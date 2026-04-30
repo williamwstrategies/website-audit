@@ -9,13 +9,20 @@ const { URL } = require('url');
 // ═══════════════════════════════════════════════════════════════════════
 
 let playwrightAvailable = false;
+let playwrightLoadError = null;
 let chromium;
 
 try {
   ({ chromium } = require('playwright'));
-  playwrightAvailable = true;
-} catch {
-  // Playwright not installed — HTTP fallback will be used automatically
+  playwrightAvailable = !!chromium;
+} catch (err) {
+  playwrightLoadError = err;
+  playwrightAvailable = false;
+}
+
+console.log('[LeadCheck] Playwright available:', playwrightAvailable);
+if (!playwrightAvailable) {
+  console.error('[LeadCheck] Playwright import failed:', playwrightLoadError?.message || playwrightLoadError);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -614,6 +621,8 @@ async function crawlWithPlaywright(startUrl) {
   let browser = null;
 
   try {
+    console.log('[LeadCheck] Using Playwright scan');
+    console.log('[LeadCheck][PW] Launching Chromium...');
     browser = await chromium.launch({
       headless: true,
       args: [
@@ -625,6 +634,7 @@ async function crawlWithPlaywright(startUrl) {
         '--no-zygote',
       ],
     });
+    console.log('[LeadCheck][PW] Chromium launched');
 
     const context = await browser.newContext({
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -647,19 +657,23 @@ async function crawlWithPlaywright(startUrl) {
 
     // ── Homepage ──────────────────────────────────────────────────
     let homepageResult = null;
+    const homepageErrors = [];
     for (const attempt of [startUrl, startUrl.replace(/^https:/, 'http:')]) {
       try {
+        console.log(`[LeadCheck][PW] Fetching homepage attempt: ${attempt}`);
         homepageResult = await Promise.race([
           playwrightFetchPage(page, attempt, PAGE_TIMEOUT),
           new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), PAGE_TIMEOUT + 500)),
         ]);
         break;
-      } catch { /* try http fallback protocol */ }
+      } catch (err) {
+        homepageErrors.push(`${attempt}: ${err.message}`);
+        console.error(`[LeadCheck][PW] Homepage attempt failed: ${attempt} — ${err.message}`);
+      }
     }
 
     if (!homepageResult) {
-      // Homepage unreachable — signal caller to fall back to HTTP
-      return null;
+      throw new Error(`Playwright could not render homepage. ${homepageErrors.join(' | ')}`);
     }
 
     const finalHomeUrl = homepageResult.finalUrl;
@@ -713,6 +727,7 @@ async function crawlWithPlaywright(startUrl) {
       if (pages.length >= MAX_PAGES || Date.now() >= deadline) break;
 
       try {
+        console.log(`[LeadCheck][PW] Fetching priority page: ${candidate.url}`);
         const result = await Promise.race([
           playwrightFetchPage(page, candidate.url, PAGE_TIMEOUT),
           new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), PAGE_TIMEOUT + 500)),
@@ -729,14 +744,17 @@ async function crawlWithPlaywright(startUrl) {
           type:    classifyPage(candidate.url),
           source:  candidate.source,
         });
-      } catch { /* skip page, continue to next candidate */ }
+      } catch (err) {
+        console.warn(`[LeadCheck][PW] Skipping priority page: ${candidate.url} — ${err.message}`);
+      }
     }
 
+    console.log(`[LeadCheck][PW] Completed Playwright scan: ${pages.length} page(s)`);
     return { pages, finalHomeUrl, method: 'playwright' };
 
   } catch (err) {
-    console.error('[LeadCheck] Playwright crawl error:', err.message);
-    return null;   // signal caller to fall back to HTTP
+    console.error('[LeadCheck][PW] Playwright scan failed:', err.stack || err.message);
+    throw err;
 
   } finally {
     // Guaranteed close — runs whether we succeeded, failed, or threw.
@@ -827,15 +845,22 @@ async function crawlWithHttp(startUrl) {
 // ── Public crawl entry point ──────────────────────────────────────────
 
 async function crawlSite(startUrl) {
-  // Try Playwright first if available
+  console.log('[LeadCheck] Playwright available:', playwrightAvailable);
+
+  // Try Playwright first whenever the package imported successfully.
   if (playwrightAvailable) {
     try {
       const result = await crawlWithPlaywright(startUrl);
-      if (result) return result;
-      // null = launch failed — fall through to HTTP
-    } catch { /* fall through */ }
+      console.log('[LeadCheck] Scan method selected: Playwright');
+      return result;
+    } catch (err) {
+      console.error('[LeadCheck] Playwright runtime failed; using HTTP fallback:', err.message);
+    }
+  } else {
+    console.error('[LeadCheck] Playwright unavailable; using HTTP fallback:', playwrightLoadError?.message || 'module not loaded');
   }
-  // HTTP fallback (always works)
+
+  console.log('[LeadCheck] Using HTTP fallback scan');
   return crawlWithHttp(startUrl);
 }
 
