@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadCheck – Website Lead-Gen Scorer for Local Businesses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3a;
+    --accent: #f5c842;
+    --accent2: #ff6b35;
+    --green: #2ecc71;
+    --yellow: #f5c842;
+    --red: #e74c3c;
+    --text: #f0f0f5;
+    --muted: #7a7a9a;
+    --radius: 12px;
+  }
+ 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+  }
+ 
+  /* ===== HERO ===== */
+  .hero {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 20px 48px;
+    text-align: center;
+  }
+ 
+  .badge {
+    display: inline-block;
+    background: rgba(245,200,66,0.12);
+    color: var(--accent);
+    border: 1px solid rgba(245,200,66,0.3);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+ 
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.9rem, 7vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+ 
+  h1 span {
+    color: var(--accent);
+    display: inline-block;
+  }
+ 
+  .hero-sub {
+    font-size: clamp(0.95rem, 3vw, 1.1rem);
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    line-height: 1.7;
+  }
+ 
+  /* ===== INPUT CARD ===== */
+  .input-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+ 
+  .url-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+ 
+  .url-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    /* Prevent iOS zoom on focus */
+    font-size: max(16px, 1rem);
+  }
+ 
+  .url-input:focus { border-color: var(--accent); }
+  .url-input::placeholder { color: var(--muted); }
+ 
+  .analyze-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.01em;
+    /* Large tap target */
+    min-height: 50px;
+  }
+ 
+  .analyze-btn:hover  { background: #f7d454; }
+  .analyze-btn:active { transform: scale(0.98); }
+  .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+ 
+  .hint {
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+  }
+ 
+  /* ===== LOADING ===== */
+  #loading {
+    display: none;
+    text-align: center;
+    padding: 60px 24px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+ 
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 0.9s linear infinite;
+  }
+ 
+  @keyframes spin { to { transform: rotate(360deg); } }
+ 
+  .loading-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    color: var(--muted);
+  }
+ 
+  .loading-steps {
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    min-height: 24px;
+    padding: 0 16px;
+  }
+
+  .loading-progress {
+    max-width: 420px;
+    margin: 24px auto 0;
+  }
+
+  .loading-progress-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-bottom: 8px;
+  }
+
+  .loading-progress-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .loading-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 100px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .loading-progress-eta {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+ 
+  /* ===== ERROR ===== */
+  #error-box {
+    display: none;
+    background: rgba(231,76,60,0.1);
+    border: 1px solid rgba(231,76,60,0.3);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    color: #e74c3c;
+    text-align: center;
+    max-width: 640px;
+    margin: 20px auto;
+    font-size: 0.9rem;
+  }
+ 
+  /* ===== RESULTS ===== */
+  #results {
+    display: none;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+    animation: fadeUp 0.4s ease;
+  }
+ 
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+ 
+  /* Score Hero */
+  .score-hero {
+    text-align: center;
+    padding: 48px 16px 32px;
+  }
+ 
+  .score-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+ 
+  .score-display {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+ 
+  .score-number {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(4.5rem, 18vw, 7rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+ 
+  .score-denom {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 6vw, 2.5rem);
+    font-weight: 700;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+ 
+  .score-bar-wrap {
+    max-width: 340px;
+    margin: 20px auto 14px;
+    height: 8px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+ 
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+ 
+  .score-verdict {
+    font-size: clamp(0.88rem, 3vw, 1rem);
+    color: var(--muted);
+    margin-top: 8px;
+    padding: 0 12px;
+  }
+ 
+  .analyzed-url {
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    word-break: break-all;
+    padding: 0 8px;
+  }
+
+  .report-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+
+  .download-pdf-btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .download-pdf-btn:hover { background: #f7d454; }
+  .download-pdf-btn:active { transform: scale(0.98); }
+ 
+  /* Results inner padding */
+  #resultsInner {
+    max-width: 880px;
+    margin: 0 auto;
+    /* Remove duplicate padding — handled by #results */
+    padding: 0;
+  }
+ 
+  /* Section Header */
+  .section-header {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+ 
+  /* ===== CATEGORIES ===== */
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+ 
+  .cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+ 
+  .cat-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+ 
+  .cat-score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+ 
+  .cat-score-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+ 
+  .cat-bar-wrap {
+    height: 5px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+ 
+  .cat-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+  }
+ 
+  /* ===== VISUAL TRUST ===== */
+  .visual-trust-section { margin-bottom: 40px; }
+
+  .visual-trust-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+
+  .visual-trust-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .visual-trust-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .visual-trust-note {
+    font-size: 0.76rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  .visual-trust-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .visual-trust-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .visual-trust-breakdown {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .visual-trust-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+
+  .visual-trust-item-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .visual-trust-item-evidence {
+    font-size: 0.74rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+ 
+  /* ===== POSITIVES ===== */
+  .positives-section { margin-bottom: 40px; }
+ 
+  .positive-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+ 
+  .positive-icon {
+    color: var(--green);
+    font-size: 1rem;
+    margin-top: 1px;
+  }
+ 
+  .positive-text {
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.5;
+  }
+ 
+  /* ===== ISSUES ===== */
+  .issues-section { margin-bottom: 40px; }
+ 
+  .issue-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+ 
+  .issue-item.partial { border-left-color: var(--yellow); }
+ 
+  .issue-icon {
+    font-size: 1rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+ 
+  .issue-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+  }
+ 
+  .issue-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+ 
+  /* ===== RECOMMENDATIONS ===== */
+  .recs-section { margin-bottom: 40px; }
+ 
+  .rec-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+ 
+  .rec-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+ 
+  .rec-num {
+    background: rgba(245,200,66,0.15);
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    width: 26px; height: 26px;
+    min-width: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+ 
+  .rec-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+ 
+  .rec-body { padding-left: 36px; }
+ 
+  .rec-fix {
+    font-size: 0.84rem;
+    color: var(--text);
+    margin-bottom: 8px;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+ 
+  .rec-impact {
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+ 
+  .rec-impact::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+ 
+  /* ===== PASSED ===== */
+  .passed-section { margin-bottom: 40px; }
+ 
+  .passed-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+ 
+  .passed-chip {
+    background: rgba(46,204,113,0.1);
+    border: 1px solid rgba(46,204,113,0.25);
+    color: var(--green);
+    border-radius: 100px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+ 
+  /* ===== ANALYZE ANOTHER ===== */
+  .analyze-another {
+    text-align: center;
+    padding: 16px 0 8px;
+  }
+ 
+  .retry-btn {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    min-height: 48px;
+  }
+ 
+  .retry-btn:hover { border-color: var(--accent); color: var(--accent); }
+ 
+  /* ===== EVIDENCE SECTION ===== */
+  .evidence-section { margin-bottom: 40px; }
+ 
+  .evidence-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+ 
+  .evidence-pages {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+ 
+  .evidence-pages-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+ 
+  .evidence-page-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+    flex-wrap: wrap;
+  }
+ 
+  .evidence-page-row:last-child { border-bottom: none; }
+ 
+  .evidence-page-path {
+    font-family: monospace;
+    color: var(--accent);
+    flex: 1;
+    min-width: 0;
+    word-break: break-all;
+    font-size: 0.85rem;
+  }
+ 
+  .evidence-page-type {
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+ 
+  .evidence-page-source {
+    font-size: 0.68rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+ 
+  .evidence-signal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+ 
+  .evidence-signal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+ 
+  .evidence-signal-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+ 
+  .evidence-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+ 
+  .badge-yes     { background: rgba(46,204,113,0.15); color: var(--green);  border: 1px solid rgba(46,204,113,0.3); }
+  .badge-partial { background: rgba(245,200,66,0.12); color: var(--yellow); border: 1px solid rgba(245,200,66,0.3); }
+  .badge-no      { background: rgba(231,76,60,0.1);  color: var(--red);    border: 1px solid rgba(231,76,60,0.25); }
+ 
+  .evidence-snippet {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+ 
+  /* ===== UTILITY ===== */
+  .color-green { color: var(--green); }
+  .color-yellow { color: var(--yellow); }
+  .color-red { color: var(--red); }
+ 
+  /* ===== DESKTOP OVERRIDES (≥ 600px) ===== */
+  @media (min-width: 600px) {
+    .hero { padding: 80px 24px 60px; }
+ 
+    .input-card { padding: 32px; }
+ 
+    .url-row {
+      flex-direction: row;
+      align-items: stretch;
+    }
+ 
+    .url-input { font-size: 1rem; }
+ 
+    .analyze-btn {
+      width: auto;
+      font-size: 0.95rem;
+      padding: 14px 28px;
+      white-space: nowrap;
+    }
+ 
+    #results { padding: 0 24px 80px; }
+ 
+    #resultsInner { padding: 0 24px; }
+ 
+    .categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+ 
+    .cat-card { padding: 20px; }
+    .cat-name { font-size: 0.8rem; }
+ 
+    .issue-item { padding: 18px 20px; }
+    .issue-title { font-size: 0.95rem; }
+    .issue-desc { font-size: 0.85rem; }
+ 
+    .rec-card { padding: 22px 24px; }
+    .rec-fix { font-size: 0.88rem; }
+ 
+    .evidence-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .evidence-signal { padding: 14px 16px; }
+    .evidence-signal-name { font-size: 0.82rem; }
+    .evidence-snippet { font-size: 0.78rem; }
+    .visual-trust-breakdown { grid-template-columns: repeat(2, 1fr); }
+  }
+ 
+  .retry-btn {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+ 
+  .retry-btn:hover { border-color: var(--accent); color: var(--accent); }
+ 
+  /* Utility */
+  .color-green { color: var(--green); }
+  .color-yellow { color: var(--yellow); }
+  .color-red { color: var(--red); }
+  .bg-green { background: var(--green); }
+  .bg-yellow { background: var(--yellow); }
+  .bg-red { background: var(--red); }
+ 
+  @media (max-width: 520px) {
+    .url-row { flex-direction: column; }
+    .score-number { font-size: 5rem; }
+    .input-card { padding: 20px; }
+    .hero { padding: 48px 20px 40px; }
+  }
+
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    @page {
+      size: auto;
+      margin: 0.45in;
+    }
+
+    html,
+    body {
+      background: var(--bg) !important;
+      color: var(--text) !important;
+    }
+
+    #home-view,
+    #loading,
+    .report-actions,
+    .analyze-another {
+      display: none !important;
+    }
+
+    #results {
+      display: block !important;
+      max-width: none;
+      width: 100%;
+      padding: 0 !important;
+      margin: 0 !important;
+      animation: none !important;
+    }
+
+    #resultsInner {
+      max-width: none;
+      padding: 0 !important;
+    }
+
+    .score-hero {
+      padding-top: 0;
+    }
+
+    .cat-card,
+    .visual-trust-card,
+    .visual-trust-item,
+    .positive-item,
+    .issue-item,
+    .rec-card,
+    .passed-chip,
+    .evidence-pages,
+    .evidence-signal {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .section-header {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+ 
+<!-- HERO / INPUT -->
+<div id="home-view">
+  <div class="hero">
+    <div class="badge">Free Website Audit Tool</div>
+    <h1>Is your website<br>actually <span>getting leads?</span></h1>
+    <p class="hero-sub">Enter your website URL and get an instant lead-generation score out of 100 — built specifically for local businesses.</p>
+  </div>
+ 
+  <div class="input-card">
+    <div class="url-row">
+      <input class="url-input" type="url" id="urlInput" placeholder="https://yourbusiness.com" autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">Analyze →</button>
+    </div>
+    <p class="hint">Free • No signup required • Results usually take about 1–2 minutes</p>
+  </div>
+ 
+  <div id="error-box"></div>
+</div>
+ 
+<!-- LOADING -->
+<div id="loading">
+  <div class="spinner"></div>
+  <p class="loading-text">Analyzing your website…</p>
+  <p class="loading-steps" id="loadingStep">Fetching homepage…</p>
+  <div class="loading-progress" aria-label="Analysis progress">
+    <div class="loading-progress-top">
+      <span>Report progress</span>
+      <span id="loadingProgressPct">0%</span>
+    </div>
+    <div class="loading-progress-track">
+      <div class="loading-progress-fill" id="loadingProgressFill"></div>
+    </div>
+    <div class="loading-progress-eta" id="loadingProgressEta">Estimated time: about 90 seconds</div>
+  </div>
+</div>
+ 
+<!-- RESULTS -->
+<div id="results">
+ 
+  <div class="score-hero">
+    <p class="score-label">Your Website Score</p>
+    <div class="score-display">
+      <span class="score-number" id="scoreNum">0</span>
+      <span class="score-denom" id="scoreDenom">/100</span>
+    </div>
+    <div class="score-bar-wrap">
+      <div class="score-bar-fill" id="scoreBar"></div>
+    </div>
+    <p class="score-verdict" id="scoreVerdict"></p>
+    <p class="analyzed-url" id="analyzedUrl"></p>
+    <div class="report-actions">
+      <button class="download-pdf-btn" onclick="downloadReportPdf()">Download PDF</button>
+    </div>
+  </div>
+ 
+  <div id="resultsInner">
+ 
+    <!-- Categories -->
+    <div class="section-header">Category Breakdown</div>
+    <div class="categories-grid" id="catsGrid"></div>
+ 
+    <!-- Visual Trust -->
+    <div class="visual-trust-section" id="visualTrustSection">
+      <div class="section-header">Visual Trust &amp; Design Quality</div>
+      <div class="visual-trust-card">
+        <div class="visual-trust-top">
+          <div>
+            <div class="visual-trust-title" id="visualTrustStatus">Not verified</div>
+            <div class="visual-trust-note">Conversion/trust factor, not a direct Google ranking factor.</div>
+          </div>
+          <div class="visual-trust-score" id="visualTrustScore">— / 15</div>
+        </div>
+        <div class="visual-trust-desc" id="visualTrustDesc"></div>
+        <div class="visual-trust-breakdown" id="visualTrustBreakdown"></div>
+      </div>
+    </div>
+ 
+    <!-- Positives -->
+    <div class="positives-section" id="positivesSection">
+      <div class="section-header">What You&rsquo;re Doing Right</div>
+      <div id="positivesList"></div>
+    </div>
+ 
+    <!-- Issues -->
+    <div class="issues-section">
+      <div class="section-header" id="issuesHeader">Issues Found</div>
+      <div id="issuesList"></div>
+    </div>
+ 
+    <!-- Recommendations -->
+    <div class="recs-section">
+      <div class="section-header">Recommended Fixes</div>
+      <div id="recsList"></div>
+    </div>
+ 
+    <!-- Passed -->
+    <div class="passed-section">
+      <div class="section-header">What's Working ✓</div>
+      <div class="passed-grid" id="passedGrid"></div>
+    </div>
+ 
+    <!-- Evidence Found -->
+    <div class="evidence-section">
+      <div class="section-header">Evidence Found</div>
+      <div id="evidencePages"></div>
+      <div class="evidence-grid" id="evidenceSignals"></div>
+    </div>
+ 
+    <div class="analyze-another">
+      <button class="retry-btn" onclick="resetApp()">← Analyze Another Website</button>
+    </div>
+  </div>
+</div>
+ 
+<script>
+const CHECK_LABELS = {
+  headline: 'Clear Headline',
+  cta: 'Strong CTA Button',
+  mobileResponsive: 'Mobile Responsive',
+  clickToCall: 'Click-to-Call',
+  pageSpeed: 'Page Speed',
+  https: 'HTTPS Security',
+  localKeywords: 'Local Keywords',
+  localPresence: 'Local Presence Signals',
+  trustSignals: 'Trust Signals',
+  contactOptions: 'Contact Options',
+  leadForm: 'Lead Form',
+  serviceClarity: 'Service Clarity',
+  servicePageLinks: 'Service Page Links',
+  navigation: 'Clean Navigation',
+  titleTag: 'SEO Title Tag',
+  metaDescription: 'Meta Description',
+  headingStructure: 'Heading Structure',
+  imageAltText: 'Image Alt Text',
+  readability: 'Readability',
+  socialProof: 'Social Proof',
+};
+ 
+const LOADING_STEPS = [
+  'Fetching homepage…',
+  'Crawling priority pages…',
+  'Running lead-gen checks…',
+  'Checking local SEO signals…',
+  'Analyzing trust & credibility…',
+  'Reviewing visual trust signals…',
+  'Scoring your results…',
+];
+
+const SCAN_ESTIMATE_MS = 90000;
+ 
+let stepIdx = 0;
+let stepTimer = null;
+let progressTimer = null;
+let progressStartedAt = 0;
+ 
+function cycleStep() {
+  stepIdx = (stepIdx + 1) % LOADING_STEPS.length;
+  document.getElementById('loadingStep').textContent = LOADING_STEPS[stepIdx];
+}
+
+function setLoadingProgress(percent, label) {
+  const bounded = Math.max(0, Math.min(100, Math.round(percent)));
+  const fill = document.getElementById('loadingProgressFill');
+  const pct = document.getElementById('loadingProgressPct');
+  const eta = document.getElementById('loadingProgressEta');
+  if (fill) fill.style.width = bounded + '%';
+  if (pct) pct.textContent = bounded + '%';
+  if (eta && label) eta.textContent = label;
+}
+
+function updateLoadingProgress() {
+  const elapsed = Date.now() - progressStartedAt;
+  const rawPct = elapsed / SCAN_ESTIMATE_MS;
+  const cappedPct = Math.min(94, rawPct * 100);
+  const secondsLeft = Math.max(5, Math.ceil((SCAN_ESTIMATE_MS - elapsed) / 1000));
+  const label = cappedPct >= 90
+    ? 'Almost done — building your report…'
+    : `Estimated time left: about ${secondsLeft} seconds`;
+  setLoadingProgress(cappedPct, label);
+}
+
+function startLoadingProgress() {
+  progressStartedAt = Date.now();
+  setLoadingProgress(0, 'Estimated time: about 90 seconds');
+  clearInterval(progressTimer);
+  progressTimer = setInterval(updateLoadingProgress, 1000);
+  updateLoadingProgress();
+}
+
+function finishLoadingProgress() {
+  clearInterval(progressTimer);
+  progressTimer = null;
+  setLoadingProgress(100, 'Report ready.');
+}
+
+function stopLoadingTimers() {
+  clearInterval(stepTimer);
+  clearInterval(progressTimer);
+  stepTimer = null;
+  progressTimer = null;
+}
+ 
+function normalizeUrl(raw) {
+  let url = raw.trim();
+  if (!url) return null;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  return url;
+}
+
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function firstArray(...values) {
+  for (const value of values) {
+    const arr = asArray(value);
+    if (arr.length) return arr;
+  }
+  return [];
+}
+
+function asRecord(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
+function objectEntries(value) {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? Object.entries(value)
+    : [];
+}
+
+function asText(value) {
+  if (typeof value === 'string') return value;
+  if (value == null) return '';
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+  if (Array.isArray(value)) return value.map(asText).filter(Boolean).join(', ');
+  if (typeof value === 'object') {
+    if ('evidence' in value) return asText(value.evidence);
+    if ('snippet' in value) return asText(value.snippet);
+    return objectEntries(value)
+      .filter(([, v]) => v !== null && v !== undefined && v !== false && v !== '')
+      .map(([k, v]) => `${k}: ${asText(v)}`)
+      .join(', ');
+  }
+  return String(value);
+}
+
+function firstDefinedValue(...values) {
+  for (const value of values) {
+    if (value == null) continue;
+    if (typeof value === 'string' && value.trim() === '') continue;
+    if (Array.isArray(value) && value.length === 0) continue;
+    if (value && typeof value === 'object' && !Array.isArray(value) && objectEntries(value).length === 0) continue;
+    return value;
+  }
+  return null;
+}
+
+function isNoEvidenceText(value) {
+  const text = asText(value).trim().toLowerCase();
+  return !text
+    || text === 'none'
+    || text === 'no'
+    || text === 'false'
+    || text.startsWith('no ')
+    || text.includes('not detected')
+    || text.includes('no evidence found')
+    || text.includes('no review evidence found');
+}
+
+function statusFromValue(value) {
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    if (value.status) return ['yes', 'partial', 'no'].includes(value.status) ? value.status : 'partial';
+    if (typeof value.detected === 'boolean') return value.detected ? 'yes' : 'no';
+    if (typeof value.result === 'boolean') return value.result ? 'yes' : 'no';
+    if (typeof value.result === 'string') return value.result.startsWith('partial') ? 'partial' : statusFromValue(value.result);
+    if ('total' in value && Number.isFinite(Number(value.total))) return Number(value.total) > 0 ? 'yes' : 'no';
+  }
+  if (Array.isArray(value)) return value.length ? 'yes' : 'no';
+  if (typeof value === 'boolean') return value ? 'yes' : 'no';
+  if (isNoEvidenceText(value)) return 'no';
+  const text = asText(value).toLowerCase();
+  if (text.includes('partial') || text.includes('weak')) return 'partial';
+  return 'yes';
+}
+ 
+function getVerdict(score) {
+  if (score >= 81) return { text: 'Excellent — your site is built to convert local customers.', color: 'var(--green)' };
+  if (score >= 61) return { text: 'Good — a few improvements could significantly boost your leads.', color: 'var(--accent)' };
+  if (score >= 41) return { text: 'Needs Work — there are clear gaps costing you calls and bookings.', color: 'var(--accent2)' };
+  return { text: 'Critical — your website is likely losing most potential customers.', color: 'var(--red)' };
+}
+ 
+function getScoreColor(score, max) {
+  const pct = score / max;
+  if (pct >= 0.81) return 'var(--green)';  // 81–100 → green
+  if (pct >= 0.61) return 'var(--accent)'; // 61–80  → yellow/accent
+  return 'var(--red)';                      // 0–60   → red
+}
+ 
+async function runAnalysis() {
+  const raw = document.getElementById('urlInput').value;
+  const url = normalizeUrl(raw);
+ 
+  const errBox = document.getElementById('error-box');
+  errBox.style.display = 'none';
+ 
+  if (!url) {
+    errBox.style.display = 'block';
+    errBox.textContent = 'Please enter a valid website URL.';
+    return;
+  }
+ 
+  // Show loading
+  document.getElementById('home-view').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('analyzeBtn').disabled = true;
+ 
+  stepIdx = 0;
+  document.getElementById('loadingStep').textContent = LOADING_STEPS[0];
+  startLoadingProgress();
+  stepTimer = setInterval(cycleStep, 1800);
+ 
+  try {
+    const res = await fetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url }),
+    });
+ 
+    const data = await res.json();
+    finishLoadingProgress();
+ 
+    if (!res.ok || data.error) {
+      showError(data.error || 'Analysis failed. Please try again.');
+      return;
+    }
+ 
+    renderResults(data);
+  } catch (err) {
+    stopLoadingTimers();
+    showError('Could not reach the server. Please try again.');
+  }
+}
+ 
+function showError(msg) {
+  stopLoadingTimers();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('home-view').style.display = 'block';
+  document.getElementById('analyzeBtn').disabled = false;
+  const errBox = document.getElementById('error-box');
+  errBox.style.display = 'block';
+  errBox.textContent = msg;
+}
+ 
+function renderResults(data) {
+  stopLoadingTimers();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+ 
+  const result = asRecord(data);
+
+  // Backend now scores out of 100 — use maxScore if present, default 100
+  const maxScore = Number(result.maxScore) || 100;
+  const total    = Number.isFinite(Number(result.total)) ? Number(result.total) : 0;
+  const verdict  = getVerdict(total);                 // thresholds on /100 scale
+  const color    = getScoreColor(total, maxScore);    // correctly computes pct = 72/100
+ 
+  // Score number and colour
+  document.getElementById('scoreNum').textContent  = total;
+  document.getElementById('scoreNum').style.color  = color;
+  document.getElementById('scoreDenom').textContent = `/${maxScore}`;
+  document.getElementById('scoreVerdict').textContent = verdict.text;
+  document.getElementById('scoreVerdict').style.color = verdict.color;
+  document.getElementById('analyzedUrl').textContent  = asText(result.url);
+ 
+  // Progress bar — width as % of maxScore
+  setTimeout(() => {
+    const bar = document.getElementById('scoreBar');
+    bar.style.width      = (total / maxScore * 100) + '%';
+    bar.style.background = color;
+  }, 100);
+ 
+  // Categories
+  const catsGrid = document.getElementById('catsGrid');
+  catsGrid.innerHTML = '';
+  const categories = asRecord(result.categories);
+  for (const [key, rawCat] of objectEntries(categories)) {
+    const cat = asRecord(rawCat);
+    const catScore = Number.isFinite(Number(cat.score)) ? Number(cat.score) : 0;
+    const catMax = Number(cat.max) || 1;
+    const pct = catScore / catMax;
+    const c = getScoreColor(catScore, catMax);
+    catsGrid.innerHTML += `
+      <div class="cat-card">
+        <div class="cat-name">${escHtml(asText(cat.label) || key)}</div>
+        <div class="cat-score-row">
+          <span class="cat-score-text" style="color:${c}">${catScore}</span>
+          <span style="color:var(--muted);font-size:0.85rem">/ ${catMax}</span>
+        </div>
+        <div class="cat-bar-wrap">
+          <div class="cat-bar-fill" style="width:${pct*100}%;background:${c}"></div>
+        </div>
+      </div>`;
+  }
+ 
+  renderVisualTrust(result);
+ 
+  // Positives
+  const positivesSection = document.getElementById('positivesSection');
+  const positivesList = document.getElementById('positivesList');
+  const positives = Array.isArray(result.positives) ? result.positives : [];
+  positivesList.innerHTML = '';
+  if (positives.length === 0) {
+    positivesSection.style.display = 'none';
+  } else {
+    positivesSection.style.display = 'block';
+    positives.forEach(rawPositive => {
+      const text = asText(rawPositive);
+      if (!text) return;
+      positivesList.innerHTML += '<div class="positive-item">' +
+        '<span class="positive-icon">✓</span>' +
+        '<div class="positive-text">' + escHtml(text) + '</div>' +
+        '</div>';
+    });
+  }
+ 
+  // Issues
+  const issuesList = document.getElementById('issuesList');
+  issuesList.innerHTML = '';
+  const issues = asArray(result.issues);
+  const criticalFlags = asArray(result.criticalFlags);
+  document.getElementById('issuesHeader').textContent = `Issues Found (${issues.length + criticalFlags.length})`;
+ 
+  if (issues.length === 0 && criticalFlags.length === 0) {
+    issuesList.innerHTML = `<p style="color:var(--green);font-size:0.95rem;">🎉 No major issues found!</p>`;
+  } else {
+    issues.forEach(rawIssue => {
+      const issue = asRecord(rawIssue);
+      const isPartial = issue.severity === 'partial';
+      const title = asText(issue.label) || asText(issue.title) || asText(issue.key) || asText(rawIssue);
+      const desc = asText(issue.issue) || asText(issue.detail) || asText(issue.evidence);
+      issuesList.innerHTML += `
+        <div class="issue-item ${isPartial ? 'partial' : ''}">
+          <span class="issue-icon">${isPartial ? '⚠️' : '✗'}</span>
+          <div>
+            <div class="issue-title">${escHtml(title)}</div>
+            <div class="issue-desc">${escHtml(desc)}</div>
+          </div>
+        </div>`;
+    });
+    criticalFlags.forEach(rawFlag => {
+      const flag = asRecord(rawFlag);
+      const title = asText(flag.label) || asText(flag.title) || asText(flag.key) || asText(rawFlag);
+      const desc = asText(flag.detail) || asText(flag.issue) || asText(flag.evidence);
+      issuesList.innerHTML += `
+        <div class="issue-item">
+          <span class="issue-icon">✗</span>
+          <div>
+            <div class="issue-title">${escHtml(title)}</div>
+            <div class="issue-desc">${escHtml(desc)}</div>
+          </div>
+        </div>`;
+    });
+  }
+ 
+  // Recommendations
+  const recsList = document.getElementById('recsList');
+  recsList.innerHTML = '';
+  const recs = asArray(result.recommendations);
+  if (recs.length === 0) {
+    recsList.innerHTML = `<p style="color:var(--muted);font-size:0.9rem;">No additional recommendations — great work!</p>`;
+  } else {
+    recs.forEach((rawRec, i) => {
+      const rec = asRecord(rawRec);
+      const title = asText(rec.label) || asText(rec.title) || asText(rec.key) || asText(rawRec);
+      const fix = asText(rec.fix) || asText(rec.recommendation);
+      const impact = asText(rec.impact);
+      recsList.innerHTML += `
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-num">${i + 1}</span>
+            <span class="rec-title">${escHtml(title)}</span>
+          </div>
+          <div class="rec-body">
+            <div class="rec-fix">${escHtml(fix)}</div>
+            <div class="rec-impact">${escHtml(impact)}</div>
+          </div>
+        </div>`;
+    });
+  }
+ 
+  // Passed checks
+  const passedGrid = document.getElementById('passedGrid');
+  passedGrid.innerHTML = '';
+  const checksObj = asRecord(result.checks);
+  // checks values are now raw: true | false | 'partial' | 'partial:N'
+  const passed = objectEntries(checksObj).filter(([, v]) => v === true || (v && typeof v === 'object' && v.result === true));
+  passed.forEach(([key]) => {
+    passedGrid.innerHTML += `
+      <span class="passed-chip">✓ ${escHtml(CHECK_LABELS[key] || key)}</span>`;
+  });
+  if (passed.length === 0) {
+    passedGrid.innerHTML = `<p style="color:var(--muted);font-size:0.9rem;">No checks fully passed yet.</p>`;
+  }
+  // Evidence Found
+  renderEvidence(result);
+}
+
+function renderVisualTrust(result) {
+  const section = document.getElementById('visualTrustSection');
+  const statusEl = document.getElementById('visualTrustStatus');
+  const scoreEl = document.getElementById('visualTrustScore');
+  const descEl = document.getElementById('visualTrustDesc');
+  const breakdownEl = document.getElementById('visualTrustBreakdown');
+  if (!section || !statusEl || !scoreEl || !descEl || !breakdownEl) return;
+
+  const evidenceFound = asRecord(asRecord(result).evidenceFound);
+  const visualTrust = asRecord(firstDefinedValue(result.visualTrust, evidenceFound.visualTrust));
+  if (!objectEntries(visualTrust).length) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+
+  const max = Number(visualTrust.max) || 15;
+  const score = Number.isFinite(Number(visualTrust.score)) ? Number(visualTrust.score) : null;
+  const status = asText(visualTrust.status) || 'Partial';
+  const resultValue = visualTrust.result;
+  const color = resultValue === true || status.toLowerCase() === 'strong'
+    ? 'var(--green)'
+    : resultValue === false || status.toLowerCase() === 'weak'
+      ? 'var(--red)'
+      : 'var(--accent)';
+
+  statusEl.textContent = status;
+  statusEl.style.color = color;
+  scoreEl.textContent = score === null ? '— / ' + max : score + ' / ' + max;
+  scoreEl.style.color = color;
+  descEl.textContent = asText(visualTrust.message) || 'Visual trust was evaluated as a conversion/trust factor.';
+
+  const rawBreakdown = firstDefinedValue(visualTrust.breakdown, visualTrust.items, visualTrust.checks);
+  const breakdown = asArray(rawBreakdown).length
+    ? asArray(rawBreakdown)
+    : objectEntries(asRecord(rawBreakdown)).map(([key, value]) => {
+        const item = asRecord(value);
+        return {
+          label: asText(item.label) || key,
+          score: item.score,
+          max: item.max,
+          evidence: asText(item.evidence) || asText(value),
+        };
+      });
+
+  breakdownEl.innerHTML = '';
+  if (!breakdown.length) {
+    breakdownEl.innerHTML = '<div class="visual-trust-item"><div class="visual-trust-item-evidence">No visual trust breakdown was returned.</div></div>';
+    return;
+  }
+
+  breakdown.forEach(rawItem => {
+    const item = asRecord(rawItem);
+    const label = asText(item.label) || asText(item.key) || asText(rawItem);
+    const itemScore = Number.isFinite(Number(item.score)) ? Number(item.score) : null;
+    const itemMax = Number(item.max) || 3;
+    const evidence = asText(item.evidence);
+    const scoreText = itemScore === null ? '' : ' (' + itemScore + '/' + itemMax + ')';
+    breakdownEl.innerHTML += `
+      <div class="visual-trust-item">
+        <div class="visual-trust-item-name">${escHtml(label + scoreText)}</div>
+        ${evidence ? `<div class="visual-trust-item-evidence">${escHtml(evidence)}</div>` : ''}
+      </div>`;
+  });
+}
+ 
+function renderEvidence(result) {
+  const root = asRecord(result);
+  const evidenceFound = asRecord(root.evidenceFound);
+  const evidenceAlias = asRecord(root.evidence);
+  const ev = objectEntries(evidenceFound).length ? evidenceFound : evidenceAlias;
+ 
+  // ── Pages scanned ─────────────────────────────────────────────────
+  const pagesEl = document.getElementById('evidencePages');
+  if (pagesEl) {
+    pagesEl.innerHTML = '';
+    // Backend may return pagesList, pagesScanned, or top-level pagesCrawled — accept any array only.
+    const rawPages = firstArray(ev.pagesList, ev.pagesScanned, root.pagesScanned, root.pagesCrawled);
+    const rows = [];
+    rawPages.forEach(rawPage => {
+      const page = asRecord(rawPage);
+      const path = asText(page.path) || asText(page.url) || asText(rawPage);
+      const type = asText(page.type) || 'page';
+      const source = asText(page.source);
+      const sourceLabel = source === 'homepage' ? '' :
+        source === 'homepage-link' ? '(found in nav)' :
+        source ? '(slug guess)' : '';
+      rows.push(`
+        <div class="evidence-page-row">
+          <span class="evidence-page-path">${escHtml(path)}</span>
+          <span class="evidence-page-type">${escHtml(type)}</span>
+          ${sourceLabel ? `<span class="evidence-page-source">${escHtml(sourceLabel)}</span>` : ''}
+        </div>`);
+    });
+    pagesEl.innerHTML = `
+      <div class="evidence-pages">
+        <div class="evidence-pages-label">Pages Scanned (${rawPages.length})</div>
+        ${rows.join('') || '<div style="color:var(--muted);font-size:0.85rem;">No pages recorded.</div>'}
+      </div>`;
+  }
+ 
+  // ── Signals ───────────────────────────────────────────────────────
+  const signalsEl = document.getElementById('evidenceSignals');
+  if (!signalsEl) return;
+  signalsEl.innerHTML = '';
+
+  const oldSignals = asRecord(ev.signals);
+  const methods = asRecord(ev.contactMethodsDetected);
+  const checkEvidence = asRecord(ev.checkEvidence);
+  const detectionSummary = asRecord(root.detectionSummary);
+ 
+  const SIGNAL_LABELS = {
+    phone:          'Phone Number',
+    freeQuoteCTA:   'Free Quote / CTA',
+    reviews:        'Reviews / Testimonials',
+    servicesListed: 'Services Listed',
+    contactForm:    'Contact Form',
+    chatbot:        'Chatbot / Live Chat',
+    booking:        'Booking / Calendar',
+    email:          'Email',
+    address:        'Address / Location',
+    googleSignals:  'Google Map / Reviews',
+    contactMethods: 'Contact Methods',
+    trustSignals:   'Trust Signals',
+  };
+
+  function check(key) {
+    return firstDefinedValue(checkEvidence[key], asRecord(root.checks)[key]);
+  }
+
+  function signalValue(key) {
+    return firstDefinedValue(oldSignals[key], {
+      phone:          firstDefinedValue(methods.phone, check('phone')),
+      freeQuoteCTA:   firstDefinedValue(ev.ctasDetected, check('cta')),
+      reviews:        firstDefinedValue(ev.reviewsDetected, ev.reviewEvidence, root.reviewEvidence, check('reviewsVisible')),
+      servicesListed: firstDefinedValue(ev.servicesDetected, check('servicesListed')),
+      contactForm:    firstDefinedValue(ev.formsDetected, methods.form, check('contactForm')),
+      chatbot:        firstDefinedValue(ev.chatWidgetsDetected, methods.chat, detectionSummary.chatDetected),
+      booking:        firstDefinedValue(methods.booking, detectionSummary.bookingDetected),
+      email:          firstDefinedValue(methods.email),
+      address:        firstDefinedValue(methods.address),
+      googleSignals:  firstDefinedValue(check('googleSignals')),
+      contactMethods: firstDefinedValue(ev.contactMethodsDetected, check('contactMethods')),
+      trustSignals:   firstDefinedValue(ev.trustSignalsDetected, check('professionalSignals'), check('riskReversal')),
+    }[key]);
+  }
+
+  const cards = [];
+  objectEntries(SIGNAL_LABELS).forEach(([key, label]) => {
+    const value = signalValue(key);
+    if (value == null) return;
+
+    const status = statusFromValue(value);
+    const snippet = firstDefinedValue(
+      asRecord(value).snippet,
+      asRecord(value).evidence,
+      asText(value),
+      status === 'no' ? 'Not detected' : null
+    );
+    const badgeClass = status === 'yes' ? 'badge-yes' : status === 'partial' ? 'badge-partial' : 'badge-no';
+    const badgeText  = status === 'yes' ? 'YES' : status === 'partial' ? 'PARTIAL' : 'NO';
+    cards.push(`
+      <div class="evidence-signal">
+        <div class="evidence-signal-header">
+          <span class="evidence-signal-name">${escHtml(label)}</span>
+          <span class="evidence-badge ${badgeClass}">${badgeText}</span>
+        </div>
+        ${snippet ? `<div class="evidence-snippet">${escHtml(snippet)}</div>` : ''}
+      </div>`);
+  });
+
+  signalsEl.innerHTML = cards.join('') || '<div style="color:var(--muted);font-size:0.85rem;">No evidence recorded.</div>';
+}
+ 
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function downloadReportPdf() {
+  const analyzedUrl = document.getElementById('analyzedUrl')?.textContent || 'website';
+  let host = 'website';
+  try {
+    host = new URL(analyzedUrl).hostname.replace(/^www\./, '');
+  } catch {
+    host = analyzedUrl.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'website';
+  }
+
+  const originalTitle = document.title;
+  document.title = `LeadCheck Audit - ${host}`;
+  window.print();
+
+  setTimeout(() => {
+    document.title = originalTitle;
+  }, 1000);
+}
+ 
+function resetApp() {
+  stopLoadingTimers();
+  setLoadingProgress(0, 'Estimated time: about 90 seconds');
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('home-view').style.display = 'block';
+  document.getElementById('analyzeBtn').disabled = false;
+  document.getElementById('urlInput').value = '';
+  document.getElementById('error-box').style.display = 'none';
+}
+ 
+// Enter key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && document.getElementById('home-view').style.display !== 'none') {
+    runAnalysis();
+  }
+});
+</script>
+</body>
+</html>
