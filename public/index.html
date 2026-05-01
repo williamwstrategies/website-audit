@@ -334,6 +334,49 @@
 
   .download-pdf-btn:hover { background: #f7d454; }
   .download-pdf-btn:active { transform: scale(0.98); }
+
+  /* ===== RATING COMPARISON ===== */
+  .rating-comparison {
+    margin-bottom: 34px;
+  }
+
+  .rating-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .rating-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    text-align: center;
+  }
+
+  .rating-card-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .rating-card-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .rating-helper {
+    color: var(--muted);
+    font-size: 0.86rem;
+    line-height: 1.5;
+    text-align: center;
+    margin-top: 12px;
+  }
  
   /* Results inner padding */
   #resultsInner {
@@ -783,6 +826,11 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 14px;
     }
+
+    .rating-cards {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
  
     .cat-card { padding: 20px; }
     .cat-name { font-size: 0.8rem; }
@@ -950,6 +998,12 @@
   </div>
  
   <div id="resultsInner">
+
+    <!-- Rating Comparison -->
+    <div class="rating-comparison" id="ratingComparison">
+      <div class="rating-cards" id="ratingCards"></div>
+      <p class="rating-helper">Compare this site against industry benchmarks and our client performance average.</p>
+    </div>
  
     <!-- Categories -->
     <div class="section-header">Category Breakdown</div>
@@ -1194,6 +1248,43 @@ function getScoreColor(score, max) {
   if (pct >= 0.61) return 'var(--accent)'; // 61–80  → yellow/accent
   return 'var(--red)';                      // 0–60   → red
 }
+
+function normalizeScore(score) {
+  if (typeof score === 'number' && Number.isFinite(score)) return score;
+  if (typeof score === 'string') {
+    const parsed = Number(score.replace('%', '').trim());
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+  return 0;
+}
+
+function formatPercent(value) {
+  return `${Math.round(value * 10) / 10}%`;
+}
+
+function renderRatingComparison(result, scoreColor) {
+  const cardsEl = document.getElementById('ratingCards');
+  if (!cardsEl) return;
+
+  const websiteScore = normalizeScore(firstDefinedValue(result.total, result.score, result.rating));
+  const industryStandard = 75.6;
+  const clientAverage = 92.1;
+  const cards = [
+    { label: 'Website Rating', value: websiteScore, color: scoreColor },
+    { label: 'Industry Standard', value: industryStandard, color: 'var(--accent)' },
+  ];
+
+  if (websiteScore <= clientAverage) {
+    cards.push({ label: 'Our Client Average', value: clientAverage, color: 'var(--green)' });
+  }
+
+  cardsEl.innerHTML = cards.map(card => `
+    <div class="rating-card">
+      <div class="rating-card-label">${escHtml(card.label)}</div>
+      <div class="rating-card-value" style="color:${card.color}">${escHtml(formatPercent(card.value))}</div>
+    </div>
+  `).join('');
+}
  
 async function runAnalysis() {
   const raw = document.getElementById('urlInput').value;
@@ -1272,6 +1363,7 @@ function renderResults(data) {
   document.getElementById('scoreVerdict').textContent = verdict.text;
   document.getElementById('scoreVerdict').style.color = verdict.color;
   document.getElementById('analyzedUrl').textContent  = asText(result.url);
+  renderRatingComparison(result, color);
  
   // Progress bar — width as % of maxScore
   setTimeout(() => {
