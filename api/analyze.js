@@ -484,6 +484,24 @@ const DOM_EXTRACTOR = () => {
  *   2. waitForLoadState('networkidle') with a graceful timeout — JS widgets finish loading
  *   3. waitForTimeout(8000) — review embeds (Elfsight, Google Reviews) need time to render
  */
+async function autoScroll(page) {
+  await page.evaluate(async () => {
+    await new Promise(resolve => {
+      let totalHeight = 0;
+      const distance = 300;
+      const timer = setInterval(() => {
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+
+        if (totalHeight >= document.body.scrollHeight) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 200);
+    });
+  });
+}
+
 async function playwrightFetchPage(page, rawUrl, pageTimeoutMs = PAGE_TIMEOUT) {
   try {
     // Step 1: navigate and wait for DOM to be ready
@@ -503,7 +521,16 @@ async function playwrightFetchPage(page, rawUrl, pageTimeoutMs = PAGE_TIMEOUT) {
 
     // Step 3: flat wait to let JS-rendered review widgets fully paint their content
     // (Google Reviews embeds, Elfsight widgets, etc. inject content after network is idle)
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(2000);
+
+    // Step 4: scroll like a real visitor so lazy-loaded sections, images,
+    // animations, CTAs, reviews, and service blocks enter the rendered DOM.
+    await autoScroll(page);
+
+    // Step 5: allow scroll-triggered JavaScript/lazy loading to finish,
+    // then return to the top before extracting above-the-fold and full-page signals.
+    await page.waitForTimeout(2000);
+    await page.evaluate(() => window.scrollTo(0, 0));
 
     const finalUrl = page.url();
     const domData  = await page.evaluate(DOM_EXTRACTOR);
