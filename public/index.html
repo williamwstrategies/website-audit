@@ -1036,6 +1036,7 @@ const LOADING_STEPS = [
   'Scoring your results…',
 ];
 
+const ANALYZE_API_URL = '/api/analyze';
 const SCAN_ESTIMATE_MS = 90000;
  
 let stepIdx = 0;
@@ -1213,7 +1214,7 @@ async function runAnalysis() {
   stepTimer = setInterval(cycleStep, 1800);
  
   try {
-    const res = await fetch('/api/analyze', {
+    const res = await fetch(ANALYZE_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url }),
@@ -1229,6 +1230,7 @@ async function runAnalysis() {
  
     renderResults(data);
   } catch (err) {
+    console.error('API request failed:', err);
     stopLoadingTimers();
     showError('Could not reach the server. Please try again.');
   }
