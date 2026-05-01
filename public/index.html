@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="LeadCheck">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>LeadCheck – Website Lead-Gen Scorer for Local Businesses</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -1615,6 +1621,18 @@ document.addEventListener('keydown', (e) => {
     runAnalysis();
   }
 });
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('[LeadCheck] Service worker registered:', registration.scope);
+      })
+      .catch(err => {
+        console.error('[LeadCheck] Service worker registration failed:', err);
+      });
+  });
+}
 </script>
 </body>
 </html>
