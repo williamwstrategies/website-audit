@@ -482,22 +482,31 @@ const DOM_EXTRACTOR = () => {
  * Wait strategy (accuracy > speed):
  *   1. goto() with waitUntil:'domcontentloaded' — page HTML is parsed
  *   2. waitForLoadState('networkidle') with a graceful timeout — JS widgets finish loading
- *   3. waitForTimeout(8000) — review embeds (Elfsight, Google Reviews) need time to render
+ *   3. autoScroll() until page height stabilizes — lazy content enters the DOM before extraction
  */
 async function autoScroll(page) {
   await page.evaluate(async () => {
-    await new Promise(resolve => {
-      let totalHeight = 0;
-      const distance = 300;
-      const timer = setInterval(() => {
-        window.scrollBy(0, distance);
-        totalHeight += distance;
+    await new Promise((resolve) => {
+      let lastHeight = document.body.scrollHeight;
+      let sameHeightCount = 0;
 
-        if (totalHeight >= document.body.scrollHeight) {
+      const timer = setInterval(() => {
+        window.scrollBy(0, window.innerHeight);
+
+        const newHeight = document.body.scrollHeight;
+
+        if (newHeight === lastHeight) {
+          sameHeightCount++;
+        } else {
+          sameHeightCount = 0;
+          lastHeight = newHeight;
+        }
+
+        if (sameHeightCount >= 3) {
           clearInterval(timer);
           resolve();
         }
-      }, 200);
+      }, 300);
     });
   });
 }
@@ -519,18 +528,17 @@ async function playwrightFetchPage(page, rawUrl, pageTimeoutMs = PAGE_TIMEOUT) {
       // Not an error; we already have DOM content.
     }
 
-    // Step 3: flat wait to let JS-rendered review widgets fully paint their content
-    // (Google Reviews embeds, Elfsight widgets, etc. inject content after network is idle)
-    await page.waitForTimeout(2000);
+    // Step 3: let JS-rendered widgets paint, then scroll until page height stabilizes.
+    await page.waitForTimeout(1000);
 
-    // Step 4: scroll like a real visitor so lazy-loaded sections, images,
-    // animations, CTAs, reviews, and service blocks enter the rendered DOM.
+    console.log('[LeadCheck][PW] Starting auto-scroll...');
     await autoScroll(page);
+    console.log('[LeadCheck][PW] Auto-scroll complete');
 
-    // Step 5: allow scroll-triggered JavaScript/lazy loading to finish,
-    // then return to the top before extracting above-the-fold and full-page signals.
-    await page.waitForTimeout(2000);
+    // Step 4: return to the top before extracting above-the-fold and full-page signals.
+    await page.waitForTimeout(1000);
     await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(500);
 
     const finalUrl = page.url();
     const domData  = await page.evaluate(DOM_EXTRACTOR);
@@ -639,6 +647,369 @@ function extractInternalLinks(html, baseUrl) {
     } catch { /* skip */ }
   }
   return [...links];
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// BROKEN LINK / MISSING PAGE DETECTION
+// Additive detection only — does not affect scoring.
+// ═══════════════════════════════════════════════════════════════════════
+
+const BROKEN_LINK_TIMEOUT = 5000;
+const MAX_INTERNAL_LINK_CHECKS = 50;
+const MAX_EXTERNAL_LINK_CHECKS = 25;
+const MAX_LINK_REDIRECTS = 5;
+
+function emptyBrokenLinksResult() {
+  return {
+    totalChecked: 0,
+    brokenInternal: [],
+    brokenExternal: [],
+    invalidLinks: [],
+    missingExpectedPages: [],
+    redirectIssues: [],
+  };
+}
+
+function anchorTextFromHtml(html) {
+  return normalizeText(String(html || '')).slice(0, 120);
+}
+
+function isLocalhostHost(hostname) {
+  return /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[?::1\]?)$/i.test(hostname || '');
+}
+
+function classifyHref(rawHref, sourcePage, anchorText, siteUrl) {
+  const href = rawHref == null ? '' : String(rawHref).trim();
+
+  const invalid = issue => ({
+    url: href || '(empty)',
+    sourcePage,
+    anchorText,
+    status: 'invalid',
+    type: 'invalid',
+    issue,
+  });
+
+  if (!href) return { invalid: invalid(rawHref == null ? 'Missing href attribute' : 'Empty href') };
+  if (href === '#') return { invalid: invalid('Placeholder anchor href="#"') };
+  if (/^javascript:\s*void\(0\)/i.test(href) || /^javascript:/i.test(href)) {
+    return { invalid: invalid('JavaScript-only navigation link') };
+  }
+  if (/^file:/i.test(href)) return { invalid: invalid('file:// link cannot work for website visitors') };
+  if (/^mailto:/i.test(href)) {
+    const address = href.replace(/^mailto:/i, '').split('?')[0].trim();
+    return address ? { skip: true } : { invalid: invalid('mailto link has no email address') };
+  }
+  if (/^tel:/i.test(href)) {
+    const phone = href.replace(/^tel:/i, '').replace(/[^\d+]/g, '');
+    return phone && /\d/.test(phone) ? { skip: true } : { invalid: invalid('tel link has no phone number') };
+  }
+
+  let resolved;
+  try {
+    resolved = new URL(href, sourcePage);
+  } catch {
+    return { invalid: invalid('Malformed URL') };
+  }
+
+  if (!/^https?:$/i.test(resolved.protocol)) {
+    return { invalid: invalid(`Unsupported link protocol: ${resolved.protocol}`) };
+  }
+  if (isLocalhostHost(resolved.hostname)) {
+    return { invalid: invalid('Localhost link will not work for public website visitors') };
+  }
+
+  const site = new URL(siteUrl);
+  const type = resolved.hostname === site.hostname ? 'internal' : 'external';
+
+  return {
+    link: {
+      url: urlKey(resolved.toString()),
+      sourcePage,
+      anchorText,
+      type,
+      originalHref: href,
+    },
+  };
+}
+
+function extractAllLinksForAudit(pages, siteUrl) {
+  const links = [];
+  const invalidLinks = [];
+  const seenLinks = new Set();
+  const seenInvalid = new Set();
+
+  const addClassified = (rawHref, sourcePage, anchorText) => {
+    const classified = classifyHref(rawHref, sourcePage, anchorText, siteUrl);
+    if (classified.invalid) {
+      const key = `${classified.invalid.sourcePage}|${classified.invalid.url}|${classified.invalid.issue}`;
+      if (!seenInvalid.has(key)) {
+        seenInvalid.add(key);
+        invalidLinks.push(classified.invalid);
+      }
+      return;
+    }
+    if (!classified.link) return;
+
+    const key = classified.link.url;
+    if (!seenLinks.has(key)) {
+      seenLinks.add(key);
+      links.push(classified.link);
+    }
+  };
+
+  for (const page of pages) {
+    const sourcePage = page.url;
+
+    for (const link of (page.domData?.links || [])) {
+      addClassified(link.href, sourcePage, (link.text || '').trim().slice(0, 120));
+    }
+
+    const html = page.html || '';
+    const anchorRe = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi;
+    let match;
+    while ((match = anchorRe.exec(html)) !== null) {
+      const attrs = match[1] || '';
+      const body = match[2] || '';
+      const hrefMatch = attrs.match(/\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+      const rawHref = hrefMatch ? (hrefMatch[1] ?? hrefMatch[2] ?? hrefMatch[3] ?? '') : null;
+      addClassified(rawHref, sourcePage, anchorTextFromHtml(body));
+    }
+  }
+
+  return { links, invalidLinks };
+}
+
+function requestLink(url, method, timeoutMs, redirects = []) {
+  return new Promise(resolve => {
+    let urlObj;
+    try {
+      urlObj = new URL(url);
+    } catch {
+      resolve({ status: 'request_error', issue: 'Malformed URL', finalUrl: url, redirects });
+      return;
+    }
+
+    const lib = urlObj.protocol === 'https:' ? https : http;
+    const req = lib.request({
+      method,
+      hostname: urlObj.hostname,
+      path: urlObj.pathname + urlObj.search,
+      port: urlObj.port || undefined,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; LeadCheckBot/1.0)',
+        'Accept': '*/*',
+      },
+      timeout: timeoutMs,
+    }, res => {
+      const status = res.statusCode || 0;
+      const location = res.headers.location;
+      res.resume();
+
+      if (status >= 300 && status < 400 && location) {
+        if (redirects.length >= MAX_LINK_REDIRECTS) {
+          resolve({
+            status: 'too_many_redirects',
+            issue: `Too many redirects (${redirects.length + 1})`,
+            finalUrl: url,
+            redirects,
+          });
+          return;
+        }
+
+        let nextUrl;
+        try {
+          nextUrl = new URL(location, urlObj).toString();
+        } catch {
+          resolve({
+            status: 'request_error',
+            issue: 'Invalid redirect location',
+            finalUrl: url,
+            redirects,
+          });
+          return;
+        }
+
+        requestLink(nextUrl, method, timeoutMs, [...redirects, nextUrl]).then(resolve);
+        return;
+      }
+
+      resolve({ status, finalUrl: url, redirects });
+    });
+
+    req.on('timeout', () => {
+      req.destroy();
+      resolve({ status: 'timeout', issue: 'Request timed out', finalUrl: url, redirects });
+    });
+
+    req.on('error', err => {
+      const dnsError = ['ENOTFOUND', 'EAI_AGAIN'].includes(err.code);
+      resolve({
+        status: dnsError ? 'dns_error' : 'request_error',
+        issue: err.message || 'Request failed',
+        finalUrl: url,
+        redirects,
+      });
+    });
+
+    req.end();
+  });
+}
+
+async function checkLinkStatus(link) {
+  let result = await requestLink(link.url, 'HEAD', BROKEN_LINK_TIMEOUT);
+  if (result.status === 405 || typeof result.status === 'string') {
+    result = await requestLink(link.url, 'GET', BROKEN_LINK_TIMEOUT);
+  }
+  return { ...link, ...result };
+}
+
+function isBrokenLinkStatus(status, type) {
+  if (typeof status === 'string') return ['timeout', 'dns_error', 'request_error', 'too_many_redirects'].includes(status);
+  if (type === 'internal') return status === 403 || status === 404 || status >= 500;
+  return status === 404 || status >= 500;
+}
+
+function brokenIssueForStatus(status) {
+  if (status === 'timeout') return 'Link timed out';
+  if (status === 'dns_error') return 'DNS/request error';
+  if (status === 'request_error') return 'Request error';
+  if (status === 'too_many_redirects') return 'Too many redirects';
+  if (status === 403) return 'Forbidden page';
+  if (status === 404) return 'Missing page / 404';
+  if (status >= 500) return 'Server error';
+  return 'Broken link';
+}
+
+function buildMissingExpectedPages(links, pages) {
+  const paths = new Set();
+  for (const link of links.filter(l => l.type === 'internal')) {
+    try { paths.add(new URL(link.url).pathname.toLowerCase().replace(/\/$/, '') || '/'); } catch { /* ignore */ }
+  }
+  for (const page of pages) {
+    try { paths.add(new URL(page.url).pathname.toLowerCase().replace(/\/$/, '') || '/'); } catch { /* ignore */ }
+  }
+
+  const expected = [
+    { label: 'Contact page', expected: ['/contact'], re: /(^|\/)(contact|contact-us|get-in-touch)$/ },
+    { label: 'About page', expected: ['/about'], re: /(^|\/)(about|about-us|company)$/ },
+    { label: 'Services page', expected: ['/services'], re: /(^|\/)(services|service)$/ },
+    { label: 'Reviews or testimonials page', expected: ['/reviews', '/testimonials'], re: /(^|\/)(reviews?|testimonials?)$/ },
+    { label: 'Gallery or portfolio page', expected: ['/gallery', '/portfolio'], re: /(^|\/)(gallery|portfolio|projects?|our-work)$/ },
+  ];
+
+  return expected
+    .filter(item => ![...paths].some(path => item.re.test(path)))
+    .map(item => ({
+      url: item.expected.join(' or '),
+      sourcePage: null,
+      anchorText: item.label,
+      status: 'missing_expected_page',
+      type: 'missing',
+      issue: `${item.label} was not found in discovered navigation or crawled pages`,
+    }));
+}
+
+async function mapWithConcurrency(items, limit, worker) {
+  const results = [];
+  let index = 0;
+
+  async function run() {
+    while (index < items.length) {
+      const current = index++;
+      results[current] = await worker(items[current]);
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run));
+  return results;
+}
+
+async function detectBrokenLinks(pages, finalHomeUrl) {
+  const result = emptyBrokenLinksResult();
+  try {
+    const { links, invalidLinks } = extractAllLinksForAudit(pages, finalHomeUrl);
+    const siteIsHttps = new URL(finalHomeUrl).protocol === 'https:';
+    const internalLinks = links.filter(l => l.type === 'internal').slice(0, MAX_INTERNAL_LINK_CHECKS);
+    const externalLinks = links.filter(l => l.type === 'external').slice(0, MAX_EXTERNAL_LINK_CHECKS);
+
+    result.invalidLinks = invalidLinks;
+    result.missingExpectedPages = buildMissingExpectedPages(links, pages);
+
+    if (siteIsHttps) {
+      for (const link of links) {
+        try {
+          if (new URL(link.url).protocol === 'http:') {
+            result.redirectIssues.push({
+              url: link.url,
+              sourcePage: link.sourcePage,
+              anchorText: link.anchorText,
+              status: 'http_link',
+              type: 'redirect',
+              issue: 'HTTP link found on HTTPS site',
+            });
+          }
+        } catch { /* ignore */ }
+      }
+    }
+
+    console.log('[LeadCheck] Broken link check:', {
+      internalQueued: internalLinks.length,
+      externalQueued: externalLinks.length,
+      invalidLinks: invalidLinks.length,
+      missingExpectedPages: result.missingExpectedPages.length,
+    });
+
+    const checked = await mapWithConcurrency([...internalLinks, ...externalLinks], 8, checkLinkStatus);
+    result.totalChecked = checked.length;
+
+    const siteHost = new URL(finalHomeUrl).hostname;
+    for (const item of checked) {
+      if (item.redirects?.length) {
+        try {
+          const finalHost = new URL(item.finalUrl).hostname;
+          if (finalHost !== new URL(item.url).hostname && (item.type === 'internal' || finalHost !== siteHost)) {
+            result.redirectIssues.push({
+              url: item.url,
+              sourcePage: item.sourcePage,
+              anchorText: item.anchorText,
+              status: item.status,
+              type: 'redirect',
+              issue: `Redirects to different domain: ${finalHost}`,
+            });
+          }
+        } catch { /* ignore */ }
+      }
+
+      if (!isBrokenLinkStatus(item.status, item.type)) continue;
+
+      const broken = {
+        url: item.url,
+        sourcePage: item.sourcePage,
+        anchorText: item.anchorText,
+        status: item.status,
+        type: item.type,
+        issue: item.issue || brokenIssueForStatus(item.status),
+      };
+
+      if (item.type === 'internal') result.brokenInternal.push(broken);
+      else result.brokenExternal.push(broken);
+    }
+
+    console.log('[LeadCheck] Broken link check:', {
+      totalChecked: result.totalChecked,
+      brokenInternal: result.brokenInternal.length,
+      brokenExternal: result.brokenExternal.length,
+      invalidLinks: result.invalidLinks.length,
+      missingExpectedPages: result.missingExpectedPages.length,
+      redirectIssues: result.redirectIssues.length,
+    });
+
+    return result;
+  } catch (err) {
+    console.error('[LeadCheck] Broken link check failed:', err.message);
+    return result;
+  }
 }
 
 // ── Playwright crawler ────────────────────────────────────────────────
@@ -3096,6 +3467,7 @@ async function analyzeWebsite(rawUrl, opts = {}) {
   // ── Single-page detection ────────────────────────────────────────
   const uniqueCrawledPageCount = new Set(pages.map(p => urlKey(p.url))).size;
   const isSinglePage = uniqueCrawledPageCount <= 1;
+  const brokenLinksPromise = detectBrokenLinks(pages, finalHomeUrl);
 
   // ── PageSpeed (non-blocking, 9 s cap) ────────────────────────────
   let psData = null;
@@ -3230,7 +3602,9 @@ async function analyzeWebsite(rawUrl, opts = {}) {
   console.log(`  finalCappedScore      : ${total}/100\n`);
 
   const evidenceFound = buildEvidenceFound(pages, methods, widgets, checks);
+  const brokenLinks = await brokenLinksPromise;
   evidenceFound.visualTrust = visualTrust;
+  evidenceFound.brokenLinks = brokenLinks;
   evidenceFound.checkEvidence = evidenceFound.checkEvidence || {};
   evidenceFound.checkEvidence.visualTrust = {
     status: visualTrust.result === true ? 'yes' : visualTrust.result === false ? 'no' : 'partial',
@@ -3281,6 +3655,7 @@ async function analyzeWebsite(rawUrl, opts = {}) {
     scores,
     pageSpeedScore:  pageSpeed.score,
     pageSpeed,
+    brokenLinks,
     visualTrust,
     categories,
     issues,
