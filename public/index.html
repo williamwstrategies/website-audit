@@ -1269,12 +1269,17 @@ function renderRatingComparison(result, scoreColor) {
   const websiteScore = normalizeScore(firstDefinedValue(result.total, result.score, result.rating));
   const industryStandard = 75.6;
   const clientAverage = 92.1;
+  const showIndustryStandard = websiteScore <= industryStandard;
+  const showClientAverage = websiteScore <= clientAverage;
   const cards = [
     { label: 'Website Rating', value: websiteScore, color: scoreColor },
-    { label: 'Industry Standard', value: industryStandard, color: 'var(--accent)' },
   ];
 
-  if (websiteScore <= clientAverage) {
+  if (showIndustryStandard) {
+    cards.push({ label: 'Industry Standard', value: industryStandard, color: 'var(--accent)' });
+  }
+
+  if (showClientAverage) {
     cards.push({ label: 'Our Client Average', value: clientAverage, color: 'var(--green)' });
   }
 
