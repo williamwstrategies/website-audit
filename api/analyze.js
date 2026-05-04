@@ -314,6 +314,10 @@ const DOM_EXTRACTOR = () => {
     'request appointment','book appointment','book now',
     'schedule now','schedule today','claim your quote',
     'get my free estimate','get my free quote',
+    'get a tint quote','request tint quote','tint quote',
+    'book tint appointment','book your tint','schedule tint',
+    'book installation','schedule installation','get pricing',
+    'view pricing','see pricing','view packages','choose a package',
   ];
   const ctaFound = CTA_PHRASES.filter(p => visibleText.includes(p));
 
@@ -445,7 +449,7 @@ const DOM_EXTRACTOR = () => {
     emailMatches: [...new Set(emailMatches)],
     forms,
     iframes,
-    images: { total: images.length, withAlt: imagesWithAlt, withoutAlt: imagesWithoutAlt },
+    images: { total: images.length, withAlt: imagesWithAlt, withoutAlt: imagesWithoutAlt, alts: images.map(i => i.alt).filter(Boolean).slice(0, 20) },
     scripts: scripts.slice(0, 30),  // cap to avoid huge payloads
     widgets: {
       isGHL, hasCalendly, hasAcuity, hasTawk, hasIntercom,
@@ -1471,11 +1475,16 @@ const STRONG_CTA = [
   'schedule consultation','book consultation','request appointment',
   'book appointment','book now','schedule now','schedule today',
   'claim your quote','get my free estimate','get my free quote',
+  'get a tint quote','request tint quote','tint quote',
+  'book tint appointment','book your tint','schedule tint',
+  'book installation','schedule installation','get pricing',
+  'view pricing','see pricing','view packages','choose a package',
 ];
 
 const WEAK_CTA = [
   'contact us','reach out','get in touch','call us','email us',
   'learn more','send message','submit','contact',
+  'pricing','packages','film options','tint packages',
 ];
 
 function detectCTA(homepageHtml, homepageText, widgets, pages) {
@@ -1563,7 +1572,7 @@ function checkTitleTag(homepageHtml, pages) {
   if (!title || title.length < 5)
     return ev(false, 'No title tag found or title is too short');
 
-  const TRADE_RE = /roof|plumb|hvac|heat|cool|air.?condition|landscap|electric|contractor|remodel|renovati|paint|siding|gutter|deck|fence|drywall|flooring|tile|handyman|home.?service|home.?improvement/i;
+  const TRADE_RE = /roof|plumb|hvac|heat|cool|air.?condition|landscap|electric|contractor|remodel|renovati|paint|siding|gutter|deck|fence|drywall|flooring|tile|handyman|home.?service|home.?improvement|window.?tint|tinting|paint.?protection|ppf|ceramic.?coating|auto.?glass|vehicle.?wrap/i;
   const LOCAL_RE = /\b(in|near|serving|for)\s+[A-Za-z]{3,}|[A-Za-z]{3,},\s*[A-Z]{2}\b|local|service\s+area/i;
 
   const hasTrade = TRADE_RE.test(title);
@@ -1589,7 +1598,13 @@ function checkHeadingKeywords(homepageHtml, homepageText, pages) {
   if (!headings.length)
     return ev(false, 'No H1, H2, or H3 headings found on the page');
 
-  const TRADE = ['roof','plumb','hvac','heat','cool','air condition','landscap','electric','contractor','remodel','paint','siding','gutter','deck','fence','flooring','tile','handyman','home service','home improvement','repair','install','renovati'];
+  const TRADE = [
+    'roof','plumb','hvac','heat','cool','air condition','landscap','electric',
+    'contractor','remodel','paint','siding','gutter','deck','fence','flooring',
+    'tile','handyman','home service','home improvement','repair','install','renovati',
+    'window tint','tinting','automotive tint','residential tint','commercial tint',
+    'paint protection','ppf','ceramic coating','auto glass','vehicle wrap',
+  ];
   const LOCAL = [' in ',' near ','serving ','local','service area','your area'];
 
   const matched = headings.filter(h => {
@@ -1623,7 +1638,7 @@ function checkMetaDescription(homepageHtml, pages) {
   if (!meta || meta.length < 20)
     return ev(false, meta ? `Meta description too short (${meta.length} chars): "${meta}"` : 'No meta description found');
 
-  const TRADE_RE = /roof|plumb|hvac|landscap|electric|contractor|remodel|paint|siding|gutter|deck|repair|install/i;
+  const TRADE_RE = /roof|plumb|hvac|landscap|electric|contractor|remodel|paint|siding|gutter|deck|repair|install|window.?tint|tinting|paint.?protection|ppf|ceramic.?coating/i;
   const hasTrade = TRADE_RE.test(meta);
   const isLong   = meta.length >= 80;
 
@@ -1648,7 +1663,11 @@ function detectIndustry(text) {
     if (industry === 'general') continue;
     const matched = keywords.filter(keyword => normalized.includes(keyword.toLowerCase()));
     matchesByIndustry[industry] = [...new Set(matched)];
-    scores[industry] = matchesByIndustry[industry].reduce((score, keyword) => score + (keyword.includes(' ') ? 2 : 1), 0);
+    scores[industry] = matchesByIndustry[industry].reduce((score, keyword) => {
+      const base = keyword.includes(' ') ? 2 : 1;
+      const tintingBoost = industry === 'tinting' && /tint|film|ppf|xpel|3m|llumar|suntek|clear bra/i.test(keyword) ? 1 : 0;
+      return score + base + tintingBoost;
+    }, 0);
   }
 
   const ranked = Object.entries(scores).sort((a, b) => b[1] - a[1]);
@@ -1679,11 +1698,13 @@ function detectServices(allHtml, allText, industry = { type: 'general' }) {
     'services include','services we provide','we specialize in',
     'we install','we repair','we replace','what we handle',
     'detailing services','packages','service packages','protection packages',
+    'tinting services','window tinting services','film options',
+    'tint packages','ppf packages','ceramic coating packages',
   ];
   const hasSection = containsAny(allText, SECTION_HEADS);
   const hasList    = /<(ul|ol)[^>]*>[\s\S]{10,3000}?<\/(ul|ol)>/i.test(allHtml) && unique.length > 0;
   const sample     = unique.slice(0,5).join(', ');
-  const industryLabel = industry.type === 'detailing' ? 'auto detailing' : industry.type === 'contractor' ? 'contractor/home services' : 'local business';
+  const industryLabel = industry.type === 'tinting' ? 'window tinting/service business' : industry.type === 'detailing' ? 'auto detailing' : industry.type === 'contractor' ? 'contractor/home services' : 'local business';
 
   if ((hasSection || hasList) && unique.length >= 3) return ev(true,          `${unique.length} ${industryLabel} services in section: ${sample}`);
   if ((hasSection || hasList) && unique.length >= 1) return ev('partial',     `Services section with ${unique.length}: ${sample}`, 'Medium');
@@ -2097,19 +2118,30 @@ function checkGoogleSignals(allHtml, pages) {
 
 // 2c. Proof of work (5 pts)
 function checkProofOfWork(pages, allHtml, allText) {
-  const GALLERY = ['gallery','portfolio','our work','past projects','before and after','before after','completed jobs','completed projects','work showcase','recent projects','our projects','photo gallery'];
+  const GALLERY = [
+    'gallery','portfolio','our work','past projects','before and after','before after',
+    'before/after','before & after','completed jobs','completed projects','work showcase',
+    'recent projects','our projects','photo gallery','project photos','project gallery',
+    'install gallery','installation gallery','tint gallery','window tint gallery',
+    'vehicle gallery','car gallery','shop gallery','transformations','recent installs',
+  ];
   const matched      = GALLERY.filter(w => allText.includes(w));
   const hasGalleryPg = pages.some(p => p.type === 'gallery');
   const hasCarousel  = /swiper|splide|slick|owl.carousel|glide|lightbox|fancybox|isotope/i.test(allHtml);
   const pwImgCount   = pages.reduce((n, p) => n + (p.domData?.images?.total || 0), 0);
   const imgCount     = pwImgCount || (allHtml.match(/<img\b[^>]+>/gi) || []).length;
+  const imgAlts      = pages.flatMap(p => Array.isArray(p.domData?.images?.alts) ? p.domData.images.alts : []);
+  const tintPhotoAlt = imgAlts.find(alt => /tint|ppf|paint protection|ceramic coating|before|after|project|install/i.test(alt));
 
   const evidence = [];
   if (hasGalleryPg)   evidence.push('gallery page crawled');
   if (matched.length) evidence.push(`keywords: ${matched.slice(0,3).join(', ')}`);
+  if (tintPhotoAlt)   evidence.push(`project/photo alt text: "${tintPhotoAlt.slice(0,50)}"`);
   if (hasCarousel)    evidence.push('carousel/lightbox markup');
   if (imgCount > 0)   evidence.push(`${imgCount} image(s)`);
 
+  if (tintPhotoAlt && imgCount >= 3)
+    return ev(true,          evidence.join('; '));
   if (!matched.length && !hasGalleryPg && imgCount < 4)
     return ev(false, `No gallery/portfolio/before-after found. ${imgCount} image(s) detected (need 4+ for weak credit)`);
   if (hasGalleryPg && matched.length)
@@ -2131,6 +2163,10 @@ function checkProfessionalSignals(allText) {
     'accredited','bbb accredited','years of experience','years experience',
     'years in business','years serving','trade member','member of ',
     'nrca','phcc','acca','neca','nalp','cfma','nari','nahb',
+    'xpel certified','xpel dealer','authorized xpel','3m certified','3m authorized',
+    '3m dealer','llumar dealer','llumar certified','suntek dealer','avery dennison',
+    'ceramic pro','stek certified','authorized dealer','certified installer',
+    'manufacturer certified','factory trained','brand partner','brand partnership',
   ];
   const GENERIC = ['professional','experienced','reliable','trusted','quality','affordable','best','expert'];
   const found = SPECIFIC.filter(c => allText.includes(c));
@@ -2153,6 +2189,8 @@ function checkRiskReversal(allText) {
     'no obligation','no-obligation','no cost estimate',
     'satisfaction guaranteed','100% satisfied','100% guarantee',
     'money back','warranty','warranted',
+    'lifetime warranty','manufacturer warranty','film warranty','tint warranty',
+    'nationwide warranty','limited lifetime warranty','warranty-backed',
     'same day service','same-day service',
     'emergency service','emergency response','emergency repair',
   ];
@@ -2692,12 +2730,22 @@ const INDUSTRY_KEYWORDS = {
     'mobile detailing','interior detailing','exterior detailing','wash and wax',
     'paint protection','ppf','window tint','detailing packages','full detail',
   ],
+  tinting: [
+    'window tint','window tinting','tinting','tint shop','auto tint','automotive tint',
+    'car tint','vehicle tint','residential tint','home window tint',
+    'commercial tint','commercial window film','architectural film',
+    'paint protection film','paint protection','ppf','clear bra',
+    'ceramic coating','ceramic tint','carbon tint','privacy film',
+    'security film','decorative film','uv protection film','heat rejection film',
+    'xpel','3m window film','llumar','suntek',
+  ],
   general: [],
 };
 
 const SERVICE_TERMS = [
   ...INDUSTRY_KEYWORDS.contractor,
   ...INDUSTRY_KEYWORDS.detailing,
+  ...INDUSTRY_KEYWORDS.tinting,
   'heating','cooling','painting','windows','doors','decking','deck building',
   'fencing','drywall','flooring','tile','masonry','insulation','pressure washing',
   'power washing','snow removal','tree service','framing','carpentry',
