@@ -1777,18 +1777,74 @@ function checkInternalLinks(pages, allHtml) {
 
 // 2a. Reviews / testimonials visible (7 pts)
 //
-// Bug fixes applied:
-//   • normalizeText now preserves ★/☆/⭐ so allText star checks work
-//   • Thresholds lowered: true at s>=6 (was 8), partial at s>=3 (was 4)
-//   • Playwright reviewSignals.praiseMatches now score from allText too
-//   • Iframe/script review-vendor matching now checks the broader IFRAME_REVIEW_RE
-//   • reviewDebug object built and returned inside the ev() evidence
-//
-// NOT SCORED: trusted, quality, reliable, professional, satisfied, happy customers (alone)
+// NOT SCORED by themselves: referrals, trusted, quality, reliable,
+// professional, satisfied/happy customers, recommend/recommended, reputation.
+function isValidReviewEvidence(text, context = {}) {
+  const value = String(text || '').trim();
+  if (!value) return false;
+
+  const normalized = normalizeText(value);
+  const rawLower = value.toLowerCase();
+
+  const STAR_OR_RATING_RE = /[★☆⭐\u2605\u2606\u2B50]{2,}|(?:rated?\s+)?[45][\d.]*\s*(?:out of\s*\d+\s*)?stars?|five.?star|5.?star\s+(?:rating|review)|\b[45][\d.]*\s*\/\s*5\b|average\s+rating[:\s]+[\d.]+/i;
+  const REVIEW_COUNT_RE = /\b\d+\+?\s+(?:verified\s+)?(?:customer\s+|client\s+|google\s+)?reviews?\b/i;
+  const STRICT_REVIEW_HEADING_RE = /\b(reviews?|testimonials?|customer reviews?|client reviews?|what our customers say)\b/i;
+  const REVIEW_PLATFORM_RE = /google\.[^"' ]+\/.*review|google\s+reviews?|yelp\.com|trustpilot|bbb\.org|houzz\.com|angi\.com|angieslist|homeadvisor/i;
+  const REVIEW_WIDGET_RE = /elfsight|birdeye|podium|nicejob|trustindex|reviewtrackers|yotpo|sociablekit|embedreviews|tagembed|widg\.io|grade\.us|reviews\.io|review[-_ ]?widget|testimonial[-_ ]?widget|google[-_ ]?review/i;
+  const ATTRIBUTED_QUOTE_RE = /["“][^"”]{20,200}["”]\s*(?:[-\u2013\u2014]|by\s+)\s*[A-Z][a-z]{2,}/;
+
+  const hasStrongPattern =
+    context.strong ||
+    STAR_OR_RATING_RE.test(value) ||
+    REVIEW_COUNT_RE.test(value) ||
+    STRICT_REVIEW_HEADING_RE.test(normalized) ||
+    REVIEW_PLATFORM_RE.test(rawLower) ||
+    REVIEW_WIDGET_RE.test(rawLower) ||
+    ATTRIBUTED_QUOTE_RE.test(value);
+
+  if (value.length < 20 && !hasStrongPattern && !context.allowShort) return false;
+
+  const TECHNICAL_RE = /width\s*=\s*device-width|viewport|<\s*(?:html|head|meta|script|style|link)\b|javascript|document\.|window\.|function\s*\(|\{[^}]*\}|\.css\b|class=|id=|aria-|data-/i;
+  if (TECHNICAL_RE.test(value) && !hasStrongPattern) return false;
+
+  const weakOnlyRe = /\b(referrals?|referred|word of mouth|trusted|quality|professional|reliable|satisfied customers?|happy customers?|recommended?|recommend|reputation)\b/i;
+  const hasReviewContext =
+    context.hasReviewContext ||
+    STRICT_REVIEW_HEADING_RE.test(normalized) ||
+    /\b(reviews?|testimonials?|customer reviews?|client reviews?|google reviews?)\b/i.test(normalized);
+
+  if (weakOnlyRe.test(normalized) && !hasStrongPattern && !hasReviewContext && !context.allowWeakPraise) return false;
+
+  if (context.requireStrong && !hasStrongPattern) return false;
+
+  return true;
+}
+
 function detectTrustSignals(allHtml, allText, pages) {
   const found = [];
+  const strongFound = [];
+  const weakFound = [];
   let   s     = 0;
-  const hit   = (pts, label) => { s += pts; found.push(label); };
+  const rejectedReviewSignals = new Set();
+
+  const rejectReviewSignal = value => {
+    const clean = normalizeText(String(value || '')).slice(0, 120);
+    if (!clean || rejectedReviewSignals.has(clean)) return;
+    rejectedReviewSignals.add(clean);
+    console.log('[LeadCheck] Rejected weak review signal:', clean);
+  };
+
+  const hit = (pts, label, value = label, context = {}) => {
+    if (!isValidReviewEvidence(value, context)) {
+      rejectReviewSignal(value);
+      return false;
+    }
+    s += pts;
+    found.push(label);
+    if (context.strong) strongFound.push(label);
+    else weakFound.push(label);
+    return true;
+  };
 
   // ── Collect all srcs for widget detection ──────────────────────────
   const scriptSrcs = [
@@ -1835,14 +1891,16 @@ function detectTrustSignals(allHtml, allText, pages) {
       const src = [...scriptSrcs, ...iframeSrcs].find(s => re.test(s));
       hit(4, src
         ? `${name} review widget via script/iframe: "${src.slice(0, 80)}"`
-        : `${name} review widget detected in page source`);
+        : `${name} review widget detected in page source`,
+        src || `${name} review widget`,
+        { strong: true, allowShort: true });
     }
   }
 
   // Generic review iframe (not a named vendor but clearly a review embed)
   if (!found.length) {
     const reviewIframe = iframeSrcs.find(s => IFRAME_REVIEW_RE.test(s));
-    if (reviewIframe) hit(3, `Review-related iframe detected: "${reviewIframe.slice(0, 80)}"`);
+    if (reviewIframe) hit(3, `Review-related iframe detected: "${reviewIframe.slice(0, 80)}"`, reviewIframe, { strong: true });
   }
 
   // Generic review widget class/id (div.review-widget, div.reviews-section, etc.)
@@ -1850,7 +1908,7 @@ function detectTrustSignals(allHtml, allText, pages) {
     const GENERIC_WIDGET_RE = /review-widget|reviews-widget|google-review|google_review|review[-_]?card|testimonial[-_]?widget|review[-_]?section|customer[-_]?review|star[-_]?rating[-_]?widget/i;
     if (GENERIC_WIDGET_RE.test(classIds)) {
       const m = classIds.match(GENERIC_WIDGET_RE);
-      hit(3, `Generic review widget element detected: "${m[0]}"`);
+      hit(3, `Generic review widget element detected: "${m[0]}"`, m[0], { strong: true, allowShort: true });
     }
   }
 
@@ -1858,128 +1916,110 @@ function detectTrustSignals(allHtml, allText, pages) {
   const pwGoogle = pages.filter(p => p.domData?.google).map(p => p.domData.google);
   if (/google\s*reviews?(?:\s*widget)?|reviewed\s+on\s+google/i.test(allText + pwVisText)
       || pwGoogle.some(g => g.hasGoogleReviews)) {
-    hit(3, 'Google reviews mentioned/linked');
+    hit(3, 'Google reviews mentioned/linked', 'Google reviews', { strong: true, allowShort: true });
   }
 
   // ── 3. Star rating signals ───────────────────────────────────────────
   // allText now preserves ★ chars (normalizeText fix), so both checks work.
   const starCharMatch = (allText + pwVisText).match(/[★☆⭐\u2605\u2606\u2B50]{2,}/u)
     || allHtml.match(/[\u2605\u2606\u2B50★]{2,}/u);
-  if (starCharMatch) hit(4, `Star characters detected: "${starCharMatch[0].slice(0,10)}"`);
+  if (starCharMatch) hit(4, `Star characters detected: "${starCharMatch[0].slice(0,10)}"`, starCharMatch[0], { strong: true, allowShort: true });
 
   const starTextMatch = (allText + ' ' + pwVisText).match(
     /(?:rated?\s+)?([45][\d.]*)\s*(?:out of\s*\d+\s*)?stars?|five.?star|5.?star\s+(?:rating|review|service)/i
   );
   if (starTextMatch && !found.some(f => f.includes('star')))
-    hit(4, `Star rating in text: "${starTextMatch[0].slice(0, 40)}"`);
+    hit(4, `Star rating in text: "${starTextMatch[0].slice(0, 40)}"`, starTextMatch[0], { strong: true, allowShort: true });
 
   // rating fraction 4.9/5, 5/5
   const ratingFraction = (allText + pwVisText).match(/\b[45][\d.]*\s*\/\s*5\b|average\s+rating[:\s]+[\d.]+/i);
   if (ratingFraction && !found.some(f => f.includes('star') || f.includes('rating')))
-    hit(3, `Rating score: "${ratingFraction[0].slice(0, 30)}"`);
+    hit(3, `Rating score: "${ratingFraction[0].slice(0, 30)}"`, ratingFraction[0], { strong: true, allowShort: true });
 
   // Playwright DOM star elements
   const pwStarEls = pages.flatMap(p => [p.domData?.reviewSignals?.starElements || 0]).reduce((a,b)=>a+b,0);
   if (pwStarEls > 0 && !found.some(f => f.includes('star')))
-    hit(4, `Star elements in rendered DOM: ${pwStarEls}`);
+    hit(4, `Star elements in rendered DOM: ${pwStarEls}`, `${pwStarEls} star rating elements`, { strong: true });
 
   // ── 4. Review count ──────────────────────────────────────────────────
   const reviewCountMatch = (allText + ' ' + pwVisText).match(
     /(\d+\+?)\s+(?:verified\s+)?(?:customer\s+|google\s+|5.?star\s+)?reviews?/i
-  ) || (allText + ' ' + pwVisText).match(
-    /(?:over|more than)\s+(\d[\d,]+)\s+(?:happy\s+)?customers?\s+(?:served|helped|satisfied)/i
   );
-  if (reviewCountMatch) hit(4, `Review count: "${reviewCountMatch[0].slice(0, 50)}"`);
+  if (reviewCountMatch) hit(4, `Review count: "${reviewCountMatch[0].slice(0, 50)}"`, reviewCountMatch[0], { strong: true });
 
   // ── 5. Quoted testimonials ───────────────────────────────────────────
   // Classic HTML pattern: "quote text" — Name  (strict attribution)
   const quotedHtml = allHtml.match(/"([^"]{20,150})"[\s\S]{0,100}[-\u2013\u2014]\s*([A-Z][a-z]{2,})/);
-  if (quotedHtml) hit(4, `Quoted testimonial: "${quotedHtml[1].slice(0, 60)}…"`);
-
-  // Looser: quoted text 20+ chars anywhere (no attribution required — contractor sites
-  // often show testimonials as bare quotes without a dash-name)
-  if (!found.some(f => f.includes('Quoted'))) {
-    const looseQuote = allHtml.match(/"([^"]{20,200})"/);
-    if (looseQuote) hit(3, `Testimonial quote in page: "${looseQuote[1].slice(0, 60)}…"`);
-  }
+  if (quotedHtml) hit(4, `Quoted testimonial: "${quotedHtml[1].slice(0, 60)}..."`, quotedHtml[0], { strong: true });
 
   // Playwright visible text: same pattern
   if (!found.some(f => f.includes('Quoted') || f.includes('quote'))) {
     const pwQuote = pwVisText.match(/"([^"]{20,150})"\s*[-–—]\s*([A-Z][a-z]+)/);
-    if (pwQuote) hit(4, `Quoted review in rendered text: "${pwQuote[1].slice(0, 60)}…"`);
+    if (pwQuote) hit(4, `Quoted review in rendered text: "${pwQuote[1].slice(0, 60)}..."`, pwQuote[0], { strong: true });
   }
 
   // ── 6. Section headings (Playwright rendered + HTML fallback) ────────
-  const REVIEW_HEADING_RE = /reviews?|testimonials?|what\s+(?:our|clients?|customers?)\s+say|customer\s+(?:reviews?|feedback|stories?)|client\s+(?:reviews?|feedback)|happy\s+customers?|hear\s+from/i;
+  const REVIEW_HEADING_RE = /\b(reviews?|testimonials?|customer reviews?|client reviews?|what our customers say)\b/i;
 
   const pwHeadings = pages.flatMap(p => (p.domData?.headings || []).map(h => h.text));
   const pwRevSigHeadings = pages.flatMap(p => p.domData?.reviewSignals?.reviewHeadings || []);
   const allHeadingText   = [...pwHeadings, ...pwRevSigHeadings];
 
   const matchedHeading = allHeadingText.find(h => REVIEW_HEADING_RE.test(h));
-  if (matchedHeading) hit(3, `Review heading in DOM: "${matchedHeading.slice(0, 60)}"`);
+  if (matchedHeading) hit(3, `Review heading in DOM: "${matchedHeading.slice(0, 60)}"`, matchedHeading, { strong: true, allowShort: true });
 
   // HTML heading fallback
   if (!matchedHeading) {
     const htmlHeadingMatch = allHtml.match(/<h[1-4][^>]*>([\s\S]{0,200}?)<\/h[1-4]>/gi);
     const reviewHtmlHeading = (htmlHeadingMatch||[]).find(h => REVIEW_HEADING_RE.test(normalizeText(h)));
-    if (reviewHtmlHeading) hit(3, `Review heading in HTML: "${normalizeText(reviewHtmlHeading).slice(0, 60)}"`);
+    if (reviewHtmlHeading) hit(3, `Review heading in HTML: "${normalizeText(reviewHtmlHeading).slice(0, 60)}"`, normalizeText(reviewHtmlHeading), { strong: true, allowShort: true });
   }
 
   // ── 7. Playwright review links / buttons ────────────────────────────
   const pwButtons  = pages.flatMap(p => p.domData?.buttons || []);
-  const pwLinks    = pages.flatMap(p => (p.domData?.links || []).map(l => l.text));
+  const pwLinks    = pages.flatMap(p => (p.domData?.links || []).map(l => `${l.text || ''} ${l.href || ''}`));
   const pwRevLinks = pages.flatMap(p => p.domData?.reviewSignals?.reviewLinks || []);
   const interactive = [...pwButtons, ...pwLinks, ...pwRevLinks].map(t => t.toLowerCase());
 
-  const reviewBtn = interactive.find(t =>
-    /read\s+(?:our\s+)?reviews?|see\s+(?:our\s+)?testimonials?|view\s+(?:our\s+)?reviews?|customer\s+reviews?|google\s+reviews?/i.test(t)
+  const reviewPlatformLink = interactive.find(t =>
+    /google\s+reviews?|google\.[^ ]+\/.*review|yelp\.com|trustpilot|bbb\.org|houzz\.com|angi\.com|angieslist|homeadvisor/i.test(t)
   );
-  if (reviewBtn) hit(2, `Review link/button in DOM: "${reviewBtn.slice(0, 50)}"`);
+  if (reviewPlatformLink) hit(3, `Review platform link/button in DOM: "${reviewPlatformLink.slice(0, 50)}"`, reviewPlatformLink, { strong: true });
 
   // Image alt text
   const altTexts = pages.flatMap(p => Array.isArray(p.domData?.images)
     ? p.domData.images.map(i => (i.alt || '')).filter(Boolean)
     : (p.domData?.reviewSignals?.reviewImageAlts || []));
   const reviewAlt = altTexts.find(a => /review|testimonial|star\s+rating|customer\s+quote/i.test(a));
-  if (reviewAlt) hit(2, `Review alt text: "${reviewAlt.slice(0, 50)}"`);
+  if (reviewAlt) hit(1, `Review alt text: "${reviewAlt.slice(0, 50)}"`, reviewAlt, { hasReviewContext: strongFound.length > 0 });
 
   // ── 8. Visible text keyword phrases ─────────────────────────────────
   const corpus = allText + ' ' + pwVisText;
 
+  for (const weak of (corpus.match(/\b(referrals?|referred|word of mouth|trusted|quality|professional|reliable|satisfied customers?|happy customers?|recommended?|recommend|reputation)\b/gi) || []).slice(0, 8)) {
+    rejectReviewSignal(weak);
+  }
+
   const SECTION_PHRASES = [
-    ['what our customers say',   3, 'Visible review section: "what our customers say"'],
-    ['what clients say',         3, 'Visible review section: "what clients say"'],
-    ['what our clients say',     3, 'Visible review section: "what our clients say"'],
-    ['customer feedback',        2, 'Visible phrase: "customer feedback"'],
-    ['client feedback',          2, 'Visible phrase: "client feedback"'],
-    ['customer reviews',         3, 'Visible phrase: "customer reviews"'],
-    ['client reviews',           3, 'Visible phrase: "client reviews"'],
-    ['verified reviews',         3, 'Visible phrase: "verified reviews"'],
-    ['happy customers',          2, 'Visible phrase: "happy customers"'],
-    ['happy clients',            2, 'Visible phrase: "happy clients"'],
-    ['hear from our customers',  3, 'Visible phrase: "hear from our customers"'],
-    ['hear from our clients',    3, 'Visible phrase: "hear from our clients"'],
-    ['see what others say',      2, 'Visible phrase: "see what others say"'],
-    ['real customer stories',    3, 'Visible phrase: "real customer stories"'],
+    ['what our customers say', 3, 'Visible review section: "what our customers say"'],
+    ['customer reviews',       3, 'Visible phrase: "customer reviews"'],
+    ['client reviews',         3, 'Visible phrase: "client reviews"'],
+    ['verified reviews',       3, 'Visible phrase: "verified reviews"'],
   ];
   for (const [phrase, pts, label] of SECTION_PHRASES) {
-    if (corpus.includes(phrase)) hit(pts, label);
+    if (corpus.includes(phrase)) hit(pts, label, phrase, { strong: true });
   }
 
   // ── 9. Praise phrases ─────────────────────────────────────────────────
-  // Score from BOTH Playwright praise matches AND raw corpus text.
-  // Praise phrases in corpus are reliable review indicators on contractor sites
-  // that don't use structured review markup.
   const PRAISE_RE = /highly recommend|great service|excellent work|would recommend|on time and|amazing job|very happy|best .{0,20}(?:company|contractor|team|service)|exceeded expectations|couldn.t be happier/gi;
   const pwPraiseAll    = pages.flatMap(p => p.domData?.reviewSignals?.praiseMatches || []);
   const corpusPraise   = (corpus.match(PRAISE_RE) || []);
   const allPraise      = [...new Set([...pwPraiseAll, ...corpusPraise.map(p => p.toLowerCase())])];
 
   if (allPraise.length >= 2) {
-    hit(3, `Review praise phrases: ${allPraise.slice(0,3).join('; ')}`);
+    hit(2, `Review praise phrases: ${allPraise.slice(0,3).join('; ')}`, allPraise.slice(0,3).join('; '), { hasReviewContext: strongFound.length > 0, allowWeakPraise: true });
   } else if (allPraise.length === 1) {
-    hit(1, `Review praise phrase: "${allPraise[0]}"`);
+    hit(1, `Review praise phrase: "${allPraise[0]}"`, allPraise[0], { hasReviewContext: strongFound.length > 0, allowWeakPraise: true });
   }
 
   // ── 10. Plain "review" and "testimonial" keywords ──────────────────
@@ -1987,34 +2027,31 @@ function detectTrustSignals(allHtml, allText, pages) {
   const testimonialKeyword      = /\btestimonials?\b/i.test(corpus);
 
   if (testimonialKeyword) {
-    if (s === 0) {
-      return ev('partial:0.25',
-        'Visible review section: "testimonial" keyword found — but no review content, star ratings, or quotes confirmed',
-        'Low');
-    }
     if (!found.some(f => f.toLowerCase().includes('testimonial')))
-      hit(1, '"testimonial" keyword detected');
+      hit(1, '"testimonial" keyword detected', 'testimonial keyword', { hasReviewContext: strongFound.length > 0 });
   }
 
   if (reviewKeywordInCorpus && s === 0) {
-    return ev('partial:0.25',
-      'Visible text: "review" keyword found — but no review content, star ratings, or section detected',
-      'Low');
+    const reviewKeyword = (corpus.match(/\breviews?\b/i) || [])[0] || 'review';
+    if (isValidReviewEvidence(reviewKeyword, { allowShort: true })) {
+      return ev('partial:0.25',
+        'Visible text: "review" keyword found — but no review content, star ratings, or section detected',
+        'Low');
+    }
+    rejectReviewSignal(reviewKeyword);
   }
 
   // ── NOT SCORED ──────────────────────────────────────────────────────
-  // "trusted", "quality", "reliable", "professional", "satisfied" alone = 0
+  // "trusted", "quality", "reliable", "professional", "satisfied",
+  // "referral", "referred", and "recommend" alone = 0.
 
   // ── Final verdict ────────────────────────────────────────────────────
   //
-  // STRONG (true) when ANY of:
-  //   A. s >= 6  — multiple signals (star+count, widget, etc.)
-  //   B. Dedicated review/testimonial page crawled AND s >= 2
-  //   C. "What our customers say" / section phrase alone (rule 2 in spec)
-  //   D. Any 2 of: review heading, praise phrase, section phrase, Google mention
-  //   E. Review heading + any praise phrase
+  // STRONG requires at least one concrete review signal:
+  // review/testimonial heading, stars/ratings, review count, review widget,
+  // attributed customer quote, or review-platform link.
   //
-  // PARTIAL — 1 weak signal present, no dedicated section
+  // PARTIAL is only for weak/low-confidence review language.
   // NONE    — nothing at all
 
   if (s === 0)
@@ -2025,48 +2062,9 @@ function detectTrustSignals(allHtml, allText, pages) {
 
   const evidenceStr = found.slice(0, 8).join('; ');
 
-  // A. Point threshold
-  if (s >= 6) return ev(true, `Reviews: ${evidenceStr}`, 'High');
+  if (strongFound.length > 0) return ev(true, `Reviews: ${evidenceStr}`, 'High');
 
-  // B. Dedicated reviews page with any content
-  const hasReviewPage = pages.some(p =>
-    p.type === 'reviews' || /\/review|\/testimonial/i.test(p.url)
-  );
-  if (hasReviewPage && s >= 2)
-    return ev(true, `Reviews: Dedicated review/testimonial page — ${evidenceStr}`, 'High');
-
-  // Classify signals present
-  const hasReviewHeading = found.some(f => /heading/i.test(f));
-  const hasSectionPhrase = found.some(f =>
-    /customers? say|clients? say|customer feedback|client feedback|customer reviews|client reviews|hear from|happy customers?/i.test(f)
-  );
-  const hasPraisePhrase  = allPraise.length >= 1;
-  const hasGoogleMention = found.some(f => /google/i.test(f));
-
-  // C. Section phrase alone = strong (spec rule 2: "homepage contains testimonial section")
-  if (hasSectionPhrase)
-    return ev(true, `Reviews: ${evidenceStr}`, 'High');
-
-  // D. Any 2 of the 4 contractor signals
-  const strongCount = [hasReviewHeading, hasPraisePhrase, hasGoogleMention].filter(Boolean).length;
-  // (hasSectionPhrase already handled in C above)
-  if (strongCount >= 2)
-    return ev(true, `Reviews: ${evidenceStr}`, 'High');
-
-  // E. Review heading + any praise
-  if (hasReviewHeading && hasPraisePhrase)
-    return ev(true, `Reviews: ${evidenceStr}`, 'High');
-
-  // F. 2+ praise phrases alone — multiple customer voices = real reviews
-  if (allPraise.length >= 2)
-    return ev(true, `Reviews: ${evidenceStr}`, 'High');
-
-  // G. Quoted testimonial text (loose match, 3+ pts) — real quote = real review
-  if (found.some(f => /quote/i.test(f)) && s >= 3)
-    return ev(true, `Reviews: ${evidenceStr}`, 'High');
-
-  // Partial: heading alone, single praise phrase, or other single weak signal
-  if (s >= 2) return ev('partial', `Partial reviews: ${evidenceStr}`, 'Medium');
+  if (weakFound.length >= 2) return ev('partial', `Partial reviews: ${evidenceStr}`, 'Medium');
 
   return ev('partial:0.25', `Weak review signal: ${evidenceStr}`, 'Low');
 }
@@ -3197,12 +3195,12 @@ function collectReviewEvidence(pages, allHtml, allText) {
 
   // Per-page widget, keyword, and text pattern checks
   const REVIEW_WIDGET_RE = /elfsight|birdeye|podium|nicejob|trustindex|reviewtrackers|reputation\.com|yotpo|sociablekit|embedreviews|tagembed|widg\.io|grade\.us|reviews\.io/i;
-  const REVIEW_IFRAME_RE = /review|google|elfsight|birdeye|podium|nicejob|trustindex|sociablekit|embedreviews|tagembed|reputation/i;
-  const REVIEW_HEADING_RE = /reviews?|testimonials?|what\s+(?:our|clients?|customers?)\s+say|customer\s+(?:reviews?|feedback)|client\s+(?:reviews?|feedback)|happy\s+customers?|hear\s+from/i;
-  const STAR_RE = /[★☆⭐\u2605\u2606\u2B50]{1,}|(?:rated?\s+)?[45][\d.]*\s*(?:out of\s*\d+\s*)?stars?|five.?star|5.?star\s+(?:rating|review)/i;
+  const REVIEW_IFRAME_RE = /review|google.*review|elfsight|birdeye|podium|nicejob|trustindex|sociablekit|embedreviews|tagembed/i;
+  const REVIEW_HEADING_RE = /\b(reviews?|testimonials?|customer reviews?|client reviews?|what our customers say)\b/i;
+  const STAR_RE = /[★☆⭐\u2605\u2606\u2B50]{2,}|(?:rated?\s+)?[45][\d.]*\s*(?:out of\s*\d+\s*)?stars?|five.?star|5.?star\s+(?:rating|review)/i;
   const REVIEW_COUNT_RE = /(\d+\+?)\s+(?:verified\s+)?(?:customer\s+|google\s+)?reviews?/i;
   const QUOTED_REVIEW_RE = /"([^"]{20,150})"[\s\S]{0,100}[-\u2013\u2014]\s*([A-Z][a-z]{2,})/;
-  const REVIEW_KW_RE = /\b(reviews?|testimonials?|customer reviews?|client reviews?|google reviews?|5.?star|five.?star|star rating|rated [45][\d.]|what our customers say|what clients say|customer feedback|client feedback|highly recommend|great service|excellent work|would recommend)\b/gi;
+  const REVIEW_KW_RE = /\b(reviews?|testimonials?|customer reviews?|client reviews?|google reviews?|5.?star|five.?star|star rating|rated [45][\d.]|what our customers say)\b/gi;
 
   for (const page of pages) {
     const pageText    = page.domData?.visibleText || normalizeText(page.html);
@@ -3213,83 +3211,103 @@ function collectReviewEvidence(pages, allHtml, allText) {
 
     const matches   = [];
     const snippets  = [];
+    const rejected = new Set();
+    const logRejected = value => {
+      const clean = normalizeText(String(value || '')).slice(0, 120);
+      if (!clean || rejected.has(clean)) return;
+      rejected.add(clean);
+      console.log('[LeadCheck] Rejected weak review signal:', clean);
+    };
+    const addMatch = (label, value = label, context = {}) => {
+      if (!isValidReviewEvidence(value, context)) {
+        logRejected(value);
+        return false;
+      }
+      matches.push(label);
+      return true;
+    };
 
     // 1. Review widget in script/iframe src
     const widgetSrc = [...scriptSrcs, ...iframeSrcs].find(s => REVIEW_WIDGET_RE.test(s));
     if (widgetSrc) {
-      matches.push(`review widget: ${widgetSrc.slice(0, 80)}`);
+      addMatch(`review widget: ${widgetSrc.slice(0, 80)}`, widgetSrc, { strong: true });
     }
 
     // 2. Review iframe (broader — includes generic "review" in src)
     const reviewIframe = iframeSrcs.find(s => REVIEW_IFRAME_RE.test(s));
     if (reviewIframe && !widgetSrc) {
-      matches.push(`review iframe: ${reviewIframe.slice(0, 80)}`);
+      addMatch(`review iframe: ${reviewIframe.slice(0, 80)}`, reviewIframe, { strong: true });
     }
 
     // 3. Review widget class/id in HTML
     if (/review-widget|reviews-widget|review[-_]?card|testimonial[-_]?widget|customer[-_]?review/i.test(classIds)) {
       const m = classIds.match(/review-widget|reviews-widget|review[-_]?card|testimonial[-_]?widget|customer[-_]?review/i);
-      if (m) matches.push(`review element class: ${m[0]}`);
+      if (m) addMatch(`review element class: ${m[0]}`, m[0], { strong: true, allowShort: true });
     }
 
     // 4. Playwright reviewSignals — widget class/ids detected in rendered DOM
     if (sig.reviewWidgetClasses?.length > 0) {
-      matches.push(`rendered widget class: ${sig.reviewWidgetClasses[0].slice(0, 60)}`);
+      addMatch(`rendered widget class: ${sig.reviewWidgetClasses[0].slice(0, 60)}`, sig.reviewWidgetClasses[0], { strong: true, allowShort: true });
     }
     if (sig.reviewIframeSrcs?.length > 0) {
-      matches.push(`rendered review iframe: ${sig.reviewIframeSrcs[0].slice(0, 60)}`);
+      addMatch(`rendered review iframe: ${sig.reviewIframeSrcs[0].slice(0, 60)}`, sig.reviewIframeSrcs[0], { strong: true });
     }
     if (sig.reviewScriptSrcs?.length > 0) {
-      matches.push(`rendered review script: ${sig.reviewScriptSrcs[0].slice(0, 60)}`);
+      addMatch(`rendered review script: ${sig.reviewScriptSrcs[0].slice(0, 60)}`, sig.reviewScriptSrcs[0], { strong: true });
     }
 
     // 5. Review heading in rendered DOM or HTML
     const headingFromPW  = (sig.reviewHeadings || []).find(h => REVIEW_HEADING_RE.test(h));
     const htmlHeadings   = (page.html || '').match(/<h[1-4][^>]*>([\s\S]{0,120}?)<\/h[1-4]>/gi) || [];
     const headingFromHtml = htmlHeadings.map(h => normalizeText(h)).find(h => REVIEW_HEADING_RE.test(h));
-    if (headingFromPW)   matches.push(`review heading (rendered): "${headingFromPW.slice(0, 60)}"`);
-    else if (headingFromHtml) matches.push(`review heading (HTML): "${headingFromHtml.slice(0, 60)}"`);
+    if (headingFromPW)   addMatch(`review heading (rendered): "${headingFromPW.slice(0, 60)}"`, headingFromPW, { strong: true, allowShort: true });
+    else if (headingFromHtml) addMatch(`review heading (HTML): "${headingFromHtml.slice(0, 60)}"`, headingFromHtml, { strong: true, allowShort: true });
 
     // 6. Star rating in text (allText now preserves ★)
     const starMatch = (pageText + ' ' + (sig.reviewKeywordsFound||[]).join(' ')).match(STAR_RE);
-    if (starMatch) { matches.push(`star rating: "${starMatch[0].slice(0, 40)}"`); }
+    if (starMatch) { addMatch(`star rating: "${starMatch[0].slice(0, 40)}"`, starMatch[0], { strong: true, allowShort: true }); }
 
     // 7. Playwright star elements
     if (sig.starElements > 0) {
-      matches.push(`star elements in DOM: ${sig.starElements}`);
+      addMatch(`star elements in DOM: ${sig.starElements}`, `${sig.starElements} star rating elements`, { strong: true });
     }
 
     // 8. Review count
     const countMatch = pageText.match(REVIEW_COUNT_RE);
-    if (countMatch) matches.push(`review count: "${countMatch[0].slice(0, 40)}"`);
+    if (countMatch) addMatch(`review count: "${countMatch[0].slice(0, 40)}"`, countMatch[0], { strong: true });
 
     // 9. Quoted testimonial with attribution
     const quoteMatch = (page.html || '').match(QUOTED_REVIEW_RE);
     if (quoteMatch) {
-      matches.push(`quoted testimonial: "${quoteMatch[1].slice(0, 60)}…"`);
+      addMatch(`quoted testimonial: "${quoteMatch[1].slice(0, 60)}..."`, quoteMatch[0], { strong: true });
       snippets.push(`"${quoteMatch[1].slice(0, 80)}" — ${quoteMatch[2]}`);
     }
 
     // 10. Playwright quoted reviews and praise
-    if (sig.visibleQuotes?.length > 0) {
-      matches.push(`visible quotes (rendered): ${sig.visibleQuotes.length}`);
+    const hasReviewContext = matches.some(m => /widget|iframe|class|script|heading|star|count|quoted|link/i.test(m));
+    if (sig.visibleQuotes?.length > 0 && hasReviewContext) {
+      addMatch(`visible quotes (rendered): ${sig.visibleQuotes.length}`, sig.visibleQuotes[0], { hasReviewContext: true });
       snippets.push(...sig.visibleQuotes.slice(0, 2).map(q => q.slice(0, 80)));
+    } else if (sig.visibleQuotes?.length > 0) {
+      logRejected(sig.visibleQuotes[0]);
     }
-    if (sig.praiseMatches?.length >= 2) {
-      matches.push(`praise phrases: ${sig.praiseMatches.slice(0, 3).join(', ')}`);
+    if (sig.praiseMatches?.length >= 2 && hasReviewContext) {
+      addMatch(`praise phrases: ${sig.praiseMatches.slice(0, 3).join(', ')}`, sig.praiseMatches.slice(0, 3).join(', '), { hasReviewContext: true, allowWeakPraise: true });
+    } else if (sig.praiseMatches?.length > 0) {
+      logRejected(sig.praiseMatches[0]);
     }
 
     // 11. Keyword matches from visible text
     const kwMatches = [...new Set((pageText.match(REVIEW_KW_RE) || []).map(k => k.toLowerCase()))].slice(0, 6);
     if (kwMatches.length >= 2) {
-      matches.push(`review keywords (${kwMatches.length}): ${kwMatches.join(', ')}`);
+      addMatch(`review keywords (${kwMatches.length}): ${kwMatches.join(', ')}`, kwMatches.join(', '), { hasReviewContext: hasReviewContext || matches.length > 0 });
     } else if (kwMatches.length === 1 && !matches.length) {
-      matches.push(`review keyword: "${kwMatches[0]}"`);
+      addMatch(`review keyword: "${kwMatches[0]}"`, kwMatches[0], { hasReviewContext: false, allowShort: true });
     }
 
     // 12. Review links
     if (sig.reviewLinks?.length > 0) {
-      matches.push(`review links: ${sig.reviewLinks.slice(0, 3).join(', ')}`);
+      addMatch(`review links: ${sig.reviewLinks.slice(0, 3).join(', ')}`, sig.reviewLinks.slice(0, 3).join(', '), { strong: /google|yelp|trustpilot|bbb|houzz|angi|homeadvisor/i.test(sig.reviewLinks.join(' ')) });
     }
 
     if (!matches.length) continue;  // nothing found on this page
