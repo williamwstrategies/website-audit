@@ -377,6 +377,127 @@
     text-align: center;
     margin-top: 12px;
   }
+
+  /* ===== BROKEN LINKS ===== */
+  .broken-links-section {
+    margin-bottom: 34px;
+  }
+
+  .broken-links-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+  }
+
+  .broken-links-summary {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .broken-links-stat {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    background: rgba(255,255,255,0.02);
+  }
+
+  .broken-links-stat-label {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .broken-links-stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .broken-links-alert,
+  .broken-links-ok {
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin-top: 10px;
+  }
+
+  .broken-links-alert {
+    color: var(--red);
+    border: 1px solid rgba(255, 93, 93, 0.35);
+    background: rgba(255, 93, 93, 0.08);
+  }
+
+  .broken-links-ok {
+    color: var(--green);
+    border: 1px solid rgba(92, 214, 154, 0.35);
+    background: rgba(92, 214, 154, 0.08);
+  }
+
+  .broken-links-toggle {
+    margin-top: 14px;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .broken-links-details {
+    display: none;
+    margin-top: 14px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .broken-links-details.is-open {
+    display: block;
+  }
+
+  .broken-links-group {
+    margin-top: 14px;
+  }
+
+  .broken-links-group-title {
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .broken-link-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    overflow-wrap: anywhere;
+  }
+
+  .broken-link-url {
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .broken-link-meta {
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
  
   /* Results inner padding */
   #resultsInner {
@@ -831,6 +952,11 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
+
+    .broken-links-summary {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
  
     .cat-card { padding: 20px; }
     .cat-name { font-size: 0.8rem; }
@@ -998,6 +1124,12 @@
   </div>
  
   <div id="resultsInner">
+
+    <!-- Broken Pages & Link Issues -->
+    <div class="broken-links-section" id="brokenLinksSection">
+      <div class="section-header">⚠️ Broken Pages &amp; Link Issues</div>
+      <div class="broken-links-card" id="brokenLinksCard"></div>
+    </div>
 
     <!-- Rating Comparison -->
     <div class="rating-comparison" id="ratingComparison">
@@ -1262,6 +1394,111 @@ function formatPercent(value) {
   return `${Math.round(value * 10) / 10}%`;
 }
 
+function renderBrokenLinksSection(result) {
+  const sectionEl = document.getElementById('brokenLinksSection');
+  const cardEl = document.getElementById('brokenLinksCard');
+  if (!sectionEl || !cardEl) return;
+
+  const evidenceFound = asRecord(result.evidenceFound);
+  const brokenLinks = asRecord(firstDefinedValue(result.brokenLinks, evidenceFound.brokenLinks));
+
+  const brokenInternal = asArray(brokenLinks.brokenInternal);
+  const brokenExternal = asArray(brokenLinks.brokenExternal);
+  const invalidLinks = asArray(brokenLinks.invalidLinks);
+  const missingExpectedPages = asArray(brokenLinks.missingExpectedPages);
+  const redirectIssues = asArray(brokenLinks.redirectIssues);
+  const totalIssues =
+    brokenInternal.length +
+    brokenExternal.length +
+    invalidLinks.length +
+    missingExpectedPages.length +
+    redirectIssues.length;
+
+  const stats = [
+    ['Broken Internal Links', brokenInternal.length],
+    ['Broken External Links', brokenExternal.length],
+    ['Invalid Links', invalidLinks.length],
+    ['Missing Core Pages', missingExpectedPages.length],
+    ['Redirect Issues', redirectIssues.length],
+  ];
+
+  const renderIssueGroup = (title, items) => {
+    const safeItems = asArray(items);
+    if (!safeItems.length) return '';
+
+    return `
+      <div class="broken-links-group">
+        <div class="broken-links-group-title">${escHtml(title)}</div>
+        ${safeItems.slice(0, 12).map(rawItem => {
+          const item = asRecord(rawItem);
+          const url = asText(firstDefinedValue(item.url, item.href, item.link, item.pagePath)) || 'Unknown URL';
+          const sourcePage = asText(item.sourcePage);
+          const status = asText(item.status);
+          const issue = asText(item.issue);
+          return `
+            <div class="broken-link-item">
+              <div class="broken-link-url">${escHtml(url)}</div>
+              <div class="broken-link-meta">
+                ${sourcePage ? `Source: ${escHtml(sourcePage)}<br>` : ''}
+                ${status ? `Status: ${escHtml(status)}${issue ? ` — ${escHtml(issue)}` : ''}` : escHtml(issue)}
+              </div>
+            </div>
+          `;
+        }).join('')}
+        ${safeItems.length > 12 ? `<div class="broken-link-meta">Showing 12 of ${safeItems.length} items.</div>` : ''}
+      </div>
+    `;
+  };
+
+  const alerts = [];
+  if (brokenInternal.length > 0) {
+    alerts.push('⚠️ Broken internal links detected – this can hurt SEO and conversions');
+  }
+  if (missingExpectedPages.length > 0) {
+    alerts.push('⚠️ Missing important pages like Contact or Services');
+  }
+
+  const detailsHtml = [
+    renderIssueGroup('Broken Internal Links', brokenInternal),
+    renderIssueGroup('Broken External Links', brokenExternal),
+    renderIssueGroup('Invalid Links', invalidLinks),
+    renderIssueGroup('Missing Core Pages', missingExpectedPages),
+    renderIssueGroup('Redirect Issues', redirectIssues),
+  ].join('');
+
+  cardEl.innerHTML = `
+    <div class="broken-links-summary">
+      ${stats.map(([label, value]) => `
+        <div class="broken-links-stat">
+          <div class="broken-links-stat-label">${escHtml(label)}</div>
+          <div class="broken-links-stat-value" style="color:${value > 0 ? 'var(--red)' : 'var(--green)'}">${value}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    ${totalIssues === 0
+      ? '<div class="broken-links-ok">✅ No broken links or missing pages detected</div>'
+      : alerts.map(text => `<div class="broken-links-alert">${escHtml(text)}</div>`).join('')}
+
+    ${totalIssues > 0 ? `
+      <button type="button" class="broken-links-toggle" onclick="toggleBrokenLinksDetails()">
+        View Details
+      </button>
+      <div class="broken-links-details" id="brokenLinksDetails">
+        ${detailsHtml}
+      </div>
+    ` : ''}
+  `;
+
+  sectionEl.style.display = 'block';
+}
+
+function toggleBrokenLinksDetails() {
+  const detailsEl = document.getElementById('brokenLinksDetails');
+  if (!detailsEl) return;
+  detailsEl.classList.toggle('is-open');
+}
+
 function renderRatingComparison(result, scoreColor) {
   const cardsEl = document.getElementById('ratingCards');
   if (!cardsEl) return;
@@ -1368,6 +1605,7 @@ function renderResults(data) {
   document.getElementById('scoreVerdict').textContent = verdict.text;
   document.getElementById('scoreVerdict').style.color = verdict.color;
   document.getElementById('analyzedUrl').textContent  = asText(result.url);
+  renderBrokenLinksSection(result);
   renderRatingComparison(result, color);
  
   // Progress bar — width as % of maxScore
