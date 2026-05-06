@@ -99,6 +99,30 @@
     flex-direction: column;
     gap: 10px;
   }
+
+  .lead-form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .lead-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .lead-field {
+    display: grid;
+    gap: 6px;
+  }
+
+  .lead-label {
+    color: var(--muted);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
  
   .url-input {
     width: 100%;
@@ -824,6 +848,14 @@
       flex-direction: row;
       align-items: stretch;
     }
+
+    .lead-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .lead-field-full {
+      grid-column: 1 / -1;
+    }
  
     .url-input { font-size: 1rem; }
  
@@ -967,11 +999,32 @@
   </div>
  
   <div class="input-card">
-    <div class="url-row">
-      <input class="url-input" type="url" id="urlInput" placeholder="https://yourbusiness.com" autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">Analyze →</button>
-    </div>
-    <p class="hint">Free • No signup required • Results usually take about 1–2 minutes</p>
+    <form class="lead-form" id="leadForm" onsubmit="event.preventDefault(); runAnalysis();">
+      <div class="lead-grid">
+        <label class="lead-field">
+          <span class="lead-label">Name</span>
+          <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name">
+        </label>
+        <label class="lead-field">
+          <span class="lead-label">Business Name</span>
+          <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
+        </label>
+        <label class="lead-field">
+          <span class="lead-label">Email *</span>
+          <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
+        </label>
+        <label class="lead-field">
+          <span class="lead-label">Phone</span>
+          <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Optional" autocomplete="tel">
+        </label>
+        <label class="lead-field lead-field-full">
+          <span class="lead-label">Website URL *</span>
+          <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+        </label>
+      </div>
+      <button class="analyze-btn" id="analyzeBtn" type="submit">Analyze Website →</button>
+    </form>
+    <p class="hint">Free report • Results usually take about 1–2 minutes</p>
   </div>
  
   <div id="error-box"></div>
@@ -980,7 +1033,7 @@
 <!-- LOADING -->
 <div id="loading">
   <div class="spinner"></div>
-  <p class="loading-text">Analyzing your website…</p>
+  <p class="loading-text">Analyzing Website...</p>
   <p class="loading-steps" id="loadingStep">Fetching homepage…</p>
   <div class="loading-progress" aria-label="Analysis progress">
     <div class="loading-progress-top">
@@ -1112,7 +1165,7 @@ const LOADING_STEPS = [
   'Scoring your results…',
 ];
 
-const ANALYZE_API_URL = '/api/analyze';
+const LEAD_CAPTURE_API_URL = '/api/lead-capture';
 const SCAN_ESTIMATE_MS = 90000;
  
 let stepIdx = 0;
@@ -1341,11 +1394,21 @@ function renderRatingComparison(result, scoreColor) {
 }
  
 async function runAnalysis() {
+  const name = document.getElementById('nameInput').value.trim();
+  const businessName = document.getElementById('businessNameInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
   const raw = document.getElementById('urlInput').value;
   const url = normalizeUrl(raw);
  
   const errBox = document.getElementById('error-box');
   errBox.style.display = 'none';
+
+  if (!email) {
+    errBox.style.display = 'block';
+    errBox.textContent = 'Please enter your email address.';
+    return;
+  }
  
   if (!url) {
     errBox.style.display = 'block';
@@ -1360,15 +1423,22 @@ async function runAnalysis() {
   document.getElementById('analyzeBtn').disabled = true;
  
   stepIdx = 0;
+  document.querySelector('.loading-text').textContent = 'Analyzing Website...';
   document.getElementById('loadingStep').textContent = LOADING_STEPS[0];
   startLoadingProgress();
   stepTimer = setInterval(cycleStep, 1800);
  
   try {
-    const res = await fetch(ANALYZE_API_URL, {
+    const res = await fetch(LEAD_CAPTURE_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({
+        name,
+        businessName,
+        email,
+        phone,
+        website: url,
+      }),
     });
  
     const data = await res.json();
@@ -1776,17 +1846,10 @@ function resetApp() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('home-view').style.display = 'block';
   document.getElementById('analyzeBtn').disabled = false;
-  document.getElementById('urlInput').value = '';
+  document.getElementById('leadForm').reset();
   document.getElementById('error-box').style.display = 'none';
 }
  
-// Enter key
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && document.getElementById('home-view').style.display !== 'none') {
-    runAnalysis();
-  }
-});
-
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
