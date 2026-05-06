@@ -24,6 +24,24 @@ function sanitizeLead(body = {}) {
   };
 }
 
+function normalizeScoreValue(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string') {
+    const parsed = Number(value.replace('%', '').trim());
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
+function extractWebsiteScore(result = {}) {
+  return normalizeScoreValue(
+    result.total ??
+    result.score ??
+    result.websiteScore ??
+    result.rating
+  );
+}
+
 async function sendLeadToGHL(lead, score = null) {
   const webhookUrl = process.env.GHL_WEBHOOK_URL;
   if (!webhookUrl) {
@@ -31,25 +49,42 @@ async function sendLeadToGHL(lead, score = null) {
     return { skipped: true };
   }
 
+  const normalizedScore = normalizeScoreValue(score);
+
   const payload = {
     name: lead.name,
     businessName: lead.businessName,
     email: lead.email,
     phone: lead.phone,
     website: lead.website,
-    score,
+    score: normalizedScore,
+    websiteScore: normalizedScore,
     timestamp: new Date().toISOString(),
   };
 
-  const response = await fetch(webhookUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  console.log('[LeadCheck][GHL] Sending lead to GoHighLevel');
+  console.log('[LeadCheck][GHL] Website score:', normalizedScore);
+  console.log('[LeadCheck][GHL] Payload:', JSON.stringify(payload, null, 2));
+
+  let response;
+  try {
+    response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.error('[LeadCheck][GHL] Webhook failed:', error.message);
+    throw error;
+  }
+
+  console.log('[LeadCheck][GHL] Webhook status:', response.status);
 
   if (!response.ok) {
     const body = await response.text().catch(() => '');
-    throw new Error(`GHL webhook failed with HTTP ${response.status}${body ? `: ${body.slice(0, 200)}` : ''}`);
+    const error = new Error(`GHL webhook failed with HTTP ${response.status}${body ? `: ${body.slice(0, 200)}` : ''}`);
+    console.error('[LeadCheck][GHL] Webhook failed:', error.message);
+    throw error;
   }
 
   return { sent: true };
@@ -93,7 +128,7 @@ app.post('/api/lead-capture', async (req, res) => {
 
   try {
     const result = await analyzeWebsite(lead.website, { debug: debugMode });
-    const score = Number.isFinite(Number(result.total)) ? Number(result.total) : null;
+    const score = extractWebsiteScore(result);
     try {
       await sendLeadToGHL(lead, score);
     } catch (err) {
