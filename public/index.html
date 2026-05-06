@@ -8,6 +8,21 @@
 <meta name="apple-mobile-web-app-title" content="LeadCheck">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>LeadCheck – Website Lead-Gen Scorer for Local Businesses</title>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '4279452245649919');
+fbq('track', 'PageView');
+console.log('[Meta Pixel] Event fired:', 'PageView', {});
+</script>
+<!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -989,6 +1004,7 @@
 </style>
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
  
 <!-- HERO / INPUT -->
 <div id="home-view">
@@ -1172,6 +1188,44 @@ let stepIdx = 0;
 let stepTimer = null;
 let progressTimer = null;
 let progressStartedAt = 0;
+let activeMetaScan = null;
+
+function trackMetaEvent(eventName, params = {}) {
+  try {
+    if (typeof window.fbq !== 'function') return;
+    window.fbq('track', eventName, params);
+    console.log('[Meta Pixel] Event fired:', eventName, params);
+  } catch {
+    // Pixel blockers should never interrupt the scanner.
+  }
+}
+
+function trackMetaCustomEvent(eventName, params = {}) {
+  try {
+    if (typeof window.fbq !== 'function') return;
+    window.fbq('trackCustom', eventName, params);
+    console.log('[Meta Pixel] Event fired:', eventName, params);
+  } catch {
+    // Pixel blockers should never interrupt the scanner.
+  }
+}
+
+function resetMetaScan(websiteUrl) {
+  activeMetaScan = {
+    website: websiteUrl,
+    auditStarted: false,
+    lead: false,
+    auditCompleted: false,
+    auditFailed: false,
+  };
+}
+
+function fireMetaOnce(key, eventName, params = {}, isCustom = true) {
+  if (!activeMetaScan || activeMetaScan[key]) return;
+  activeMetaScan[key] = true;
+  if (isCustom) trackMetaCustomEvent(eventName, params);
+  else trackMetaEvent(eventName, params);
+}
  
 function cycleStep() {
   stepIdx = (stepIdx + 1) % LOADING_STEPS.length;
@@ -1415,6 +1469,9 @@ async function runAnalysis() {
     errBox.textContent = 'Please enter a valid website URL.';
     return;
   }
+
+  resetMetaScan(url);
+  fireMetaOnce('auditStarted', 'AuditStarted', { website: url });
  
   // Show loading
   document.getElementById('home-view').style.display = 'none';
@@ -1443,16 +1500,34 @@ async function runAnalysis() {
  
     const data = await res.json();
     finishLoadingProgress();
+
+    if (res.status !== 400) {
+      fireMetaOnce('lead', 'Lead', { website: url }, false);
+    }
  
     if (!res.ok || data.error) {
-      showError(data.error || 'Analysis failed. Please try again.');
+      const errorMessage = data.error || 'Analysis failed. Please try again.';
+      fireMetaOnce('auditFailed', 'AuditFailed', {
+        website: url,
+        error: errorMessage,
+      });
+      showError(errorMessage);
       return;
     }
  
     renderResults(data);
+    fireMetaOnce('auditCompleted', 'AuditCompleted', {
+      website: url,
+      websiteScore: normalizeScore(firstDefinedValue(data.total, data.score, data.websiteScore, data.rating)),
+    });
   } catch (err) {
     console.error('API request failed:', err);
     stopLoadingTimers();
+    const errorMessage = err?.message || 'Could not reach the server. Please try again.';
+    fireMetaOnce('auditFailed', 'AuditFailed', {
+      website: url,
+      error: errorMessage,
+    });
     showError('Could not reach the server. Please try again.');
   }
 }
