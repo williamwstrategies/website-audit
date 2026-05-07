@@ -442,7 +442,6 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     margin-bottom: 18px;
   }
 
-  .preview-card,
   .unlock-card,
   .locked-card {
     background: var(--surface);
@@ -451,24 +450,90 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     padding: 18px 16px;
   }
 
-  .preview-label {
+  .locked-card {
+    min-height: 160px;
+    position: relative;
+    overflow: hidden;
+    border-color: rgba(245, 200, 66, 0.22);
+  }
+
+  .locked-card.attention {
+    border-color: rgba(231, 76, 60, 0.55);
+    background: linear-gradient(180deg, rgba(231, 76, 60, 0.13), var(--surface) 58%);
+  }
+
+  .locked-card.opportunity {
+    border-color: rgba(245, 200, 66, 0.45);
+    background: linear-gradient(180deg, rgba(245, 200, 66, 0.12), var(--surface) 58%);
+  }
+
+  .locked-card.growth {
+    border-color: rgba(46, 204, 113, 0.38);
+    background: linear-gradient(180deg, rgba(46, 204, 113, 0.10), var(--surface) 58%);
+  }
+
+  .locked-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .locked-card-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,0.06);
+    font-weight: 900;
+  }
+
+  .locked-card-status {
     color: var(--muted);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
-  .preview-text {
+  .locked-card-title {
     color: var(--text);
-    font-size: 0.92rem;
-    line-height: 1.5;
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .locked-card-value {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin: 10px 0;
+  }
+
+  .locked-detail {
+    color: rgba(240,240,245,0.72);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    filter: blur(3px);
+    user-select: none;
+  }
+
+  .locked-unlock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    margin-top: 12px;
   }
 
   .unlock-title {
     font-family: 'Syne', sans-serif;
-    font-size: 1.25rem;
+    font-size: 1.35rem;
     line-height: 1.2;
     margin-bottom: 8px;
   }
@@ -478,39 +543,6 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     font-size: 0.9rem;
     line-height: 1.55;
     margin-bottom: 16px;
-  }
-
-  .locked-preview {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin: 18px 0;
-  }
-
-  .locked-card {
-    min-height: 84px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .locked-line {
-    height: 12px;
-    border-radius: 99px;
-    background: rgba(255,255,255,0.12);
-    margin-bottom: 10px;
-    filter: blur(3px);
-  }
-
-  .locked-line.short { width: 58%; }
-  .locked-line.mid { width: 78%; }
-
-  .locked-badge {
-    color: var(--accent);
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
   }
 
   /* Results inner padding */
@@ -968,8 +1000,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       grid-column: 1 / -1;
     }
 
-    .preview-grid,
-    .locked-preview {
+    .preview-grid {
       grid-template-columns: repeat(3, 1fr);
     }
  
@@ -1169,29 +1200,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
     <!-- Partial Results / Lead Unlock -->
     <div class="partial-gate" id="partialGate">
-      <div class="section-header">Initial Findings</div>
+      <div class="section-header">Preview of Findings</div>
       <div class="preview-grid" id="previewIssues"></div>
 
-      <div class="locked-preview">
-        <div class="locked-card">
-          <div class="locked-badge">Locked</div>
-          <div class="locked-line mid"></div>
-          <div class="locked-line short"></div>
-        </div>
-        <div class="locked-card">
-          <div class="locked-badge">Recommendations</div>
-          <div class="locked-line"></div>
-          <div class="locked-line mid"></div>
-        </div>
-        <div class="locked-card">
-          <div class="locked-badge">Technical Details</div>
-          <div class="locked-line mid"></div>
-          <div class="locked-line"></div>
-        </div>
-      </div>
-
       <div class="unlock-card">
-        <div class="unlock-title">Unlock the full audit</div>
+        <div class="unlock-title">Unlock Your Full Website Audit</div>
+        <p class="unlock-copy">See exactly what is helping, hurting, and costing your website leads.</p>
         <p class="unlock-copy">Enter your info to unlock the full audit breakdown and recommendations.</p>
         <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
           <div class="lead-grid">
@@ -1212,7 +1226,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
             </label>
           </div>
-          <button class="analyze-btn" id="unlockBtn" type="submit">Unlock Full Audit</button>
+          <button class="analyze-btn" id="unlockBtn" type="submit">Unlock Full Report</button>
         </form>
       </div>
     </div>
@@ -1684,6 +1698,87 @@ function renderScoreHero(result) {
   return { total, maxScore, color };
 }
 
+function buildLockedPreviewCards(result) {
+  const score = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
+  const tier = score < 70 ? 'low' : score < 85 ? 'medium' : 'high';
+  const categories = asRecord(result.categories);
+  const brokenSummary = getBrokenLinksSummary(result);
+
+  const categoryDefs = [
+    ['leadConversion', 'Lead Conversion', 'Conversion Optimization'],
+    ['localTrust', 'Trust Signals', 'Trust Signals'],
+    ['seoVisibility', 'SEO Visibility', 'SEO Visibility'],
+    ['technical', 'Technical Health', 'Technical Health'],
+  ];
+
+  const tierCopy = {
+    low: {
+      urgent: ['attention', '!', 'Needs immediate review', 'Likely costing leads'],
+      normal: ['attention', '!', 'Opportunity detected', 'Unlock the exact fixes and priority order'],
+    },
+    medium: {
+      urgent: ['opportunity', '!', 'Optimization opportunity', 'Some hidden gaps may still be limiting leads'],
+      normal: ['opportunity', '↗', 'Hidden issue check', 'Unlock detailed recommendations and next steps'],
+    },
+    high: {
+      urgent: ['opportunity', '↗', 'Growth opportunity', 'Advanced improvements may still increase conversions'],
+      normal: ['growth', '↗', 'Unlock detailed breakdown', 'See competitive benchmarks and fine-tuning opportunities'],
+    },
+  };
+
+  const cards = categoryDefs.map(([key, fallbackLabel, highLabel]) => {
+    const cat = asRecord(categories[key]);
+    const label = asText(cat.label) || (tier === 'high' ? highLabel : fallbackLabel);
+    const catScore = Number.isFinite(Number(cat.score)) ? Number(cat.score) : null;
+    const catMax = Number(cat.max) || null;
+    const pct = catScore !== null && catMax ? catScore / catMax : null;
+    const isWeak = pct !== null ? pct < (tier === 'low' ? 0.7 : 0.82) : tier !== 'high';
+    const copy = isWeak ? tierCopy[tier].urgent : tierCopy[tier].normal;
+
+    return {
+      label,
+      sort: pct === null ? 1 : pct,
+      className: copy[0],
+      icon: copy[1],
+      status: copy[2],
+      value: catScore !== null && catMax ? `${catScore} / ${catMax} visible` : 'Unlock to view',
+      detail: copy[3],
+    };
+  });
+
+  cards.sort((a, b) => a.sort - b.sort);
+
+  const brokenHasIssues = brokenSummary.totalIssues > 0;
+  cards.push({
+    label: 'Broken Pages & Links',
+    sort: brokenHasIssues ? -1 : 1,
+    className: brokenHasIssues ? 'attention' : tier === 'high' ? 'growth' : 'opportunity',
+    icon: brokenHasIssues ? '!' : '↗',
+    status: brokenHasIssues
+      ? (tier === 'low' ? 'Needs immediate review' : 'Potential lead loss area')
+      : (tier === 'high' ? 'Fine-tuning opportunity' : 'Check hidden issues'),
+    value: brokenHasIssues ? `${brokenSummary.totalIssues} issue${brokenSummary.totalIssues === 1 ? '' : 's'} detected` : 'No obvious issues in preview',
+    detail: brokenHasIssues
+      ? 'Unlock the affected pages, source URLs, and recommended fixes'
+      : 'Unlock the link health details and crawl summary',
+  });
+
+  const selectedCards = cards
+    .sort((a, b) => a.sort - b.sort)
+    .slice(0, 5);
+
+  if (selectedCards.length && !selectedCards.some(card => card.className === 'attention' || card.className === 'opportunity')) {
+    selectedCards[0] = {
+      ...selectedCards[0],
+      className: 'opportunity',
+      icon: '↗',
+      status: 'Growth opportunity',
+    };
+  }
+
+  return selectedCards;
+}
+
 function renderPartialResults(data) {
   stopLoadingTimers();
   document.getElementById('loading').style.display = 'none';
@@ -1698,23 +1793,21 @@ function renderPartialResults(data) {
   document.getElementById('fullResults').style.display = 'none';
 
   const previewIssues = document.getElementById('previewIssues');
-  const issuePool = [...asArray(result.criticalFlags), ...asArray(result.issues)].slice(0, 3);
-  previewIssues.innerHTML = issuePool.length
-    ? issuePool.map(rawIssue => {
-        const issue = asRecord(rawIssue);
-        const title = asText(issue.label) || asText(issue.title) || asText(issue.key) || asText(rawIssue);
-        const desc = asText(issue.issue) || asText(issue.detail) || asText(issue.evidence) || 'This area needs attention.';
-        return `
-          <div class="preview-card">
-            <div class="preview-label">${escHtml(title)}</div>
-            <div class="preview-text">${escHtml(desc)}</div>
-          </div>`;
-      }).join('')
-    : `
-      <div class="preview-card">
-        <div class="preview-label">Initial Scan Complete</div>
-        <div class="preview-text">We found useful details in your website audit. Unlock the full breakdown to see recommendations.</div>
-      </div>`;
+  const lockedCards = buildLockedPreviewCards(result);
+  previewIssues.innerHTML = lockedCards.map(card => `
+    <div class="locked-card ${escHtml(card.className)}">
+      <div class="locked-card-top">
+        <div>
+          <div class="locked-card-status">${escHtml(card.status)}</div>
+          <div class="locked-card-title">${escHtml(card.label)}</div>
+        </div>
+        <div class="locked-card-icon">${escHtml(card.icon)}</div>
+      </div>
+      <div class="locked-card-value">${escHtml(card.value)}</div>
+      <div class="locked-detail">${escHtml(card.detail)}</div>
+      <div class="locked-unlock">Lock • Unlock to view</div>
+    </div>
+  `).join('');
 
   const unlockForm = document.getElementById('unlockLeadForm');
   if (unlockForm) unlockForm.reset();
