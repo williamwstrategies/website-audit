@@ -110,11 +110,24 @@ app.post('/api/lead-capture', async (req, res) => {
 
   if (!lead.email) return res.status(400).json({ error: 'Email is required' });
   if (!lead.website) return res.status(400).json({ error: 'Website URL is required' });
+  if (req.body.leadOnly && !lead.name) return res.status(400).json({ error: 'Name is required' });
+  if (req.body.leadOnly && !lead.phone) return res.status(400).json({ error: 'Phone is required' });
 
   try {
     new URL(lead.website);
   } catch {
     return res.status(400).json({ error: 'Please enter a valid website URL' });
+  }
+
+  if (req.body.leadOnly) {
+    const score = normalizeScoreValue(req.body.score ?? req.body.websiteScore);
+    try {
+      await sendLeadToGHL(lead, score);
+    } catch (err) {
+      console.error('[LeadCheck] GHL webhook error:', err.message);
+      return res.status(502).json({ error: 'Lead capture webhook failed' });
+    }
+    return res.json({ ok: true });
   }
 
   const debugMode = !!(req.query.debug || req.body.debug);

@@ -115,6 +115,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     gap: 10px;
   }
 
+  .audit-form {
+    display: grid;
+    gap: 14px;
+  }
+
   .lead-form {
     display: grid;
     gap: 14px;
@@ -177,6 +182,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   .analyze-btn:hover  { background: #f7d454; }
   .analyze-btn:active { transform: scale(0.98); }
   .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .secondary-btn {
+    background: transparent;
+    color: var(--accent);
+    border: 1.5px solid var(--border);
+  }
+
+  .secondary-btn:hover { background: rgba(245,200,66,0.08); }
  
   .hint {
     margin-top: 12px;
@@ -415,6 +428,89 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     line-height: 1.5;
     text-align: center;
     margin-top: 12px;
+  }
+
+  /* ===== PARTIAL RESULTS / UNLOCK ===== */
+  .partial-gate {
+    margin: 0 auto 34px;
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .preview-card,
+  .unlock-card,
+  .locked-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+  }
+
+  .preview-label {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .preview-text {
+    color: var(--text);
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .unlock-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .unlock-copy {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .locked-preview {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 18px 0;
+  }
+
+  .locked-card {
+    min-height: 84px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .locked-line {
+    height: 12px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.12);
+    margin-bottom: 10px;
+    filter: blur(3px);
+  }
+
+  .locked-line.short { width: 58%; }
+  .locked-line.mid { width: 78%; }
+
+  .locked-badge {
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
   }
 
   /* Results inner padding */
@@ -871,6 +967,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     .lead-field-full {
       grid-column: 1 / -1;
     }
+
+    .preview-grid,
+    .locked-preview {
+      grid-template-columns: repeat(3, 1fr);
+    }
  
     .url-input { font-size: 1rem; }
  
@@ -1011,36 +1112,18 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   <div class="hero">
     <div class="badge">Free Website Audit Tool</div>
     <h1>Is your website<br>actually <span>getting leads?</span></h1>
-    <p class="hero-sub">Enter your website URL and get an instant lead-generation score out of 100 — built specifically for local businesses.</p>
+    <p class="hero-sub">Enter your website URL to start a fast lead-generation audit for your local business.</p>
   </div>
  
   <div class="input-card">
-    <form class="lead-form" id="leadForm" onsubmit="event.preventDefault(); runAnalysis();">
-      <div class="lead-grid">
-        <label class="lead-field">
-          <span class="lead-label">Name</span>
-          <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name">
-        </label>
-        <label class="lead-field">
-          <span class="lead-label">Business Name</span>
-          <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
-        </label>
-        <label class="lead-field">
-          <span class="lead-label">Email *</span>
-          <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
-        </label>
-        <label class="lead-field">
-          <span class="lead-label">Phone</span>
-          <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Optional" autocomplete="tel">
-        </label>
-        <label class="lead-field lead-field-full">
-          <span class="lead-label">Website URL *</span>
-          <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
-        </label>
-      </div>
-      <button class="analyze-btn" id="analyzeBtn" type="submit">Analyze Website →</button>
+    <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
+      <label class="lead-field">
+        <span class="lead-label">Website URL</span>
+        <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+      </label>
+      <button class="analyze-btn" id="analyzeBtn" type="submit">Run Free Audit</button>
     </form>
-    <p class="hint">Free report • Results usually take about 1–2 minutes</p>
+    <p class="hint">No signup to start • Preview your score first</p>
   </div>
  
   <div id="error-box"></div>
@@ -1049,8 +1132,8 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- LOADING -->
 <div id="loading">
   <div class="spinner"></div>
-  <p class="loading-text">Analyzing Website...</p>
-  <p class="loading-steps" id="loadingStep">Fetching homepage…</p>
+  <p class="loading-text">Analyzing your website…</p>
+  <p class="loading-steps" id="loadingStep">Checking SEO visibility…</p>
   <div class="loading-progress" aria-label="Analysis progress">
     <div class="loading-progress-top">
       <span>Report progress</span>
@@ -1083,6 +1166,58 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   </div>
  
   <div id="resultsInner">
+
+    <!-- Partial Results / Lead Unlock -->
+    <div class="partial-gate" id="partialGate">
+      <div class="section-header">Initial Findings</div>
+      <div class="preview-grid" id="previewIssues"></div>
+
+      <div class="locked-preview">
+        <div class="locked-card">
+          <div class="locked-badge">Locked</div>
+          <div class="locked-line mid"></div>
+          <div class="locked-line short"></div>
+        </div>
+        <div class="locked-card">
+          <div class="locked-badge">Recommendations</div>
+          <div class="locked-line"></div>
+          <div class="locked-line mid"></div>
+        </div>
+        <div class="locked-card">
+          <div class="locked-badge">Technical Details</div>
+          <div class="locked-line mid"></div>
+          <div class="locked-line"></div>
+        </div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="unlock-title">Unlock the full audit</div>
+        <p class="unlock-copy">Enter your info to unlock the full audit breakdown and recommendations.</p>
+        <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
+          <div class="lead-grid">
+            <label class="lead-field">
+              <span class="lead-label">Name *</span>
+              <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name" required>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Business Name</span>
+              <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Email *</span>
+              <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Phone *</span>
+              <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
+            </label>
+          </div>
+          <button class="analyze-btn" id="unlockBtn" type="submit">Unlock Full Audit</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="fullResults">
 
     <!-- Rating Comparison -->
     <div class="rating-comparison" id="ratingComparison">
@@ -1144,6 +1279,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <div class="analyze-another">
       <button class="retry-btn" onclick="resetApp()">← Analyze Another Website</button>
     </div>
+    </div>
   </div>
 </div>
  
@@ -1172,15 +1308,14 @@ const CHECK_LABELS = {
 };
  
 const LOADING_STEPS = [
-  'Fetching homepage…',
-  'Crawling priority pages…',
-  'Running lead-gen checks…',
-  'Checking local SEO signals…',
-  'Analyzing trust & credibility…',
-  'Reviewing visual trust signals…',
-  'Scoring your results…',
+  'Analyzing your website…',
+  'Checking SEO visibility…',
+  'Checking trust signals…',
+  'Checking mobile experience…',
+  'Checking conversion issues…',
 ];
 
+const ANALYZE_API_URL = '/api/analyze';
 const LEAD_CAPTURE_API_URL = '/api/lead-capture';
 const SCAN_ESTIMATE_MS = 90000;
  
@@ -1189,6 +1324,9 @@ let stepTimer = null;
 let progressTimer = null;
 let progressStartedAt = 0;
 let activeMetaScan = null;
+let pendingScanResult = null;
+let pendingWebsiteUrl = null;
+let fullResultsUnlocked = false;
 
 function trackMetaEvent(eventName, params = {}) {
   try {
@@ -1448,21 +1586,11 @@ function renderRatingComparison(result, scoreColor) {
 }
  
 async function runAnalysis() {
-  const name = document.getElementById('nameInput').value.trim();
-  const businessName = document.getElementById('businessNameInput').value.trim();
-  const email = document.getElementById('emailInput').value.trim();
-  const phone = document.getElementById('phoneInput').value.trim();
   const raw = document.getElementById('urlInput').value;
   const url = normalizeUrl(raw);
  
   const errBox = document.getElementById('error-box');
   errBox.style.display = 'none';
-
-  if (!email) {
-    errBox.style.display = 'block';
-    errBox.textContent = 'Please enter your email address.';
-    return;
-  }
  
   if (!url) {
     errBox.style.display = 'block';
@@ -1471,7 +1599,10 @@ async function runAnalysis() {
   }
 
   resetMetaScan(url);
-  fireMetaOnce('auditStarted', 'AuditStarted', { website: url });
+  fireMetaOnce('auditStarted', 'AuditStarted');
+  pendingScanResult = null;
+  pendingWebsiteUrl = url;
+  fullResultsUnlocked = false;
  
   // Show loading
   document.getElementById('home-view').style.display = 'none';
@@ -1480,44 +1611,34 @@ async function runAnalysis() {
   document.getElementById('analyzeBtn').disabled = true;
  
   stepIdx = 0;
-  document.querySelector('.loading-text').textContent = 'Analyzing Website...';
+  document.querySelector('.loading-text').textContent = 'Analyzing your website…';
   document.getElementById('loadingStep').textContent = LOADING_STEPS[0];
   startLoadingProgress();
   stepTimer = setInterval(cycleStep, 1800);
  
   try {
-    const res = await fetch(LEAD_CAPTURE_API_URL, {
+    const res = await fetch(ANALYZE_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        businessName,
-        email,
-        phone,
-        website: url,
-      }),
+      body: JSON.stringify({ url }),
     });
  
     const data = await res.json();
     finishLoadingProgress();
-
-    if (res.status !== 400) {
-      fireMetaOnce('lead', 'Lead', { website: url }, false);
-    }
  
     if (!res.ok || data.error) {
       const errorMessage = data.error || 'Analysis failed. Please try again.';
       fireMetaOnce('auditFailed', 'AuditFailed', {
-        website: url,
         error: errorMessage,
       });
       showError(errorMessage);
       return;
     }
  
-    renderResults(data);
+    pendingScanResult = data;
+    pendingWebsiteUrl = asText(data.url) || url;
+    renderPartialResults(data);
     fireMetaOnce('auditCompleted', 'AuditCompleted', {
-      website: url,
       websiteScore: normalizeScore(firstDefinedValue(data.total, data.score, data.websiteScore, data.rating)),
     });
   } catch (err) {
@@ -1525,10 +1646,9 @@ async function runAnalysis() {
     stopLoadingTimers();
     const errorMessage = err?.message || 'Could not reach the server. Please try again.';
     fireMetaOnce('auditFailed', 'AuditFailed', {
-      website: url,
       error: errorMessage,
     });
-    showError('Could not reach the server. Please try again.');
+    showError('We could not complete the scan right now. Please check the website URL and try again.');
   }
 }
  
@@ -1541,6 +1661,123 @@ function showError(msg) {
   errBox.style.display = 'block';
   errBox.textContent = msg;
 }
+
+function renderScoreHero(result) {
+  const maxScore = Number(result.maxScore) || 100;
+  const total    = Number.isFinite(Number(result.total)) ? Number(result.total) : 0;
+  const verdict  = getVerdict(total);
+  const color    = getScoreColor(total, maxScore);
+
+  document.getElementById('scoreNum').textContent  = total;
+  document.getElementById('scoreNum').style.color  = color;
+  document.getElementById('scoreDenom').textContent = `/${maxScore}`;
+  document.getElementById('scoreVerdict').textContent = verdict.text;
+  document.getElementById('scoreVerdict').style.color = verdict.color;
+  document.getElementById('analyzedUrl').textContent  = asText(result.url);
+
+  setTimeout(() => {
+    const bar = document.getElementById('scoreBar');
+    bar.style.width      = (total / maxScore * 100) + '%';
+    bar.style.background = color;
+  }, 100);
+
+  return { total, maxScore, color };
+}
+
+function renderPartialResults(data) {
+  stopLoadingTimers();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+
+  const result = asRecord(data);
+  renderScoreHero(result);
+
+  const actions = document.querySelector('.report-actions');
+  if (actions) actions.style.display = 'none';
+  document.getElementById('partialGate').style.display = 'block';
+  document.getElementById('fullResults').style.display = 'none';
+
+  const previewIssues = document.getElementById('previewIssues');
+  const issuePool = [...asArray(result.criticalFlags), ...asArray(result.issues)].slice(0, 3);
+  previewIssues.innerHTML = issuePool.length
+    ? issuePool.map(rawIssue => {
+        const issue = asRecord(rawIssue);
+        const title = asText(issue.label) || asText(issue.title) || asText(issue.key) || asText(rawIssue);
+        const desc = asText(issue.issue) || asText(issue.detail) || asText(issue.evidence) || 'This area needs attention.';
+        return `
+          <div class="preview-card">
+            <div class="preview-label">${escHtml(title)}</div>
+            <div class="preview-text">${escHtml(desc)}</div>
+          </div>`;
+      }).join('')
+    : `
+      <div class="preview-card">
+        <div class="preview-label">Initial Scan Complete</div>
+        <div class="preview-text">We found useful details in your website audit. Unlock the full breakdown to see recommendations.</div>
+      </div>`;
+
+  const unlockForm = document.getElementById('unlockLeadForm');
+  if (unlockForm) unlockForm.reset();
+  const unlockBtn = document.getElementById('unlockBtn');
+  if (unlockBtn) unlockBtn.disabled = false;
+}
+
+async function submitLeadCapture() {
+  if (!pendingScanResult || !pendingWebsiteUrl) {
+    unlockFullResults();
+    return;
+  }
+
+  const name = document.getElementById('nameInput').value.trim();
+  const businessName = document.getElementById('businessNameInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const unlockBtn = document.getElementById('unlockBtn');
+
+  if (!name || !email || !phone) return;
+
+  if (unlockBtn) unlockBtn.disabled = true;
+
+  const score = normalizeScore(firstDefinedValue(
+    pendingScanResult.total,
+    pendingScanResult.score,
+    pendingScanResult.websiteScore,
+    pendingScanResult.rating
+  ));
+
+  try {
+    const res = await fetch(LEAD_CAPTURE_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        leadOnly: true,
+        name,
+        businessName,
+        email,
+        phone,
+        website: pendingWebsiteUrl,
+        score,
+        websiteScore: score,
+      }),
+    });
+
+    if (res.ok) {
+      fireMetaOnce('lead', 'Lead', {}, false);
+    } else {
+      const data = await res.json().catch(() => ({}));
+      console.error('[LeadCheck] Lead capture failed:', data.error || res.statusText);
+    }
+  } catch (err) {
+    console.error('[LeadCheck] Lead capture failed:', err.message);
+  }
+
+  unlockFullResults();
+}
+
+function unlockFullResults() {
+  fullResultsUnlocked = true;
+  if (pendingScanResult) renderResults(pendingScanResult);
+}
  
 function renderResults(data) {
   stopLoadingTimers();
@@ -1548,28 +1785,13 @@ function renderResults(data) {
   document.getElementById('results').style.display = 'block';
  
   const result = asRecord(data);
-
-  // Backend now scores out of 100 — use maxScore if present, default 100
-  const maxScore = Number(result.maxScore) || 100;
-  const total    = Number.isFinite(Number(result.total)) ? Number(result.total) : 0;
-  const verdict  = getVerdict(total);                 // thresholds on /100 scale
-  const color    = getScoreColor(total, maxScore);    // correctly computes pct = 72/100
- 
-  // Score number and colour
-  document.getElementById('scoreNum').textContent  = total;
-  document.getElementById('scoreNum').style.color  = color;
-  document.getElementById('scoreDenom').textContent = `/${maxScore}`;
-  document.getElementById('scoreVerdict').textContent = verdict.text;
-  document.getElementById('scoreVerdict').style.color = verdict.color;
-  document.getElementById('analyzedUrl').textContent  = asText(result.url);
+  const { color } = renderScoreHero(result);
   renderRatingComparison(result, color);
- 
-  // Progress bar — width as % of maxScore
-  setTimeout(() => {
-    const bar = document.getElementById('scoreBar');
-    bar.style.width      = (total / maxScore * 100) + '%';
-    bar.style.background = color;
-  }, 100);
+
+  document.getElementById('partialGate').style.display = 'none';
+  document.getElementById('fullResults').style.display = 'block';
+  const actions = document.querySelector('.report-actions');
+  if (actions) actions.style.display = 'flex';
  
   // Categories
   const catsGrid = document.getElementById('catsGrid');
@@ -1918,10 +2140,16 @@ function downloadReportPdf() {
 function resetApp() {
   stopLoadingTimers();
   setLoadingProgress(0, 'Estimated time: about 90 seconds');
+  pendingScanResult = null;
+  pendingWebsiteUrl = null;
+  fullResultsUnlocked = false;
   document.getElementById('results').style.display = 'none';
+  document.getElementById('partialGate').style.display = 'block';
+  document.getElementById('fullResults').style.display = 'none';
   document.getElementById('home-view').style.display = 'block';
   document.getElementById('analyzeBtn').disabled = false;
-  document.getElementById('leadForm').reset();
+  document.getElementById('auditForm').reset();
+  document.getElementById('unlockLeadForm').reset();
   document.getElementById('error-box').style.display = 'none';
 }
  
