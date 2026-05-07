@@ -435,6 +435,23 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     margin: 0 auto 34px;
   }
 
+  .partial-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.45rem;
+    line-height: 1.16;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+
+  .partial-subcopy {
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.55;
+    margin: 0 0 22px;
+    max-width: 680px;
+  }
+
   .preview-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -443,7 +460,8 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   }
 
   .unlock-card,
-  .locked-card {
+  .locked-card,
+  .report-includes-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -451,15 +469,30 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   }
 
   .locked-card {
-    min-height: 160px;
+    min-height: 190px;
     position: relative;
     overflow: hidden;
     border-color: rgba(245, 200, 66, 0.22);
+    box-shadow: 0 18px 48px rgba(0,0,0,0.22);
+  }
+
+  .locked-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
   }
 
   .locked-card.attention {
     border-color: rgba(231, 76, 60, 0.55);
     background: linear-gradient(180deg, rgba(231, 76, 60, 0.13), var(--surface) 58%);
+  }
+
+  .locked-card.attention::before {
+    background: #e74c3c;
   }
 
   .locked-card.opportunity {
@@ -470,6 +503,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   .locked-card.growth {
     border-color: rgba(46, 204, 113, 0.38);
     background: linear-gradient(180deg, rgba(46, 204, 113, 0.10), var(--surface) 58%);
+  }
+
+  .locked-card.growth::before {
+    background: #2ecc71;
   }
 
   .locked-card-top {
@@ -483,11 +520,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   .locked-card-icon {
     width: 34px;
     height: 34px;
-    border-radius: 10px;
+    border-radius: 50%;
     display: grid;
     place-items: center;
     background: rgba(255,255,255,0.06);
     font-weight: 900;
+    flex: 0 0 auto;
   }
 
   .locked-card-status {
@@ -513,12 +551,21 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     margin: 10px 0;
   }
 
+  .locked-metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
   .locked-detail {
     color: rgba(240,240,245,0.72);
     font-size: 0.82rem;
     line-height: 1.45;
     filter: blur(3px);
     user-select: none;
+    min-height: 54px;
   }
 
   .locked-unlock {
@@ -531,9 +578,77 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     margin-top: 12px;
   }
 
+  .locked-card-lock {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid rgba(245, 200, 66, 0.38);
+    font-size: 0.72rem;
+  }
+
+  .report-includes-card {
+    margin: 2px 0 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+    box-shadow: 0 18px 48px rgba(0,0,0,0.16);
+  }
+
+  .report-includes-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .report-includes-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .report-include-item {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 11px 12px;
+    background: rgba(255,255,255,0.025);
+  }
+
+  .report-include-title {
+    color: var(--text);
+    font-weight: 800;
+    font-size: 0.88rem;
+    margin-bottom: 4px;
+  }
+
+  .report-include-detail {
+    color: rgba(240,240,245,0.65);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    filter: blur(2.5px);
+    user-select: none;
+  }
+
+  .audit-proof-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 2px 0 18px;
+  }
+
+  .audit-proof-pill {
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 999px;
+    color: rgba(240,240,245,0.78);
+    background: rgba(255,255,255,0.035);
+    padding: 7px 10px;
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
   .unlock-title {
     font-family: 'Syne', sans-serif;
-    font-size: 1.35rem;
+    font-size: 1.48rem;
     line-height: 1.2;
     margin-bottom: 8px;
   }
@@ -1003,6 +1118,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     .preview-grid {
       grid-template-columns: repeat(3, 1fr);
     }
+
+    .report-includes-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
  
     .url-input { font-size: 1rem; }
  
@@ -1200,13 +1319,50 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
     <!-- Partial Results / Lead Unlock -->
     <div class="partial-gate" id="partialGate">
-      <div class="section-header">Preview of Findings</div>
+      <div class="partial-headline" id="partialHeadline">We found several areas worth reviewing.</div>
+      <p class="partial-subcopy">Your score is only the beginning. The locked findings below show where the full report gets specific.</p>
+      <div class="section-header">Locked Findings Preview</div>
       <div class="preview-grid" id="previewIssues"></div>
 
+      <div class="report-includes-card">
+        <div class="report-includes-title">Full Report Includes</div>
+        <div class="report-includes-list">
+          <div class="report-include-item">
+            <div class="report-include-title">Exact issues detected</div>
+            <div class="report-include-detail">Specific findings from the live scan, grouped by impact and priority.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Category-by-category breakdown</div>
+            <div class="report-include-detail">SEO, trust, conversion, mobile, and technical health scores with evidence.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Priority fixes</div>
+            <div class="report-include-detail">The highest-impact changes to improve visibility and lead conversion first.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Broken links and missing pages</div>
+            <div class="report-include-detail">Navigation problems, missing core pages, redirects, and crawl issues.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Lead conversion recommendations</div>
+            <div class="report-include-detail">CTA, form, phone, booking, and trust improvements based on the scan.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Mobile and technical health insights</div>
+            <div class="report-include-detail">Mobile experience, speed signals, layout clarity, and technical checks.</div>
+          </div>
+        </div>
+      </div>
+
       <div class="unlock-card">
-        <div class="unlock-title">Unlock Your Full Website Audit</div>
-        <p class="unlock-copy">See exactly what is helping, hurting, and costing your website leads.</p>
+        <div class="unlock-title">Unlock the Full Audit Report</div>
+        <p class="unlock-copy">See what may be costing your website leads and which fixes should be prioritized first.</p>
         <p class="unlock-copy">Enter your info to unlock the full audit breakdown and recommendations.</p>
+        <div class="audit-proof-row">
+          <span class="audit-proof-pill">Generated from a live scan of your website</span>
+          <span class="audit-proof-pill">Benchmarked against lead-generation best practices</span>
+          <span class="audit-proof-pill">Includes SEO, trust, conversion, mobile, and technical checks</span>
+        </div>
         <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
           <div class="lead-grid">
             <label class="lead-field">
@@ -1226,7 +1382,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
             </label>
           </div>
-          <button class="analyze-btn" id="unlockBtn" type="submit">Unlock Full Report</button>
+          <button class="analyze-btn" id="unlockBtn" type="submit">Unlock My Full Report</button>
         </form>
       </div>
     </div>
@@ -1698,69 +1854,88 @@ function renderScoreHero(result) {
   return { total, maxScore, color };
 }
 
+function getPreviewTier(score) {
+  if (score < 70) return 'low';
+  if (score < 85) return 'medium';
+  return 'high';
+}
+
+function getPartialHeadline(score) {
+  return getPreviewTier(score) === 'high'
+    ? 'Your site is performing well — but there may still be hidden growth opportunities.'
+    : 'We found several areas worth reviewing.';
+}
+
 function buildLockedPreviewCards(result) {
   const score = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
-  const tier = score < 70 ? 'low' : score < 85 ? 'medium' : 'high';
+  const tier = getPreviewTier(score);
   const categories = asRecord(result.categories);
   const brokenSummary = getBrokenLinksSummary(result);
 
   const categoryDefs = [
-    ['leadConversion', 'Lead Conversion', 'Conversion Optimization'],
-    ['localTrust', 'Trust Signals', 'Trust Signals'],
-    ['seoVisibility', 'SEO Visibility', 'SEO Visibility'],
-    ['technical', 'Technical Health', 'Technical Health'],
+    ['leadConversion', {
+      low: ['Lead Conversion', 'attention', '!', 'Potential lead loss detected', 'Unlock the CTA, contact, and conversion-path findings'],
+      medium: ['Lead Conversion', 'opportunity', '↗', 'Optimization opportunity', 'Unlock the conversion steps and lead friction notes'],
+      high: ['Conversion Optimization', 'growth', '↗', 'Advanced growth opportunity', 'Unlock the conversion benchmarks and next-level improvements'],
+    }],
+    ['localTrust', {
+      low: ['Trust Signals', 'attention', '!', 'Review/trust gaps may be hurting conversions', 'Unlock the trust, review, proof, and credibility findings'],
+      medium: ['Trust Signals', 'opportunity', '↗', 'Trust improvements available', 'Unlock review, proof, and confidence-building recommendations'],
+      high: ['Trust Signals', 'growth', '↗', 'Authority improvements available', 'Unlock trust benchmarks and credibility fine-tuning'],
+    }],
+    ['seoVisibility', {
+      low: ['SEO Visibility', 'attention', '!', 'Ranking opportunities found', 'Unlock title, heading, service, and local SEO details'],
+      medium: ['SEO Visibility', 'opportunity', '↗', 'Local ranking opportunities', 'Unlock the SEO breakdown and priority keyword fixes'],
+      high: ['SEO Visibility', 'growth', '↗', 'Fine-tuning opportunities', 'Unlock advanced local SEO and service-page recommendations'],
+    }],
+    ['technical', {
+      low: ['Mobile Experience', 'attention', '!', 'Mobile friction may be costing calls', 'Unlock mobile, speed, and technical health details'],
+      medium: ['Mobile Experience', 'opportunity', '↗', 'User experience check needed', 'Unlock mobile and technical health insights'],
+      high: ['Technical Health', 'growth', '↗', 'Performance details locked', 'Unlock technical fine-tuning and mobile experience notes'],
+    }],
   ];
 
-  const tierCopy = {
-    low: {
-      urgent: ['attention', '!', 'Needs immediate review', 'Likely costing leads'],
-      normal: ['attention', '!', 'Opportunity detected', 'Unlock the exact fixes and priority order'],
-    },
-    medium: {
-      urgent: ['opportunity', '!', 'Optimization opportunity', 'Some hidden gaps may still be limiting leads'],
-      normal: ['opportunity', '↗', 'Hidden issue check', 'Unlock detailed recommendations and next steps'],
-    },
-    high: {
-      urgent: ['opportunity', '↗', 'Growth opportunity', 'Advanced improvements may still increase conversions'],
-      normal: ['growth', '↗', 'Unlock detailed breakdown', 'See competitive benchmarks and fine-tuning opportunities'],
-    },
-  };
-
-  const cards = categoryDefs.map(([key, fallbackLabel, highLabel]) => {
+  const cards = categoryDefs.map(([key, copyByTier]) => {
     const cat = asRecord(categories[key]);
-    const label = asText(cat.label) || (tier === 'high' ? highLabel : fallbackLabel);
     const catScore = Number.isFinite(Number(cat.score)) ? Number(cat.score) : null;
     const catMax = Number(cat.max) || null;
     const pct = catScore !== null && catMax ? catScore / catMax : null;
-    const isWeak = pct !== null ? pct < (tier === 'low' ? 0.7 : 0.82) : tier !== 'high';
-    const copy = isWeak ? tierCopy[tier].urgent : tierCopy[tier].normal;
+    const copy = copyByTier[tier];
+    const label = asText(cat.label) || copy[0];
+    const displayPct = pct !== null ? Math.round(pct * 100) : null;
 
     return {
       label,
       sort: pct === null ? 1 : pct,
-      className: copy[0],
-      icon: copy[1],
-      status: copy[2],
-      value: catScore !== null && catMax ? `${catScore} / ${catMax} visible` : 'Unlock to view',
-      detail: copy[3],
+      className: copy[1],
+      icon: copy[2],
+      status: copy[3],
+      value: displayPct !== null ? `${displayPct}% preview score` : 'Unlock detailed score',
+      detail: copy[4],
     };
   });
 
   cards.sort((a, b) => a.sort - b.sort);
 
   const brokenHasIssues = brokenSummary.totalIssues > 0;
+  const brokenCopy = tier === 'high'
+    ? ['Competitive Benchmark', 'growth', '↗', 'See how you compare', 'Unlock the link health details and crawl summary']
+    : tier === 'medium'
+      ? ['Broken Links', 'opportunity', '↗', 'Unlock hidden issue scan', 'Unlock broken-page, redirect, and missing-page details']
+      : ['Broken Links', 'attention', '!', 'Technical issues may exist', 'Unlock the affected pages, source URLs, and missing-page checks'];
+
   cards.push({
-    label: 'Broken Pages & Links',
+    label: brokenHasIssues ? 'Broken Pages & Links' : brokenCopy[0],
     sort: brokenHasIssues ? -1 : 1,
-    className: brokenHasIssues ? 'attention' : tier === 'high' ? 'growth' : 'opportunity',
-    icon: brokenHasIssues ? '!' : '↗',
+    className: brokenHasIssues ? 'attention' : brokenCopy[1],
+    icon: brokenHasIssues ? '!' : brokenCopy[2],
     status: brokenHasIssues
       ? (tier === 'low' ? 'Needs immediate review' : 'Potential lead loss area')
-      : (tier === 'high' ? 'Fine-tuning opportunity' : 'Check hidden issues'),
-    value: brokenHasIssues ? `${brokenSummary.totalIssues} issue${brokenSummary.totalIssues === 1 ? '' : 's'} detected` : 'No obvious issues in preview',
+      : brokenCopy[3],
+    value: brokenHasIssues ? `${brokenSummary.totalIssues} item${brokenSummary.totalIssues === 1 ? '' : 's'} flagged in preview` : 'Unlock link health details',
     detail: brokenHasIssues
       ? 'Unlock the affected pages, source URLs, and recommended fixes'
-      : 'Unlock the link health details and crawl summary',
+      : brokenCopy[4],
   });
 
   const selectedCards = cards
@@ -1786,6 +1961,9 @@ function renderPartialResults(data) {
 
   const result = asRecord(data);
   renderScoreHero(result);
+  const previewScore = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
+  const partialHeadline = document.getElementById('partialHeadline');
+  if (partialHeadline) partialHeadline.textContent = getPartialHeadline(previewScore);
 
   const actions = document.querySelector('.report-actions');
   if (actions) actions.style.display = 'none';
@@ -1803,9 +1981,11 @@ function renderPartialResults(data) {
         </div>
         <div class="locked-card-icon">${escHtml(card.icon)}</div>
       </div>
-      <div class="locked-card-value">${escHtml(card.value)}</div>
+      <div class="locked-metric-row">
+        <div class="locked-card-value">${escHtml(card.value)}</div>
+      </div>
       <div class="locked-detail">${escHtml(card.detail)}</div>
-      <div class="locked-unlock">Lock • Unlock to view</div>
+      <div class="locked-unlock"><span class="locked-card-lock">&#128274;</span> Unlock to view full finding</div>
     </div>
   `).join('');
 
