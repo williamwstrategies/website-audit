@@ -239,6 +239,160 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     color: var(--muted);
     text-align: center;
   }
+
+  .reassurance-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .reassurance-chip {
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 999px;
+    color: rgba(240,240,245,0.78);
+    background: rgba(255,255,255,0.035);
+    padding: 7px 10px;
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+
+  .conversion-section {
+    max-width: 940px;
+    margin: 34px auto 0;
+    padding: 0 20px;
+  }
+
+  .conversion-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .conversion-card,
+  .proof-card,
+  .competitor-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+
+  .conversion-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .conversion-list,
+  .competitor-list {
+    display: grid;
+    gap: 9px;
+    list-style: none;
+  }
+
+  .conversion-list li,
+  .competitor-list li {
+    color: rgba(240,240,245,0.82);
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .conversion-list li::before,
+  .competitor-list li::before {
+    content: "•";
+    color: var(--accent);
+    font-weight: 900;
+    margin-right: 8px;
+  }
+
+  .sample-score-card {
+    border-color: rgba(231, 76, 60, 0.38);
+    background: linear-gradient(180deg, rgba(231, 76, 60, 0.10), var(--surface) 58%);
+  }
+
+  .sample-label {
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .sample-score {
+    color: var(--red);
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .sample-note {
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+
+  .sample-category {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding: 10px 0;
+    font-size: 0.84rem;
+  }
+
+  .sample-category:last-child {
+    padding-bottom: 0;
+  }
+
+  .sample-category span:first-child {
+    color: rgba(240,240,245,0.82);
+    font-weight: 700;
+  }
+
+  .sample-status {
+    color: var(--accent);
+    font-weight: 800;
+    text-align: right;
+  }
+
+  .proof-card {
+    margin-top: 14px;
+  }
+
+  .proof-card-copy {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .proof-image {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .competitor-card {
+    margin-top: 14px;
+    border-color: rgba(245, 200, 66, 0.28);
+  }
+
+  .competitor-card p {
+    color: rgba(240,240,245,0.86);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
  
   /* ===== LOADING ===== */
   #loading {
@@ -1157,6 +1311,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       grid-column: 1 / -1;
     }
 
+    .conversion-grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+
     .preview-grid {
       grid-template-columns: repeat(3, 1fr);
     }
@@ -1325,7 +1484,69 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <button class="analyze-btn" id="analyzeBtn" type="submit">Find What&rsquo;s Costing Me Leads</button>
     </form>
     <p class="hint">Built for roofers, contractors, HVAC companies, plumbers, and landscapers. See if competitors are outranking you • Find weak spots costing you calls • Preview your score before signing up</p>
+    <div class="reassurance-row" aria-label="Scan reassurance">
+      <span class="reassurance-chip">Takes less than 60 seconds</span>
+      <span class="reassurance-chip">No signup required</span>
+      <span class="reassurance-chip">Instant contractor-focused insights</span>
+      <span class="reassurance-chip">See what may be costing you leads before booking a call</span>
+    </div>
   </div>
+
+  <section class="conversion-section" aria-label="What the website scan reveals">
+    <div class="conversion-grid">
+      <div class="conversion-card">
+        <div class="conversion-card-title">Your scan may reveal:</div>
+        <ul class="conversion-list">
+          <li>Why competitors rank above you</li>
+          <li>What&rsquo;s hurting your Google visibility</li>
+          <li>Why visitors aren&rsquo;t calling</li>
+          <li>Website issues costing you leads</li>
+          <li>Missing trust signals</li>
+          <li>Mobile problems hurting conversions</li>
+        </ul>
+      </div>
+
+      <div class="conversion-card sample-score-card">
+        <div class="sample-label">Sample preview only</div>
+        <div class="conversion-card-title">Example Contractor Score</div>
+        <div class="sample-score">58/100</div>
+        <p class="sample-note">This is an example of the kind of contractor-focused breakdown the scan can preview.</p>
+        <div class="sample-category">
+          <span>Google Visibility</span>
+          <span class="sample-status">Needs Work</span>
+        </div>
+        <div class="sample-category">
+          <span>Trust Signals</span>
+          <span class="sample-status">Weak</span>
+        </div>
+        <div class="sample-category">
+          <span>Lead Conversion</span>
+          <span class="sample-status">Poor</span>
+        </div>
+        <div class="sample-category">
+          <span>Mobile Experience</span>
+          <span class="sample-status">Needs Improvement</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="proof-card">
+      <div class="conversion-card-title">From invisible online to consistent calls.</div>
+      <p class="proof-card-copy">See how improving your website, Google visibility, and trust signals can turn online visitors into real leads.</p>
+      <img class="proof-image" src="/assets/before-after-proof.png" alt="Before and after contractor website audit score example">
+    </div>
+
+    <div class="competitor-card">
+      <div class="conversion-card-title">Competitors may be winning the job before you get the call.</div>
+      <p>Most contractors don&rsquo;t realize competitors ranking above them are often getting the calls before customers ever reach out.</p>
+      <ul class="competitor-list">
+        <li>Customers usually contact the businesses they find first</li>
+        <li>A weak website can make visitors choose someone else</li>
+        <li>Missing trust signals can cost you estimates</li>
+        <li>Poor Google visibility can mean missed jobs every week</li>
+      </ul>
+    </div>
+  </section>
 
   <section class="testimonial-section" aria-label="Contractor testimonial">
     <div class="section-header">Testimonials</div>
