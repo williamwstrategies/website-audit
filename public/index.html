@@ -157,6 +157,63 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     margin-top: 6px;
   }
 
+  .owner-section {
+    max-width: 940px;
+    margin: 34px auto 0;
+    padding: 0 20px;
+  }
+
+  .owner-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .owner-photo {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .owner-eyebrow {
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .owner-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.45rem;
+    line-height: 1.2;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .owner-copy {
+    color: rgba(240,240,245,0.84);
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .owner-copy p {
+    margin-bottom: 12px;
+  }
+
+  .owner-signature {
+    color: var(--accent);
+    font-weight: 800;
+    margin-top: 4px;
+  }
+
   .audit-form {
     display: grid;
     gap: 14px;
@@ -1324,6 +1381,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       align-items: stretch;
     }
 
+    .owner-card {
+      grid-template-columns: 0.85fr 1.15fr;
+      align-items: center;
+    }
+
     .preview-grid {
       grid-template-columns: repeat(3, 1fr);
     }
@@ -1573,6 +1635,20 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <p>William helped us build everything properly from the ground up and showed us exactly what was holding us back from getting found online.</p>
         <p>Now we&rsquo;re consistently getting calls and leads coming through our website and Google, and it finally feels like our business actually has a strong presence online.&rdquo;</p>
         <div class="testimonial-name">&mdash; Excavation Contractor</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="owner-section" aria-label="Who is behind LeadCheck">
+    <div class="owner-card">
+      <img class="owner-photo" src="/assets/owner-william.png" alt="William from WStrategies Canada">
+      <div class="owner-copy">
+        <div class="owner-eyebrow">Who&rsquo;s behind this</div>
+        <div class="owner-title">Built for contractors who need the phone to ring.</div>
+        <p>I started this because I kept seeing good local businesses with weak websites, poor Google visibility, and almost no consistent online leads while competitors with worse service were getting the calls instead.</p>
+        <p>A lot of contractors do great work, but their website does not show it. Their Google presence is thin, their trust signals are missing, and visitors leave without calling. That is frustrating, especially when the business is capable of winning those jobs.</p>
+        <p>My goal is simple: help roofers, HVAC companies, plumbers, landscapers, and contractors see what is holding their website back so they can get found, earn trust faster, and turn more visitors into real calls and booked estimates.</p>
+        <div class="owner-signature">William &mdash; Founder, WStrategies Canada</div>
       </div>
     </div>
   </section>
