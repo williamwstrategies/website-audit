@@ -363,6 +363,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     text-align: right;
   }
 
+  .sample-status-low {
+    color: var(--red);
+  }
+
+  .sample-status-good {
+    color: var(--green);
+  }
+
   .proof-card {
     margin-top: 14px;
   }
@@ -1483,7 +1491,6 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </label>
       <button class="analyze-btn" id="analyzeBtn" type="submit">Find What&rsquo;s Costing Me Leads</button>
     </form>
-    <p class="hint">Built for roofers, contractors, HVAC companies, plumbers, and landscapers. See if competitors are outranking you • Find weak spots costing you calls • Preview your score before signing up</p>
     <div class="reassurance-row" aria-label="Scan reassurance">
       <span class="reassurance-chip">Takes less than 60 seconds</span>
       <span class="reassurance-chip">No signup required</span>
@@ -1513,19 +1520,19 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <p class="sample-note">This is an example of the kind of contractor-focused breakdown the scan can preview.</p>
         <div class="sample-category">
           <span>Google Visibility</span>
-          <span class="sample-status">Needs Work</span>
+          <span class="sample-status sample-status-low">14/30</span>
         </div>
         <div class="sample-category">
           <span>Trust Signals</span>
-          <span class="sample-status">Weak</span>
+          <span class="sample-status sample-status-low">11/25</span>
         </div>
         <div class="sample-category">
           <span>Lead Conversion</span>
-          <span class="sample-status">Poor</span>
+          <span class="sample-status sample-status-low">18/30</span>
         </div>
         <div class="sample-category">
           <span>Mobile Experience</span>
-          <span class="sample-status">Needs Improvement</span>
+          <span class="sample-status sample-status-good">15/15</span>
         </div>
       </div>
     </div>
@@ -1551,7 +1558,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   <section class="testimonial-section" aria-label="Contractor testimonial">
     <div class="section-header">Testimonials</div>
     <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/before-after-proof.png" alt="Before and after website audit score improvement from 47.8 to 94 out of 100">
+      <img class="testimonial-image" src="/assets/contractor-testimonial-1.png" alt="Contractor website example showing excavation and site services lead generation improvements">
       <div class="testimonial-quote">
         <p>&ldquo;Before I ran the scan, my website barely brought in any calls and honestly felt like a waste of money. I knew people were visiting it, but nobody was reaching out.</p>
         <p>The scan showed me exactly what was hurting my rankings and why visitors weren&rsquo;t turning into leads. William helped fix the issues, improve the site, and get everything performing properly again.</p>
@@ -1560,7 +1567,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
     </div>
     <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/excavation-review.png" alt="Website audit score example showing an excavation contractor score of 93 out of 100">
+      <img class="testimonial-image" src="/assets/contractor-testimonial-2.png" alt="Contractor website example showing renovation and construction lead generation improvements">
       <div class="testimonial-quote">
         <p>&ldquo;When we first started, we had basically no online presence at all &mdash; no real website, no Google visibility, and hardly any calls coming in from online.</p>
         <p>William helped us build everything properly from the ground up and showed us exactly what was holding us back from getting found online.</p>
