@@ -56,10 +56,21 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   }
  
   /* ===== HERO ===== */
+  .hero-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .hero-main {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
   .hero {
     max-width: 760px;
     margin: 0 auto;
-    padding: 60px 20px 48px;
+    padding: 60px 0 48px;
     text-align: center;
   }
  
@@ -108,6 +119,25 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     max-width: 640px;
     margin: 0 auto;
   }
+
+  .hero-visual-card {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+
+  .hero-visual-image {
+    width: 100%;
+    height: auto;
+    max-height: 340px;
+    object-fit: contain;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+  }
  
   .url-row {
     display: flex;
@@ -116,7 +146,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   }
 
   .testimonial-section {
-    max-width: 940px;
+    max-width: 1120px;
     margin: 34px auto 0;
     padding: 0 20px;
   }
@@ -134,6 +164,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
   .testimonial-image {
     width: 100%;
+    height: auto;
+    max-height: 280px;
+    object-fit: cover;
     display: block;
     border-radius: 12px;
     border: 1px solid var(--border);
@@ -158,7 +191,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   }
 
   .owner-section {
-    max-width: 940px;
+    max-width: 1120px;
     margin: 34px auto 0;
     padding: 0 20px;
   }
@@ -175,6 +208,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
   .owner-photo {
     width: 100%;
+    height: auto;
+    max-height: 360px;
+    object-fit: cover;
     display: block;
     border-radius: 12px;
     border: 1px solid var(--border);
@@ -324,7 +360,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   }
 
   .conversion-section {
-    max-width: 940px;
+    max-width: 1120px;
     margin: 34px auto 0;
     padding: 0 20px;
   }
@@ -449,6 +485,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
   .proof-image {
     width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
     display: block;
     border-radius: 12px;
     border: 1px solid var(--border);
@@ -1367,7 +1406,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
  
   /* ===== DESKTOP OVERRIDES (≥ 600px) ===== */
   @media (min-width: 600px) {
-    .hero { padding: 80px 24px 60px; }
+    .hero { padding: 80px 0 60px; }
  
     .input-card { padding: 32px; }
  
@@ -1441,6 +1480,123 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     .evidence-snippet { font-size: 0.78rem; }
     .visual-trust-breakdown { grid-template-columns: repeat(2, 1fr); }
   }
+
+  @media (min-width: 900px) {
+    .hero-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.78fr);
+      align-items: center;
+      gap: 44px;
+      padding: 78px 28px 58px;
+    }
+
+    .hero-main {
+      max-width: none;
+      margin: 0;
+    }
+
+    .hero-shell .hero {
+      max-width: 720px;
+      margin: 0;
+      padding: 0 0 28px;
+      text-align: left;
+    }
+
+    .hero-shell h1 {
+      font-size: clamp(3.35rem, 5vw, 5.2rem);
+    }
+
+    .hero-shell .hero-sub {
+      max-width: 620px;
+      margin: 0;
+    }
+
+    .hero-shell .input-card {
+      max-width: 620px;
+      margin: 0;
+    }
+
+    .hero-shell .audit-form .analyze-btn {
+      width: 100%;
+    }
+
+    .hero-shell .reassurance-row {
+      justify-content: flex-start;
+    }
+
+    .hero-visual-card {
+      display: block;
+      align-self: center;
+    }
+
+    .conversion-section,
+    .testimonial-section,
+    .owner-section {
+      margin-top: 48px;
+      padding: 0 28px;
+    }
+
+    .conversion-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .conversion-grid {
+      grid-column: 1 / -1;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .proof-card,
+    .competitor-card {
+      margin-top: 0;
+    }
+
+    .proof-card {
+      display: grid;
+      grid-template-columns: 0.78fr 1.22fr;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .testimonial-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .testimonial-section .section-header {
+      grid-column: 1 / -1;
+      margin-bottom: 0;
+    }
+
+    .testimonial-card + .testimonial-card {
+      margin-top: 0;
+    }
+
+    .testimonial-image {
+      height: 255px;
+      max-height: 255px;
+      object-fit: cover;
+    }
+
+    .owner-card {
+      grid-template-columns: 0.78fr 1.22fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .owner-photo {
+      height: 360px;
+      max-height: 360px;
+      object-fit: cover;
+    }
+
+    .owner-copy {
+      max-width: 660px;
+    }
+  }
  
   .retry-btn {
     background: transparent;
@@ -1468,7 +1624,15 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     .url-row { flex-direction: column; }
     .score-number { font-size: 5rem; }
     .input-card { padding: 20px; }
-    .hero { padding: 48px 20px 40px; }
+    .hero { padding: 48px 0 40px; }
+    .testimonial-image,
+    .owner-photo {
+      max-height: 240px;
+      object-fit: cover;
+    }
+    .proof-image {
+      max-height: 220px;
+    }
   }
 
   @media print {
@@ -1538,34 +1702,43 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
  
 <!-- HERO / INPUT -->
 <div id="home-view">
-  <div class="hero">
-    <div class="badge">Free Website Audit Tool</div>
-    <!--
-      Headline options:
-      Default: How Many Jobs Is Your Website Quietly Losing?
-      1. Are Competitors Getting Calls That Should Be Yours?
-      2. Is Your Website Costing You Calls?
-      3. Is Your Google Listing Helping You Win Jobs — Or Lose Them?
-      4. Local Customers Are Searching. Are They Finding You First?
-      5. Your Website Might Be Leaking Contractor Leads Every Day
-    -->
-    <h1>How Many Jobs Is Your Website <span>Quietly Losing?</span></h1>
-    <p class="hero-sub">Enter your website to scan your Google visibility, trust, and lead conversion performance.</p>
-  </div>
- 
-  <div class="input-card">
-    <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
-      <label class="lead-field">
-        <span class="lead-label">Website URL</span>
-        <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
-      </label>
-      <button class="analyze-btn" id="analyzeBtn" type="submit">Find What&rsquo;s Costing Me Leads</button>
-    </form>
-    <div class="reassurance-row" aria-label="Scan reassurance">
-      <span class="reassurance-chip">Takes less than 60 seconds</span>
-      <span class="reassurance-chip">No signup required</span>
-      <span class="reassurance-chip">Instant contractor-focused insights</span>
-      <span class="reassurance-chip">See what may be costing you leads before booking a call</span>
+  <div class="hero-shell">
+    <div class="hero-main">
+      <div class="hero">
+        <div class="badge">Free Website Audit Tool</div>
+        <!--
+          Headline options:
+          Default: How Many Jobs Is Your Website Quietly Losing?
+          1. Are Competitors Getting Calls That Should Be Yours?
+          2. Is Your Website Costing You Calls?
+          3. Is Your Google Listing Helping You Win Jobs — Or Lose Them?
+          4. Local Customers Are Searching. Are They Finding You First?
+          5. Your Website Might Be Leaking Contractor Leads Every Day
+        -->
+        <h1>How Many Jobs Is Your Website <span>Quietly Losing?</span></h1>
+        <p class="hero-sub">Enter your website to scan your Google visibility, trust, and lead conversion performance.</p>
+      </div>
+    
+      <div class="input-card">
+        <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
+          <label class="lead-field">
+            <span class="lead-label">Website URL</span>
+            <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+          </label>
+          <button class="analyze-btn" id="analyzeBtn" type="submit">Find What&rsquo;s Costing Me Leads</button>
+        </form>
+        <div class="reassurance-row" aria-label="Scan reassurance">
+          <span class="reassurance-chip">Takes less than 60 seconds</span>
+          <span class="reassurance-chip">No signup required</span>
+          <span class="reassurance-chip">Instant contractor-focused insights</span>
+          <span class="reassurance-chip">See what may be costing you leads before booking a call</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual-card" aria-label="Example audit improvement visual">
+      <div class="sample-label">Example audit result</div>
+      <img class="hero-visual-image" src="/assets/before-after-proof.png" alt="Before and after contractor website audit score example">
     </div>
   </div>
 
