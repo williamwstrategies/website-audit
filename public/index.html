@@ -62,6 +62,47 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     padding: 0 20px;
   }
 
+  .landing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0 10px;
+  }
+
+  .brand-logo {
+    width: auto;
+    height: 48px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .header-scan-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    border: 1px solid rgba(245,200,66,0.42);
+    border-radius: 999px;
+    background: rgba(245,200,66,0.12);
+    color: var(--accent);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.86rem;
+    font-weight: 800;
+    padding: 10px 16px;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .header-scan-btn:hover {
+    background: rgba(245,200,66,0.18);
+  }
+
+  .header-scan-btn:active {
+    transform: scale(0.98);
+  }
+
   .hero-main {
     max-width: 760px;
     margin: 0 auto;
@@ -70,7 +111,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   .hero {
     max-width: 760px;
     margin: 0 auto;
-    padding: 60px 0 48px;
+    padding: 34px 0 28px;
     text-align: center;
   }
  
@@ -117,7 +158,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     font-size: clamp(0.95rem, 3vw, 1.1rem);
     color: var(--muted);
     max-width: 520px;
-    margin: 0 auto 18px;
+    margin: 0 auto;
     line-height: 1.7;
   }
 
@@ -126,8 +167,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     font-size: clamp(0.86rem, 2.4vw, 0.96rem);
     font-weight: 700;
     letter-spacing: 0;
-    margin: 0 auto 18px;
+    margin: 6px auto 12px;
     max-width: 620px;
+    text-align: center;
   }
 
   .hero-trust-line span {
@@ -143,6 +185,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     padding: 24px 20px;
     max-width: 640px;
     margin: 0 auto;
+  }
+
+  .cta-microcopy {
+    color: rgba(240,240,245,0.66);
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 10px;
+    text-align: center;
   }
 
   .hero-visual-card {
@@ -1431,7 +1481,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
  
   /* ===== DESKTOP OVERRIDES (≥ 600px) ===== */
   @media (min-width: 600px) {
-    .hero { padding: 80px 0 60px; }
+    .hero { padding: 52px 0 36px; }
  
     .input-card { padding: 32px; }
  
@@ -1513,6 +1563,23 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       align-items: center;
       gap: 44px;
       padding: 78px 28px 58px;
+    }
+
+    .landing-header,
+    .hero-trust-line {
+      grid-column: 1 / -1;
+    }
+
+    .landing-header {
+      padding: 0;
+    }
+
+    .brand-logo {
+      height: 56px;
+    }
+
+    .hero-trust-line {
+      margin: -26px auto 4px;
     }
 
     .hero-main {
@@ -1649,7 +1716,13 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     .url-row { flex-direction: column; }
     .score-number { font-size: 5rem; }
     .input-card { padding: 20px; }
-    .hero { padding: 48px 0 40px; }
+    .brand-logo { height: 40px; }
+    .header-scan-btn {
+      min-height: 38px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+    .hero { padding: 30px 0 24px; }
     .testimonial-image,
     .owner-photo {
       max-height: 240px;
@@ -1728,10 +1801,15 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- HERO / INPUT -->
 <div id="home-view">
   <div class="hero-shell">
+    <header class="landing-header" aria-label="Landing page header">
+      <img class="brand-logo" src="/assets/wstrategies-logo-transparent.png" alt="WStrategies Canada">
+      <button class="header-scan-btn" type="button" onclick="document.getElementById('urlInput')?.focus();">Scan My Website</button>
+    </header>
+
+    <div class="hero-trust-line">Trusted by local contractors and home service businesses</div>
+
     <div class="hero-main">
       <div class="hero">
-        <div class="badge">Free Contractor Lead Leak Scan</div>
-        <div class="hero-eyebrow">Built for roofers, landscapers, HVAC, local contractors and more</div>
         <!--
           Headline options:
           Default: Turn More Website Visitors Into Real Jobs
@@ -1743,7 +1821,6 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         -->
         <h1>Turn More Website Visitors <span>Into Real Jobs</span></h1>
         <p class="hero-sub">In 60 seconds, discover what may be stopping your website from generating more calls, quotes, and booked jobs.</p>
-        <div class="hero-trust-line"><span>★★★★★</span> Trusted by local contractors and home service businesses</div>
       </div>
     
       <div class="input-card">
@@ -1752,14 +1829,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <span class="lead-label">Website URL</span>
             <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
           </label>
-          <button class="analyze-btn" id="analyzeBtn" type="submit">Find What&rsquo;s Costing Me Leads</button>
+          <button class="analyze-btn" id="analyzeBtn" type="submit">Run Free Website Scan</button>
         </form>
-        <div class="reassurance-row" aria-label="Scan reassurance">
-          <span class="reassurance-chip">Takes less than 60 seconds</span>
-          <span class="reassurance-chip">No signup required</span>
-          <span class="reassurance-chip">Instant contractor-focused insights</span>
-          <span class="reassurance-chip">See what may be costing you leads before booking a call</span>
-        </div>
+        <div class="cta-microcopy">No sign up required</div>
       </div>
     </div>
 
