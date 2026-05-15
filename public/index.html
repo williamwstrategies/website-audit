@@ -163,6 +163,8 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   }
 
   .hero-trust-line {
+    display: grid;
+    gap: 2px;
     color: rgba(240,240,245,0.9);
     font-size: clamp(0.86rem, 2.4vw, 0.96rem);
     font-weight: 700;
@@ -175,6 +177,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   .hero-trust-line span {
     color: var(--accent);
     letter-spacing: 0.04em;
+    line-height: 1;
   }
  
   /* ===== INPUT CARD ===== */
@@ -1806,7 +1809,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <button class="header-scan-btn" type="button" onclick="document.getElementById('urlInput')?.focus();">Scan My Website</button>
     </header>
 
-    <div class="hero-trust-line">Trusted by local contractors and home service businesses</div>
+    <div class="hero-trust-line"><span>★★★★★</span> Trusted by local contractors and home service businesses</div>
 
     <div class="hero-main">
       <div class="hero">
