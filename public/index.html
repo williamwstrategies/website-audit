@@ -198,6 +198,32 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     text-align: center;
   }
 
+  .no-website-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    color: rgba(240,240,245,0.78);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 800;
+    margin: 12px auto 0;
+    min-height: 40px;
+    padding: 9px 14px;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    width: 100%;
+  }
+
+  .no-website-link:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(245,200,66,0.36);
+    color: var(--accent);
+  }
+
   .hero-visual-card {
     display: none;
     background: var(--surface);
@@ -1835,6 +1861,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <button class="analyze-btn" id="analyzeBtn" type="submit">Run Free Website Scan</button>
         </form>
         <div class="cta-microcopy">No sign up required</div>
+        <a class="no-website-link" href="https://www.wstrategiescanada.ca/contact">No website? Click here</a>
       </div>
     </div>
 
@@ -1843,6 +1870,28 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <img class="hero-visual-image" src="/assets/before-after-proof.png" alt="Before and after contractor website audit score example">
     </div>
   </div>
+
+  <section class="testimonial-section" aria-label="Contractor testimonial">
+    <div class="section-header">Testimonials</div>
+    <div class="testimonial-card">
+      <img class="testimonial-image" src="/assets/contractor-testimonial-2.png" alt="Contractor website example showing renovation and construction lead generation improvements">
+      <div class="testimonial-quote">
+        <p>&ldquo;Before I ran the scan, my website barely brought in any calls and honestly felt like a waste of money. I knew people were visiting it, but nobody was reaching out.</p>
+        <p>The scan showed me exactly what was hurting my rankings and why visitors weren&rsquo;t turning into leads. William helped fix the issues, improve the site, and get everything performing properly again.</p>
+        <p>Now we&rsquo;re getting consistent calls and leads coming in organically through our website and Google &mdash; without relying on ads.&rdquo;</p>
+        <div class="testimonial-name">&mdash; Local Contractor</div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <img class="testimonial-image" src="/assets/contractor-testimonial-1.png" alt="Contractor website example showing excavation and site services lead generation improvements">
+      <div class="testimonial-quote">
+        <p>&ldquo;When we first started, we had basically no online presence at all &mdash; no real website, no Google visibility, and hardly any calls coming in from online.</p>
+        <p>William helped us build everything properly from the ground up and showed us exactly what was holding us back from getting found online.</p>
+        <p>Now we&rsquo;re consistently getting calls and leads coming through our website and Google, and it finally feels like our business actually has a strong presence online.&rdquo;</p>
+        <div class="testimonial-name">&mdash; Excavation Contractor</div>
+      </div>
+    </div>
+  </section>
 
   <section class="conversion-section" aria-label="What the website scan reveals">
     <div class="conversion-grid">
@@ -1897,28 +1946,6 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <li>Missing trust signals can cost you estimates</li>
         <li>Poor Google visibility can mean missed jobs every week</li>
       </ul>
-    </div>
-  </section>
-
-  <section class="testimonial-section" aria-label="Contractor testimonial">
-    <div class="section-header">Testimonials</div>
-    <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/contractor-testimonial-2.png" alt="Contractor website example showing renovation and construction lead generation improvements">
-      <div class="testimonial-quote">
-        <p>&ldquo;Before I ran the scan, my website barely brought in any calls and honestly felt like a waste of money. I knew people were visiting it, but nobody was reaching out.</p>
-        <p>The scan showed me exactly what was hurting my rankings and why visitors weren&rsquo;t turning into leads. William helped fix the issues, improve the site, and get everything performing properly again.</p>
-        <p>Now we&rsquo;re getting consistent calls and leads coming in organically through our website and Google &mdash; without relying on ads.&rdquo;</p>
-        <div class="testimonial-name">&mdash; Local Contractor</div>
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/contractor-testimonial-1.png" alt="Contractor website example showing excavation and site services lead generation improvements">
-      <div class="testimonial-quote">
-        <p>&ldquo;When we first started, we had basically no online presence at all &mdash; no real website, no Google visibility, and hardly any calls coming in from online.</p>
-        <p>William helped us build everything properly from the ground up and showed us exactly what was holding us back from getting found online.</p>
-        <p>Now we&rsquo;re consistently getting calls and leads coming through our website and Google, and it finally feels like our business actually has a strong presence online.&rdquo;</p>
-        <div class="testimonial-name">&mdash; Excavation Contractor</div>
-      </div>
     </div>
   </section>
 
