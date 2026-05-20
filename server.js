@@ -48,7 +48,7 @@ function extractWebsiteScore(result = {}) {
   );
 }
 
-async function sendLeadToGHL(lead, score = null) {
+async function sendLeadToGHL(lead, score = null, extra = {}) {
   const webhookUrl = process.env.GHL_WEBHOOK_URL;
   if (!webhookUrl) {
     console.warn('[LeadCheck] GHL_WEBHOOK_URL is not configured; lead webhook skipped.');
@@ -66,6 +66,7 @@ async function sendLeadToGHL(lead, score = null) {
     score: normalizedScore,
     websiteScore: normalizedScore,
     timestamp: new Date().toISOString(),
+    ...extra,
   };
 
   console.log('[LeadCheck][GHL] Sending lead to GoHighLevel');
@@ -131,11 +132,13 @@ app.post('/api/analyze', async (req, res) => {
 
 app.post('/api/lead-capture', async (req, res) => {
   const lead = sanitizeLead(req.body);
+  const reportRequested = req.body.reportRequested === true;
+  const captureOnly = !!req.body.leadOnly || reportRequested;
 
   if (!lead.email) return res.status(400).json({ error: 'Email is required' });
   if (!lead.website) return res.status(400).json({ error: 'Website URL is required' });
-  if (req.body.leadOnly && !lead.name) return res.status(400).json({ error: 'Name is required' });
-  if (req.body.leadOnly && !lead.phone) return res.status(400).json({ error: 'Phone is required' });
+  if (req.body.leadOnly && !reportRequested && !lead.name) return res.status(400).json({ error: 'Name is required' });
+  if (req.body.leadOnly && !reportRequested && !lead.phone) return res.status(400).json({ error: 'Phone is required' });
 
   try {
     new URL(lead.website);
@@ -159,36 +162,48 @@ app.post('/api/lead-capture', async (req, res) => {
     },
   });
 
-  if (req.body.leadOnly) {
+  if (captureOnly) {
     const score = normalizeScoreValue(req.body.score ?? req.body.websiteScore);
+    const reportData = req.body.reportData && typeof req.body.reportData === 'object'
+      ? req.body.reportData
+      : null;
     try {
-      await sendLeadToGHL(lead, score);
+      await sendLeadToGHL(lead, score, {
+        reportRequested,
+        ...(reportData && { reportData }),
+      });
     } catch (err) {
       console.error('[LeadCheck] GHL webhook error:', err.message);
       posthog.captureException(err, distinctId, { website: lead.website, score });
       posthog.capture({
         distinctId,
-        event: 'lead capture failed',
+        event: reportRequested ? 'ReportPDFRequested failed' : 'lead capture failed',
         properties: {
           website: lead.website,
           score,
+          report_requested: reportRequested,
           error: err.message,
           ...(sessionId && { $session_id: sessionId }),
         },
       });
+      if (reportRequested) {
+        return res.json({ ok: true, webhookSent: false, warning: 'Report request received, but webhook failed' });
+      }
       return res.status(502).json({ error: 'Lead capture webhook failed' });
     }
     posthog.capture({
       distinctId,
-      event: 'lead captured',
+      event: reportRequested ? 'ReportPDFRequested' : 'lead captured',
       properties: {
         website: lead.website,
         score,
-        lead_only: true,
+        lead_only: !!req.body.leadOnly,
+        report_requested: reportRequested,
+        ...(reportData && { report_data: reportData }),
         ...(sessionId && { $session_id: sessionId }),
       },
     });
-    return res.json({ ok: true });
+    return res.json({ ok: true, reportRequested });
   }
 
   const debugMode = !!(req.query.debug || req.body.debug);

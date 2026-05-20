@@ -1072,6 +1072,20 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     margin-bottom: 16px;
   }
 
+  .report-request-section {
+    margin: 40px 0 30px;
+  }
+
+  .report-request-message {
+    color: var(--green);
+    display: none;
+    font-size: 0.9rem;
+    font-weight: 800;
+    line-height: 1.4;
+    margin-top: 12px;
+    text-align: center;
+  }
+
   /* Results inner padding */
   #resultsInner {
     max-width: 880px;
@@ -1782,6 +1796,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     #home-view,
     #loading,
     .report-actions,
+    .report-request-section,
     .analyze-another {
       display: none !important;
     }
@@ -2005,76 +2020,6 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
  
   <div id="resultsInner">
 
-    <!-- Partial Results / Lead Unlock -->
-    <div class="partial-gate" id="partialGate">
-      <div class="partial-headline" id="partialHeadline">We found several areas worth reviewing.</div>
-      <p class="partial-subcopy">Your score is only the beginning. The locked findings below show where the full report gets specific.</p>
-      <div class="section-header">Locked Findings Preview</div>
-      <div class="preview-grid" id="previewIssues"></div>
-
-      <div class="report-includes-card">
-        <div class="report-includes-title">Full Report Includes</div>
-        <div class="report-includes-list">
-          <div class="report-include-item">
-            <div class="report-include-title">Exact issues detected</div>
-            <div class="report-include-detail">Specific findings from the live scan, grouped by impact and priority.</div>
-          </div>
-          <div class="report-include-item">
-            <div class="report-include-title">Category-by-category breakdown</div>
-            <div class="report-include-detail">SEO, trust, conversion, mobile, and technical health scores with evidence.</div>
-          </div>
-          <div class="report-include-item">
-            <div class="report-include-title">Priority fixes</div>
-            <div class="report-include-detail">The highest-impact changes to improve visibility and lead conversion first.</div>
-          </div>
-          <div class="report-include-item">
-            <div class="report-include-title">Broken links and missing pages</div>
-            <div class="report-include-detail">Navigation problems, missing core pages, redirects, and crawl issues.</div>
-          </div>
-          <div class="report-include-item">
-            <div class="report-include-title">Lead conversion recommendations</div>
-            <div class="report-include-detail">CTA, form, phone, booking, and trust improvements based on the scan.</div>
-          </div>
-          <div class="report-include-item">
-            <div class="report-include-title">Mobile and technical health insights</div>
-            <div class="report-include-detail">Mobile experience, speed signals, layout clarity, and technical checks.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="unlock-card">
-        <div class="unlock-title">Unlock the Full Audit Report</div>
-        <p class="unlock-copy">See what may be costing your website leads and which fixes should be prioritized first.</p>
-        <p class="unlock-copy">Enter your info to unlock the full audit breakdown and recommendations.</p>
-        <div class="audit-proof-row">
-          <span class="audit-proof-pill">Generated from a live scan of your website</span>
-          <span class="audit-proof-pill">Benchmarked against lead-generation best practices</span>
-          <span class="audit-proof-pill">Includes SEO, trust, conversion, mobile, and technical checks</span>
-        </div>
-        <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
-          <div class="lead-grid">
-            <label class="lead-field">
-              <span class="lead-label">Name *</span>
-              <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name" required>
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Business Name</span>
-              <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Email *</span>
-              <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Phone *</span>
-              <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
-            </label>
-          </div>
-          <button class="analyze-btn" id="unlockBtn" type="submit">Unlock My Full Report</button>
-        </form>
-      </div>
-    </div>
-
     <div id="fullResults">
 
     <!-- Rating Comparison -->
@@ -2133,6 +2078,41 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div id="evidencePages"></div>
       <div class="evidence-grid" id="evidenceSignals"></div>
     </div>
+
+    <!-- Optional PDF/report request -->
+    <div class="report-request-section" id="reportRequestSection">
+      <div class="unlock-card">
+        <div class="unlock-title">Want a PDF copy of this report?</div>
+        <p class="unlock-copy">Enter your details and we&rsquo;ll capture your request for a copy of your website audit report.</p>
+        <div class="audit-proof-row">
+          <span class="audit-proof-pill">Generated from a live scan of your website</span>
+          <span class="audit-proof-pill">Report request captured for follow-up</span>
+          <span class="audit-proof-pill">No report gate required</span>
+        </div>
+        <form class="lead-form" id="reportRequestForm" onsubmit="event.preventDefault(); submitReportRequest();">
+          <div class="lead-grid">
+            <label class="lead-field">
+              <span class="lead-label">Name</span>
+              <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Business Name</span>
+              <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
+            </label>
+            <label class="lead-field lead-field-full">
+              <span class="lead-label">Email *</span>
+              <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Phone</span>
+              <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel">
+            </label>
+          </div>
+          <button class="analyze-btn" id="reportRequestBtn" type="submit">Send Me the PDF Report</button>
+          <div class="report-request-message" id="reportRequestMessage" role="status"></div>
+        </form>
+      </div>
+    </div>
  
     <div class="analyze-another">
       <button class="retry-btn" onclick="resetApp()">← Analyze Another Website</button>
@@ -2184,7 +2164,6 @@ let progressStartedAt = 0;
 let activeMetaScan = null;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
-let fullResultsUnlocked = false;
 
 function trackMetaEvent(eventName, params = {}) {
   try {
@@ -2460,7 +2439,6 @@ async function runAnalysis() {
   fireMetaOnce('auditStarted', 'AuditStarted');
   pendingScanResult = null;
   pendingWebsiteUrl = url;
-  fullResultsUnlocked = false;
  
   // Show loading
   document.getElementById('home-view').style.display = 'none';
@@ -2495,7 +2473,7 @@ async function runAnalysis() {
  
     pendingScanResult = data;
     pendingWebsiteUrl = asText(data.url) || url;
-    renderPartialResults(data);
+    renderResults(data);
     fireMetaOnce('auditCompleted', 'AuditCompleted', {
       websiteScore: normalizeScore(firstDefinedValue(data.total, data.score, data.websiteScore, data.rating)),
     });
@@ -2542,162 +2520,49 @@ function renderScoreHero(result) {
   return { total, maxScore, color };
 }
 
-function getPreviewTier(score) {
-  if (score < 70) return 'low';
-  if (score < 85) return 'medium';
-  return 'high';
-}
-
-function getPartialHeadline(score) {
-  return getPreviewTier(score) === 'high'
-    ? 'Your site is performing well — but there may still be hidden growth opportunities.'
-    : 'We found several areas worth reviewing.';
-}
-
-function buildLockedPreviewCards(result) {
-  const score = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
-  const tier = getPreviewTier(score);
-  const categories = asRecord(result.categories);
-  const brokenSummary = getBrokenLinksSummary(result);
-
-  const categoryDefs = [
-    ['leadConversion', {
-      low: ['Lead Conversion', 'attention', '!', 'Potential lead loss detected', 'Unlock the CTA, contact, and conversion-path findings'],
-      medium: ['Lead Conversion', 'opportunity', '↗', 'Optimization opportunity', 'Unlock the conversion steps and lead friction notes'],
-      high: ['Conversion Optimization', 'growth', '↗', 'Advanced growth opportunity', 'Unlock the conversion benchmarks and next-level improvements'],
-    }],
-    ['localTrust', {
-      low: ['Trust Signals', 'attention', '!', 'Review/trust gaps may be hurting conversions', 'Unlock the trust, review, proof, and credibility findings'],
-      medium: ['Trust Signals', 'opportunity', '↗', 'Trust improvements available', 'Unlock review, proof, and confidence-building recommendations'],
-      high: ['Trust Signals', 'growth', '↗', 'Authority improvements available', 'Unlock trust benchmarks and credibility fine-tuning'],
-    }],
-    ['seoVisibility', {
-      low: ['SEO Visibility', 'attention', '!', 'Ranking opportunities found', 'Unlock title, heading, service, and local SEO details'],
-      medium: ['SEO Visibility', 'opportunity', '↗', 'Local ranking opportunities', 'Unlock the SEO breakdown and priority keyword fixes'],
-      high: ['SEO Visibility', 'growth', '↗', 'Fine-tuning opportunities', 'Unlock advanced local SEO and service-page recommendations'],
-    }],
-    ['technical', {
-      low: ['Mobile Experience', 'attention', '!', 'Mobile friction may be costing calls', 'Unlock mobile, speed, and technical health details'],
-      medium: ['Mobile Experience', 'opportunity', '↗', 'User experience check needed', 'Unlock mobile and technical health insights'],
-      high: ['Technical Health', 'growth', '↗', 'Performance details locked', 'Unlock technical fine-tuning and mobile experience notes'],
-    }],
-  ];
-
-  const cards = categoryDefs.map(([key, copyByTier]) => {
-    const cat = asRecord(categories[key]);
-    const catScore = Number.isFinite(Number(cat.score)) ? Number(cat.score) : null;
-    const catMax = Number(cat.max) || null;
-    const pct = catScore !== null && catMax ? catScore / catMax : null;
-    const copy = copyByTier[tier];
-    const label = asText(cat.label) || copy[0];
-    const displayPct = pct !== null ? Math.round(pct * 100) : null;
-
+function buildReportRequestData(result) {
+  const root = asRecord(result);
+  const categories = asRecord(root.categories);
+  const score = normalizeScore(firstDefinedValue(root.total, root.score, root.websiteScore, root.rating));
+  const categorySummary = objectEntries(categories).map(([key, rawCat]) => {
+    const cat = asRecord(rawCat);
     return {
-      label,
-      sort: pct === null ? 1 : pct,
-      className: copy[1],
-      icon: copy[2],
-      status: copy[3],
-      value: displayPct !== null ? `${displayPct}% preview score` : 'Unlock detailed score',
-      detail: copy[4],
+      key,
+      label: asText(cat.label) || key,
+      score: Number.isFinite(Number(cat.score)) ? Number(cat.score) : null,
+      max: Number.isFinite(Number(cat.max)) ? Number(cat.max) : null,
     };
   });
 
-  cards.sort((a, b) => a.sort - b.sort);
-
-  const brokenHasIssues = brokenSummary.totalIssues > 0;
-  const brokenCopy = tier === 'high'
-    ? ['Competitive Benchmark', 'growth', '↗', 'See how you compare', 'Unlock the link health details and crawl summary']
-    : tier === 'medium'
-      ? ['Broken Links', 'opportunity', '↗', 'Unlock hidden issue scan', 'Unlock broken-page, redirect, and missing-page details']
-      : ['Broken Links', 'attention', '!', 'Technical issues may exist', 'Unlock the affected pages, source URLs, and missing-page checks'];
-
-  cards.push({
-    label: brokenHasIssues ? 'Broken Pages & Links' : brokenCopy[0],
-    sort: brokenHasIssues ? -1 : 1,
-    className: brokenHasIssues ? 'attention' : brokenCopy[1],
-    icon: brokenHasIssues ? '!' : brokenCopy[2],
-    status: brokenHasIssues
-      ? (tier === 'low' ? 'Needs immediate review' : 'Potential lead loss area')
-      : brokenCopy[3],
-    value: brokenHasIssues ? `${brokenSummary.totalIssues} item${brokenSummary.totalIssues === 1 ? '' : 's'} flagged in preview` : 'Unlock link health details',
-    detail: brokenHasIssues
-      ? 'Unlock the affected pages, source URLs, and recommended fixes'
-      : brokenCopy[4],
-  });
-
-  const selectedCards = cards
-    .sort((a, b) => a.sort - b.sort)
-    .slice(0, 5);
-
-  if (selectedCards.length && !selectedCards.some(card => card.className === 'attention' || card.className === 'opportunity')) {
-    selectedCards[0] = {
-      ...selectedCards[0],
-      className: 'opportunity',
-      icon: '↗',
-      status: 'Growth opportunity',
-    };
-  }
-
-  return selectedCards;
+  return {
+    score,
+    maxScore: Number(root.maxScore) || 100,
+    categories: categorySummary,
+    issues: asArray(root.issues).slice(0, 10),
+    recommendations: asArray(root.recommendations).slice(0, 10),
+    criticalFlags: asArray(root.criticalFlags).slice(0, 10),
+    positives: asArray(root.positives).slice(0, 7),
+    brokenLinks: asRecord(root.brokenLinks),
+  };
 }
 
-function renderPartialResults(data) {
-  stopLoadingTimers();
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('results').style.display = 'block';
-
-  const result = asRecord(data);
-  renderScoreHero(result);
-  const previewScore = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
-  const partialHeadline = document.getElementById('partialHeadline');
-  if (partialHeadline) partialHeadline.textContent = getPartialHeadline(previewScore);
-
-  const actions = document.querySelector('.report-actions');
-  if (actions) actions.style.display = 'none';
-  document.getElementById('partialGate').style.display = 'block';
-  document.getElementById('fullResults').style.display = 'none';
-
-  const previewIssues = document.getElementById('previewIssues');
-  const lockedCards = buildLockedPreviewCards(result);
-  previewIssues.innerHTML = lockedCards.map(card => `
-    <div class="locked-card ${escHtml(card.className)}">
-      <div class="locked-card-top">
-        <div>
-          <div class="locked-card-status">${escHtml(card.status)}</div>
-          <div class="locked-card-title">${escHtml(card.label)}</div>
-        </div>
-        <div class="locked-card-icon">${escHtml(card.icon)}</div>
-      </div>
-      <div class="locked-metric-row">
-        <div class="locked-card-value">${escHtml(card.value)}</div>
-      </div>
-      <div class="locked-detail">${escHtml(card.detail)}</div>
-      <div class="locked-unlock"><span class="locked-card-lock">&#128274;</span> Unlock to view full finding</div>
-    </div>
-  `).join('');
-
-  const unlockForm = document.getElementById('unlockLeadForm');
-  if (unlockForm) unlockForm.reset();
-  const unlockBtn = document.getElementById('unlockBtn');
-  if (unlockBtn) unlockBtn.disabled = false;
-}
-
-async function submitLeadCapture() {
-  if (!pendingScanResult || !pendingWebsiteUrl) {
-    unlockFullResults();
-    return;
-  }
+async function submitReportRequest() {
+  if (!pendingScanResult || !pendingWebsiteUrl) return;
 
   const name = document.getElementById('nameInput').value.trim();
   const businessName = document.getElementById('businessNameInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
-  const unlockBtn = document.getElementById('unlockBtn');
+  const reportButton = document.getElementById('reportRequestBtn');
+  const message = document.getElementById('reportRequestMessage');
 
-  if (!name || !email || !phone) return;
+  if (!email) return;
 
-  if (unlockBtn) unlockBtn.disabled = true;
+  if (reportButton) reportButton.disabled = true;
+  if (message) {
+    message.style.display = 'none';
+    message.textContent = '';
+  }
 
   const score = normalizeScore(firstDefinedValue(
     pendingScanResult.total,
@@ -2711,7 +2576,7 @@ async function submitLeadCapture() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        leadOnly: true,
+        reportRequested: true,
         name,
         businessName,
         email,
@@ -2719,25 +2584,36 @@ async function submitLeadCapture() {
         website: pendingWebsiteUrl,
         score,
         websiteScore: score,
+        reportData: buildReportRequestData(pendingScanResult),
       }),
     });
 
+    const data = await res.json().catch(() => ({}));
     if (res.ok) {
       fireMetaOnce('lead', 'Lead', {}, false);
+      if (message) {
+        message.style.display = 'block';
+        message.style.color = 'var(--green)';
+        message.textContent = 'Report request received.';
+      }
     } else {
-      const data = await res.json().catch(() => ({}));
-      console.error('[LeadCheck] Lead capture failed:', data.error || res.statusText);
+      console.error('[LeadCheck] Report request failed:', data.error || res.statusText);
+      if (message) {
+        message.style.display = 'block';
+        message.style.color = 'var(--red)';
+        message.textContent = 'We could not capture the report request, but your full report is still available here.';
+      }
+      if (reportButton) reportButton.disabled = false;
     }
   } catch (err) {
-    console.error('[LeadCheck] Lead capture failed:', err.message);
+    console.error('[LeadCheck] Report request failed:', err.message);
+    if (message) {
+      message.style.display = 'block';
+      message.style.color = 'var(--red)';
+      message.textContent = 'We could not capture the report request, but your full report is still available here.';
+    }
+    if (reportButton) reportButton.disabled = false;
   }
-
-  unlockFullResults();
-}
-
-function unlockFullResults() {
-  fullResultsUnlocked = true;
-  if (pendingScanResult) renderResults(pendingScanResult);
 }
  
 function renderResults(data) {
@@ -2749,10 +2625,19 @@ function renderResults(data) {
   const { color } = renderScoreHero(result);
   renderRatingComparison(result, color);
 
-  document.getElementById('partialGate').style.display = 'none';
   document.getElementById('fullResults').style.display = 'block';
   const actions = document.querySelector('.report-actions');
   if (actions) actions.style.display = 'flex';
+
+  const reportForm = document.getElementById('reportRequestForm');
+  if (reportForm) reportForm.reset();
+  const reportButton = document.getElementById('reportRequestBtn');
+  if (reportButton) reportButton.disabled = false;
+  const reportMessage = document.getElementById('reportRequestMessage');
+  if (reportMessage) {
+    reportMessage.style.display = 'none';
+    reportMessage.textContent = '';
+  }
  
   // Categories
   const catsGrid = document.getElementById('catsGrid');
@@ -3103,14 +2988,20 @@ function resetApp() {
   setLoadingProgress(0, 'Estimated time: about 90 seconds');
   pendingScanResult = null;
   pendingWebsiteUrl = null;
-  fullResultsUnlocked = false;
   document.getElementById('results').style.display = 'none';
-  document.getElementById('partialGate').style.display = 'block';
   document.getElementById('fullResults').style.display = 'none';
   document.getElementById('home-view').style.display = 'block';
   document.getElementById('analyzeBtn').disabled = false;
   document.getElementById('auditForm').reset();
-  document.getElementById('unlockLeadForm').reset();
+  const reportForm = document.getElementById('reportRequestForm');
+  if (reportForm) reportForm.reset();
+  const reportButton = document.getElementById('reportRequestBtn');
+  if (reportButton) reportButton.disabled = false;
+  const reportMessage = document.getElementById('reportRequestMessage');
+  if (reportMessage) {
+    reportMessage.style.display = 'none';
+    reportMessage.textContent = '';
+  }
   document.getElementById('error-box').style.display = 'none';
 }
  
