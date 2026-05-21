@@ -2390,6 +2390,12 @@ function fireMetaOnce(key, eventName, params = {}, isCustom = true) {
   if (isCustom) trackMetaCustomEvent(eventName, params);
   else trackMetaEvent(eventName, params);
 }
+
+function fireMetaLead(params = {}) {
+  if (!activeMetaScan || activeMetaScan.lead) return;
+  activeMetaScan.lead = true;
+  trackMetaEvent('Lead', params);
+}
  
 function cycleStep() {
   stepIdx = (stepIdx + 1) % LOADING_STEPS.length;
@@ -2799,7 +2805,11 @@ async function submitLeadUnlock() {
 
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      fireMetaOnce('lead', 'Lead', {}, false);
+      fireMetaLead({
+        content_name: 'Full Report Unlock',
+        website: pendingWebsiteUrl,
+        websiteScore: score,
+      });
       renderResults(pendingScanResult);
     } else {
       console.error('[LeadCheck] Lead unlock failed:', data.error || res.statusText);

@@ -186,7 +186,21 @@ app.post('/api/lead-capture', async (req, res) => {
           ...(sessionId && { $session_id: sessionId }),
         },
       });
-      return res.status(502).json({ error: 'Lead capture webhook failed' });
+      posthog.capture({
+        distinctId,
+        event: reportRequested ? 'LeadSubmitted' : 'lead captured',
+        properties: {
+          website: lead.website,
+          score,
+          lead_only: !!req.body.leadOnly,
+          report_requested: reportRequested,
+          webhook_sent: false,
+          webhook_error: err.message,
+          ...(reportData && { report_data: reportData }),
+          ...(sessionId && { $session_id: sessionId }),
+        },
+      });
+      return res.json({ ok: true, reportRequested, webhookSent: false, warning: 'Lead captured, but webhook failed' });
     }
     posthog.capture({
       distinctId,
@@ -196,6 +210,7 @@ app.post('/api/lead-capture', async (req, res) => {
         score,
         lead_only: !!req.body.leadOnly,
         report_requested: reportRequested,
+        webhook_sent: true,
         ...(reportData && { report_data: reportData }),
         ...(sessionId && { $session_id: sessionId }),
       },
