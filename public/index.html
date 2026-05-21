@@ -2785,12 +2785,6 @@ async function submitLeadUnlock() {
     pendingScanResult.rating
   ));
 
-  fireMetaLead({
-    content_name: 'Full Report Unlock',
-    website: pendingWebsiteUrl,
-    websiteScore: score,
-  });
-
   try {
     const res = await fetch(LEAD_CAPTURE_API_URL, {
       method: 'POST',
@@ -2812,6 +2806,7 @@ async function submitLeadUnlock() {
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
       renderResults(pendingScanResult);
+      fireMetaLead();
     } else {
       console.error('[LeadCheck] Lead unlock failed:', data.error || res.statusText);
       if (message) {
