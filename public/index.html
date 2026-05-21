@@ -2352,6 +2352,7 @@ let progressTimer = null;
 let progressStartedAt = 0;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
+let metaLeadTrackedForUnlock = false;
  
 function cycleStep() {
   stepIdx = (stepIdx + 1) % LOADING_STEPS.length;
@@ -2366,6 +2367,18 @@ function setLoadingProgress(percent, label) {
   if (fill) fill.style.width = bounded + '%';
   if (pct) pct.textContent = bounded + '%';
   if (eta && label) eta.textContent = label;
+}
+
+function trackMetaLeadAfterUnlock() {
+  if (metaLeadTrackedForUnlock) return;
+  metaLeadTrackedForUnlock = true;
+
+  // Meta Lead fires only after the required unlock form submits successfully
+  // and the full report is shown. It does not fire on page load or scan start.
+  if (window.fbq) {
+    window.fbq('track', 'Lead');
+    console.log('[Meta Pixel] Lead event fired after report unlock');
+  }
 }
 
 function updateLoadingProgress() {
@@ -2588,6 +2601,7 @@ async function runAnalysis() {
 
   pendingScanResult = null;
   pendingWebsiteUrl = url;
+  metaLeadTrackedForUnlock = false;
  
   // Show loading
   document.getElementById('home-view').style.display = 'none';
@@ -2751,6 +2765,7 @@ async function submitLeadUnlock() {
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
       renderResults(pendingScanResult);
+      trackMetaLeadAfterUnlock();
     } else {
       console.error('[LeadCheck] Lead unlock failed:', data.error || res.statusText);
       if (message) {
