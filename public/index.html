@@ -3,154 +3,82 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#060504">
+<meta name="theme-color" content="#111827">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="LeadCheck">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>LeadCheck – Website Lead-Gen Scorer for Local Businesses</title>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '4279452245649919');
+fbq('track', 'PageView');
+console.log('[Meta Pixel] Event fired:', 'PageView', {});
+</script>
+<!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #060504;
-    --surface: #11100e;
-    --surface2: #181613;
-    --surface3: #211d18;
-    --border: rgba(201, 164, 109, 0.18);
-    --border-strong: rgba(201, 164, 109, 0.34);
-    --accent: #c9a46d;
-    --accent2: #a9773c;
-    --accent-light: #e5c487;
-    --green: #3ddc97;
-    --yellow: #d5ab62;
-    --red: #e06455;
-    --text: #f7f1e8;
-    --muted: #a99f91;
-    --radius: 10px;
-    --shadow: 0 24px 80px rgba(0,0,0,0.38);
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3a;
+    --accent: #f5c842;
+    --accent2: #ff6b35;
+    --green: #2ecc71;
+    --yellow: #f5c842;
+    --red: #e74c3c;
+    --text: #f0f0f5;
+    --muted: #7a7a9a;
+    --radius: 12px;
   }
  
   * { box-sizing: border-box; margin: 0; padding: 0; }
  
   body {
     font-family: 'DM Sans', sans-serif;
-    background:
-      radial-gradient(circle at 18% 8%, rgba(38, 74, 94, 0.34), transparent 28rem),
-      radial-gradient(circle at 82% 0%, rgba(201, 164, 109, 0.18), transparent 28rem),
-      linear-gradient(180deg, #090806 0%, #050504 42%, #090806 100%);
+    background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     line-height: 1.6;
     /* Prevent horizontal overflow on mobile */
     overflow-x: hidden;
   }
-
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background:
-      linear-gradient(115deg, transparent 8%, rgba(99, 154, 177, 0.10) 17%, transparent 28%),
-      linear-gradient(138deg, transparent 56%, rgba(201, 164, 109, 0.16) 66%, transparent 78%);
-    filter: blur(12px);
-    opacity: 0.72;
-    z-index: -1;
-  }
-
-  #home-view {
-    position: relative;
-    overflow: hidden;
-  }
-
-  #home-view::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 86px;
-    width: min(900px, 90vw);
-    height: 360px;
-    transform: translateX(-50%);
-    background:
-      radial-gradient(ellipse at center, rgba(201, 164, 109, 0.12), transparent 58%),
-      linear-gradient(100deg, transparent 16%, rgba(82, 134, 156, 0.13), transparent 46%, rgba(201, 164, 109, 0.13), transparent 78%);
-    filter: blur(26px);
-    opacity: 0.9;
-    pointer-events: none;
-  }
  
   /* ===== HERO ===== */
   .hero-shell {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 0 20px 54px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .landing-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 22px 0 22px;
-  }
-
-  .brand-logo {
-    width: auto;
-    height: 54px;
-    object-fit: contain;
-    display: block;
-  }
-
-  .header-scan-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    background: rgba(201,164,109,0.10);
-    color: var(--accent-light);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.84rem;
-    font-weight: 800;
-    padding: 10px 18px;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.1s;
-    white-space: nowrap;
-  }
-
-  .header-scan-btn:hover {
-    background: rgba(201,164,109,0.18);
-    border-color: rgba(229,196,135,0.55);
-    color: var(--text);
-  }
-
-  .header-scan-btn:active {
-    transform: scale(0.98);
+    padding: 0 20px;
   }
 
   .hero-main {
-    max-width: 820px;
+    max-width: 760px;
     margin: 0 auto;
   }
 
   .hero {
-    max-width: 820px;
+    max-width: 760px;
     margin: 0 auto;
-    padding: 46px 0 30px;
+    padding: 60px 0 48px;
     text-align: center;
   }
  
   .badge {
     display: inline-block;
-    background: rgba(201,164,109,0.12);
+    background: rgba(245,200,66,0.12);
     color: var(--accent);
-    border: 1px solid rgba(201,164,109,0.3);
+    border: 1px solid rgba(245,200,66,0.3);
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.12em;
@@ -172,118 +100,42 @@
   }
  
   h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.55rem, 8.5vw, 6.4rem);
-    font-weight: 700;
-    line-height: 0.98;
-    letter-spacing: -0.035em;
-    margin: 0 auto 22px;
-    max-width: 930px;
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.9rem, 7vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
   }
  
   h1 span {
-    color: var(--accent-light);
+    color: var(--accent);
     display: inline-block;
   }
  
   .hero-sub {
-    font-size: clamp(1rem, 2.6vw, 1.18rem);
-    color: rgba(247,241,232,0.72);
-    max-width: 650px;
-    margin: 0 auto;
+    font-size: clamp(0.95rem, 3vw, 1.1rem);
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
     line-height: 1.7;
-  }
-
-  .hero-trust-line {
-    display: grid;
-    gap: 2px;
-    color: rgba(247,241,232,0.82);
-    font-size: clamp(0.86rem, 2.4vw, 0.96rem);
-    font-weight: 700;
-    letter-spacing: 0;
-    margin: 8px auto 4px;
-    max-width: 620px;
-    text-align: center;
-  }
-
-  .hero-trust-line span {
-    color: var(--accent-light);
-    letter-spacing: 0.04em;
-    line-height: 1;
   }
  
   /* ===== INPUT CARD ===== */
   .input-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.022));
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 22px;
-    max-width: 680px;
+    border-radius: 16px;
+    padding: 24px 20px;
+    max-width: 640px;
     margin: 0 auto;
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(14px);
-  }
-
-  .cta-microcopy {
-    color: rgba(247,241,232,0.62);
-    font-size: 0.82rem;
-    font-weight: 700;
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .no-website-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 1px solid rgba(201,164,109,0.24);
-    border-radius: 8px;
-    color: rgba(247,241,232,0.78);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 800;
-    margin: 12px auto 0;
-    min-height: 40px;
-    padding: 9px 14px;
-    text-decoration: none;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
-    width: 100%;
-  }
-
-  .no-website-link:hover {
-    background: rgba(201,164,109,0.08);
-    border-color: rgba(229,196,135,0.42);
-    color: var(--accent-light);
-  }
-
-  .hero-proof-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin: 16px auto 0;
-    max-width: 680px;
-  }
-
-  .hero-proof-item {
-    border: 1px solid rgba(201,164,109,0.18);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.025);
-    color: rgba(247,241,232,0.74);
-    font-size: 0.74rem;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    padding: 10px 8px;
-    text-align: center;
-    text-transform: uppercase;
   }
 
   .hero-visual-card {
     display: none;
-    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 18px;
   }
 
@@ -293,7 +145,7 @@
     max-height: 340px;
     object-fit: contain;
     display: block;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid var(--border);
     background: var(--bg);
   }
@@ -311,9 +163,9 @@
   }
 
   .testimonial-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 18px;
   }
 
@@ -327,13 +179,13 @@
     max-height: 280px;
     object-fit: cover;
     display: block;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid var(--border);
     background: var(--bg);
   }
 
   .testimonial-quote {
-    color: rgba(247,241,232,0.84);
+    color: rgba(240,240,245,0.86);
     font-size: 0.96rem;
     line-height: 1.75;
     margin-top: 18px;
@@ -356,9 +208,9 @@
   }
 
   .owner-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.046), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 18px;
     display: grid;
     grid-template-columns: 1fr;
@@ -371,7 +223,7 @@
     max-height: 360px;
     object-fit: cover;
     display: block;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid var(--border);
     background: var(--bg);
   }
@@ -386,15 +238,15 @@
   }
 
   .owner-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.45rem;
     line-height: 1.2;
-    font-weight: 700;
+    font-weight: 800;
     margin-bottom: 12px;
   }
 
   .owner-copy {
-    color: rgba(247,241,232,0.84);
+    color: rgba(240,240,245,0.84);
     font-size: 0.94rem;
     line-height: 1.7;
   }
@@ -448,34 +300,31 @@
  
   .url-input {
     width: 100%;
-    background: rgba(5,5,4,0.72);
-    border: 1px solid rgba(201,164,109,0.28);
-    border-radius: 8px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
     color: var(--text);
     font-family: 'DM Sans', sans-serif;
     font-size: 1rem;
-    padding: 15px 16px;
+    padding: 14px 16px;
     outline: none;
     transition: border-color 0.2s;
     /* Prevent iOS zoom on focus */
     font-size: max(16px, 1rem);
   }
  
-  .url-input:focus {
-    border-color: var(--accent-light);
-    box-shadow: 0 0 0 3px rgba(201,164,109,0.12);
-  }
+  .url-input:focus { border-color: var(--accent); }
   .url-input::placeholder { color: var(--muted); }
  
   .analyze-btn {
     width: 100%;
-    background: linear-gradient(180deg, #e0bd7a 0%, #bd8e4d 100%);
-    color: #080705;
-    border: 1px solid rgba(229,196,135,0.6);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
     font-size: 1rem;
-    font-weight: 900;
+    font-weight: 700;
     padding: 15px 20px;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
@@ -484,10 +333,7 @@
     min-height: 50px;
   }
  
-  .analyze-btn:hover  {
-    background: linear-gradient(180deg, #edcc8d 0%, #c99a59 100%);
-    box-shadow: 0 12px 34px rgba(201,164,109,0.22);
-  }
+  .analyze-btn:hover  { background: #f7d454; }
   .analyze-btn:active { transform: scale(0.98); }
   .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
@@ -497,7 +343,7 @@
     border: 1.5px solid var(--border);
   }
 
-  .secondary-btn:hover { background: rgba(201,164,109,0.08); }
+  .secondary-btn:hover { background: rgba(245,200,66,0.08); }
  
   .hint {
     margin-top: 12px;
@@ -517,7 +363,7 @@
   .reassurance-chip {
     border: 1px solid rgba(255,255,255,0.10);
     border-radius: 999px;
-    color: rgba(247,241,232,0.78);
+    color: rgba(240,240,245,0.78);
     background: rgba(255,255,255,0.035);
     padding: 7px 10px;
     font-size: 0.76rem;
@@ -539,14 +385,14 @@
   .conversion-card,
   .proof-card,
   .competitor-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.046), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 18px;
   }
 
   .conversion-card-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.08rem;
     font-weight: 800;
     margin-bottom: 12px;
@@ -561,7 +407,7 @@
 
   .conversion-list li,
   .competitor-list li {
-    color: rgba(247,241,232,0.82);
+    color: rgba(240,240,245,0.82);
     font-size: 0.88rem;
     line-height: 1.45;
   }
@@ -576,7 +422,7 @@
 
   .sample-score-card {
     border-color: rgba(231, 76, 60, 0.38);
-    background: linear-gradient(180deg, rgba(224, 100, 85, 0.10), var(--surface) 58%);
+    background: linear-gradient(180deg, rgba(231, 76, 60, 0.10), var(--surface) 58%);
   }
 
   .sample-label {
@@ -590,7 +436,7 @@
 
   .sample-score {
     color: var(--red);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2.4rem;
     font-weight: 800;
     line-height: 1;
@@ -619,7 +465,7 @@
   }
 
   .sample-category span:first-child {
-    color: rgba(247,241,232,0.82);
+    color: rgba(240,240,245,0.82);
     font-weight: 700;
   }
 
@@ -661,11 +507,11 @@
 
   .competitor-card {
     margin-top: 14px;
-    border-color: rgba(201,164,109,0.28);
+    border-color: rgba(245, 200, 66, 0.28);
   }
 
   .competitor-card p {
-    color: rgba(247,241,232,0.84);
+    color: rgba(240,240,245,0.86);
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 12px;
@@ -692,7 +538,7 @@
   @keyframes spin { to { transform: rotate(360deg); } }
  
   .loading-text {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.05rem;
     color: var(--muted);
   }
@@ -729,7 +575,7 @@
   .loading-progress-fill {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, var(--accent2), var(--accent-light));
+    background: var(--accent);
     border-radius: 100px;
     transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
   }
@@ -757,7 +603,7 @@
   /* ===== RESULTS ===== */
   #results {
     display: none;
-    max-width: 1020px;
+    max-width: 880px;
     margin: 0 auto;
     padding: 0 16px 60px;
     animation: fadeUp 0.4s ease;
@@ -771,12 +617,11 @@
   /* Score Hero */
   .score-hero {
     text-align: center;
-    padding: 58px 16px 38px;
-    position: relative;
+    padding: 48px 16px 32px;
   }
  
   .score-label {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 0.8rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -791,7 +636,7 @@
   }
  
   .score-number {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: clamp(4.5rem, 18vw, 7rem);
     font-weight: 800;
     line-height: 1;
@@ -799,7 +644,7 @@
   }
  
   .score-denom {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: clamp(1.6rem, 6vw, 2.5rem);
     font-weight: 700;
     color: var(--muted);
@@ -846,10 +691,10 @@
   }
 
   .download-pdf-btn {
-    background: linear-gradient(180deg, #e0bd7a 0%, #bd8e4d 100%);
+    background: var(--accent);
     color: var(--bg);
     border: 1.5px solid var(--accent);
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 12px 24px;
     font-family: 'DM Sans', sans-serif;
     font-size: 0.9rem;
@@ -858,7 +703,7 @@
     transition: background 0.2s, transform 0.1s;
   }
 
-  .download-pdf-btn:hover { background: linear-gradient(180deg, #edcc8d 0%, #c99a59 100%); }
+  .download-pdf-btn:hover { background: #f7d454; }
   .download-pdf-btn:active { transform: scale(0.98); }
 
   /* ===== RATING COMPARISON ===== */
@@ -873,7 +718,7 @@
   }
 
   .rating-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 18px 16px;
@@ -890,7 +735,7 @@
   }
 
   .rating-card-value {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2rem;
     font-weight: 800;
     line-height: 1;
@@ -910,7 +755,7 @@
   }
 
   .partial-headline {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.45rem;
     line-height: 1.16;
     font-weight: 800;
@@ -936,7 +781,7 @@
   .unlock-card,
   .locked-card,
   .report-includes-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.052), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 18px 16px;
@@ -1013,7 +858,7 @@
 
   .locked-card-title {
     color: var(--text);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1rem;
     line-height: 1.2;
   }
@@ -1058,7 +903,7 @@
     border-radius: 50%;
     display: inline-grid;
     place-items: center;
-    border: 1px solid rgba(201,164,109,0.38);
+    border: 1px solid rgba(245, 200, 66, 0.38);
     font-size: 0.72rem;
   }
 
@@ -1069,7 +914,7 @@
   }
 
   .report-includes-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.08rem;
     font-weight: 800;
     margin-bottom: 12px;
@@ -1121,7 +966,7 @@
   }
 
   .unlock-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.48rem;
     line-height: 1.2;
     margin-bottom: 8px;
@@ -1134,98 +979,9 @@
     margin-bottom: 16px;
   }
 
-  .report-request-section {
-    margin: 40px 0 30px;
-  }
-
-  .lead-unlock-section {
-    max-width: 900px;
-    margin: 52px auto 36px;
-    padding: 0 16px;
-  }
-
-  .lead-unlock-shell {
-    background:
-      radial-gradient(circle at 12% 0%, rgba(201,164,109,0.12), transparent 28rem),
-      linear-gradient(180deg, rgba(255,255,255,0.052), rgba(255,255,255,0.018));
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-    padding: clamp(22px, 4vw, 34px);
-  }
-
-  .lead-unlock-kicker {
-    color: var(--accent-light);
-    font-size: 0.72rem;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    margin-bottom: 10px;
-    text-align: center;
-    text-transform: uppercase;
-  }
-
-  .lead-unlock-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 7vw, 3.6rem);
-    line-height: 1;
-    margin-bottom: 12px;
-    text-align: center;
-  }
-
-  .lead-unlock-copy {
-    color: rgba(247,241,232,0.72);
-    font-size: 1rem;
-    line-height: 1.65;
-    margin: 0 auto 22px;
-    max-width: 680px;
-    text-align: center;
-  }
-
-  .locked-preview-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin: 20px 0 24px;
-  }
-
-  .locked-preview-card {
-    align-items: center;
-    background: rgba(255,255,255,0.028);
-    border: 1px solid rgba(201,164,109,0.18);
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 15px;
-  }
-
-  .locked-preview-label {
-    color: var(--text);
-    font-weight: 900;
-  }
-
-  .locked-preview-status {
-    color: var(--accent-light);
-    font-size: 0.74rem;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .report-request-message {
-    color: var(--green);
-    display: none;
-    font-size: 0.9rem;
-    font-weight: 800;
-    line-height: 1.4;
-    margin-top: 12px;
-    text-align: center;
-  }
-
   /* Results inner padding */
   #resultsInner {
-    max-width: 960px;
+    max-width: 880px;
     margin: 0 auto;
     /* Remove duplicate padding — handled by #results */
     padding: 0;
@@ -1233,8 +989,8 @@
  
   /* Section Header */
   .section-header {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.34rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 14px;
     padding-bottom: 10px;
@@ -1251,7 +1007,7 @@
   }
  
   .cat-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px;
@@ -1274,7 +1030,7 @@
   }
  
   .cat-score-text {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.4rem;
     font-weight: 700;
   }
@@ -1311,7 +1067,7 @@
   .visual-trust-section { margin-bottom: 40px; }
 
   .visual-trust-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px;
@@ -1326,7 +1082,7 @@
   }
 
   .visual-trust-title {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1rem;
     font-weight: 700;
     margin-bottom: 4px;
@@ -1339,7 +1095,7 @@
   }
 
   .visual-trust-score {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.4rem;
     font-weight: 800;
     white-space: nowrap;
@@ -1382,7 +1138,7 @@
   .positives-section { margin-bottom: 40px; }
  
   .positive-item {
-    background: linear-gradient(180deg, rgba(255,255,255,0.046), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-left: 3px solid var(--green);
     border-radius: var(--radius);
@@ -1409,7 +1165,7 @@
   .issues-section { margin-bottom: 40px; }
  
   .issue-item {
-    background: linear-gradient(180deg, rgba(255,255,255,0.046), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-left: 3px solid var(--red);
     border-radius: var(--radius);
@@ -1444,7 +1200,7 @@
   .recs-section { margin-bottom: 40px; }
  
   .rec-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.046), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px;
@@ -1459,9 +1215,9 @@
   }
  
   .rec-num {
-    background: rgba(201,164,109,0.15);
+    background: rgba(245,200,66,0.15);
     color: var(--accent);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-weight: 700;
     font-size: 0.78rem;
     width: 26px; height: 26px;
@@ -1556,7 +1312,7 @@
   }
  
   .evidence-pages {
-    background: linear-gradient(180deg, rgba(255,255,255,0.046), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px;
@@ -1609,7 +1365,7 @@
   }
  
   .evidence-signal {
-    background: linear-gradient(180deg, rgba(255,255,255,0.046), rgba(255,255,255,0.018));
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 12px 14px;
@@ -1643,7 +1399,7 @@
   }
  
   .badge-yes     { background: rgba(46,204,113,0.15); color: var(--green);  border: 1px solid rgba(46,204,113,0.3); }
-  .badge-partial { background: rgba(201,164,109,0.12); color: var(--yellow); border: 1px solid rgba(201,164,109,0.3); }
+  .badge-partial { background: rgba(245,200,66,0.12); color: var(--yellow); border: 1px solid rgba(245,200,66,0.3); }
   .badge-no      { background: rgba(231,76,60,0.1);  color: var(--red);    border: 1px solid rgba(231,76,60,0.25); }
  
   .evidence-snippet {
@@ -1661,7 +1417,7 @@
  
   /* ===== DESKTOP OVERRIDES (≥ 600px) ===== */
   @media (min-width: 600px) {
-    .hero { padding: 52px 0 36px; }
+    .hero { padding: 80px 0 60px; }
  
     .input-card { padding: 32px; }
  
@@ -1676,20 +1432,6 @@
 
     .lead-field-full {
       grid-column: 1 / -1;
-    }
-
-    .hero-proof-row {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .locked-preview-grid {
-      grid-template-columns: repeat(5, 1fr);
-    }
-
-    .locked-preview-card {
-      align-items: flex-start;
-      flex-direction: column;
-      min-height: 104px;
     }
 
     .conversion-grid {
@@ -1752,51 +1494,37 @@
 
   @media (min-width: 900px) {
     .hero-shell {
-      display: block;
-      padding: 28px 28px 72px;
-    }
-
-    .landing-header,
-    .hero-trust-line {
-      grid-column: auto;
-    }
-
-    .landing-header {
-      padding: 0;
-    }
-
-    .brand-logo {
-      height: 56px;
-    }
-
-    .hero-trust-line {
-      margin: 40px auto 8px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 0.78fr);
+      align-items: center;
+      gap: 44px;
+      padding: 78px 28px 58px;
     }
 
     .hero-main {
-      max-width: 860px;
-      margin: 0 auto;
+      max-width: none;
+      margin: 0;
     }
 
     .hero-shell .hero {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 0 32px;
-      text-align: center;
+      max-width: 720px;
+      margin: 0;
+      padding: 0 0 28px;
+      text-align: left;
     }
 
     .hero-shell h1 {
-      font-size: clamp(4.35rem, 7.2vw, 7.25rem);
+      font-size: clamp(3.35rem, 5vw, 5.2rem);
     }
 
     .hero-shell .hero-sub {
       max-width: 620px;
-      margin: 0 auto;
+      margin: 0;
     }
 
     .hero-shell .input-card {
-      max-width: 720px;
-      margin: 0 auto;
+      max-width: 620px;
+      margin: 0;
     }
 
     .hero-shell .audit-form .analyze-btn {
@@ -1804,11 +1532,12 @@
     }
 
     .hero-shell .reassurance-row {
-      justify-content: center;
+      justify-content: flex-start;
     }
 
     .hero-visual-card {
-      display: none;
+      display: block;
+      align-self: center;
     }
 
     .conversion-section,
@@ -1906,13 +1635,7 @@
     .url-row { flex-direction: column; }
     .score-number { font-size: 5rem; }
     .input-card { padding: 20px; }
-    .brand-logo { height: 40px; }
-    .header-scan-btn {
-      min-height: 38px;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-    }
-    .hero { padding: 30px 0 24px; }
+    .hero { padding: 48px 0 40px; }
     .testimonial-image,
     .owner-photo {
       max-height: 240px;
@@ -1920,9 +1643,6 @@
     }
     .proof-image {
       max-height: 220px;
-    }
-    .hero-proof-row {
-      grid-template-columns: 1fr;
     }
   }
 
@@ -1945,9 +1665,7 @@
 
     #home-view,
     #loading,
-    .lead-unlock-section,
     .report-actions,
-    .report-request-section,
     .analyze-another {
       display: none !important;
     }
@@ -1989,37 +1707,17 @@
     }
   }
 </style>
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '4279452245649919');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
+ 
 <!-- HERO / INPUT -->
 <div id="home-view">
-    <div class="hero-shell">
-    <header class="landing-header" aria-label="Landing page header">
-      <img class="brand-logo" src="/assets/wstrategies-logo-transparent.png" alt="WStrategies Canada">
-      <a class="header-scan-btn" href="https://www.wstrategiescanada.ca/contact">Book a Call</a>
-    </header>
-
-    <div class="hero-trust-line"><span>★★★★★</span> Trusted by local contractors and home service businesses</div>
-
+  <div class="hero-shell">
     <div class="hero-main">
       <div class="hero">
+        <div class="badge">Free Contractor Lead Leak Scan</div>
+        <div class="hero-eyebrow">Built for roofers, landscapers, HVAC, local contractors and more</div>
         <!--
           Headline options:
           Default: Turn More Website Visitors Into Real Jobs
@@ -2039,16 +1737,14 @@ src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
             <span class="lead-label">Website URL</span>
             <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
           </label>
-          <button class="analyze-btn" id="analyzeBtn" type="submit">Run Free Website Scan</button>
+          <button class="analyze-btn" id="analyzeBtn" type="submit">Find What&rsquo;s Costing Me Leads</button>
         </form>
-        <div class="cta-microcopy">No sign up required</div>
-        <a class="no-website-link" href="https://www.wstrategiescanada.ca/contact">No website? Click here</a>
-      </div>
-      <div class="hero-proof-row" aria-label="Audit proof points">
-        <div class="hero-proof-item">Fully Automated</div>
-        <div class="hero-proof-item">60 Second Scan</div>
-        <div class="hero-proof-item">SEO + Conversion Analysis</div>
-        <div class="hero-proof-item">No Sign Up Required</div>
+        <div class="reassurance-row" aria-label="Scan reassurance">
+          <span class="reassurance-chip">Takes less than 60 seconds</span>
+          <span class="reassurance-chip">No signup required</span>
+          <span class="reassurance-chip">Instant contractor-focused insights</span>
+          <span class="reassurance-chip">See what may be costing you leads before booking a call</span>
+        </div>
       </div>
     </div>
 
@@ -2057,28 +1753,6 @@ src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
       <img class="hero-visual-image" src="/assets/before-after-proof.png" alt="Before and after contractor website audit score example">
     </div>
   </div>
-
-  <section class="testimonial-section" aria-label="Contractor testimonial">
-    <div class="section-header">Testimonials</div>
-    <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/contractor-testimonial-2.png" alt="Contractor website example showing renovation and construction lead generation improvements">
-      <div class="testimonial-quote">
-        <p>&ldquo;Before I ran the scan, my website barely brought in any calls and honestly felt like a waste of money. I knew people were visiting it, but nobody was reaching out.</p>
-        <p>The scan showed me exactly what was hurting my rankings and why visitors weren&rsquo;t turning into leads. William helped fix the issues, improve the site, and get everything performing properly again.</p>
-        <p>Now we&rsquo;re getting consistent calls and leads coming in organically through our website and Google &mdash; without relying on ads.&rdquo;</p>
-        <div class="testimonial-name">&mdash; Local Contractor</div>
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/contractor-testimonial-1.png" alt="Contractor website example showing excavation and site services lead generation improvements">
-      <div class="testimonial-quote">
-        <p>&ldquo;When we first started, we had basically no online presence at all &mdash; no real website, no Google visibility, and hardly any calls coming in from online.</p>
-        <p>William helped us build everything properly from the ground up and showed us exactly what was holding us back from getting found online.</p>
-        <p>Now we&rsquo;re consistently getting calls and leads coming through our website and Google, and it finally feels like our business actually has a strong presence online.&rdquo;</p>
-        <div class="testimonial-name">&mdash; Excavation Contractor</div>
-      </div>
-    </div>
-  </section>
 
   <section class="conversion-section" aria-label="What the website scan reveals">
     <div class="conversion-grid">
@@ -2136,6 +1810,28 @@ src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
     </div>
   </section>
 
+  <section class="testimonial-section" aria-label="Contractor testimonial">
+    <div class="section-header">Testimonials</div>
+    <div class="testimonial-card">
+      <img class="testimonial-image" src="/assets/contractor-testimonial-1.png" alt="Contractor website example showing excavation and site services lead generation improvements">
+      <div class="testimonial-quote">
+        <p>&ldquo;Before I ran the scan, my website barely brought in any calls and honestly felt like a waste of money. I knew people were visiting it, but nobody was reaching out.</p>
+        <p>The scan showed me exactly what was hurting my rankings and why visitors weren&rsquo;t turning into leads. William helped fix the issues, improve the site, and get everything performing properly again.</p>
+        <p>Now we&rsquo;re getting consistent calls and leads coming in organically through our website and Google &mdash; without relying on ads.&rdquo;</p>
+        <div class="testimonial-name">&mdash; Local Contractor</div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <img class="testimonial-image" src="/assets/contractor-testimonial-2.png" alt="Contractor website example showing renovation and construction lead generation improvements">
+      <div class="testimonial-quote">
+        <p>&ldquo;When we first started, we had basically no online presence at all &mdash; no real website, no Google visibility, and hardly any calls coming in from online.</p>
+        <p>William helped us build everything properly from the ground up and showed us exactly what was holding us back from getting found online.</p>
+        <p>Now we&rsquo;re consistently getting calls and leads coming through our website and Google, and it finally feels like our business actually has a strong presence online.&rdquo;</p>
+        <div class="testimonial-name">&mdash; Excavation Contractor</div>
+      </div>
+    </div>
+  </section>
+
   <section class="owner-section" aria-label="Who is behind LeadCheck">
     <div class="owner-card">
       <img class="owner-photo" src="/assets/owner-william.png" alt="William from WStrategies Canada">
@@ -2173,60 +1869,8 @@ src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
  
 <!-- RESULTS -->
 <div id="results">
-
-  <div class="lead-unlock-section" id="leadUnlockSection">
-    <div class="lead-unlock-shell">
-      <div class="lead-unlock-kicker">Live scan complete</div>
-      <div class="lead-unlock-title">Your Website Audit Is Ready</div>
-      <p class="lead-unlock-copy">We found your website score, conversion gaps, trust signals, and technical opportunities. Enter your info to unlock the full report.</p>
-      <div class="locked-preview-grid" aria-label="Locked report preview">
-        <div class="locked-preview-card">
-          <span class="locked-preview-label">Website Score</span>
-          <span class="locked-preview-status">Locked</span>
-        </div>
-        <div class="locked-preview-card">
-          <span class="locked-preview-label">Lead Conversion</span>
-          <span class="locked-preview-status">Locked</span>
-        </div>
-        <div class="locked-preview-card">
-          <span class="locked-preview-label">Trust Signals</span>
-          <span class="locked-preview-status">Locked</span>
-        </div>
-        <div class="locked-preview-card">
-          <span class="locked-preview-label">SEO Visibility</span>
-          <span class="locked-preview-status">Locked</span>
-        </div>
-        <div class="locked-preview-card">
-          <span class="locked-preview-label">Technical Health</span>
-          <span class="locked-preview-status">Locked</span>
-        </div>
-      </div>
-      <form class="lead-form" id="leadUnlockForm" onsubmit="event.preventDefault(); submitLeadUnlock();">
-        <div class="lead-grid">
-          <label class="lead-field">
-            <span class="lead-label">Name *</span>
-            <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name" required>
-          </label>
-          <label class="lead-field">
-            <span class="lead-label">Business Name</span>
-            <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
-          </label>
-          <label class="lead-field">
-            <span class="lead-label">Email *</span>
-            <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
-          </label>
-          <label class="lead-field">
-            <span class="lead-label">Phone *</span>
-            <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
-          </label>
-        </div>
-        <button class="analyze-btn" id="leadUnlockBtn" type="submit">Unlock My Full Report</button>
-        <div class="report-request-message" id="leadUnlockMessage" role="status"></div>
-      </form>
-    </div>
-  </div>
  
-  <div class="score-hero" id="scoreHero">
+  <div class="score-hero">
     <p class="score-label">Your Website Score</p>
     <div class="score-display">
       <span class="score-number" id="scoreNum">0</span>
@@ -2243,6 +1887,76 @@ src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
   </div>
  
   <div id="resultsInner">
+
+    <!-- Partial Results / Lead Unlock -->
+    <div class="partial-gate" id="partialGate">
+      <div class="partial-headline" id="partialHeadline">We found several areas worth reviewing.</div>
+      <p class="partial-subcopy">Your score is only the beginning. The locked findings below show where the full report gets specific.</p>
+      <div class="section-header">Locked Findings Preview</div>
+      <div class="preview-grid" id="previewIssues"></div>
+
+      <div class="report-includes-card">
+        <div class="report-includes-title">Full Report Includes</div>
+        <div class="report-includes-list">
+          <div class="report-include-item">
+            <div class="report-include-title">Exact issues detected</div>
+            <div class="report-include-detail">Specific findings from the live scan, grouped by impact and priority.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Category-by-category breakdown</div>
+            <div class="report-include-detail">SEO, trust, conversion, mobile, and technical health scores with evidence.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Priority fixes</div>
+            <div class="report-include-detail">The highest-impact changes to improve visibility and lead conversion first.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Broken links and missing pages</div>
+            <div class="report-include-detail">Navigation problems, missing core pages, redirects, and crawl issues.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Lead conversion recommendations</div>
+            <div class="report-include-detail">CTA, form, phone, booking, and trust improvements based on the scan.</div>
+          </div>
+          <div class="report-include-item">
+            <div class="report-include-title">Mobile and technical health insights</div>
+            <div class="report-include-detail">Mobile experience, speed signals, layout clarity, and technical checks.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="unlock-card">
+        <div class="unlock-title">Unlock the Full Audit Report</div>
+        <p class="unlock-copy">See what may be costing your website leads and which fixes should be prioritized first.</p>
+        <p class="unlock-copy">Enter your info to unlock the full audit breakdown and recommendations.</p>
+        <div class="audit-proof-row">
+          <span class="audit-proof-pill">Generated from a live scan of your website</span>
+          <span class="audit-proof-pill">Benchmarked against lead-generation best practices</span>
+          <span class="audit-proof-pill">Includes SEO, trust, conversion, mobile, and technical checks</span>
+        </div>
+        <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
+          <div class="lead-grid">
+            <label class="lead-field">
+              <span class="lead-label">Name *</span>
+              <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name" required>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Business Name</span>
+              <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Email *</span>
+              <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Phone *</span>
+              <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
+            </label>
+          </div>
+          <button class="analyze-btn" id="unlockBtn" type="submit">Unlock My Full Report</button>
+        </form>
+      </div>
+    </div>
 
     <div id="fullResults">
 
@@ -2302,7 +2016,7 @@ src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
       <div id="evidencePages"></div>
       <div class="evidence-grid" id="evidenceSignals"></div>
     </div>
-
+ 
     <div class="analyze-another">
       <button class="retry-btn" onclick="resetApp()">← Analyze Another Website</button>
     </div>
@@ -2350,9 +2064,47 @@ let stepIdx = 0;
 let stepTimer = null;
 let progressTimer = null;
 let progressStartedAt = 0;
+let activeMetaScan = null;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
-let metaLeadTrackedForUnlock = false;
+let fullResultsUnlocked = false;
+
+function trackMetaEvent(eventName, params = {}) {
+  try {
+    if (typeof window.fbq !== 'function') return;
+    window.fbq('track', eventName, params);
+    console.log('[Meta Pixel] Event fired:', eventName, params);
+  } catch {
+    // Pixel blockers should never interrupt the scanner.
+  }
+}
+
+function trackMetaCustomEvent(eventName, params = {}) {
+  try {
+    if (typeof window.fbq !== 'function') return;
+    window.fbq('trackCustom', eventName, params);
+    console.log('[Meta Pixel] Event fired:', eventName, params);
+  } catch {
+    // Pixel blockers should never interrupt the scanner.
+  }
+}
+
+function resetMetaScan(websiteUrl) {
+  activeMetaScan = {
+    website: websiteUrl,
+    auditStarted: false,
+    lead: false,
+    auditCompleted: false,
+    auditFailed: false,
+  };
+}
+
+function fireMetaOnce(key, eventName, params = {}, isCustom = true) {
+  if (!activeMetaScan || activeMetaScan[key]) return;
+  activeMetaScan[key] = true;
+  if (isCustom) trackMetaCustomEvent(eventName, params);
+  else trackMetaEvent(eventName, params);
+}
  
 function cycleStep() {
   stepIdx = (stepIdx + 1) % LOADING_STEPS.length;
@@ -2367,18 +2119,6 @@ function setLoadingProgress(percent, label) {
   if (fill) fill.style.width = bounded + '%';
   if (pct) pct.textContent = bounded + '%';
   if (eta && label) eta.textContent = label;
-}
-
-function trackMetaLeadAfterUnlock() {
-  if (metaLeadTrackedForUnlock) return;
-  metaLeadTrackedForUnlock = true;
-
-  // Meta Lead fires only after the required unlock form submits successfully
-  // and the full report is shown. It does not fire on page load or scan start.
-  if (window.fbq) {
-    window.fbq('track', 'Lead');
-    console.log('[Meta Pixel] Lead event fired after report unlock');
-  }
 }
 
 function updateLoadingProgress() {
@@ -2599,9 +2339,11 @@ async function runAnalysis() {
     return;
   }
 
+  resetMetaScan(url);
+  fireMetaOnce('auditStarted', 'AuditStarted');
   pendingScanResult = null;
   pendingWebsiteUrl = url;
-  metaLeadTrackedForUnlock = false;
+  fullResultsUnlocked = false;
  
   // Show loading
   document.getElementById('home-view').style.display = 'none';
@@ -2627,17 +2369,26 @@ async function runAnalysis() {
  
     if (!res.ok || data.error) {
       const errorMessage = data.error || 'Analysis failed. Please try again.';
+      fireMetaOnce('auditFailed', 'AuditFailed', {
+        error: errorMessage,
+      });
       showError(errorMessage);
       return;
     }
  
     pendingScanResult = data;
     pendingWebsiteUrl = asText(data.url) || url;
-    renderLockedResults();
+    renderPartialResults(data);
+    fireMetaOnce('auditCompleted', 'AuditCompleted', {
+      websiteScore: normalizeScore(firstDefinedValue(data.total, data.score, data.websiteScore, data.rating)),
+    });
   } catch (err) {
     console.error('API request failed:', err);
     stopLoadingTimers();
     const errorMessage = err?.message || 'Could not reach the server. Please try again.';
+    fireMetaOnce('auditFailed', 'AuditFailed', {
+      error: errorMessage,
+    });
     showError('We could not complete the scan right now. Please check the website URL and try again.');
   }
 }
@@ -2674,68 +2425,162 @@ function renderScoreHero(result) {
   return { total, maxScore, color };
 }
 
-function buildReportRequestData(result) {
-  const root = asRecord(result);
-  const categories = asRecord(root.categories);
-  const score = normalizeScore(firstDefinedValue(root.total, root.score, root.websiteScore, root.rating));
-  const categorySummary = objectEntries(categories).map(([key, rawCat]) => {
-    const cat = asRecord(rawCat);
+function getPreviewTier(score) {
+  if (score < 70) return 'low';
+  if (score < 85) return 'medium';
+  return 'high';
+}
+
+function getPartialHeadline(score) {
+  return getPreviewTier(score) === 'high'
+    ? 'Your site is performing well — but there may still be hidden growth opportunities.'
+    : 'We found several areas worth reviewing.';
+}
+
+function buildLockedPreviewCards(result) {
+  const score = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
+  const tier = getPreviewTier(score);
+  const categories = asRecord(result.categories);
+  const brokenSummary = getBrokenLinksSummary(result);
+
+  const categoryDefs = [
+    ['leadConversion', {
+      low: ['Lead Conversion', 'attention', '!', 'Potential lead loss detected', 'Unlock the CTA, contact, and conversion-path findings'],
+      medium: ['Lead Conversion', 'opportunity', '↗', 'Optimization opportunity', 'Unlock the conversion steps and lead friction notes'],
+      high: ['Conversion Optimization', 'growth', '↗', 'Advanced growth opportunity', 'Unlock the conversion benchmarks and next-level improvements'],
+    }],
+    ['localTrust', {
+      low: ['Trust Signals', 'attention', '!', 'Review/trust gaps may be hurting conversions', 'Unlock the trust, review, proof, and credibility findings'],
+      medium: ['Trust Signals', 'opportunity', '↗', 'Trust improvements available', 'Unlock review, proof, and confidence-building recommendations'],
+      high: ['Trust Signals', 'growth', '↗', 'Authority improvements available', 'Unlock trust benchmarks and credibility fine-tuning'],
+    }],
+    ['seoVisibility', {
+      low: ['SEO Visibility', 'attention', '!', 'Ranking opportunities found', 'Unlock title, heading, service, and local SEO details'],
+      medium: ['SEO Visibility', 'opportunity', '↗', 'Local ranking opportunities', 'Unlock the SEO breakdown and priority keyword fixes'],
+      high: ['SEO Visibility', 'growth', '↗', 'Fine-tuning opportunities', 'Unlock advanced local SEO and service-page recommendations'],
+    }],
+    ['technical', {
+      low: ['Mobile Experience', 'attention', '!', 'Mobile friction may be costing calls', 'Unlock mobile, speed, and technical health details'],
+      medium: ['Mobile Experience', 'opportunity', '↗', 'User experience check needed', 'Unlock mobile and technical health insights'],
+      high: ['Technical Health', 'growth', '↗', 'Performance details locked', 'Unlock technical fine-tuning and mobile experience notes'],
+    }],
+  ];
+
+  const cards = categoryDefs.map(([key, copyByTier]) => {
+    const cat = asRecord(categories[key]);
+    const catScore = Number.isFinite(Number(cat.score)) ? Number(cat.score) : null;
+    const catMax = Number(cat.max) || null;
+    const pct = catScore !== null && catMax ? catScore / catMax : null;
+    const copy = copyByTier[tier];
+    const label = asText(cat.label) || copy[0];
+    const displayPct = pct !== null ? Math.round(pct * 100) : null;
+
     return {
-      key,
-      label: asText(cat.label) || key,
-      score: Number.isFinite(Number(cat.score)) ? Number(cat.score) : null,
-      max: Number.isFinite(Number(cat.max)) ? Number(cat.max) : null,
+      label,
+      sort: pct === null ? 1 : pct,
+      className: copy[1],
+      icon: copy[2],
+      status: copy[3],
+      value: displayPct !== null ? `${displayPct}% preview score` : 'Unlock detailed score',
+      detail: copy[4],
     };
   });
 
-  return {
-    score,
-    maxScore: Number(root.maxScore) || 100,
-    categories: categorySummary,
-    issues: asArray(root.issues).slice(0, 10),
-    recommendations: asArray(root.recommendations).slice(0, 10),
-    criticalFlags: asArray(root.criticalFlags).slice(0, 10),
-    positives: asArray(root.positives).slice(0, 7),
-    brokenLinks: asRecord(root.brokenLinks),
-  };
+  cards.sort((a, b) => a.sort - b.sort);
+
+  const brokenHasIssues = brokenSummary.totalIssues > 0;
+  const brokenCopy = tier === 'high'
+    ? ['Competitive Benchmark', 'growth', '↗', 'See how you compare', 'Unlock the link health details and crawl summary']
+    : tier === 'medium'
+      ? ['Broken Links', 'opportunity', '↗', 'Unlock hidden issue scan', 'Unlock broken-page, redirect, and missing-page details']
+      : ['Broken Links', 'attention', '!', 'Technical issues may exist', 'Unlock the affected pages, source URLs, and missing-page checks'];
+
+  cards.push({
+    label: brokenHasIssues ? 'Broken Pages & Links' : brokenCopy[0],
+    sort: brokenHasIssues ? -1 : 1,
+    className: brokenHasIssues ? 'attention' : brokenCopy[1],
+    icon: brokenHasIssues ? '!' : brokenCopy[2],
+    status: brokenHasIssues
+      ? (tier === 'low' ? 'Needs immediate review' : 'Potential lead loss area')
+      : brokenCopy[3],
+    value: brokenHasIssues ? `${brokenSummary.totalIssues} item${brokenSummary.totalIssues === 1 ? '' : 's'} flagged in preview` : 'Unlock link health details',
+    detail: brokenHasIssues
+      ? 'Unlock the affected pages, source URLs, and recommended fixes'
+      : brokenCopy[4],
+  });
+
+  const selectedCards = cards
+    .sort((a, b) => a.sort - b.sort)
+    .slice(0, 5);
+
+  if (selectedCards.length && !selectedCards.some(card => card.className === 'attention' || card.className === 'opportunity')) {
+    selectedCards[0] = {
+      ...selectedCards[0],
+      className: 'opportunity',
+      icon: '↗',
+      status: 'Growth opportunity',
+    };
+  }
+
+  return selectedCards;
 }
 
-function renderLockedResults() {
+function renderPartialResults(data) {
   stopLoadingTimers();
   document.getElementById('loading').style.display = 'none';
   document.getElementById('results').style.display = 'block';
-  document.getElementById('leadUnlockSection').style.display = 'block';
-  document.getElementById('scoreHero').style.display = 'none';
+
+  const result = asRecord(data);
+  renderScoreHero(result);
+  const previewScore = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
+  const partialHeadline = document.getElementById('partialHeadline');
+  if (partialHeadline) partialHeadline.textContent = getPartialHeadline(previewScore);
+
+  const actions = document.querySelector('.report-actions');
+  if (actions) actions.style.display = 'none';
+  document.getElementById('partialGate').style.display = 'block';
   document.getElementById('fullResults').style.display = 'none';
 
-  const unlockForm = document.getElementById('leadUnlockForm');
+  const previewIssues = document.getElementById('previewIssues');
+  const lockedCards = buildLockedPreviewCards(result);
+  previewIssues.innerHTML = lockedCards.map(card => `
+    <div class="locked-card ${escHtml(card.className)}">
+      <div class="locked-card-top">
+        <div>
+          <div class="locked-card-status">${escHtml(card.status)}</div>
+          <div class="locked-card-title">${escHtml(card.label)}</div>
+        </div>
+        <div class="locked-card-icon">${escHtml(card.icon)}</div>
+      </div>
+      <div class="locked-metric-row">
+        <div class="locked-card-value">${escHtml(card.value)}</div>
+      </div>
+      <div class="locked-detail">${escHtml(card.detail)}</div>
+      <div class="locked-unlock"><span class="locked-card-lock">&#128274;</span> Unlock to view full finding</div>
+    </div>
+  `).join('');
+
+  const unlockForm = document.getElementById('unlockLeadForm');
   if (unlockForm) unlockForm.reset();
-  const unlockButton = document.getElementById('leadUnlockBtn');
-  if (unlockButton) unlockButton.disabled = false;
-  const message = document.getElementById('leadUnlockMessage');
-  if (message) {
-    message.style.display = 'none';
-    message.textContent = '';
-  }
+  const unlockBtn = document.getElementById('unlockBtn');
+  if (unlockBtn) unlockBtn.disabled = false;
 }
 
-async function submitLeadUnlock() {
-  if (!pendingScanResult || !pendingWebsiteUrl) return;
+async function submitLeadCapture() {
+  if (!pendingScanResult || !pendingWebsiteUrl) {
+    unlockFullResults();
+    return;
+  }
 
   const name = document.getElementById('nameInput').value.trim();
   const businessName = document.getElementById('businessNameInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
-  const unlockButton = document.getElementById('leadUnlockBtn');
-  const message = document.getElementById('leadUnlockMessage');
+  const unlockBtn = document.getElementById('unlockBtn');
 
   if (!name || !email || !phone) return;
 
-  if (unlockButton) unlockButton.disabled = true;
-  if (message) {
-    message.style.display = 'none';
-    message.textContent = '';
-  }
+  if (unlockBtn) unlockBtn.disabled = true;
 
   const score = normalizeScore(firstDefinedValue(
     pendingScanResult.total,
@@ -2749,7 +2594,6 @@ async function submitLeadUnlock() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        reportRequested: true,
         leadOnly: true,
         name,
         businessName,
@@ -2758,32 +2602,25 @@ async function submitLeadUnlock() {
         website: pendingWebsiteUrl,
         score,
         websiteScore: score,
-        reportData: buildReportRequestData(pendingScanResult),
       }),
     });
 
-    const data = await res.json().catch(() => ({}));
     if (res.ok) {
-      renderResults(pendingScanResult);
-      trackMetaLeadAfterUnlock();
+      fireMetaOnce('lead', 'Lead', {}, false);
     } else {
-      console.error('[LeadCheck] Lead unlock failed:', data.error || res.statusText);
-      if (message) {
-        message.style.display = 'block';
-        message.style.color = 'var(--red)';
-        message.textContent = 'We could not unlock the report yet. Please check your info and try again.';
-      }
-      if (unlockButton) unlockButton.disabled = false;
+      const data = await res.json().catch(() => ({}));
+      console.error('[LeadCheck] Lead capture failed:', data.error || res.statusText);
     }
   } catch (err) {
-    console.error('[LeadCheck] Lead unlock failed:', err.message);
-    if (message) {
-      message.style.display = 'block';
-      message.style.color = 'var(--red)';
-      message.textContent = 'We could not unlock the report yet. Please check your connection and try again.';
-    }
-    if (unlockButton) unlockButton.disabled = false;
+    console.error('[LeadCheck] Lead capture failed:', err.message);
   }
+
+  unlockFullResults();
+}
+
+function unlockFullResults() {
+  fullResultsUnlocked = true;
+  if (pendingScanResult) renderResults(pendingScanResult);
 }
  
 function renderResults(data) {
@@ -2795,12 +2632,11 @@ function renderResults(data) {
   const { color } = renderScoreHero(result);
   renderRatingComparison(result, color);
 
-  document.getElementById('leadUnlockSection').style.display = 'none';
-  document.getElementById('scoreHero').style.display = 'block';
+  document.getElementById('partialGate').style.display = 'none';
   document.getElementById('fullResults').style.display = 'block';
   const actions = document.querySelector('.report-actions');
   if (actions) actions.style.display = 'flex';
-
+ 
   // Categories
   const catsGrid = document.getElementById('catsGrid');
   catsGrid.innerHTML = '';
@@ -3150,22 +2986,14 @@ function resetApp() {
   setLoadingProgress(0, 'Estimated time: about 90 seconds');
   pendingScanResult = null;
   pendingWebsiteUrl = null;
+  fullResultsUnlocked = false;
   document.getElementById('results').style.display = 'none';
-  document.getElementById('leadUnlockSection').style.display = 'none';
-  document.getElementById('scoreHero').style.display = 'block';
+  document.getElementById('partialGate').style.display = 'block';
   document.getElementById('fullResults').style.display = 'none';
   document.getElementById('home-view').style.display = 'block';
   document.getElementById('analyzeBtn').disabled = false;
   document.getElementById('auditForm').reset();
-  const unlockForm = document.getElementById('leadUnlockForm');
-  if (unlockForm) unlockForm.reset();
-  const unlockButton = document.getElementById('leadUnlockBtn');
-  if (unlockButton) unlockButton.disabled = false;
-  const unlockMessage = document.getElementById('leadUnlockMessage');
-  if (unlockMessage) {
-    unlockMessage.style.display = 'none';
-    unlockMessage.textContent = '';
-  }
+  document.getElementById('unlockLeadForm').reset();
   document.getElementById('error-box').style.display = 'none';
 }
  
