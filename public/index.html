@@ -8,21 +8,6 @@
 <meta name="apple-mobile-web-app-title" content="LeadCheck">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>LeadCheck – Website Lead-Gen Scorer for Local Businesses</title>
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '4279452245649919');
-fbq('track', 'PageView');
-console.log('[Meta Pixel] Event fired:', 'PageView', {});
-</script>
-<!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2004,10 +1989,25 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     }
   }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '4279452245649919');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
-<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
- 
 <!-- HERO / INPUT -->
 <div id="home-view">
     <div class="hero-shell">
@@ -2350,52 +2350,8 @@ let stepIdx = 0;
 let stepTimer = null;
 let progressTimer = null;
 let progressStartedAt = 0;
-let activeMetaScan = null;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
-
-function trackMetaEvent(eventName, params = {}) {
-  try {
-    if (typeof window.fbq !== 'function') return;
-    window.fbq('track', eventName, params);
-    console.log('[Meta Pixel] Event fired:', eventName, params);
-  } catch {
-    // Pixel blockers should never interrupt the scanner.
-  }
-}
-
-function trackMetaCustomEvent(eventName, params = {}) {
-  try {
-    if (typeof window.fbq !== 'function') return;
-    window.fbq('trackCustom', eventName, params);
-    console.log('[Meta Pixel] Event fired:', eventName, params);
-  } catch {
-    // Pixel blockers should never interrupt the scanner.
-  }
-}
-
-function resetMetaScan(websiteUrl) {
-  activeMetaScan = {
-    website: websiteUrl,
-    auditStarted: false,
-    lead: false,
-    auditCompleted: false,
-    auditFailed: false,
-  };
-}
-
-function fireMetaOnce(key, eventName, params = {}, isCustom = true) {
-  if (!activeMetaScan || activeMetaScan[key]) return;
-  activeMetaScan[key] = true;
-  if (isCustom) trackMetaCustomEvent(eventName, params);
-  else trackMetaEvent(eventName, params);
-}
-
-function fireMetaLead(params = {}) {
-  if (!activeMetaScan || activeMetaScan.lead) return;
-  activeMetaScan.lead = true;
-  trackMetaEvent('Lead', params);
-}
  
 function cycleStep() {
   stepIdx = (stepIdx + 1) % LOADING_STEPS.length;
@@ -2630,8 +2586,6 @@ async function runAnalysis() {
     return;
   }
 
-  resetMetaScan(url);
-  fireMetaOnce('auditStarted', 'AuditStarted');
   pendingScanResult = null;
   pendingWebsiteUrl = url;
  
@@ -2659,9 +2613,6 @@ async function runAnalysis() {
  
     if (!res.ok || data.error) {
       const errorMessage = data.error || 'Analysis failed. Please try again.';
-      fireMetaOnce('auditFailed', 'AuditFailed', {
-        error: errorMessage,
-      });
       showError(errorMessage);
       return;
     }
@@ -2669,16 +2620,10 @@ async function runAnalysis() {
     pendingScanResult = data;
     pendingWebsiteUrl = asText(data.url) || url;
     renderLockedResults();
-    fireMetaOnce('auditCompleted', 'AuditCompleted', {
-      status: 'locked',
-    });
   } catch (err) {
     console.error('API request failed:', err);
     stopLoadingTimers();
     const errorMessage = err?.message || 'Could not reach the server. Please try again.';
-    fireMetaOnce('auditFailed', 'AuditFailed', {
-      error: errorMessage,
-    });
     showError('We could not complete the scan right now. Please check the website URL and try again.');
   }
 }
@@ -2806,7 +2751,6 @@ async function submitLeadUnlock() {
     const data = await res.json().catch(() => ({}));
     if (res.ok) {
       renderResults(pendingScanResult);
-      fireMetaLead();
     } else {
       console.error('[LeadCheck] Lead unlock failed:', data.error || res.statusText);
       if (message) {
