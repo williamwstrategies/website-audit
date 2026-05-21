@@ -137,8 +137,8 @@ app.post('/api/lead-capture', async (req, res) => {
 
   if (!lead.email) return res.status(400).json({ error: 'Email is required' });
   if (!lead.website) return res.status(400).json({ error: 'Website URL is required' });
-  if (req.body.leadOnly && !reportRequested && !lead.name) return res.status(400).json({ error: 'Name is required' });
-  if (req.body.leadOnly && !reportRequested && !lead.phone) return res.status(400).json({ error: 'Phone is required' });
+  if (captureOnly && !lead.name) return res.status(400).json({ error: 'Name is required' });
+  if (captureOnly && !lead.phone) return res.status(400).json({ error: 'Phone is required' });
 
   try {
     new URL(lead.website);
@@ -177,7 +177,7 @@ app.post('/api/lead-capture', async (req, res) => {
       posthog.captureException(err, distinctId, { website: lead.website, score });
       posthog.capture({
         distinctId,
-        event: reportRequested ? 'ReportPDFRequested failed' : 'lead capture failed',
+        event: reportRequested ? 'LeadSubmitted failed' : 'lead capture failed',
         properties: {
           website: lead.website,
           score,
@@ -186,14 +186,11 @@ app.post('/api/lead-capture', async (req, res) => {
           ...(sessionId && { $session_id: sessionId }),
         },
       });
-      if (reportRequested) {
-        return res.json({ ok: true, webhookSent: false, warning: 'Report request received, but webhook failed' });
-      }
       return res.status(502).json({ error: 'Lead capture webhook failed' });
     }
     posthog.capture({
       distinctId,
-      event: reportRequested ? 'ReportPDFRequested' : 'lead captured',
+      event: reportRequested ? 'LeadSubmitted' : 'lead captured',
       properties: {
         website: lead.website,
         score,
