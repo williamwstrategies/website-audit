@@ -364,7 +364,7 @@ a {
 }
 
 .login-card {
-  width: min(460px, 100%);
+  width: min(520px, 100%);
   padding: 28px;
 }
 
@@ -375,6 +375,116 @@ a {
 
 .login-card p {
   margin-bottom: 20px;
+}
+
+.auth-card {
+  display: grid;
+  gap: 18px;
+}
+
+.auth-copy h1 {
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+.auth-copy p {
+  margin-bottom: 0;
+}
+
+.auth-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface-soft);
+}
+
+.auth-tab {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 720;
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.auth-tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+}
+
+.auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-form .secondary-btn,
+.auth-form .analyze-btn {
+  width: 100%;
+}
+
+.auth-alt-link {
+  justify-self: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 680;
+  text-decoration: none;
+}
+
+.auth-alt-link:hover {
+  color: var(--text);
+}
+
+.auth-message {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.auth-message[data-tone="success"] {
+  border-color: rgba(95, 143, 109, 0.24);
+  background: #f1f8f3;
+  color: var(--green);
+}
+
+.auth-message[data-tone="error"],
+.auth-warning {
+  border-color: rgba(184, 93, 79, 0.24);
+  background: #fff4f1;
+  color: var(--red);
+}
+
+.auth-user-chip {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  max-width: 220px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  padding: 0 12px;
+  font-size: 0.78rem;
+  font-weight: 680;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  min-width: 92px;
 }
 
 .app-shell {
@@ -2590,6 +2700,8 @@ button:disabled {
 .route-view,
 .marketing-view,
 .login-view,
+.auth-card,
+.auth-form,
 .app-shell,
 .app-workspace,
 .app-content,
@@ -2639,6 +2751,8 @@ button:disabled {
 .feature-card,
 .pricing-card,
 .step-card,
+.auth-card,
+.auth-message,
 .metric-card,
 .assessment-card,
 .settings-header,

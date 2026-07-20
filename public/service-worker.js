@@ -1,7 +1,8 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-07-20';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-07-20-auth';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
+  '/auth.js',
   '/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
@@ -45,7 +46,7 @@ self.addEventListener('fetch', event => {
 
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname === '/api/analyze') {
+  if (url.pathname === '/api/analyze' || url.pathname === '/api/auth-config') {
     event.respondWith(fetch(event.request));
     return;
   }

@@ -170,7 +170,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 </main>
 
 <main id="login-view" class="route-view login-view" hidden>
-  <section class="login-card">
+  <section class="login-card auth-card">
     <div class="brand-lockup login-brand">
       <span class="brand-mark">LC</span>
       <span>
@@ -178,9 +178,70 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <span class="brand-subtitle">Secure access</span>
       </span>
     </div>
-    <h1>Sign in to LeadCheck</h1>
-    <p>Authentication will be connected here later. Continue to the application preview for now.</p>
-    <a class="analyze-btn" href="/app" data-route>Continue to App</a>
+    <div class="auth-copy">
+      <div class="section-kicker" id="authKicker">Secure Access</div>
+      <h1 id="authTitle">Sign in to LeadCheck</h1>
+      <p id="authIntro">Access your agency workspace and continue generating professional website assessments.</p>
+    </div>
+
+    <div class="auth-tabs" aria-label="Authentication options">
+      <a href="/login" data-route class="auth-tab active" data-auth-tab="login">Login</a>
+      <a href="/signup" data-route class="auth-tab" data-auth-tab="signup">Sign Up</a>
+    </div>
+
+    <div class="auth-message auth-warning" id="authConfigWarning" hidden></div>
+    <div class="auth-message" id="authMessage" hidden></div>
+
+    <form class="auth-form" id="loginForm" data-auth-panel="login">
+      <label class="lead-field">
+        <span class="lead-label">Email Address</span>
+        <input type="email" id="loginEmail" autocomplete="email" required>
+      </label>
+      <label class="lead-field">
+        <span class="lead-label">Password</span>
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+      </label>
+      <button class="analyze-btn" type="submit" id="loginSubmit">Login</button>
+      <a class="auth-alt-link" href="/forgot-password" data-route>Forgot password?</a>
+    </form>
+
+    <form class="auth-form" id="signupForm" data-auth-panel="signup" hidden>
+      <label class="lead-field">
+        <span class="lead-label">Name</span>
+        <input type="text" id="signupName" autocomplete="name" required>
+      </label>
+      <label class="lead-field">
+        <span class="lead-label">Email Address</span>
+        <input type="email" id="signupEmail" autocomplete="email" required>
+      </label>
+      <label class="lead-field">
+        <span class="lead-label">Password</span>
+        <input type="password" id="signupPassword" autocomplete="new-password" minlength="6" required>
+      </label>
+      <button class="analyze-btn" type="submit" id="signupSubmit">Create Account</button>
+      <button class="secondary-btn" type="button" id="resendVerificationBtn">Resend Verification Email</button>
+    </form>
+
+    <form class="auth-form" id="forgotPasswordForm" data-auth-panel="forgot" hidden>
+      <label class="lead-field">
+        <span class="lead-label">Email Address</span>
+        <input type="email" id="forgotEmail" autocomplete="email" required>
+      </label>
+      <button class="analyze-btn" type="submit" id="forgotSubmit">Send Reset Link</button>
+      <a class="auth-alt-link" href="/login" data-route>Back to login</a>
+    </form>
+
+    <form class="auth-form" id="resetPasswordForm" data-auth-panel="reset" hidden>
+      <label class="lead-field">
+        <span class="lead-label">New Password</span>
+        <input type="password" id="resetPassword" autocomplete="new-password" minlength="6" required>
+      </label>
+      <label class="lead-field">
+        <span class="lead-label">Confirm Password</span>
+        <input type="password" id="resetPasswordConfirm" autocomplete="new-password" minlength="6" required>
+      </label>
+      <button class="analyze-btn" type="submit" id="resetSubmit">Update Password</button>
+    </form>
   </section>
 </main>
 
@@ -213,8 +274,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <h1 id="appPageTitle">Dashboard</h1>
       </div>
       <div class="enterprise-header-actions">
+        <span class="auth-user-chip" data-auth-email hidden></span>
         <a class="secondary-btn" href="/app/settings" data-route>Brand Settings</a>
         <a class="analyze-btn" href="/app/scan" data-route>Generate Report</a>
+        <button class="secondary-btn logout-btn" id="logoutBtn" type="button">Logout</button>
       </div>
     </header>
 
@@ -609,8 +672,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/branding.js"></script>
- 
+<script src="/auth.js"></script>
+
 <script>
 const CHECK_LABELS = {
   headline: 'Clear Headline',
@@ -657,6 +722,8 @@ let pendingWebsiteUrl = null;
 let pendingProspectName = '';
 let fullResultsUnlocked = false;
 let brandingProvider = null;
+let authProvider = null;
+let pendingProtectedPath = '/app';
 
 const ROUTE_TITLES = {
   '/app': 'Dashboard',
@@ -706,9 +773,96 @@ function setActiveAppNav(key) {
   });
 }
 
+function isAuthRoute(path = window.location.pathname) {
+  return path.startsWith('/login') ||
+    path.startsWith('/signup') ||
+    path.startsWith('/forgot-password') ||
+    path.startsWith('/reset-password');
+}
+
+function authPanelForPath(path = window.location.pathname) {
+  if (path.startsWith('/signup')) return 'signup';
+  if (path.startsWith('/forgot-password')) return 'forgot';
+  if (path.startsWith('/reset-password')) return 'reset';
+  return 'login';
+}
+
+function setAuthMessage(message = '', tone = 'default') {
+  const node = document.getElementById('authMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
+function getAuthUrlError() {
+  const hash = window.location.hash ? window.location.hash.slice(1) : '';
+  const query = window.location.search ? window.location.search.slice(1) : '';
+  const params = new URLSearchParams(hash || query);
+  const description = params.get('error_description') || params.get('error');
+  return description ? description.replace(/\+/g, ' ') : '';
+}
+
+function renderAuthPanel(panel = 'login') {
+  const copy = {
+    login: {
+      kicker: 'Secure Access',
+      title: 'Sign in to LeadCheck',
+      intro: 'Access your agency workspace and continue generating professional website assessments.',
+    },
+    signup: {
+      kicker: 'Create Account',
+      title: 'Start your agency workspace',
+      intro: 'Create an account, verify your email, then enter the application dashboard.',
+    },
+    forgot: {
+      kicker: 'Password Recovery',
+      title: 'Reset your password',
+      intro: 'Enter your account email and Supabase will send a secure reset link.',
+    },
+    reset: {
+      kicker: 'New Password',
+      title: 'Create a new password',
+      intro: 'Enter a new password for your LeadCheck account.',
+    },
+  };
+
+  const activeCopy = copy[panel] || copy.login;
+  document.getElementById('authKicker').textContent = activeCopy.kicker;
+  document.getElementById('authTitle').textContent = activeCopy.title;
+  document.getElementById('authIntro').textContent = activeCopy.intro;
+
+  document.querySelectorAll('[data-auth-panel]').forEach(node => {
+    node.hidden = node.dataset.authPanel !== panel;
+  });
+
+  document.querySelectorAll('[data-auth-tab]').forEach(node => {
+    const tab = panel === 'signup' ? 'signup' : 'login';
+    node.classList.toggle('active', node.dataset.authTab === tab);
+  });
+
+  const warning = document.getElementById('authConfigWarning');
+  if (warning) {
+    const message = authProvider?.error || '';
+    warning.hidden = !message;
+    warning.textContent = message;
+  }
+
+  const urlError = getAuthUrlError();
+  if (urlError) setAuthMessage(urlError, 'error');
+}
+
+function updateAuthUserUI() {
+  const email = authProvider?.getUserEmail?.() || '';
+  document.querySelectorAll('[data-auth-email]').forEach(node => {
+    node.hidden = !email;
+    node.textContent = email;
+  });
+}
+
 function renderRoute() {
   const path = window.location.pathname;
-  const isLogin = path.startsWith('/login');
+  const isLogin = isAuthRoute(path);
   const isApp = path.startsWith('/app');
   const marketingView = document.getElementById('marketing-view');
   const marketingNav = document.getElementById('marketingNav');
@@ -716,10 +870,35 @@ function renderRoute() {
   const appShell = document.getElementById('app-shell');
   const appPageTitle = document.getElementById('appPageTitle');
 
+  if (authProvider && !authProvider.ready && isApp) {
+    setHidden(marketingView, true);
+    setHidden(marketingNav, true);
+    setHidden(loginView, true);
+    setHidden(appShell, true);
+    return;
+  }
+
+  if (authProvider?.ready && isApp && !authProvider.isAuthenticated()) {
+    pendingProtectedPath = path;
+    window.history.replaceState({}, '', '/login');
+    renderRoute();
+    return;
+  }
+
+  if (authProvider?.ready && isLogin && authProvider.isAuthenticated() && !path.startsWith('/reset-password')) {
+    window.history.replaceState({}, '', '/app');
+    renderRoute();
+    return;
+  }
+
   setHidden(marketingView, isLogin || isApp);
   setHidden(marketingNav, isLogin || isApp);
   setHidden(loginView, !isLogin);
   setHidden(appShell, !isApp);
+
+  if (isLogin) {
+    renderAuthPanel(authPanelForPath(path));
+  }
 
   if (isApp) {
     const key = appRouteKey(path);
@@ -738,6 +917,8 @@ function renderRoute() {
     brandingProvider.apply(path);
     brandingProvider.populateForm();
   }
+
+  updateAuthUserUI();
 }
 
 function navigateTo(path) {
@@ -760,6 +941,161 @@ function bindRouteLinks() {
     navigateTo(href);
   });
   window.addEventListener('popstate', renderRoute);
+}
+
+function requireAuthProvider() {
+  if (authProvider?.isConfigured?.()) return true;
+  setAuthMessage(authProvider?.error || 'Authentication is not configured yet.', 'error');
+  return false;
+}
+
+async function withButtonLoading(button, loadingLabel, action) {
+  if (!button) return action();
+  const original = button.textContent;
+  button.disabled = true;
+  button.textContent = loadingLabel;
+  try {
+    return await action();
+  } catch (error) {
+    setAuthMessage(error?.message || 'Authentication request failed. Please try again.', 'error');
+    return null;
+  } finally {
+    button.disabled = false;
+    button.textContent = original;
+  }
+}
+
+function bindAuthForms() {
+  const loginForm = document.getElementById('loginForm');
+  const signupForm = document.getElementById('signupForm');
+  const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  const resetPasswordForm = document.getElementById('resetPasswordForm');
+  const resendVerificationBtn = document.getElementById('resendVerificationBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  loginForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!requireAuthProvider()) return;
+    setAuthMessage('');
+
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const button = document.getElementById('loginSubmit');
+
+    withButtonLoading(button, 'Logging in...', async () => {
+      const { error } = await authProvider.signIn({ email, password });
+      if (error) {
+        setAuthMessage(error.message || 'Login failed. Please check your details.', 'error');
+        return;
+      }
+      navigateTo(pendingProtectedPath || '/app');
+      pendingProtectedPath = '/app';
+    });
+  });
+
+  signupForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!requireAuthProvider()) return;
+    setAuthMessage('');
+
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const button = document.getElementById('signupSubmit');
+
+    withButtonLoading(button, 'Creating account...', async () => {
+      const { data, error } = await authProvider.signUp({ name, email, password });
+      if (error) {
+        setAuthMessage(error.message || 'Sign up failed. Please try again.', 'error');
+        return;
+      }
+
+      if (data?.session) {
+        navigateTo('/app');
+        return;
+      }
+
+      setAuthMessage('Check your email to verify your account, then return here to login.', 'success');
+    });
+  });
+
+  resendVerificationBtn?.addEventListener('click', () => {
+    if (!requireAuthProvider()) return;
+
+    const email = document.getElementById('signupEmail').value.trim();
+    if (!email) {
+      setAuthMessage('Enter your email address first, then resend the verification email.', 'error');
+      return;
+    }
+
+    withButtonLoading(resendVerificationBtn, 'Sending...', async () => {
+      const { error } = await authProvider.resendVerification(email);
+      if (error) {
+        setAuthMessage(error.message || 'Could not resend verification email.', 'error');
+        return;
+      }
+      setAuthMessage('Verification email sent. Please check your inbox.', 'success');
+    });
+  });
+
+  forgotPasswordForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!requireAuthProvider()) return;
+    setAuthMessage('');
+
+    const email = document.getElementById('forgotEmail').value.trim();
+    const button = document.getElementById('forgotSubmit');
+
+    withButtonLoading(button, 'Sending...', async () => {
+      const { error } = await authProvider.sendPasswordReset(email);
+      if (error) {
+        setAuthMessage(error.message || 'Could not send reset email.', 'error');
+        return;
+      }
+      setAuthMessage('Password reset email sent. Open the link in your inbox to continue.', 'success');
+    });
+  });
+
+  resetPasswordForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!requireAuthProvider()) return;
+    setAuthMessage('');
+
+    const password = document.getElementById('resetPassword').value;
+    const confirm = document.getElementById('resetPasswordConfirm').value;
+    const button = document.getElementById('resetSubmit');
+
+    if (password !== confirm) {
+      setAuthMessage('Passwords do not match.', 'error');
+      return;
+    }
+
+    withButtonLoading(button, 'Updating...', async () => {
+      const { error } = await authProvider.updatePassword(password);
+      if (error) {
+        setAuthMessage(error.message || 'Could not update password. Open the latest reset link and try again.', 'error');
+        return;
+      }
+      setAuthMessage('Password updated. Redirecting to your dashboard...', 'success');
+      setTimeout(() => navigateTo('/app'), 700);
+    });
+  });
+
+  logoutBtn?.addEventListener('click', () => {
+    if (!authProvider?.isConfigured?.()) {
+      navigateTo('/login');
+      return;
+    }
+
+    withButtonLoading(logoutBtn, 'Logging out...', async () => {
+      const { error } = await authProvider.signOut();
+      if (error) {
+        console.error('[LeadCheck] Logout failed:', error.message);
+      }
+      pendingProtectedPath = '/app';
+      navigateTo('/login');
+    });
+  });
 }
 
 function bindBrandingForm() {
@@ -1902,10 +2238,16 @@ function resetApp() {
   navigateTo('/app/scan');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   brandingProvider = new window.BrandingProvider();
+  authProvider = new window.AuthProvider({
+    onChange: () => renderRoute(),
+  });
   bindRouteLinks();
+  bindAuthForms();
   bindBrandingForm();
+  renderRoute();
+  await authProvider.init();
   renderRoute();
 });
  

@@ -80,7 +80,10 @@
     apply(route = window.location.pathname) {
       const brand = this.branding;
       const isApp = route.startsWith('/app');
-      const isLogin = route.startsWith('/login');
+      const isLogin = route.startsWith('/login') ||
+        route.startsWith('/signup') ||
+        route.startsWith('/forgot-password') ||
+        route.startsWith('/reset-password');
       const agencyName = brand.agencyName || 'Agency';
       const platformLabel = brand.platformLabel || 'Website Assessment Platform';
 

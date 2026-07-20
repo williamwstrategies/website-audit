@@ -14,6 +14,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/api/auth-config', (req, res) => {
+  const supabaseUrl = process.env.SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || '';
+
+  res.set('Cache-Control', 'no-store');
+  res.json({
+    supabaseUrl,
+    supabaseAnonKey,
+    configured: Boolean(supabaseUrl && supabaseAnonKey),
+  });
+});
+
 function normalizeLeadUrl(rawUrl) {
   const value = String(rawUrl || '').trim();
   if (!value) return '';
