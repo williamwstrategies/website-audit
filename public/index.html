@@ -38,6 +38,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     --green: #2ecc71;
     --yellow: #f5c842;
     --red: #e74c3c;
+    --report-good: #9ab9a6;
+    --report-warn: #d8bf7a;
+    --report-risk: #d9a08d;
     --text: #f0f0f5;
     --muted: #7a7a9a;
     --radius: 12px;
@@ -1422,6 +1425,413 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   .color-green { color: var(--green); }
   .color-yellow { color: var(--yellow); }
   .color-red { color: var(--red); }
+
+  /* ===== PREMIUM CONSULTING REPORT ===== */
+  #results {
+    max-width: 1180px;
+    padding: 30px 18px 72px;
+  }
+
+  .report-shell {
+    display: grid;
+    gap: 26px;
+  }
+
+  .report-hero {
+    text-align: left;
+    padding: 28px;
+    background:
+      linear-gradient(145deg, rgba(255,255,255,0.065), rgba(255,255,255,0.018)),
+      radial-gradient(circle at 12% 0%, rgba(245,200,66,0.12), transparent 34rem);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 24px;
+    box-shadow: 0 28px 90px rgba(0,0,0,0.30);
+    overflow: hidden;
+  }
+
+  .report-hero-topline,
+  .executive-kicker,
+  .report-section-heading span,
+  .report-meta-label,
+  .report-card-kicker,
+  .consulting-chip-label {
+    color: rgba(240,240,245,0.58);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .report-hero-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .report-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 26px;
+    align-items: stretch;
+  }
+
+  .score-label {
+    color: rgba(240,240,245,0.62);
+    margin-bottom: 12px;
+  }
+
+  .score-display {
+    display: flex;
+  }
+
+  .score-number {
+    font-size: clamp(4.4rem, 14vw, 7.6rem);
+  }
+
+  .score-bar-wrap {
+    max-width: 460px;
+    margin: 20px 0 14px;
+    background: rgba(255,255,255,0.10);
+  }
+
+  .score-verdict {
+    max-width: 560px;
+    padding: 0;
+    color: rgba(240,240,245,0.72);
+  }
+
+  .analyzed-url {
+    padding: 0;
+    color: rgba(240,240,245,0.52);
+  }
+
+  .executive-panel,
+  .report-section,
+  .final-assessment-card,
+  .unlock-card {
+    background: rgba(19,19,26,0.82);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 22px;
+    box-shadow: 0 18px 60px rgba(0,0,0,0.22);
+  }
+
+  .executive-panel {
+    padding: 24px;
+    display: grid;
+    align-content: space-between;
+    gap: 22px;
+  }
+
+  .executive-panel h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 7vw, 3.2rem);
+    line-height: 1;
+    margin: 8px 0 12px;
+  }
+
+  .executive-panel p,
+  .final-assessment-card {
+    color: rgba(240,240,245,0.72);
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .executive-metrics {
+    display: grid;
+    gap: 10px;
+  }
+
+  .executive-metric {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .executive-metric span {
+    color: rgba(240,240,245,0.55);
+    font-size: 0.82rem;
+  }
+
+  .executive-metric strong {
+    color: var(--text);
+    font-size: 0.88rem;
+    text-align: right;
+  }
+
+  #resultsInner {
+    max-width: none;
+    padding: 0;
+  }
+
+  .report-section {
+    padding: 26px;
+    margin-bottom: 24px;
+    animation: reportReveal 0.5s ease both;
+  }
+
+  .report-section:nth-of-type(2) { animation-delay: 0.04s; }
+  .report-section:nth-of-type(3) { animation-delay: 0.08s; }
+  .report-section:nth-of-type(4) { animation-delay: 0.12s; }
+
+  @keyframes reportReveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .report-section-heading {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+    margin-bottom: 22px;
+  }
+
+  .report-section-heading span {
+    color: var(--accent);
+    padding-top: 5px;
+  }
+
+  .report-section-heading h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.45rem, 4vw, 2.05rem);
+    line-height: 1.1;
+    margin-bottom: 7px;
+  }
+
+  .report-section-heading p {
+    color: rgba(240,240,245,0.58);
+    max-width: 720px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+
+  .priority-list,
+  .consulting-finding-list,
+  .consulting-fix-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .priority-card,
+  .issue-item,
+  .rec-card,
+  .positive-item,
+  .evidence-pages,
+  .evidence-signal,
+  .visual-trust-card {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.085);
+    border-radius: 16px;
+    box-shadow: none;
+  }
+
+  .priority-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .priority-rank {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(245,200,66,0.12);
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+  }
+
+  .priority-title,
+  .issue-title,
+  .rec-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .priority-meta,
+  .finding-meta,
+  .category-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .status-chip {
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 999px;
+    padding: 5px 9px;
+    color: rgba(240,240,245,0.72);
+    background: rgba(255,255,255,0.035);
+    font-size: 0.74rem;
+    font-weight: 800;
+  }
+
+  .status-chip.high { color: #d9a08d; border-color: rgba(217,160,141,0.30); background: rgba(217,160,141,0.08); }
+  .status-chip.medium { color: #d8bf7a; border-color: rgba(216,191,122,0.30); background: rgba(216,191,122,0.08); }
+  .status-chip.low { color: #9ab9a6; border-color: rgba(154,185,166,0.30); background: rgba(154,185,166,0.08); }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .cat-card {
+    padding: 18px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.09);
+  }
+
+  .cat-name {
+    color: rgba(240,240,245,0.58);
+  }
+
+  .cat-score-row {
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .cat-score-text {
+    font-size: 2.1rem;
+  }
+
+  .cat-summary {
+    color: rgba(240,240,245,0.72);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin: 12px 0 14px;
+  }
+
+  .cat-business-impact {
+    color: rgba(240,240,245,0.56);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    margin-top: 12px;
+  }
+
+  .cat-bar-wrap {
+    background: rgba(255,255,255,0.10);
+  }
+
+  .issue-item {
+    border-left: none;
+    padding: 20px;
+    display: grid;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .issue-icon {
+    display: none;
+  }
+
+  .issue-desc {
+    color: rgba(240,240,245,0.68);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  .finding-label {
+    color: rgba(240,240,245,0.50);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .rec-card {
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .rec-header {
+    margin-bottom: 14px;
+  }
+
+  .rec-num {
+    background: rgba(245,200,66,0.12);
+    border: 1px solid rgba(245,200,66,0.20);
+  }
+
+  .rec-body {
+    padding-left: 0;
+  }
+
+  .rec-fix {
+    background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(240,240,245,0.78);
+    padding: 14px 16px;
+  }
+
+  .fix-steps {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .fix-steps li {
+    color: rgba(240,240,245,0.78);
+    line-height: 1.55;
+  }
+
+  .final-assessment-card {
+    padding: 22px;
+  }
+
+  .positive-item {
+    border-left: none;
+    padding: 14px 16px;
+  }
+
+  .positive-icon {
+    color: #9ab9a6;
+  }
+
+  .passed-grid {
+    margin-top: 12px;
+  }
+
+  .passed-chip,
+  .badge-yes,
+  .badge-partial,
+  .badge-no {
+    color: rgba(240,240,245,0.72);
+    background: rgba(255,255,255,0.035);
+    border-color: rgba(255,255,255,0.10);
+  }
+
+  .evidence-section {
+    margin-bottom: 24px;
+  }
+
+  .evidence-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .unlock-card {
+    padding: 24px;
+    background:
+      linear-gradient(135deg, rgba(245,200,66,0.08), rgba(255,255,255,0.025)),
+      rgba(19,19,26,0.86);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .report-section {
+      animation: none;
+    }
+  }
  
   /* ===== DESKTOP OVERRIDES (≥ 600px) ===== */
   @media (min-width: 600px) {
@@ -1654,6 +2064,52 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     }
   }
 
+  @media (min-width: 600px) {
+    #results {
+      padding: 34px 28px 90px;
+    }
+
+    #resultsInner {
+      padding: 0;
+    }
+
+    .report-hero {
+      padding: 36px;
+    }
+
+    .report-hero-grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+    }
+
+    .report-section {
+      padding: 34px;
+      margin-bottom: 28px;
+    }
+
+    .categories-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .priority-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .priority-card {
+      grid-template-columns: 1fr;
+    }
+
+    .evidence-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 980px) {
+    .categories-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
   @media print {
     * {
       -webkit-print-color-adjust: exact !important;
@@ -1692,6 +2148,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       padding: 0 !important;
     }
 
+    .report-hero,
     .score-hero {
       padding-top: 0;
     }
@@ -1709,6 +2166,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       page-break-inside: avoid;
     }
 
+    .report-section-heading,
     .section-header {
       break-after: avoid;
       page-break-after: avoid;
@@ -1877,85 +2335,148 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
  
 <!-- RESULTS -->
 <div id="results">
- 
-  <div class="score-hero">
-    <p class="score-label">Your Website Score</p>
-    <div class="score-display">
-      <span class="score-number" id="scoreNum">0</span>
-      <span class="score-denom" id="scoreDenom">/100</span>
+
+  <div class="report-shell">
+  <section class="report-hero score-hero">
+    <div class="report-hero-topline">
+      <span>Executive Summary</span>
+      <span id="auditDate">Audit Date</span>
     </div>
-    <div class="score-bar-wrap">
-      <div class="score-bar-fill" id="scoreBar"></div>
+    <div class="report-hero-grid">
+      <div>
+        <p class="score-label">Overall Website Health</p>
+        <div class="score-display">
+          <span class="score-number" id="scoreNum">0</span>
+          <span class="score-denom" id="scoreDenom">/100</span>
+        </div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-fill" id="scoreBar"></div>
+        </div>
+        <p class="score-verdict" id="scoreVerdict"></p>
+        <p class="analyzed-url" id="analyzedUrl"></p>
+      </div>
+      <div class="executive-panel">
+        <div class="executive-kicker">Website Health</div>
+        <h2 id="healthStatus">Status</h2>
+        <p id="executiveSummary">Your website audit summary will appear here after the scan completes.</p>
+        <div class="executive-metrics">
+          <div class="executive-metric">
+            <span>Industry Comparison</span>
+            <strong id="industryComparison">-</strong>
+          </div>
+          <div class="executive-metric">
+            <span>Estimated Lead Impact</span>
+            <strong id="leadImpact">-</strong>
+          </div>
+          <div class="executive-metric">
+            <span>Priority</span>
+            <strong id="priorityLevel">-</strong>
+          </div>
+        </div>
+      </div>
     </div>
-    <p class="score-verdict" id="scoreVerdict"></p>
-    <p class="analyzed-url" id="analyzedUrl"></p>
     <div class="report-actions">
       <button class="download-pdf-btn" onclick="downloadReportPdf()">Download PDF</button>
     </div>
-  </div>
+  </section>
  
   <div id="resultsInner">
     <div id="fullResults">
 
-    <!-- Rating Comparison -->
-    <div class="rating-comparison" id="ratingComparison">
-      <div class="rating-cards" id="ratingCards"></div>
-      <p class="rating-helper">Compare this site against industry benchmarks and our client performance average.</p>
-    </div>
- 
-    <!-- Categories -->
-    <div class="section-header">Category Breakdown</div>
-    <div class="categories-grid" id="catsGrid"></div>
- 
-    <!-- Visual Trust -->
-    <div class="visual-trust-section" id="visualTrustSection">
-      <div class="section-header">Visual Trust &amp; Design Quality</div>
-      <div class="visual-trust-card">
-        <div class="visual-trust-top">
-          <div>
-            <div class="visual-trust-title" id="visualTrustStatus">Not verified</div>
-            <div class="visual-trust-note">Conversion/trust factor, not a direct Google ranking factor.</div>
-          </div>
-          <div class="visual-trust-score" id="visualTrustScore">— / 15</div>
+    <section class="report-section top-priorities-section">
+      <div class="report-section-heading">
+        <span>01</span>
+        <div>
+          <h2>Top Priorities</h2>
+          <p>The three highest-impact opportunities to review first.</p>
         </div>
-        <div class="visual-trust-desc" id="visualTrustDesc"></div>
-        <div class="visual-trust-breakdown" id="visualTrustBreakdown"></div>
       </div>
-    </div>
- 
-    <!-- Positives -->
-    <div class="positives-section" id="positivesSection">
-      <div class="section-header">What You&rsquo;re Doing Right</div>
-      <div id="positivesList"></div>
-    </div>
- 
-    <!-- Issues -->
-    <div class="issues-section">
-      <div class="section-header" id="issuesHeader">Issues Found</div>
+      <div class="priority-list" id="topPrioritiesList"></div>
+    </section>
+
+    <section class="report-section category-overview-section">
+      <div class="report-section-heading">
+        <span>02</span>
+        <div>
+          <h2>Category Overview</h2>
+          <p>A business-focused view of the areas that influence trust, visibility, and lead conversion.</p>
+        </div>
+      </div>
+      <div class="categories-grid" id="catsGrid"></div>
+      <div class="visual-trust-section" id="visualTrustSection">
+        <div class="visual-trust-card">
+          <div class="visual-trust-top">
+          <div>
+              <div class="visual-trust-title">Visual Trust &amp; Design Quality</div>
+              <div class="visual-trust-note" id="visualTrustStatus">Conversion/trust factor, not a direct Google ranking factor.</div>
+          </div>
+            <div class="visual-trust-score" id="visualTrustScore">- / 15</div>
+          </div>
+          <div class="visual-trust-desc" id="visualTrustDesc"></div>
+          <div class="visual-trust-breakdown" id="visualTrustBreakdown"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report-section issues-section">
+      <div class="report-section-heading">
+        <span>03</span>
+        <div>
+          <h2 id="issuesHeader">Detailed Findings</h2>
+          <p>Each finding is translated into what it may mean for enquiries, trust, and sales conversations.</p>
+        </div>
+      </div>
       <div id="issuesList"></div>
-    </div>
- 
-    <!-- Recommendations -->
-    <div class="recs-section">
-      <div class="section-header">Recommended Fixes</div>
+    </section>
+
+    <section class="report-section recs-section">
+      <div class="report-section-heading">
+        <span>04</span>
+        <div>
+          <h2>How To Fix</h2>
+          <p>Practical next steps written for a business owner, not a technical audit checklist.</p>
+        </div>
+      </div>
       <div id="recsList"></div>
-    </div>
- 
-    <!-- Passed -->
-    <div class="passed-section">
-      <div class="section-header">What's Working ✓</div>
+    </section>
+
+    <section class="report-section positives-section" id="positivesSection">
+      <div class="report-section-heading">
+        <span>05</span>
+        <div>
+          <h2>Strengths Already Working</h2>
+          <p>Positive signals found during the scan.</p>
+        </div>
+      </div>
+      <div id="positivesList"></div>
       <div class="passed-grid" id="passedGrid"></div>
-    </div>
- 
-    <!-- Evidence Found -->
-    <div class="evidence-section">
-      <div class="section-header">Evidence Found</div>
+    </section>
+
+    <section class="report-section evidence-section">
+      <div class="report-section-heading">
+        <span>06</span>
+        <div>
+          <h2>Scan Evidence</h2>
+          <p>The pages and visible signals used to support the assessment.</p>
+        </div>
+      </div>
       <div id="evidencePages"></div>
       <div class="evidence-grid" id="evidenceSignals"></div>
-    </div>
+    </section>
+
+    <section class="report-section final-assessment-section">
+      <div class="report-section-heading">
+        <span>07</span>
+        <div>
+          <h2>Final Assessment</h2>
+          <p>A concise business summary of what the report means.</p>
+        </div>
+      </div>
+      <div class="final-assessment-card" id="finalAssessment"></div>
+    </section>
 
     <!-- Optional Lead Capture -->
-    <div class="partial-gate" id="partialGate">
+    <section class="partial-gate" id="partialGate">
       <div class="unlock-card">
         <div class="unlock-title">Want us to send you your results?</div>
         <p class="unlock-copy">Enter your details and we&rsquo;ll send this website audit into our follow-up system so you can get help reviewing the score, fixes, and next steps.</p>
@@ -1987,12 +2508,13 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div class="unlock-message" id="unlockMessage" role="status"></div>
         </form>
       </div>
-    </div>
+    </section>
  
     <div class="analyze-another">
       <button class="retry-btn" onclick="resetApp()">← Analyze Another Website</button>
     </div>
     </div>
+  </div>
   </div>
 </div>
  
@@ -2210,17 +2732,17 @@ function statusFromValue(value) {
 }
  
 function getVerdict(score) {
-  if (score >= 81) return { text: 'Excellent — your site is built to convert local customers.', color: 'var(--green)' };
-  if (score >= 61) return { text: 'Good — a few improvements could significantly boost your leads.', color: 'var(--accent)' };
-  if (score >= 41) return { text: 'Needs Work — there are clear gaps costing you calls and bookings.', color: 'var(--accent2)' };
-  return { text: 'Critical — your website is likely losing most potential customers.', color: 'var(--red)' };
+  if (score >= 81) return { text: 'Good foundation with room for strategic refinement.', color: 'var(--report-good)' };
+  if (score >= 61) return { text: 'Average performance with meaningful opportunities to improve lead generation.', color: 'var(--report-warn)' };
+  if (score >= 41) return { text: 'Needs improvement in areas that may be costing calls and enquiries.', color: 'var(--report-risk)' };
+  return { text: 'High-priority improvements are likely needed to support stronger lead generation.', color: 'var(--report-risk)' };
 }
  
 function getScoreColor(score, max) {
   const pct = score / max;
-  if (pct >= 0.81) return 'var(--green)';  // 81–100 → green
-  if (pct >= 0.61) return 'var(--accent)'; // 61–80  → yellow/accent
-  return 'var(--red)';                      // 0–60   → red
+  if (pct >= 0.81) return 'var(--report-good)';  // 81-100
+  if (pct >= 0.61) return 'var(--report-warn)';  // 61-80
+  return 'var(--report-risk)';                   // 0-60
 }
 
 function normalizeScore(score) {
@@ -2267,6 +2789,201 @@ function getBrokenLinksSummary(result) {
       ? 'No broken links or missing pages detected'
       : 'Broken links or missing pages detected',
   };
+}
+
+function getScoreContext(score, max = 100) {
+  const pct = max ? score / max : score / 100;
+  const normalized = max ? (score / max) * 100 : score;
+  if (pct >= 0.81) {
+    return {
+      status: 'Good',
+      priority: 'Low',
+      impact: 'Low',
+      comparison: normalized > 75.6 ? 'Above Average' : 'Average',
+      tone: 'low',
+    };
+  }
+  if (pct >= 0.61) {
+    return {
+      status: 'Average',
+      priority: 'Medium',
+      impact: 'Moderate',
+      comparison: normalized > 75.6 ? 'Above Average' : 'Average',
+      tone: 'medium',
+    };
+  }
+  return {
+    status: 'Needs Improvement',
+    priority: 'High',
+    impact: 'High',
+    comparison: 'Needs Improvement',
+    tone: 'high',
+  };
+}
+
+function getCategoryDisplay(key, label) {
+  const normalized = String(key || '').toLowerCase();
+  const fallback = asText(label) || key;
+  if (normalized.includes('lead') || normalized.includes('conversion')) return 'Conversion';
+  if (normalized.includes('trust') || normalized.includes('local')) return 'Trust & Credibility';
+  if (normalized.includes('seo') || normalized.includes('visibility')) return 'SEO Visibility';
+  if (normalized.includes('technical') || normalized.includes('speed')) return 'Technical Health';
+  if (normalized.includes('visual') || normalized.includes('user')) return 'User Experience';
+  return fallback || 'Website Performance';
+}
+
+function getCategorySummary(label, score, max) {
+  const pct = max ? score / max : 0;
+  const status = getScoreContext(score, max).status;
+  const lower = label.toLowerCase();
+  const strong = pct >= 0.81;
+  const weak = pct < 0.61;
+
+  if (lower.includes('conversion')) {
+    return strong
+      ? 'The site gives visitors a clear path toward calls, quotes, or bookings.'
+      : weak
+        ? 'Visitor intent may not be converting into calls or quote requests consistently.'
+        : 'The site has conversion signals, but the next step could be clearer.';
+  }
+  if (lower.includes('trust')) {
+    return strong
+      ? 'Trust signals are visible enough to support confidence from new visitors.'
+      : weak
+        ? 'Visitors may need more proof before feeling ready to contact the business.'
+        : 'Trust is present, but stronger proof could improve quote requests.';
+  }
+  if (lower.includes('seo')) {
+    return strong
+      ? 'The site has a solid local search foundation for being discovered.'
+      : weak
+        ? 'Search visibility may be limited by missing local or service signals.'
+        : 'There are local visibility opportunities worth tightening.';
+  }
+  if (lower.includes('technical') || lower.includes('performance')) {
+    return strong
+      ? 'The technical foundation appears stable enough to support a smooth visit.'
+      : weak
+        ? 'Technical or mobile friction may be affecting user experience.'
+        : 'Technical health is workable, with room for refinement.';
+  }
+  if (lower.includes('experience') || lower.includes('visual')) {
+    return strong
+      ? 'The presentation supports trust and makes the business feel professional.'
+      : weak
+        ? 'Visual clarity may be reducing confidence before visitors take action.'
+        : 'The design has professional signals, but clarity could improve.';
+  }
+  return status === 'Good'
+    ? 'This area is supporting the website experience well.'
+    : status === 'Average'
+      ? 'This area is serviceable, but there is room to improve outcomes.'
+      : 'This area may be limiting website performance and lead generation.';
+}
+
+function getBusinessImpact(label, priority) {
+  const lower = label.toLowerCase();
+  if (lower.includes('conversion')) return 'Directly affects calls, quote requests, and booked appointments.';
+  if (lower.includes('trust')) return 'Influences whether first-time visitors feel comfortable reaching out.';
+  if (lower.includes('seo')) return 'Affects how easily local customers can find the business online.';
+  if (lower.includes('technical')) return 'Can influence mobile friction, patience, and completion of key actions.';
+  if (lower.includes('experience') || lower.includes('visual')) return 'Shapes first impressions and perceived professionalism.';
+  return priority === 'High'
+    ? 'Likely affects how many qualified visitors become leads.'
+    : 'Supports the overall customer journey and decision-making process.';
+}
+
+function issuePriority(rawIssue, index = 0) {
+  const issue = asRecord(rawIssue);
+  const severity = asText(issue.severity).toLowerCase();
+  const impact = asText(issue.impact).toLowerCase();
+  if (severity.includes('critical') || severity.includes('high') || impact.includes('high') || index === 0) return 'High';
+  if (severity.includes('partial') || severity.includes('medium') || impact.includes('medium')) return 'Medium';
+  return 'Medium';
+}
+
+function issueImpactText(rawIssue) {
+  const issue = asRecord(rawIssue);
+  const explicitImpact = asText(issue.impact);
+  if (explicitImpact && explicitImpact.length < 140) return explicitImpact;
+  const title = (asText(issue.label) || asText(issue.title) || '').toLowerCase();
+  if (title.includes('cta') || title.includes('conversion')) return 'May reduce the number of visitors who request a quote or call.';
+  if (title.includes('review') || title.includes('trust')) return 'May reduce confidence from visitors comparing multiple providers.';
+  if (title.includes('service')) return 'May make it harder for customers to understand whether you handle their job.';
+  if (title.includes('local') || title.includes('seo') || title.includes('title')) return 'May limit visibility when customers search for local services.';
+  if (title.includes('speed') || title.includes('mobile') || title.includes('technical')) return 'May create friction before visitors reach the contact step.';
+  return 'May reduce confidence, clarity, or conversion from otherwise qualified visitors.';
+}
+
+function businessExplanation(rawIssue) {
+  const issue = asRecord(rawIssue);
+  const desc = asText(issue.issue) || asText(issue.detail) || asText(issue.evidence);
+  if (desc) return desc;
+  return 'This area deserves review because it can affect how quickly visitors understand the business and decide to take action.';
+}
+
+function splitFixItems(text) {
+  const raw = asText(text);
+  if (!raw) return [];
+  const byLine = raw.split(/\n|•|-/).map(item => item.trim()).filter(item => item.length > 8);
+  if (byLine.length > 1) return byLine.slice(0, 5);
+  return raw
+    .replace(/([.!?])\s+/g, '$1|')
+    .split('|')
+    .map(item => item.trim())
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+function buildExecutiveSummary(result, score, context) {
+  const issues = asArray(result.issues);
+  const recommendations = asArray(result.recommendations);
+  if (context.priority === 'High') {
+    return 'Your website may be limiting lead generation because several high-impact areas need attention. Improving clarity, trust signals, and conversion paths should be the first priority.';
+  }
+  if (context.priority === 'Medium') {
+    return 'Your website has a workable foundation, but several improvements could help more visitors become leads. The biggest gains are likely in trust, conversion clarity, and local visibility.';
+  }
+  if (issues.length || recommendations.length) {
+    return 'Your website has a strong foundation with a few opportunities to improve conversion and trust. Refining the highest-priority items should help create a smoother path to enquiry.';
+  }
+  return 'Your website appears strong across the major areas reviewed. Continue maintaining trust signals, clear calls-to-action, and local relevance to protect performance.';
+}
+
+function buildFinalAssessment(result, score, context) {
+  if (context.priority === 'High') {
+    return 'Overall, this website has meaningful opportunities to improve lead generation and visitor confidence. Addressing the highest-priority recommendations first should create the clearest path toward more qualified enquiries.';
+  }
+  if (context.priority === 'Medium') {
+    return 'Overall, this website is functional but has several areas where stronger positioning, trust, and calls-to-action could improve results. The best next step is to focus on the top priorities rather than spreading effort across every minor issue.';
+  }
+  return 'Overall, this website performs well in several important business areas. The remaining opportunities are mostly refinements that can help strengthen trust, improve conversion, and create a more polished customer journey.';
+}
+
+function buildTopPriorities(result) {
+  const issues = [...asArray(result.criticalFlags), ...asArray(result.issues)];
+  const recommendations = asArray(result.recommendations);
+  const source = issues.length ? issues : recommendations;
+  const priorities = source.slice(0, 3).map((rawItem, index) => {
+    const item = asRecord(rawItem);
+    const title = asText(item.label) || asText(item.title) || asText(item.key) || asText(rawItem) || `Priority ${index + 1}`;
+    return {
+      title,
+      priority: issuePriority(item, index),
+      impact: issueImpactText(item),
+    };
+  });
+
+  while (priorities.length < 3) {
+    const defaults = [
+      ['Strengthen Calls-to-Action', 'Make the next step obvious for visitors ready to call or request a quote.'],
+      ['Improve Trust Signals', 'Show stronger proof that the business is credible, experienced, and safe to contact.'],
+      ['Tighten Local Visibility', 'Help nearby customers understand services, location, and relevance faster.'],
+    ];
+    const [title, impact] = defaults[priorities.length];
+    priorities.push({ title, priority: priorities.length === 0 ? 'High' : 'Medium', impact });
+  }
+  return priorities.slice(0, 3);
 }
 
 function renderRatingComparison(result, scoreColor) {
@@ -2510,7 +3227,33 @@ function renderResults(data) {
  
   const result = asRecord(data);
   const { color } = renderScoreHero(result);
-  renderRatingComparison(result, color);
+  const score = normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
+  const maxScore = Number(result.maxScore) || 100;
+  const context = getScoreContext(score, maxScore);
+  const auditDate = document.getElementById('auditDate');
+  const healthStatus = document.getElementById('healthStatus');
+  const industryComparison = document.getElementById('industryComparison');
+  const leadImpact = document.getElementById('leadImpact');
+  const priorityLevel = document.getElementById('priorityLevel');
+  const executiveSummary = document.getElementById('executiveSummary');
+  const finalAssessment = document.getElementById('finalAssessment');
+
+  if (auditDate) {
+    auditDate.textContent = new Date().toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+  if (healthStatus) {
+    healthStatus.textContent = context.status;
+    healthStatus.style.color = color;
+  }
+  if (industryComparison) industryComparison.textContent = context.comparison;
+  if (leadImpact) leadImpact.textContent = context.impact;
+  if (priorityLevel) priorityLevel.textContent = context.priority;
+  if (executiveSummary) executiveSummary.textContent = buildExecutiveSummary(result, score, context);
+  if (finalAssessment) finalAssessment.textContent = buildFinalAssessment(result, score, context);
 
   fullResultsUnlocked = true;
   document.getElementById('partialGate').style.display = 'block';
@@ -2529,8 +3272,25 @@ function renderResults(data) {
     unlockMessage.style.display = 'none';
     unlockMessage.textContent = '';
   }
+
+  const topPrioritiesList = document.getElementById('topPrioritiesList');
+  const topPriorities = buildTopPriorities(result);
+  if (topPrioritiesList) {
+    topPrioritiesList.innerHTML = topPriorities.map((priority, index) => `
+      <div class="priority-card">
+        <div class="priority-rank">${index + 1}</div>
+        <div>
+          <div class="priority-title">${escHtml(priority.title)}</div>
+          <div class="priority-meta">
+            <span class="status-chip ${escHtml(priority.priority.toLowerCase())}">${escHtml(priority.priority)} Priority</span>
+            <span class="status-chip ${escHtml(priority.priority.toLowerCase())}">${escHtml(priority.priority)} Impact</span>
+          </div>
+          <div class="cat-business-impact">${escHtml(priority.impact)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
  
-  // Categories
   const catsGrid = document.getElementById('catsGrid');
   catsGrid.innerHTML = '';
   const categories = asRecord(result.categories);
@@ -2540,9 +3300,11 @@ function renderResults(data) {
     const catMax = Number(cat.max) || 1;
     const pct = catScore / catMax;
     const c = getScoreColor(catScore, catMax);
+    const label = getCategoryDisplay(key, asText(cat.label));
+    const catContext = getScoreContext(catScore, catMax);
     catsGrid.innerHTML += `
       <div class="cat-card">
-        <div class="cat-name">${escHtml(asText(cat.label) || key)}</div>
+        <div class="cat-name">${escHtml(label)}</div>
         <div class="cat-score-row">
           <span class="cat-score-text" style="color:${c}">${catScore}</span>
           <span style="color:var(--muted);font-size:0.85rem">/ ${catMax}</span>
@@ -2550,10 +3312,17 @@ function renderResults(data) {
         <div class="cat-bar-wrap">
           <div class="cat-bar-fill" style="width:${pct*100}%;background:${c}"></div>
         </div>
+        <div class="category-meta">
+          <span class="status-chip ${escHtml(catContext.tone)}">${escHtml(catContext.status)}</span>
+          <span class="status-chip ${escHtml(catContext.priority.toLowerCase())}">${escHtml(catContext.priority)} Priority</span>
+        </div>
+        <div class="cat-summary">${escHtml(getCategorySummary(label, catScore, catMax))}</div>
+        <div class="cat-business-impact"><span class="consulting-chip-label">Business Impact</span><br>${escHtml(getBusinessImpact(label, catContext.priority))}</div>
       </div>`;
   }
   const brokenSummary = getBrokenLinksSummary(result);
-  const brokenColor = brokenSummary.totalIssues > 0 ? 'var(--red)' : 'var(--green)';
+  const brokenColor = brokenSummary.totalIssues > 0 ? 'var(--report-risk)' : 'var(--report-good)';
+  const brokenPriority = brokenSummary.totalIssues > 0 ? 'High' : 'Low';
   catsGrid.innerHTML += `
     <div class="cat-card">
       <div class="cat-name">Broken Pages &amp; Link Issues</div>
@@ -2561,15 +3330,19 @@ function renderResults(data) {
         <span class="cat-score-text" style="color:${brokenColor}">${brokenSummary.totalIssues}</span>
         <span style="color:var(--muted);font-size:0.85rem">issues</span>
       </div>
-      <div class="cat-detail-list">
-        ${brokenSummary.stats.map(([label, value]) => `
-          <div>${escHtml(label)}: <strong style="color:${value > 0 ? 'var(--red)' : 'var(--green)'}">${value}</strong></div>
-        `).join('')}
-      </div>
       <div class="cat-bar-wrap">
         <div class="cat-bar-fill" style="width:${brokenSummary.totalIssues > 0 ? '100%' : '0%'};background:${brokenColor}"></div>
       </div>
-      <div class="cat-status-note">${escHtml(brokenSummary.statusText)}</div>
+      <div class="category-meta">
+        <span class="status-chip ${brokenSummary.totalIssues > 0 ? 'high' : 'low'}">${escHtml(brokenSummary.statusText)}</span>
+        <span class="status-chip ${brokenPriority.toLowerCase()}">${brokenPriority} Priority</span>
+      </div>
+      <div class="cat-summary">${brokenSummary.totalIssues > 0 ? 'Navigation or missing-page issues may create trust problems and dead ends.' : 'No broken links or missing core pages were detected during the scan.'}</div>
+      <div class="cat-detail-list">
+        ${brokenSummary.stats.map(([label, value]) => `
+          <div>${escHtml(label)}: <strong style="color:${value > 0 ? 'var(--report-risk)' : 'var(--report-good)'}">${value}</strong></div>
+        `).join('')}
+      </div>
     </div>`;
  
   renderVisualTrust(result);
@@ -2598,35 +3371,26 @@ function renderResults(data) {
   issuesList.innerHTML = '';
   const issues = asArray(result.issues);
   const criticalFlags = asArray(result.criticalFlags);
-  document.getElementById('issuesHeader').textContent = `Issues Found (${issues.length + criticalFlags.length})`;
+  document.getElementById('issuesHeader').textContent = `Detailed Findings (${issues.length + criticalFlags.length})`;
  
   if (issues.length === 0 && criticalFlags.length === 0) {
-    issuesList.innerHTML = `<p style="color:var(--green);font-size:0.95rem;">🎉 No major issues found!</p>`;
+    issuesList.innerHTML = `<div class="issue-item"><div class="issue-title">No major findings surfaced</div><div class="issue-desc">The scan did not return major issues. Continue monitoring conversion clarity, trust proof, and local visibility over time.</div></div>`;
   } else {
-    issues.forEach(rawIssue => {
+    [...criticalFlags, ...issues].forEach((rawIssue, index) => {
       const issue = asRecord(rawIssue);
-      const isPartial = issue.severity === 'partial';
+      const priority = issuePriority(issue, index);
       const title = asText(issue.label) || asText(issue.title) || asText(issue.key) || asText(rawIssue);
-      const desc = asText(issue.issue) || asText(issue.detail) || asText(issue.evidence);
-      issuesList.innerHTML += `
-        <div class="issue-item ${isPartial ? 'partial' : ''}">
-          <span class="issue-icon">${isPartial ? '⚠️' : '✗'}</span>
-          <div>
-            <div class="issue-title">${escHtml(title)}</div>
-            <div class="issue-desc">${escHtml(desc)}</div>
-          </div>
-        </div>`;
-    });
-    criticalFlags.forEach(rawFlag => {
-      const flag = asRecord(rawFlag);
-      const title = asText(flag.label) || asText(flag.title) || asText(flag.key) || asText(rawFlag);
-      const desc = asText(flag.detail) || asText(flag.issue) || asText(flag.evidence);
+      const desc = businessExplanation(issue);
       issuesList.innerHTML += `
         <div class="issue-item">
-          <span class="issue-icon">✗</span>
           <div>
+            <div class="finding-label">Issue Title</div>
             <div class="issue-title">${escHtml(title)}</div>
             <div class="issue-desc">${escHtml(desc)}</div>
+            <div class="finding-meta">
+              <span class="status-chip ${escHtml(priority.toLowerCase())}">${escHtml(priority)} Priority</span>
+              <span class="status-chip ${escHtml(priority.toLowerCase())}">${escHtml(issueImpactText(issue))}</span>
+            </div>
           </div>
         </div>`;
     });
@@ -2644,6 +3408,7 @@ function renderResults(data) {
       const title = asText(rec.label) || asText(rec.title) || asText(rec.key) || asText(rawRec);
       const fix = asText(rec.fix) || asText(rec.recommendation);
       const impact = asText(rec.impact);
+      const fixItems = splitFixItems(fix);
       recsList.innerHTML += `
         <div class="rec-card">
           <div class="rec-header">
@@ -2651,7 +3416,11 @@ function renderResults(data) {
             <span class="rec-title">${escHtml(title)}</span>
           </div>
           <div class="rec-body">
-            <div class="rec-fix">${escHtml(fix)}</div>
+            <div class="rec-fix">
+              ${fixItems.length > 1
+                ? `<ul class="fix-steps">${fixItems.map(item => `<li>${escHtml(item)}</li>`).join('')}</ul>`
+                : escHtml(fix || 'Review this area and apply the recommended improvement in the report.')}
+            </div>
             <div class="rec-impact">${escHtml(impact)}</div>
           </div>
         </div>`;
@@ -2697,12 +3466,12 @@ function renderVisualTrust(result) {
   const status = asText(visualTrust.status) || 'Partial';
   const resultValue = visualTrust.result;
   const color = resultValue === true || status.toLowerCase() === 'strong'
-    ? 'var(--green)'
+    ? 'var(--report-good)'
     : resultValue === false || status.toLowerCase() === 'weak'
-      ? 'var(--red)'
-      : 'var(--accent)';
+      ? 'var(--report-risk)'
+      : 'var(--report-warn)';
 
-  statusEl.textContent = status;
+  statusEl.textContent = `${status} conversion/trust signal, not a direct Google ranking factor.`;
   statusEl.style.color = color;
   scoreEl.textContent = score === null ? '— / ' + max : score + ' / ' + max;
   scoreEl.style.color = color;
