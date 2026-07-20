@@ -28,17 +28,26 @@
 }
 
 * {
+  box-sizing: border-box;
   letter-spacing: 0 !important;
 }
 
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 html {
+  box-sizing: border-box;
   background: var(--bg);
   color: var(--text);
   scroll-behavior: smooth;
 }
 
 body {
+  width: 100%;
   min-height: 100vh;
+  margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", sans-serif;
@@ -1032,6 +1041,7 @@ button:disabled {
   font-family: inherit;
   font-size: 0.92rem;
   font-weight: 680;
+  text-decoration: none;
   cursor: pointer;
   box-shadow: var(--shadow-soft);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, color 160ms ease;
@@ -2573,6 +2583,714 @@ button:disabled {
 
   .report-section-heading h2 {
     font-size: 1.45rem;
+  }
+}
+
+/* Responsive stabilization layer for the separated marketing and app experiences. */
+.route-view,
+.marketing-view,
+.login-view,
+.app-shell,
+.app-workspace,
+.app-content,
+.app-panel,
+.report-shell,
+#results,
+#resultsInner,
+.settings-form,
+.assessment-card,
+.dashboard-hero,
+.dashboard-grid,
+.settings-grid,
+.lead-grid,
+.report-meta-grid,
+.report-hero-grid,
+.priority-list,
+.categories-grid,
+.evidence-grid,
+.visual-trust-breakdown {
+  min-width: 0;
+}
+
+.marketing-nav-inner,
+.marketing-section,
+.marketing-cta,
+.marketing-footer,
+#results,
+#loading {
+  max-width: calc(100% - 32px);
+}
+
+.brand-lockup,
+.app-brand-lockup,
+.marketing-brand {
+  min-width: 0;
+}
+
+.brand-name,
+.brand-subtitle,
+.enterprise-header h1,
+.evidence-page-source {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feature-card,
+.pricing-card,
+.step-card,
+.metric-card,
+.assessment-card,
+.settings-header,
+.settings-form,
+.dashboard-brand-card,
+.dashboard-hero > div:first-child,
+.report-meta-grid > div,
+.priority-card,
+.cat-card,
+.visual-trust-card,
+.visual-trust-item,
+.positive-item,
+.issue-item,
+.rec-card,
+.evidence-pages,
+.evidence-signal,
+.final-assessment-card,
+.unlock-card,
+.loading-card,
+.empty-state {
+  overflow-wrap: anywhere;
+}
+
+.marketing-hero {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.marketing-copy h1 {
+  max-width: 760px;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 3.85rem;
+}
+
+.marketing-copy p,
+.marketing-cta p,
+.faq-section p {
+  max-width: 680px;
+}
+
+.hero-actions,
+.settings-actions,
+.enterprise-header-actions,
+.report-actions,
+.nav-actions {
+  min-width: 0;
+}
+
+.feature-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.pricing-grid,
+.dashboard-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.steps-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.app-shell {
+  grid-template-columns: 276px minmax(0, 1fr);
+  overflow-x: hidden;
+}
+
+.app-sidebar {
+  min-width: 0;
+}
+
+.app-menu a {
+  min-width: 0;
+}
+
+.app-content {
+  width: 100%;
+  padding: 32px;
+}
+
+.app-panel {
+  width: 100%;
+}
+
+.dashboard-hero {
+  grid-template-columns: minmax(0, 1fr) 280px;
+}
+
+.settings-grid,
+.lead-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lead-field,
+.lead-field input,
+.lead-field textarea,
+.lead-field select {
+  min-width: 0;
+}
+
+.url-row {
+  min-width: 0;
+}
+
+.url-row .url-input {
+  flex: 1 1 auto;
+}
+
+#results {
+  width: min(var(--container), calc(100% - 32px));
+}
+
+.report-brand-header,
+.report-hero-topline,
+.visual-trust-top,
+.evidence-signal-header,
+.rec-header,
+.cat-score-row,
+.executive-metric {
+  min-width: 0;
+}
+
+.report-contact-block {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.report-meta-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.report-hero-grid {
+  grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+}
+
+.priority-list,
+.categories-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.evidence-grid,
+.visual-trust-breakdown {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.status-chip,
+.passed-chip,
+.audit-proof-pill,
+.reassurance-chip,
+.evidence-badge,
+.evidence-page-type {
+  min-width: 0;
+  line-height: 1.25;
+}
+
+@media (max-width: 1180px) {
+  .marketing-hero {
+    padding: 68px 32px 82px;
+    background:
+      linear-gradient(90deg, rgba(245, 245, 247, 0.99) 0%, rgba(245, 245, 247, 0.94) 58%, rgba(245, 245, 247, 0.68) 100%),
+      url('/assets/before-after-proof.png') right bottom / 600px auto no-repeat;
+  }
+
+  .feature-grid,
+  .steps-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell {
+    grid-template-columns: 236px minmax(0, 1fr);
+  }
+
+  .app-sidebar {
+    padding: 18px;
+  }
+
+  .report-hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .executive-panel {
+    align-content: start;
+  }
+}
+
+@media (max-width: 920px) {
+  .marketing-nav-inner {
+    min-height: 64px;
+  }
+
+  .marketing-links {
+    gap: 12px;
+  }
+
+  .marketing-links a {
+    font-size: 0.82rem;
+  }
+
+  .marketing-hero {
+    padding: 58px 24px 72px;
+    background:
+      linear-gradient(180deg, rgba(245, 245, 247, 0.99), rgba(245, 245, 247, 0.9)),
+      url('/assets/before-after-proof.png') right bottom / 520px auto no-repeat;
+  }
+
+  .marketing-copy {
+    max-width: 640px;
+  }
+
+  .marketing-copy h1 {
+    font-size: 3rem;
+  }
+
+  .marketing-section h2,
+  .marketing-cta h2 {
+    font-size: 2rem;
+  }
+
+  .pricing-grid,
+  .dashboard-grid,
+  .report-meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    position: static;
+    height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px 20px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .app-menu {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .app-menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  .app-menu a {
+    min-height: 38px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .sidebar-footer {
+    display: none;
+  }
+
+  .enterprise-header {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    padding: 18px 24px;
+  }
+
+  .enterprise-header-actions {
+    justify-content: flex-start;
+  }
+
+  .app-content {
+    padding: 24px;
+  }
+
+  .dashboard-hero,
+  .settings-header,
+  .settings-toggle-row,
+  .report-brand-header {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .report-contact-block {
+    text-align: left;
+  }
+
+  .priority-list,
+  .categories-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .marketing-nav-inner,
+  .marketing-section,
+  .marketing-cta,
+  .marketing-footer,
+  #results,
+  #loading {
+    width: min(100% - 24px, var(--container));
+    max-width: min(100% - 24px, var(--container));
+  }
+
+  .marketing-nav-inner {
+    justify-content: space-between;
+  }
+
+  .marketing-links {
+    display: none;
+  }
+
+  .marketing-brand .brand-subtitle {
+    display: none;
+  }
+
+  .marketing-hero {
+    min-height: auto;
+    gap: 20px;
+    padding: 46px 18px 56px;
+    background: var(--bg);
+  }
+
+  .marketing-visual-card {
+    display: block;
+    max-width: 420px;
+    margin: 0;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: rgba(255, 255, 255, 0.84);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .report-preview-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .marketing-copy {
+    max-width: none;
+  }
+
+  .marketing-copy h1 {
+    font-size: 2.42rem;
+    line-height: 1.06;
+  }
+
+  .marketing-copy p {
+    font-size: 1rem;
+  }
+
+  .marketing-section {
+    padding: 48px 0;
+  }
+
+  .marketing-section h2,
+  .marketing-cta h2 {
+    font-size: 1.72rem;
+    line-height: 1.12;
+  }
+
+  .marketing-cta {
+    padding: 22px;
+  }
+
+  .marketing-footer {
+    display: grid;
+    justify-content: stretch;
+    gap: 8px;
+    padding: 18px 0;
+  }
+
+  .feature-grid,
+  .pricing-grid,
+  .steps-grid,
+  .dashboard-grid,
+  .settings-grid,
+  .lead-grid,
+  .report-meta-grid,
+  .priority-list,
+  .categories-grid,
+  .evidence-grid,
+  .visual-trust-breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    padding: 14px 16px;
+  }
+
+  .app-menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-left: 0;
+    margin-right: 0;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .app-menu a {
+    width: 100%;
+    flex: initial;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .enterprise-header {
+    padding: 16px;
+  }
+
+  .enterprise-header h1 {
+    font-size: 1.32rem;
+  }
+
+  .enterprise-header-actions,
+  .settings-actions,
+  .hero-actions,
+  .report-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .enterprise-header-actions > *,
+  .settings-actions > *,
+  .hero-actions > *,
+  .report-actions > *,
+  .analyze-btn,
+  .download-pdf-btn,
+  .secondary-btn,
+  .retry-btn {
+    width: 100%;
+  }
+
+  .app-content {
+    padding: 18px 12px 30px;
+  }
+
+  .dashboard-hero > div:first-child,
+  .dashboard-brand-card,
+  .assessment-card,
+  .settings-header,
+  .settings-form,
+  .report-hero,
+  .loading-card,
+  .unlock-card {
+    padding: 20px;
+  }
+
+  .dashboard-hero h2,
+  .assessment-card h2,
+  .settings-header h2 {
+    font-size: 1.62rem;
+    line-height: 1.14;
+  }
+
+  .settings-toggle-row {
+    gap: 12px;
+  }
+
+  .score-number {
+    font-size: 4rem;
+  }
+
+  .score-denom {
+    font-size: 1.45rem;
+  }
+
+  .report-hero-topline,
+  .visual-trust-top,
+  .evidence-signal-header,
+  .rec-header,
+  .cat-score-row,
+  .executive-metric {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .report-section {
+    padding: 28px 0;
+  }
+
+  .report-section-heading {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .report-section-heading span {
+    padding-top: 0;
+  }
+
+  .report-section-heading h2 {
+    font-size: 1.42rem;
+  }
+
+  .priority-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .status-chip,
+  .passed-chip,
+  .audit-proof-pill,
+  .reassurance-chip,
+  .evidence-badge,
+  .evidence-page-type {
+    min-height: 26px;
+    white-space: normal;
+  }
+
+  .evidence-page-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .evidence-page-source {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 520px) {
+  .marketing-nav-inner,
+  .marketing-section,
+  .marketing-cta,
+  .marketing-footer,
+  #results,
+  #loading {
+    width: min(100% - 20px, var(--container));
+    max-width: min(100% - 20px, var(--container));
+  }
+
+  .marketing-hero {
+    padding: 40px 14px 50px;
+    background: var(--bg);
+  }
+
+  .marketing-nav .nav-actions .nav-link {
+    display: none;
+  }
+
+  .marketing-nav .nav-actions {
+    flex: 0 0 auto;
+  }
+
+  .marketing-copy h1 {
+    font-size: 2.1rem;
+  }
+
+  .marketing-section h2,
+  .marketing-cta h2 {
+    font-size: 1.48rem;
+  }
+
+  .feature-card,
+  .pricing-card,
+  .step-card,
+  .metric-card,
+  .dashboard-hero > div:first-child,
+  .dashboard-brand-card,
+  .assessment-card,
+  .settings-header,
+  .settings-form,
+  .report-hero,
+  .loading-card,
+  .unlock-card,
+  .cat-card,
+  .visual-trust-card,
+  .positive-item,
+  .issue-item,
+  .rec-card,
+  .evidence-pages,
+  .evidence-signal,
+  .final-assessment-card {
+    padding: 16px;
+  }
+
+  .app-content {
+    padding: 14px 10px 28px;
+  }
+
+  .brand-logo-image,
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+  }
+
+  .brand-name {
+    font-size: 0.92rem;
+  }
+
+  .app-menu a {
+    min-height: 36px;
+    padding: 0 11px;
+    font-size: 0.82rem;
+  }
+
+  .enterprise-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .dashboard-hero h2,
+  .assessment-card h2,
+  .settings-header h2 {
+    font-size: 1.45rem;
+  }
+
+  .url-input,
+  input[type="url"],
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    min-height: 48px;
+    padding: 12px 13px;
+  }
+
+  .analyze-btn,
+  .download-pdf-btn {
+    min-height: 50px;
+  }
+
+  .secondary-btn,
+  .retry-btn {
+    min-height: 46px;
+  }
+
+  .score-number {
+    font-size: 3.45rem;
+  }
+
+  .score-denom {
+    font-size: 1.25rem;
+  }
+
+  .executive-panel h2 {
+    font-size: 1.72rem;
+  }
+
+  .cat-score-text {
+    font-size: 1.62rem;
+  }
+
+  .priority-card {
+    grid-template-columns: 1fr;
   }
 }
 
