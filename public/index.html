@@ -675,6 +675,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/branding.js"></script>
 <script src="/auth.js"></script>
+<script src="/database.js"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -723,6 +724,8 @@ let pendingProspectName = '';
 let fullResultsUnlocked = false;
 let brandingProvider = null;
 let authProvider = null;
+let databaseService = null;
+let pendingSavedReportId = null;
 let pendingProtectedPath = '/app';
 
 const ROUTE_TITLES = {
@@ -1327,6 +1330,43 @@ function formatPercent(value) {
   return `${Math.round(value * 10) / 10}%`;
 }
 
+function reportScoreFromResult(result) {
+  return normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
+}
+
+function buildPersistedReportData(result) {
+  return {
+    report: result,
+    context: {
+      prospectName: pendingProspectName || '',
+      requestedWebsite: pendingWebsiteUrl || '',
+      generatedAt: new Date().toISOString(),
+      branding: brandingProvider?.getBranding?.() || null,
+    },
+  };
+}
+
+async function persistGeneratedReport(result) {
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) return null;
+
+  const website = asText(result.url) || pendingWebsiteUrl;
+  const websiteScore = reportScoreFromResult(result);
+
+  try {
+    const savedReport = await databaseService.saveReport({
+      website,
+      websiteScore,
+      reportData: buildPersistedReportData(result),
+    });
+    pendingSavedReportId = savedReport?.id || null;
+    console.log('[LeadCheck] Report saved:', pendingSavedReportId);
+    return savedReport;
+  } catch (error) {
+    console.warn('[LeadCheck] Report save skipped:', error?.message || error);
+    return null;
+  }
+}
+
 function getBrokenLinksSummary(result) {
   const evidenceFound = asRecord(result.evidenceFound);
   const brokenLinks = asRecord(firstDefinedValue(result.brokenLinks, evidenceFound.brokenLinks));
@@ -1601,6 +1641,7 @@ async function runAnalysis() {
   resetMetaScan(url);
   fireMetaOnce('auditStarted', 'AuditStarted');
   pendingScanResult = null;
+  pendingSavedReportId = null;
   pendingWebsiteUrl = url;
   fullResultsUnlocked = false;
  
@@ -1635,8 +1676,9 @@ async function runAnalysis() {
     pendingScanResult = data;
     pendingWebsiteUrl = asText(data.url) || url;
     renderResults(data);
+    persistGeneratedReport(data);
     fireMetaOnce('auditCompleted', 'AuditCompleted', {
-      websiteScore: normalizeScore(firstDefinedValue(data.total, data.score, data.websiteScore, data.rating)),
+      websiteScore: reportScoreFromResult(data),
     });
   } catch (err) {
     console.error('API request failed:', err);
@@ -1735,12 +1777,7 @@ async function submitLeadCapture() {
 
   if (unlockBtn) unlockBtn.disabled = true;
 
-  const score = normalizeScore(firstDefinedValue(
-    pendingScanResult.total,
-    pendingScanResult.score,
-    pendingScanResult.websiteScore,
-    pendingScanResult.rating
-  ));
+  const score = reportScoreFromResult(pendingScanResult);
 
   try {
     const res = await fetch(LEAD_CAPTURE_API_URL, {
@@ -2221,6 +2258,7 @@ function resetApp() {
   setLoadingProgress(0, 'Estimated time: about 90 seconds');
   pendingScanResult = null;
   pendingWebsiteUrl = null;
+  pendingSavedReportId = null;
   pendingProspectName = '';
   fullResultsUnlocked = false;
   showAppPanel('dashboard');
@@ -2248,6 +2286,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindBrandingForm();
   renderRoute();
   await authProvider.init();
+  if (authProvider.client) {
+    databaseService = new window.DatabaseService(authProvider.client);
+  }
   renderRoute();
 });
  
