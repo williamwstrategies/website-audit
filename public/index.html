@@ -30,370 +30,586 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
 
-<header class="app-nav" aria-label="Primary navigation">
-  <div class="app-nav-inner">
-    <div class="brand-lockup" aria-label="LeadCheck">
+<header class="marketing-nav" id="marketingNav" aria-label="LeadCheck marketing navigation">
+  <div class="marketing-nav-inner">
+    <a class="brand-lockup marketing-brand" href="/" data-route>
       <span class="brand-mark">LC</span>
       <span>
         <span class="brand-name">LeadCheck</span>
-        <span class="brand-subtitle">Contractor Website Scanner</span>
+        <span class="brand-subtitle">White-label assessment software</span>
       </span>
-    </div>
+    </a>
+    <nav class="marketing-links" aria-label="Marketing sections">
+      <a href="/#features">Features</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/#how-it-works">How It Works</a>
+      <a href="/#faq">FAQ</a>
+    </nav>
     <div class="nav-actions">
-      <span class="nav-status">Premium Audit Preview</span>
-      <a class="nav-link" href="https://www.wstrategiescanada.ca/contact">Book a call</a>
+      <a class="nav-link" href="/login" data-route>Log in</a>
+      <a class="analyze-btn nav-cta" href="/app" data-route>Open App</a>
     </div>
   </div>
 </header>
- 
-<!-- HERO / INPUT -->
-<div id="home-view">
-  <div class="hero-shell">
-    <div class="hero-main">
-      <div class="hero">
-        <div class="badge">LeadCheck Website Scanner</div>
-        <div class="hero-eyebrow">Built for roofers, landscapers, HVAC, local contractors and more</div>
-        <!--
-          Headline options:
-          Default: Turn More Website Visitors Into Real Jobs
-          1. Are Competitors Getting Calls That Should Be Yours?
-          2. Is Your Website Costing You Calls?
-          3. Is Your Google Listing Helping You Win Jobs — Or Lose Them?
-          4. Local Customers Are Searching. Are They Finding You First?
-          5. Your Website Might Be Leaking Contractor Leads Every Day
-        -->
-        <h1>Turn More Website Visitors <span>Into Real Jobs</span></h1>
-        <p class="hero-sub">In 60 seconds, discover what may be stopping your website from generating more calls, quotes, and booked jobs.</p>
-      </div>
-    
-      <div class="input-card">
-        <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
-          <label class="lead-field">
-            <span class="lead-label">Website URL</span>
-            <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://yourbusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
-          </label>
-          <button class="analyze-btn" id="analyzeBtn" type="submit">Find What&rsquo;s Costing Me Leads</button>
-        </form>
-        <div class="reassurance-row" aria-label="Scan reassurance">
-          <span class="reassurance-chip">Takes less than 60 seconds</span>
-          <span class="reassurance-chip">No signup required</span>
-          <span class="reassurance-chip">Instant contractor-focused insights</span>
-          <span class="reassurance-chip">See what may be costing you leads before booking a call</span>
-        </div>
-      </div>
-      <div id="error-box" role="alert" aria-live="polite"></div>
-    </div>
 
-    <div class="hero-visual-card" aria-label="Example audit improvement visual">
-      <div class="sample-label">Example audit result</div>
-      <img class="hero-visual-image" src="/assets/before-after-proof.png" alt="Before and after contractor website audit score example">
-    </div>
-  </div>
-
-  <section class="conversion-section" aria-label="What the website scan reveals">
-    <div class="conversion-grid">
-      <div class="conversion-card">
-        <div class="conversion-card-title">Your scan may reveal:</div>
-        <ul class="conversion-list">
-          <li>Why competitors rank above you</li>
-          <li>What&rsquo;s hurting your Google visibility</li>
-          <li>Why visitors aren&rsquo;t calling</li>
-          <li>Website issues costing you leads</li>
-          <li>Missing trust signals</li>
-          <li>Mobile problems hurting conversions</li>
-        </ul>
-      </div>
-
-      <div class="conversion-card sample-score-card">
-        <div class="sample-label">Sample preview only</div>
-        <div class="conversion-card-title">Example Contractor Score</div>
-        <div class="sample-score">58/100</div>
-        <p class="sample-note">This is an example of the kind of contractor-focused breakdown the scan can preview.</p>
-        <div class="sample-category">
-          <span>Google Visibility</span>
-          <span class="sample-status sample-status-low">14/30</span>
-        </div>
-        <div class="sample-category">
-          <span>Trust Signals</span>
-          <span class="sample-status sample-status-low">11/25</span>
-        </div>
-        <div class="sample-category">
-          <span>Lead Conversion</span>
-          <span class="sample-status sample-status-low">18/30</span>
-        </div>
-        <div class="sample-category">
-          <span>Mobile Experience</span>
-          <span class="sample-status sample-status-good">15/15</span>
-        </div>
+<main id="marketing-view" class="route-view marketing-view">
+  <section class="marketing-hero">
+    <div class="marketing-copy">
+      <div class="badge">LeadCheck for agencies</div>
+      <h1>Close more website projects with polished assessment reports.</h1>
+      <p class="hero-sub">Create white-label website assessments that help agencies lead better sales conversations, demonstrate expertise, and move prospects from interest to proposal faster.</p>
+      <div class="hero-actions">
+        <a class="analyze-btn" href="/login" data-route>Start Generating Reports</a>
+        <a class="secondary-btn" href="#features">View Features</a>
       </div>
     </div>
-
-    <div class="proof-card">
-      <div class="conversion-card-title">From invisible online to consistent calls.</div>
-      <p class="proof-card-copy">See how improving your website, Google visibility, and trust signals can turn online visitors into real leads.</p>
-      <img class="proof-image" src="/assets/before-after-proof.png" alt="Before and after contractor website audit score example">
-    </div>
-
-    <div class="competitor-card">
-      <div class="conversion-card-title">Competitors may be winning the job before you get the call.</div>
-      <p>Most contractors don&rsquo;t realize competitors ranking above them are often getting the calls before customers ever reach out.</p>
-      <ul class="competitor-list">
-        <li>Customers usually contact the businesses they find first</li>
-        <li>A weak website can make visitors choose someone else</li>
-        <li>Missing trust signals can cost you estimates</li>
-        <li>Poor Google visibility can mean missed jobs every week</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="testimonial-section" aria-label="Contractor testimonial">
-    <div class="section-header">Testimonials</div>
-    <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/contractor-testimonial-1.png" alt="Contractor website example showing excavation and site services lead generation improvements">
-      <div class="testimonial-quote">
-        <p>&ldquo;Before I ran the scan, my website barely brought in any calls and honestly felt like a waste of money. I knew people were visiting it, but nobody was reaching out.</p>
-        <p>The scan showed me exactly what was hurting my rankings and why visitors weren&rsquo;t turning into leads. William helped fix the issues, improve the site, and get everything performing properly again.</p>
-        <p>Now we&rsquo;re getting consistent calls and leads coming in organically through our website and Google &mdash; without relying on ads.&rdquo;</p>
-        <div class="testimonial-name">&mdash; Local Contractor</div>
+    <div class="marketing-visual-card" aria-label="White-label report preview">
+      <div class="report-preview-top">
+        <span class="sample-label">White-label report preview</span>
+        <span class="status-chip low">Agency branded</span>
       </div>
-    </div>
-    <div class="testimonial-card">
-      <img class="testimonial-image" src="/assets/contractor-testimonial-2.png" alt="Contractor website example showing renovation and construction lead generation improvements">
-      <div class="testimonial-quote">
-        <p>&ldquo;When we first started, we had basically no online presence at all &mdash; no real website, no Google visibility, and hardly any calls coming in from online.</p>
-        <p>William helped us build everything properly from the ground up and showed us exactly what was holding us back from getting found online.</p>
-        <p>Now we&rsquo;re consistently getting calls and leads coming through our website and Google, and it finally feels like our business actually has a strong presence online.&rdquo;</p>
-        <div class="testimonial-name">&mdash; Excavation Contractor</div>
+      <img class="hero-visual-image" src="/assets/before-after-proof.png" alt="Example website assessment report preview">
+      <div class="sample-category">
+        <span>Proposal readiness</span>
+        <span class="sample-status sample-status-good">92%</span>
+      </div>
+      <div class="sample-category">
+        <span>Report delivery time</span>
+        <span class="sample-status">60 sec</span>
       </div>
     </div>
   </section>
 
-  <section class="owner-section" aria-label="Who is behind LeadCheck">
-    <div class="owner-card">
-      <img class="owner-photo" src="/assets/owner-william.png" alt="William from WStrategies Canada">
-      <div class="owner-copy">
-        <div class="owner-eyebrow">Who&rsquo;s behind this</div>
-        <div class="owner-title">Built for contractors who need the phone to ring.</div>
-        <p>I started this because I kept seeing good local businesses with weak websites, poor Google visibility, and almost no consistent online leads while competitors with worse service were getting the calls instead.</p>
-        <p>A lot of contractors do great work, but their website does not show it. Their Google presence is thin, their trust signals are missing, and visitors leave without calling. That is frustrating, especially when the business is capable of winning those jobs.</p>
-        <p>My goal is simple: help roofers, HVAC companies, plumbers, landscapers, and contractors see what is holding their website back so they can get found, earn trust faster, and turn more visitors into real calls and booked estimates.</p>
-        <div class="owner-signature">William &mdash; Founder, WStrategies Canada</div>
-        <a class="analyze-btn owner-book-call" href="https://www.wstrategiescanada.ca/contact">Book a Call With Me Directly</a>
-      </div>
+  <section class="marketing-section" id="features" aria-label="Features">
+    <div class="section-kicker">Features</div>
+    <h2>Everything an agency needs before the proposal call.</h2>
+    <div class="feature-grid">
+      <article class="feature-card">
+        <span class="feature-icon">01</span>
+        <h3>White-label reports</h3>
+        <p>Present assessments under your agency brand with your logo, colours, contact details, and booking link.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">02</span>
+        <h3>Sharper sales conversations</h3>
+        <p>Turn vague website feedback into structured findings, priorities, and next-step recommendations.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">03</span>
+        <h3>Faster prospecting</h3>
+        <p>Generate a professional assessment before a discovery call, proposal, or outbound follow-up.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">04</span>
+        <h3>Proposal support</h3>
+        <p>Use clear website health evidence to justify redesign, SEO, conversion, and maintenance projects.</p>
+      </article>
     </div>
   </section>
-</div>
- 
-<!-- LOADING -->
-<div id="loading" aria-live="polite" aria-busy="true">
-  <div class="loading-card">
-    <div class="spinner"></div>
-    <p class="loading-text">Analyzing your website…</p>
-    <p class="loading-steps" id="loadingStep">Checking SEO visibility…</p>
-    <div class="loading-progress" aria-label="Analysis progress">
-      <div class="loading-progress-top">
-        <span>Report progress</span>
-        <span id="loadingProgressPct">0%</span>
-      </div>
-      <div class="loading-progress-track">
-        <div class="loading-progress-fill" id="loadingProgressFill"></div>
-      </div>
-      <div class="loading-progress-eta" id="loadingProgressEta">Estimated time: about 90 seconds</div>
-    </div>
-  </div>
-</div>
- 
-<!-- RESULTS -->
-<div id="results">
 
-  <div class="report-shell">
-  <section class="report-hero score-hero">
-    <div class="report-hero-topline">
-      <span>Executive Summary</span>
-      <span id="auditDate">Audit Date</span>
+  <section class="marketing-section" id="pricing" aria-label="Pricing">
+    <div class="section-kicker">Pricing</div>
+    <h2>Simple plans for agencies and freelancers.</h2>
+    <div class="pricing-grid">
+      <article class="pricing-card">
+        <span class="plan-name">Starter</span>
+        <strong>$49</strong>
+        <p>For freelancers validating demand and running occasional prospect assessments.</p>
+      </article>
+      <article class="pricing-card featured">
+        <span class="plan-name">Pro</span>
+        <strong>$149</strong>
+        <p>For agencies using white-label reports in sales calls and proposal workflows.</p>
+      </article>
+      <article class="pricing-card">
+        <span class="plan-name">Studio</span>
+        <strong>Custom</strong>
+        <p>For teams that need higher volume, shared templates, and expanded branding controls.</p>
+      </article>
     </div>
-    <div class="report-hero-grid">
+  </section>
+
+  <section class="marketing-section" id="how-it-works" aria-label="How LeadCheck works">
+    <div class="section-kicker">How It Works</div>
+    <h2>From prospect URL to branded assessment in minutes.</h2>
+    <div class="steps-grid">
+      <div class="step-card"><span>1</span><p>Enter a prospect website.</p></div>
+      <div class="step-card"><span>2</span><p>Generate a structured website assessment.</p></div>
+      <div class="step-card"><span>3</span><p>Share the report with your agency branding.</p></div>
+      <div class="step-card"><span>4</span><p>Use the findings to guide the proposal conversation.</p></div>
+    </div>
+  </section>
+
+  <section class="marketing-section faq-section" id="faq" aria-label="FAQ">
+    <div class="section-kicker">FAQ</div>
+    <h2>Common questions</h2>
+    <details open>
+      <summary>Can reports be white-labeled?</summary>
+      <p>Yes. The application is designed so agency branding can populate the dashboard, reports, PDF exports, and shared report views.</p>
+    </details>
+    <details>
+      <summary>Who is this for?</summary>
+      <p>Marketing agencies, web design agencies, SEO agencies, and freelancers who use website assessments in sales workflows.</p>
+    </details>
+    <details>
+      <summary>Does the client see LeadCheck?</summary>
+      <p>The public marketing website uses LeadCheck branding. The application and reports are built for agency-owned presentation.</p>
+    </details>
+  </section>
+
+  <section class="marketing-cta" aria-label="Call to action">
+    <h2>Give every proposal a stronger starting point.</h2>
+    <p>Generate polished website assessments that help prospects understand what needs attention before you pitch the work.</p>
+    <a class="analyze-btn" href="/login" data-route>Open LeadCheck</a>
+  </section>
+
+  <footer class="marketing-footer">
+    <span><strong>LeadCheck</strong> for agencies</span>
+    <span>White-label website assessment software for better sales conversations.</span>
+  </footer>
+</main>
+
+<main id="login-view" class="route-view login-view" hidden>
+  <section class="login-card">
+    <div class="brand-lockup login-brand">
+      <span class="brand-mark">LC</span>
+      <span>
+        <span class="brand-name">LeadCheck</span>
+        <span class="brand-subtitle">Secure access</span>
+      </span>
+    </div>
+    <h1>Sign in to LeadCheck</h1>
+    <p>Authentication will be connected here later. Continue to the application preview for now.</p>
+    <a class="analyze-btn" href="/app" data-route>Continue to App</a>
+  </section>
+</main>
+
+<div id="app-shell" class="route-view app-shell" hidden>
+  <aside class="app-sidebar" aria-label="Application navigation">
+    <a class="brand-lockup app-brand-lockup" href="/app" data-route>
+      <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
+      <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
+      <span>
+        <span class="brand-name" data-brand-name>WStrategies Canada</span>
+        <span class="brand-subtitle" data-brand-platform>Website Assessment Platform</span>
+      </span>
+    </a>
+    <nav class="app-menu">
+      <a href="/app" data-route data-app-nav="dashboard">Dashboard</a>
+      <a href="/app/scan" data-route data-app-nav="scan">Scan Website</a>
+      <a href="/app/reports" data-route data-app-nav="reports">Reports</a>
+      <a href="/app/history" data-route data-app-nav="history">History</a>
+      <a href="/app/settings" data-route data-app-nav="settings">Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+      <span data-brand-tagline>Website Assessment Platform</span>
+    </div>
+  </aside>
+
+  <div class="app-workspace">
+    <header class="enterprise-header">
       <div>
-        <p class="score-label">Overall Website Health</p>
-        <div class="score-display">
-          <span class="score-number" id="scoreNum">0</span>
-          <span class="score-denom" id="scoreDenom">/100</span>
-        </div>
-        <div class="score-bar-wrap">
-          <div class="score-bar-fill" id="scoreBar"></div>
-        </div>
-        <p class="score-verdict" id="scoreVerdict"></p>
-        <p class="analyzed-url" id="analyzedUrl"></p>
+        <div class="section-kicker">Application</div>
+        <h1 id="appPageTitle">Dashboard</h1>
       </div>
-      <div class="executive-panel">
-        <div class="executive-kicker">Website Health</div>
-        <h2 id="healthStatus">Status</h2>
-        <p id="executiveSummary">Your website audit summary will appear here after the scan completes.</p>
-        <div class="executive-metrics">
-          <div class="executive-metric">
-            <span>Industry Comparison</span>
-            <strong id="industryComparison">-</strong>
-          </div>
-          <div class="executive-metric">
-            <span>Estimated Lead Impact</span>
-            <strong id="leadImpact">-</strong>
-          </div>
-          <div class="executive-metric">
-            <span>Priority</span>
-            <strong id="priorityLevel">-</strong>
-          </div>
-        </div>
+      <div class="enterprise-header-actions">
+        <a class="secondary-btn" href="/app/settings" data-route>Brand Settings</a>
+        <a class="analyze-btn" href="/app/scan" data-route>Generate Report</a>
       </div>
-    </div>
-    <div class="report-actions">
-      <button class="download-pdf-btn" onclick="downloadReportPdf()">Download PDF</button>
-    </div>
-  </section>
- 
-  <div id="resultsInner">
-    <div id="fullResults">
+    </header>
 
-    <section class="report-section top-priorities-section">
-      <div class="report-section-heading">
-        <span>01</span>
-        <div>
-          <h2>Top Priorities</h2>
-          <p>The three highest-impact opportunities to review first.</p>
-        </div>
-      </div>
-      <div class="priority-list" id="topPrioritiesList"></div>
-    </section>
-
-    <section class="report-section category-overview-section">
-      <div class="report-section-heading">
-        <span>02</span>
-        <div>
-          <h2>Category Overview</h2>
-          <p>A business-focused view of the areas that influence trust, visibility, and lead conversion.</p>
-        </div>
-      </div>
-      <div class="categories-grid" id="catsGrid"></div>
-      <div class="visual-trust-section" id="visualTrustSection">
-        <div class="visual-trust-card">
-          <div class="visual-trust-top">
+    <main class="app-content">
+      <section id="home-view" class="app-panel dashboard-panel">
+        <div class="dashboard-hero">
           <div>
-              <div class="visual-trust-title">Visual Trust &amp; Design Quality</div>
-              <div class="visual-trust-note" id="visualTrustStatus">Conversion/trust factor, not a direct Google ranking factor.</div>
+            <div class="section-kicker" data-brand-name>WStrategies Canada</div>
+            <h2>Website Assessment Platform</h2>
+            <p>Generate neutral, professional website assessments and review report activity from one focused workspace.</p>
           </div>
-            <div class="visual-trust-score" id="visualTrustScore">- / 15</div>
+          <div class="dashboard-brand-card">
+            <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
+            <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
+            <strong data-brand-name>WStrategies Canada</strong>
+            <span data-brand-tagline>Website Assessment Platform</span>
           </div>
-          <div class="visual-trust-desc" id="visualTrustDesc"></div>
-          <div class="visual-trust-breakdown" id="visualTrustBreakdown"></div>
         </div>
-      </div>
-    </section>
 
-    <section class="report-section issues-section">
-      <div class="report-section-heading">
-        <span>03</span>
-        <div>
-          <h2 id="issuesHeader">Detailed Findings</h2>
-          <p>Each finding is translated into what it may mean for enquiries, trust, and sales conversations.</p>
+        <div class="dashboard-grid">
+          <article class="metric-card">
+            <span>Reports</span>
+            <strong>Ready</strong>
+            <p>Assessment generation is available.</p>
+          </article>
+          <article class="metric-card">
+            <span>Branding</span>
+            <strong>Active</strong>
+            <p>Reports inherit agency settings.</p>
+          </article>
+          <article class="metric-card">
+            <span>Mode</span>
+            <strong id="whiteLabelStatus">White-label</strong>
+            <p>Application branding is agency-owned.</p>
+          </article>
         </div>
-      </div>
-      <div id="issuesList"></div>
-    </section>
 
-    <section class="report-section recs-section">
-      <div class="report-section-heading">
-        <span>04</span>
-        <div>
-          <h2>How To Fix</h2>
-          <p>Practical next steps written for a business owner, not a technical audit checklist.</p>
-        </div>
-      </div>
-      <div id="recsList"></div>
-    </section>
+        <section class="assessment-card" aria-label="Generate website assessment">
+          <div class="assessment-card-header">
+            <div>
+              <div class="section-kicker">Scan Website</div>
+              <h2>Generate Report</h2>
+              <p>Enter a website URL to create a professional website assessment.</p>
+            </div>
+          </div>
+          <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
+            <div class="lead-grid">
+              <label class="lead-field">
+                <span class="lead-label">Website URL</span>
+                <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://example.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Prepared For</span>
+                <input class="url-input" type="text" id="prospectInput" name="prospectName" placeholder="Prospect or company name" autocomplete="organization">
+              </label>
+            </div>
+            <button class="analyze-btn" id="analyzeBtn" type="submit">Generate Report</button>
+          </form>
+          <div id="error-box" role="alert" aria-live="polite"></div>
+        </section>
+      </section>
 
-    <section class="report-section positives-section" id="positivesSection">
-      <div class="report-section-heading">
-        <span>05</span>
-        <div>
-          <h2>Strengths Already Working</h2>
-          <p>Positive signals found during the scan.</p>
+      <section id="settings-view" class="app-panel settings-view" hidden>
+        <div class="settings-header">
+          <div>
+            <div class="section-kicker">Settings</div>
+            <h2>Branding</h2>
+            <p>Configure the agency identity used by the application, reports, PDF exports, and future share links.</p>
+          </div>
+          <span class="status-chip low">Future-proof</span>
         </div>
-      </div>
-      <div id="positivesList"></div>
-      <div class="passed-grid" id="passedGrid"></div>
-    </section>
-
-    <section class="report-section evidence-section">
-      <div class="report-section-heading">
-        <span>06</span>
-        <div>
-          <h2>Scan Evidence</h2>
-          <p>The pages and visible signals used to support the assessment.</p>
-        </div>
-      </div>
-      <div id="evidencePages"></div>
-      <div class="evidence-grid" id="evidenceSignals"></div>
-    </section>
-
-    <section class="report-section final-assessment-section">
-      <div class="report-section-heading">
-        <span>07</span>
-        <div>
-          <h2>Final Assessment</h2>
-          <p>A concise business summary of what the report means.</p>
-        </div>
-      </div>
-      <div class="final-assessment-card" id="finalAssessment"></div>
-    </section>
-
-    <!-- Optional Lead Capture -->
-    <section class="partial-gate" id="partialGate">
-      <div class="unlock-card">
-        <div class="unlock-title">Want us to send you your results?</div>
-        <p class="unlock-copy">Enter your details and we&rsquo;ll send this website audit into our follow-up system so you can get help reviewing the score, fixes, and next steps.</p>
-        <div class="audit-proof-row">
-          <span class="audit-proof-pill">Sends your score to GoHighLevel</span>
-          <span class="audit-proof-pill">Includes your scanned website</span>
-          <span class="audit-proof-pill">Useful for follow-up and report delivery</span>
-        </div>
-        <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
-          <div class="lead-grid">
+        <form class="settings-form" id="brandingForm">
+          <label class="settings-toggle-row">
+            <span>
+              <strong>White-Label Mode</strong>
+              <small>Use agency branding throughout the application experience.</small>
+            </span>
+            <input type="checkbox" id="whiteLabelEnabledInput" name="whiteLabelEnabled">
+          </label>
+          <div class="settings-grid">
             <label class="lead-field">
-              <span class="lead-label">Name *</span>
-              <input class="url-input" type="text" id="nameInput" name="name" placeholder="Your name" autocomplete="name" required>
+              <span class="lead-label">Agency Name</span>
+              <input class="url-input" type="text" id="agencyNameInput" name="agencyName">
             </label>
             <label class="lead-field">
-              <span class="lead-label">Business Name</span>
-              <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
+              <span class="lead-label">Agency Logo URL</span>
+              <input class="url-input" type="url" id="agencyLogoInput" name="logoUrl" placeholder="https://.../logo.png">
             </label>
             <label class="lead-field">
-              <span class="lead-label">Email *</span>
-              <input class="url-input" type="email" id="emailInput" name="email" placeholder="you@business.com" autocomplete="email" required>
+              <span class="lead-label">Primary Accent Colour</span>
+              <input class="color-input" type="color" id="primaryAccentInput" name="primaryAccent">
             </label>
             <label class="lead-field">
-              <span class="lead-label">Phone *</span>
-              <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
+              <span class="lead-label">Secondary Accent Colour</span>
+              <input class="color-input" type="color" id="secondaryAccentInput" name="secondaryAccent">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Website</span>
+              <input class="url-input" type="url" id="agencyWebsiteInput" name="website" placeholder="https://agency.com">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Phone Number</span>
+              <input class="url-input" type="tel" id="agencyPhoneInput" name="phone">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Email Address</span>
+              <input class="url-input" type="email" id="agencyEmailInput" name="email">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Booking Link</span>
+              <input class="url-input" type="url" id="agencyBookingInput" name="bookingLink">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Favicon URL</span>
+              <input class="url-input" type="url" id="agencyFaviconInput" name="faviconUrl" placeholder="https://.../favicon.png">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Optional Tagline</span>
+              <input class="url-input" type="text" id="agencyTaglineInput" name="tagline">
+            </label>
+            <label class="lead-field lead-field-full">
+              <span class="lead-label">Optional Report Disclaimer</span>
+              <textarea class="url-input" id="reportDisclaimerInput" name="reportDisclaimer" rows="3"></textarea>
             </label>
           </div>
-          <button class="analyze-btn" id="unlockBtn" type="submit">Send Me My Results</button>
-          <div class="unlock-message" id="unlockMessage" role="status"></div>
+          <div class="settings-actions">
+            <button class="analyze-btn" type="submit">Save Branding</button>
+            <button class="secondary-btn" type="button" id="resetBrandingBtn">Reset</button>
+            <span class="unlock-message" id="brandingMessage" role="status"></span>
+          </div>
         </form>
+      </section>
+
+      <section id="reports-view" class="app-panel reports-view" hidden>
+        <div class="settings-header">
+          <div>
+            <div class="section-kicker">Reports</div>
+            <h2>Report Workspace</h2>
+            <p>Completed reports and shareable report links will appear here when report history is connected.</p>
+          </div>
+          <a class="analyze-btn" href="/app/scan" data-route>Generate Report</a>
+        </div>
+        <div class="empty-state">
+          <strong>No saved reports yet</strong>
+          <p>Generate an assessment to view the current report. Report history can be connected to persistent storage later.</p>
+        </div>
+      </section>
+
+      <section id="history-view" class="app-panel reports-view" hidden>
+        <div class="settings-header">
+          <div>
+            <div class="section-kicker">History</div>
+            <h2>Assessment History</h2>
+            <p>Historical scan activity will appear here after persistent storage is introduced.</p>
+          </div>
+        </div>
+        <div class="empty-state">
+          <strong>No history available</strong>
+          <p>The current frontend keeps assessment data only for the active session.</p>
+        </div>
+      </section>
+
+      <div id="loading" aria-live="polite" aria-busy="true">
+        <div class="loading-card">
+          <div class="spinner"></div>
+          <p class="loading-text">Analyzing website...</p>
+          <p class="loading-steps" id="loadingStep">Checking SEO visibility...</p>
+          <div class="loading-progress" aria-label="Analysis progress">
+            <div class="loading-progress-top">
+              <span>Report progress</span>
+              <span id="loadingProgressPct">0%</span>
+            </div>
+            <div class="loading-progress-track">
+              <div class="loading-progress-fill" id="loadingProgressFill"></div>
+            </div>
+            <div class="loading-progress-eta" id="loadingProgressEta">Estimated time: about 90 seconds</div>
+          </div>
+        </div>
       </div>
-    </section>
- 
-    <div class="analyze-another">
-      <button class="retry-btn" onclick="resetApp()">Analyze Another Website</button>
-    </div>
-    </div>
-  </div>
+
+      <div id="results">
+        <div class="report-shell">
+          <section class="report-hero score-hero">
+            <div class="report-brand-header">
+              <div class="brand-lockup report-brand-lockup">
+                <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
+                <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
+                <span>
+                  <span class="brand-name" data-brand-name>WStrategies Canada</span>
+                  <span class="brand-subtitle" data-brand-platform>Website Assessment Platform</span>
+                </span>
+              </div>
+              <div class="report-contact-block">
+                <a data-brand-email href="mailto:hello@example.com">hello@example.com</a>
+                <span data-brand-phone>Phone not set</span>
+                <a data-brand-booking href="#" target="_blank" rel="noopener">Booking link</a>
+              </div>
+            </div>
+            <div class="report-hero-topline">
+              <span>Website Assessment</span>
+              <span id="auditDate">Assessment Date</span>
+            </div>
+            <div class="report-meta-grid">
+              <div>
+                <span class="report-meta-label">Prepared For</span>
+                <strong id="reportProspectName">Prospect</strong>
+              </div>
+              <div>
+                <span class="report-meta-label">Website</span>
+                <strong id="reportWebsite">-</strong>
+              </div>
+              <div>
+                <span class="report-meta-label">Prepared By</span>
+                <strong data-brand-name>WStrategies Canada</strong>
+              </div>
+            </div>
+            <div class="report-hero-grid">
+              <div>
+                <p class="score-label">Overall Website Health</p>
+                <div class="score-display">
+                  <span class="score-number" id="scoreNum">0</span>
+                  <span class="score-denom" id="scoreDenom">/100</span>
+                </div>
+                <div class="score-bar-wrap">
+                  <div class="score-bar-fill" id="scoreBar"></div>
+                </div>
+                <p class="score-verdict" id="scoreVerdict"></p>
+                <p class="analyzed-url" id="analyzedUrl"></p>
+              </div>
+              <div class="executive-panel">
+                <div class="executive-kicker">Website Health</div>
+                <h2 id="healthStatus">Status</h2>
+                <p id="executiveSummary">The website assessment summary will appear here after the scan completes.</p>
+                <div class="executive-metrics">
+                  <div class="executive-metric">
+                    <span>Industry Comparison</span>
+                    <strong id="industryComparison">-</strong>
+                  </div>
+                  <div class="executive-metric">
+                    <span>Estimated Lead Impact</span>
+                    <strong id="leadImpact">-</strong>
+                  </div>
+                  <div class="executive-metric">
+                    <span>Priority</span>
+                    <strong id="priorityLevel">-</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="report-actions">
+              <button class="download-pdf-btn" onclick="downloadReportPdf()">Download PDF</button>
+            </div>
+          </section>
+
+          <div id="resultsInner">
+            <div id="fullResults">
+              <section class="report-section top-priorities-section">
+                <div class="report-section-heading">
+                  <span>01</span>
+                  <div>
+                    <h2>Top Priorities</h2>
+                    <p>The three highest-impact opportunities to review first.</p>
+                  </div>
+                </div>
+                <div class="priority-list" id="topPrioritiesList"></div>
+              </section>
+
+              <section class="report-section category-overview-section">
+                <div class="report-section-heading">
+                  <span>02</span>
+                  <div>
+                    <h2>Category Overview</h2>
+                    <p>A professional overview of the areas that influence trust, visibility, and conversion.</p>
+                  </div>
+                </div>
+                <div class="categories-grid" id="catsGrid"></div>
+                <div class="visual-trust-section" id="visualTrustSection">
+                  <div class="visual-trust-card">
+                    <div class="visual-trust-top">
+                      <div>
+                        <div class="visual-trust-title">Visual Trust &amp; Design Quality</div>
+                        <div class="visual-trust-note" id="visualTrustStatus">Conversion and trust factor.</div>
+                      </div>
+                      <div class="visual-trust-score" id="visualTrustScore">- / 15</div>
+                    </div>
+                    <div class="visual-trust-desc" id="visualTrustDesc"></div>
+                    <div class="visual-trust-breakdown" id="visualTrustBreakdown"></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="report-section issues-section">
+                <div class="report-section-heading">
+                  <span>03</span>
+                  <div>
+                    <h2 id="issuesHeader">Detailed Findings</h2>
+                    <p>Findings translated into practical business impact.</p>
+                  </div>
+                </div>
+                <div id="issuesList"></div>
+              </section>
+
+              <section class="report-section recs-section">
+                <div class="report-section-heading">
+                  <span>04</span>
+                  <div>
+                    <h2>Recommended Actions</h2>
+                    <p>Practical next steps for improving website performance and clarity.</p>
+                  </div>
+                </div>
+                <div id="recsList"></div>
+              </section>
+
+              <section class="report-section positives-section" id="positivesSection">
+                <div class="report-section-heading">
+                  <span>05</span>
+                  <div>
+                    <h2>Strengths Already Working</h2>
+                    <p>Positive signals found during the assessment.</p>
+                  </div>
+                </div>
+                <div id="positivesList"></div>
+                <div class="passed-grid" id="passedGrid"></div>
+              </section>
+
+              <section class="report-section evidence-section">
+                <div class="report-section-heading">
+                  <span>06</span>
+                  <div>
+                    <h2>Assessment Evidence</h2>
+                    <p>The pages and visible signals used to support the assessment.</p>
+                  </div>
+                </div>
+                <div id="evidencePages"></div>
+                <div class="evidence-grid" id="evidenceSignals"></div>
+              </section>
+
+              <section class="report-section final-assessment-section">
+                <div class="report-section-heading">
+                  <span>07</span>
+                  <div>
+                    <h2>Final Assessment</h2>
+                    <p>A concise professional summary of what the report means.</p>
+                  </div>
+                </div>
+                <div class="final-assessment-card" id="finalAssessment"></div>
+                <div class="report-disclaimer" data-brand-disclaimer></div>
+              </section>
+
+              <section class="partial-gate" id="partialGate">
+                <div class="unlock-card">
+                  <div class="unlock-title">Send assessment details</div>
+                  <p class="unlock-copy">Enter contact details to submit this assessment for follow-up and report delivery.</p>
+                  <div class="audit-proof-row">
+                    <span class="audit-proof-pill">Includes assessment score</span>
+                    <span class="audit-proof-pill">Includes scanned website</span>
+                    <span class="audit-proof-pill">Uses configured branding</span>
+                  </div>
+                  <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
+                    <div class="lead-grid">
+                      <label class="lead-field">
+                        <span class="lead-label">Name *</span>
+                        <input class="url-input" type="text" id="nameInput" name="name" placeholder="Contact name" autocomplete="name" required>
+                      </label>
+                      <label class="lead-field">
+                        <span class="lead-label">Business Name</span>
+                        <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
+                      </label>
+                      <label class="lead-field">
+                        <span class="lead-label">Email *</span>
+                        <input class="url-input" type="email" id="emailInput" name="email" placeholder="name@company.com" autocomplete="email" required>
+                      </label>
+                      <label class="lead-field">
+                        <span class="lead-label">Phone *</span>
+                        <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
+                      </label>
+                    </div>
+                    <button class="analyze-btn" id="unlockBtn" type="submit">Send Details</button>
+                    <div class="unlock-message" id="unlockMessage" role="status"></div>
+                  </form>
+                </div>
+              </section>
+
+              <div class="analyze-another">
+                <button class="retry-btn" onclick="resetApp()">Generate Another Report</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
 </div>
 
-<footer class="app-footer">
-  <div class="app-footer-inner">
-    <span><strong>LeadCheck</strong> by WStrategies Canada</span>
-    <span>Website audits for local businesses that depend on qualified calls.</span>
-  </div>
-</footer>
+<script src="/branding.js"></script>
  
 <script>
 const CHECK_LABELS = {
@@ -438,7 +654,147 @@ let progressStartedAt = 0;
 let activeMetaScan = null;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
+let pendingProspectName = '';
 let fullResultsUnlocked = false;
+let brandingProvider = null;
+
+const ROUTE_TITLES = {
+  '/app': 'Dashboard',
+  '/app/scan': 'Scan Website',
+  '/app/reports': 'Reports',
+  '/app/history': 'History',
+  '/app/settings': 'Settings',
+};
+
+function setHidden(el, hidden) {
+  if (!el) return;
+  el.hidden = hidden;
+}
+
+function setDisplay(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = value;
+}
+
+function appRouteKey(path = window.location.pathname) {
+  if (path.startsWith('/app/settings')) return 'settings';
+  if (path.startsWith('/app/reports/current')) return 'current-report';
+  if (path.startsWith('/app/reports')) return 'reports';
+  if (path.startsWith('/app/history')) return 'history';
+  if (path.startsWith('/app/scan')) return 'scan';
+  return 'dashboard';
+}
+
+function showAppPanel(panel) {
+  const panels = {
+    dashboard: 'home-view',
+    scan: 'home-view',
+    loading: 'loading',
+    report: 'results',
+    settings: 'settings-view',
+    reports: 'reports-view',
+    history: 'history-view',
+  };
+  Object.values(panels).forEach(id => setDisplay(id, 'none'));
+  const activeId = panels[panel] || panels.dashboard;
+  setDisplay(activeId, 'block');
+}
+
+function setActiveAppNav(key) {
+  document.querySelectorAll('[data-app-nav]').forEach(link => {
+    link.classList.toggle('active', link.dataset.appNav === key);
+  });
+}
+
+function renderRoute() {
+  const path = window.location.pathname;
+  const isLogin = path.startsWith('/login');
+  const isApp = path.startsWith('/app');
+  const marketingView = document.getElementById('marketing-view');
+  const marketingNav = document.getElementById('marketingNav');
+  const loginView = document.getElementById('login-view');
+  const appShell = document.getElementById('app-shell');
+  const appPageTitle = document.getElementById('appPageTitle');
+
+  setHidden(marketingView, isLogin || isApp);
+  setHidden(marketingNav, isLogin || isApp);
+  setHidden(loginView, !isLogin);
+  setHidden(appShell, !isApp);
+
+  if (isApp) {
+    const key = appRouteKey(path);
+    const title = ROUTE_TITLES[path] || (key === 'current-report' ? 'Current Report' : ROUTE_TITLES['/app']);
+    if (appPageTitle) appPageTitle.textContent = title;
+    setActiveAppNav(key === 'current-report' ? 'reports' : key === 'dashboard' ? 'dashboard' : key);
+    if (key === 'settings') showAppPanel('settings');
+    else if (key === 'reports') showAppPanel('reports');
+    else if (key === 'history') showAppPanel('history');
+    else if (key === 'current-report' && pendingScanResult) showAppPanel('report');
+    else if (key === 'scan') showAppPanel('scan');
+    else showAppPanel('dashboard');
+  }
+
+  if (brandingProvider) {
+    brandingProvider.apply(path);
+    brandingProvider.populateForm();
+  }
+}
+
+function navigateTo(path) {
+  window.history.pushState({}, '', path);
+  renderRoute();
+  if (window.location.hash) {
+    document.querySelector(window.location.hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function bindRouteLinks() {
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[data-route]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+    event.preventDefault();
+    navigateTo(href);
+  });
+  window.addEventListener('popstate', renderRoute);
+}
+
+function bindBrandingForm() {
+  const form = document.getElementById('brandingForm');
+  const resetBtn = document.getElementById('resetBrandingBtn');
+  const message = document.getElementById('brandingMessage');
+  if (!form || !brandingProvider) return;
+
+  brandingProvider.populateForm();
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    brandingProvider.save(brandingProvider.readForm());
+    if (message) {
+      message.style.display = 'inline-flex';
+      message.style.color = 'var(--green)';
+      message.textContent = 'Branding saved.';
+    }
+  });
+
+  form.addEventListener('input', () => {
+    brandingProvider.save(brandingProvider.readForm());
+  });
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      brandingProvider.reset();
+      if (message) {
+        message.style.display = 'inline-flex';
+        message.style.color = 'var(--green)';
+        message.textContent = 'Branding reset.';
+      }
+    });
+  }
+}
 
 function trackMetaEvent(eventName, params = {}) {
   try {
@@ -895,6 +1251,7 @@ function renderRatingComparison(result, scoreColor) {
 async function runAnalysis() {
   const raw = document.getElementById('urlInput').value;
   const url = normalizeUrl(raw);
+  pendingProspectName = document.getElementById('prospectInput')?.value.trim() || '';
  
   const errBox = document.getElementById('error-box');
   errBox.style.display = 'none';
@@ -911,14 +1268,11 @@ async function runAnalysis() {
   pendingWebsiteUrl = url;
   fullResultsUnlocked = false;
  
-  // Show loading
-  document.getElementById('home-view').style.display = 'none';
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('loading').style.display = 'block';
+  showAppPanel('loading');
   document.getElementById('analyzeBtn').disabled = true;
  
   stepIdx = 0;
-  document.querySelector('.loading-text').textContent = 'Analyzing your website…';
+  document.querySelector('.loading-text').textContent = 'Analyzing website...';
   document.getElementById('loadingStep').textContent = LOADING_STEPS[0];
   startLoadingProgress();
   stepTimer = setInterval(cycleStep, 1800);
@@ -961,8 +1315,7 @@ async function runAnalysis() {
  
 function showError(msg) {
   stopLoadingTimers();
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('home-view').style.display = 'block';
+  showAppPanel('dashboard');
   document.getElementById('analyzeBtn').disabled = false;
   const errBox = document.getElementById('error-box');
   errBox.style.display = 'block';
@@ -981,6 +1334,10 @@ function renderScoreHero(result) {
   document.getElementById('scoreVerdict').textContent = verdict.text;
   document.getElementById('scoreVerdict').style.color = verdict.color;
   document.getElementById('analyzedUrl').textContent  = asText(result.url);
+  const reportWebsite = document.getElementById('reportWebsite');
+  const reportProspectName = document.getElementById('reportProspectName');
+  if (reportWebsite) reportWebsite.textContent = asText(result.url) || pendingWebsiteUrl || '-';
+  if (reportProspectName) reportProspectName.textContent = pendingProspectName || 'Prospect';
 
   setTimeout(() => {
     const bar = document.getElementById('scoreBar');
@@ -1072,7 +1429,7 @@ async function submitLeadCapture() {
       if (message) {
         message.style.display = 'block';
         message.style.color = 'var(--green)';
-        message.textContent = 'Got it — your info and website score were sent for follow-up.';
+        message.textContent = 'Assessment details were submitted for follow-up.';
       }
     } else {
       const data = await res.json().catch(() => ({}));
@@ -1099,8 +1456,9 @@ async function submitLeadCapture() {
 
 function renderResults(data) {
   stopLoadingTimers();
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('results').style.display = 'block';
+  showAppPanel('report');
+  window.history.replaceState({}, '', '/app/reports/current');
+  renderRoute();
  
   const result = asRecord(data);
   const { color } = renderScoreHero(result);
@@ -1142,7 +1500,7 @@ function renderResults(data) {
   const unlockBtn = document.getElementById('unlockBtn');
   if (unlockBtn) {
     unlockBtn.disabled = false;
-    unlockBtn.textContent = 'Send Me My Results';
+    unlockBtn.textContent = 'Send Details';
   }
   const unlockMessage = document.getElementById('unlockMessage');
   if (unlockMessage) {
@@ -1348,7 +1706,7 @@ function renderVisualTrust(result) {
       ? 'var(--report-risk)'
       : 'var(--report-warn)';
 
-  statusEl.textContent = `${status} conversion/trust signal, not a direct Google ranking factor.`;
+  statusEl.textContent = `${status} conversion and trust signal.`;
   statusEl.style.color = color;
   scoreEl.textContent = score === null ? '— / ' + max : score + ' / ' + max;
   scoreEl.style.color = color;
@@ -1504,6 +1862,8 @@ function escHtml(str) {
 
 function downloadReportPdf() {
   const analyzedUrl = document.getElementById('analyzedUrl')?.textContent || 'website';
+  const brand = brandingProvider?.getBranding?.() || window.DEFAULT_AGENCY_BRANDING || {};
+  const agencyName = brand.whiteLabelEnabled === false ? 'Website Assessment' : (brand.agencyName || 'Agency');
   let host = 'website';
   try {
     host = new URL(analyzedUrl).hostname.replace(/^www\./, '');
@@ -1512,7 +1872,7 @@ function downloadReportPdf() {
   }
 
   const originalTitle = document.title;
-  document.title = `LeadCheck Audit - ${host}`;
+  document.title = `${agencyName} Website Assessment - ${host}`;
   window.print();
 
   setTimeout(() => {
@@ -1525,11 +1885,11 @@ function resetApp() {
   setLoadingProgress(0, 'Estimated time: about 90 seconds');
   pendingScanResult = null;
   pendingWebsiteUrl = null;
+  pendingProspectName = '';
   fullResultsUnlocked = false;
-  document.getElementById('results').style.display = 'none';
+  showAppPanel('dashboard');
   document.getElementById('partialGate').style.display = 'none';
   document.getElementById('fullResults').style.display = 'none';
-  document.getElementById('home-view').style.display = 'block';
   document.getElementById('analyzeBtn').disabled = false;
   document.getElementById('auditForm').reset();
   document.getElementById('unlockLeadForm').reset();
@@ -1539,7 +1899,15 @@ function resetApp() {
     unlockMessage.textContent = '';
   }
   document.getElementById('error-box').style.display = 'none';
+  navigateTo('/app/scan');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  brandingProvider = new window.BrandingProvider();
+  bindRouteLinks();
+  bindBrandingForm();
+  renderRoute();
+});
  
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
