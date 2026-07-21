@@ -12,6 +12,9 @@ alter table public.subscriptions alter column plan set default 'professional';
 alter table public.subscriptions alter column status set default 'incomplete';
 alter table public.subscriptions alter column audit_limit set default 100;
 
+alter table public.subscriptions drop constraint if exists subscriptions_user_id_fkey;
+alter table public.subscriptions drop constraint if exists subscriptions_user_id_auth_users_fkey;
+
 do $$
 declare
   v_constraint text;
@@ -68,7 +71,7 @@ begin
       and referenced_class.relname = 'users'
   ) then
     alter table public.subscriptions
-      add constraint subscriptions_user_id_auth_users_fkey
+      add constraint subscriptions_user_id_fkey
       foreign key (user_id) references auth.users(id) on delete cascade not valid;
   end if;
 end;

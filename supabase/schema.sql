@@ -242,6 +242,9 @@ update public.subscriptions
 set id = gen_random_uuid()
 where id is null;
 
+alter table public.subscriptions drop constraint if exists subscriptions_user_id_fkey;
+alter table public.subscriptions drop constraint if exists subscriptions_user_id_auth_users_fkey;
+
 do $$
 declare
   v_constraint text;
@@ -313,7 +316,7 @@ begin
       and pg_get_constraintdef(c.oid) like '%REFERENCES auth.users%'
   ) then
     alter table public.subscriptions
-      add constraint subscriptions_user_id_auth_users_fkey
+      add constraint subscriptions_user_id_fkey
       foreign key (user_id) references auth.users(id) on delete cascade not valid;
   end if;
 end;
