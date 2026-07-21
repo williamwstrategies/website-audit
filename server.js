@@ -76,6 +76,18 @@ app.get('/api/billing/subscription', async (req, res) => {
   }
 });
 
+app.get('/api/billing/diagnostics', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const diagnostics = await billing.getBillingDiagnostics(user);
+    res.set('Cache-Control', 'no-store');
+    res.json({ diagnostics });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.post('/api/account/provision', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
