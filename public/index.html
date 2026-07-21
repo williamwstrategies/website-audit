@@ -3,22 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#F5F5F7">
+<meta id="themeColorMeta" name="theme-color" content="#06111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="LeadCheck">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>White-Label Website Audit Software for Agencies | LeadCheck</title>
+<title>White-Label Website Audit Software for Agencies | W Strategies</title>
 <meta id="metaDescription" name="description" content="Create professional white-label website assessments for sales calls, outreach, and proposals. Scan websites, save reports, and export branded PDFs.">
 <meta id="robotsMeta" name="robots" content="index,follow">
 <link id="canonicalUrl" rel="canonical" href="https://scanner.wstrategiescanada.ca/">
-<meta id="ogTitle" property="og:title" content="White-Label Website Audit Software for Agencies | LeadCheck">
+<meta id="ogTitle" property="og:title" content="White-Label Website Audit Software for Agencies | W Strategies">
 <meta id="ogDescription" property="og:description" content="Create professional white-label website assessments for sales calls, outreach, and proposals.">
 <meta id="ogUrl" property="og:url" content="https://scanner.wstrategiescanada.ca/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="LeadCheck">
+<meta property="og:site_name" content="W Strategies">
 <meta property="og:image" content="https://scanner.wstrategiescanada.ca/assets/before-after-proof.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta id="twitterTitle" name="twitter:title" content="White-Label Website Audit Software for Agencies | LeadCheck">
+<meta id="twitterTitle" name="twitter:title" content="White-Label Website Audit Software for Agencies | W Strategies">
 <meta id="twitterDescription" name="twitter:description" content="Create professional white-label website assessments for sales calls, outreach, and proposals.">
 <meta name="twitter:image" content="https://scanner.wstrategiescanada.ca/assets/before-after-proof.png">
 <!-- Meta Pixel Code -->
@@ -38,18 +38,18 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-21-public-saas-home">
+<link rel="stylesheet" href="/styles.css?v=2026-07-21-dark-public-site">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
 
-<header class="marketing-nav" id="marketingNav" aria-label="LeadCheck public navigation">
+<header class="marketing-nav" id="marketingNav" aria-label="W Strategies public navigation">
   <div class="marketing-nav-inner">
-    <a class="brand-lockup marketing-brand" href="/" data-route aria-label="LeadCheck home">
-      <span class="brand-mark">LC</span>
+    <a class="brand-lockup marketing-brand" href="/" data-route aria-label="W Strategies home">
+      <span class="marketing-logo-wrap"><img src="/assets/wstrategies-logo-transparent.png" alt="" width="34" height="34"></span>
       <span>
-        <span class="brand-name">LeadCheck</span>
-        <span class="brand-subtitle">White-label website assessments</span>
+        <span class="brand-name">W Strategies</span>
+        <span class="brand-subtitle">Website audit platform</span>
       </span>
     </a>
     <button class="marketing-menu-toggle" id="marketingMenuToggle" type="button" aria-expanded="false" aria-controls="marketingLinks">
@@ -58,343 +58,377 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <span class="sr-only">Toggle menu</span>
     </button>
     <nav class="marketing-links" id="marketingLinks" aria-label="Public sections">
-      <a href="/#product" data-route>Product</a>
-      <a href="/#how-it-works" data-route>How It Works</a>
-      <a href="/#report" data-route>Report</a>
-      <a href="/#white-label" data-route>White Label</a>
-      <a href="/#pricing" data-route>Pricing</a>
-      <a href="/#faq" data-route>FAQ</a>
+      <a href="/" data-route>Home</a>
+      <a href="/product" data-route>Product</a>
+      <a href="/how-it-works" data-route>How It Works</a>
+      <a href="/sample-report" data-route>Sample Report</a>
+      <a href="/pricing" data-route>Pricing</a>
+      <a href="/faq" data-route>FAQ</a>
+      <a class="mobile-nav-only" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
+      <a class="mobile-nav-only mobile-nav-cta" href="/signup" data-route data-public-cta data-public-event="signup_started">Start Free</a>
     </nav>
     <div class="nav-actions">
       <a class="nav-link" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
-      <a class="analyze-btn nav-cta" href="/signup" data-route data-public-cta data-public-event="signup_started">Start Your Account</a>
+      <a class="analyze-btn nav-cta" href="/signup" data-route data-public-cta data-public-event="signup_started">Start Free</a>
     </div>
   </div>
 </header>
 
 <main id="marketing-view" class="route-view marketing-view">
   <div class="public-page public-home" data-public-page="home">
-    <section class="marketing-hero" id="product" aria-labelledby="homeHeroTitle">
+    <section class="marketing-hero dark-hero" id="product" aria-labelledby="homeHeroTitle" data-reveal>
       <div class="marketing-copy">
-        <div class="badge">Website sales platform for agencies</div>
-        <h1 id="homeHeroTitle">Don't Just Tell Prospects Their Website Needs Work. Show Them.</h1>
-        <p class="hero-sub">Scan any business website and instantly generate a professional white-label assessment your agency can use during sales calls, follow-ups, and proposals.</p>
+        <div class="badge">White-label website audits for agencies</div>
+        <h1 id="homeHeroTitle">Don't Just Tell Prospects Their Website Needs Work. <span>Show Them.</span></h1>
+        <p class="hero-sub">Scan a prospect's website, generate a professional assessment, and present the findings under your agency's brand during sales calls, outreach, and proposals.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="hero_signup_clicked">Start Your Account</a>
+          <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="hero_signup_clicked">Start Free</a>
           <a class="secondary-btn" href="/sample-report" data-route data-public-event="sample_report_clicked">View Sample Report</a>
         </div>
         <div class="hero-proof-row" aria-label="Product facts">
-          <span>White-label application and reports</span>
-          <span>Branded PDF exports</span>
-          <span>No code install required</span>
+          <span>White Label</span>
+          <span>PDF Reports</span>
+          <span>Professional Dashboard</span>
         </div>
       </div>
 
-      <div class="product-showcase" aria-label="LeadCheck product preview">
+      <div class="product-showcase desktop-dashboard-mockup screenshot-float" aria-label="Desktop dashboard mockup">
         <div class="mock-browser-bar">
           <span></span><span></span><span></span>
-          <strong>Maple Studio</strong>
+          <strong>W Strategies Audit Suite</strong>
+        </div>
+        <div class="dashboard-mock-top">
+          <div><small>Dashboard</small><strong>Website assessments</strong></div>
+          <a href="/signup" data-route data-public-cta data-public-event="hero_mockup_signup_clicked">Start Free</a>
         </div>
         <div class="mock-dashboard-grid">
-          <div class="mock-scan-card">
-            <span>Website URL</span>
+          <div class="mock-scan-card glow-card">
+            <span>Enter Website</span>
             <strong>northstarroofing.example</strong>
             <div class="mock-progress"><i style="width:76%"></i></div>
-            <small>Scanning trust, SEO, conversion, and technical health</small>
+            <small>AI scan running across 38+ sales and website factors</small>
           </div>
-          <div class="mock-score-card">
+          <div class="mock-score-card glow-card">
             <span>Website Score</span>
             <strong>74</strong>
-            <small>Professional assessment ready</small>
+            <small>Report ready</small>
           </div>
         </div>
-        <div class="mock-report-card">
+        <div class="mock-report-card glow-card">
           <div class="mock-report-header">
             <div>
-              <span class="mock-agency-mark">MS</span>
-              <strong>Maple Studio</strong>
+              <span class="mock-agency-mark">WS</span>
+              <strong>W Strategies</strong>
             </div>
             <span>Website Assessment</span>
           </div>
           <div class="mock-category"><span>Website Health</span><strong>74%</strong></div>
-          <div class="mock-category"><span>Trust and Credibility</span><strong>68%</strong></div>
+          <div class="mock-category"><span>Trust</span><strong>68%</strong></div>
           <div class="mock-category"><span>Conversion</span><strong>71%</strong></div>
           <div class="mock-priority-list">
             <span>Top priorities</span>
-            <p>Clarify the primary call to action, strengthen proof, and fix broken service links.</p>
+            <p>Clarify the call to action, strengthen proof, and repair broken service links.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="marketing-section problem-section" aria-labelledby="problemTitle">
-      <div class="section-kicker">The Problem</div>
-      <h2 id="problemTitle">Saying a Website Is Outdated Is Not Enough.</h2>
-      <p class="section-lede">Prospects have heard generic website pitches before. Without evidence, the conversation can become opinion versus opinion. A professional assessment gives the prospect a clearer reason to understand what matters and why.</p>
-      <div class="comparison-panel">
-        <article>
-          <span>Old sales approach</span>
-          <blockquote>"Your website could use an update."</blockquote>
-          <p>Subjective, easy to dismiss, and hard to prioritize.</p>
-        </article>
-        <article class="is-better">
-          <span>Better sales approach</span>
-          <blockquote>"Here are the specific issues affecting trust, conversion, visibility, and technical performance."</blockquote>
-          <p>Clearer evidence, clearer priorities, and a more useful follow-up.</p>
-        </article>
+    <section class="trust-bar" aria-label="Platform highlights" data-reveal>
+      <span>White Label</span>
+      <span>PDF Reports</span>
+      <span>Professional Dashboard</span>
+      <span>Stripe Billing</span>
+      <span>100 Audits Included</span>
+    </section>
+
+    <section class="marketing-section problem-section visual-section" aria-labelledby="problemTitle" data-reveal>
+      <div class="split-copy">
+        <div class="section-kicker">The Problem</div>
+        <h2 id="problemTitle">Agencies struggle to explain why a prospect should invest.</h2>
+        <p class="section-lede">Instead of saying, "Your website could be better," show the exact issues affecting trust, conversion, visibility, and performance.</p>
+        <div class="quote-switch">
+          <span>"Your website could be better."</span>
+          <strong>"This is exactly why."</strong>
+        </div>
+      </div>
+      <div class="mockup-frame image-frame">
+        <img src="/assets/before-after-proof.png" alt="Before and after website score comparison showing a weak website score improved into a stronger assessment score" loading="lazy">
       </div>
     </section>
 
-    <section class="marketing-section" id="how-it-works" aria-labelledby="workflowTitle">
+    <section class="marketing-section" id="how-it-works" aria-labelledby="workflowTitle" data-reveal>
       <div class="section-kicker">How It Works</div>
-      <h2 id="workflowTitle">Turn a Website URL Into a Professional Sales Asset.</h2>
-      <div class="steps-grid flow-grid">
-        <article class="step-card"><span>1</span><h3>Scan Any Website</h3><p>Enter a prospect's website and let the platform evaluate performance, trust, conversion, SEO, and technical health.</p></article>
-        <article class="step-card"><span>2</span><h3>Generate the Report</h3><p>Receive a clear assessment that prioritizes important issues and explains them in business-friendly language.</p></article>
-        <article class="step-card"><span>3</span><h3>Use It in Sales</h3><p>Present it live, download the PDF, or use it as a practical reason to follow up with the prospect.</p></article>
+      <h2 id="workflowTitle">From a website URL to a sales-ready audit.</h2>
+      <div class="steps-grid flow-grid four-step-grid">
+        <article class="step-card"><span>1</span><h3>Enter Website</h3><p>Add any prospect URL before a call, follow-up, or proposal.</p></article>
+        <article class="step-card"><span>2</span><h3>AI Scans 38+ Factors</h3><p>The platform reviews trust, SEO, conversion, technical health, and design signals.</p></article>
+        <article class="step-card"><span>3</span><h3>Generate Report</h3><p>Get a polished assessment with a score, priorities, and practical recommendations.</p></article>
+        <article class="step-card"><span>4</span><h3>Close More Website Clients</h3><p>Use the report to create a clearer, more evidence-backed sales conversation.</p></article>
       </div>
-      <a class="inline-cta" href="/signup" data-route data-public-cta data-public-event="workflow_signup_clicked">Start Your Account</a>
     </section>
 
-    <section class="marketing-section report-preview-section" id="report" aria-labelledby="reportPreviewTitle">
-      <div class="section-kicker">Report Preview</div>
-      <h2 id="reportPreviewTitle">A Report Your Prospects Can Actually Understand.</h2>
-      <p class="section-lede">LeadCheck organizes findings into plain-language categories with a clear score, prioritized issues, short explanations, and practical recommendations.</p>
+    <section class="marketing-section product-preview-section" aria-labelledby="previewTitle" data-reveal>
+      <div class="section-kicker">Product Preview</div>
+      <h2 id="previewTitle">The software sells itself through the workflow.</h2>
+      <div class="product-preview-row">
+        <div class="product-showcase mini-dashboard-mockup">
+          <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Dashboard</strong></div>
+          <div class="metric-strip"><span>Reports saved <b>28</b></span><span>Audits used <b>41/100</b></span><span>Avg score <b>72</b></span></div>
+          <div class="mock-category"><span>northstarroofing.example</span><strong>74</strong></div>
+          <div class="mock-category"><span>greenlinehvac.example</span><strong>63</strong></div>
+          <div class="mock-category"><span>ridgeviewdental.example</span><strong>81</strong></div>
+        </div>
+        <div><h3>Desktop Dashboard</h3><p>Manage audits, reopen reports, track usage, and move quickly from prospect research to professional presentation.</p></div>
+      </div>
+      <div class="product-preview-row reverse">
+        <div class="mobile-report-mockup">
+          <div class="phone-shell">
+            <div class="phone-notch"></div>
+            <strong>74</strong>
+            <span>Website Score</span>
+            <p>Top priority: make the quote request easier to find.</p>
+            <i></i><i></i><i></i>
+          </div>
+        </div>
+        <div><h3>Mobile Report</h3><p>Reports stay readable on smaller screens, so a prospect can review findings after a call without pinching through a tiny document.</p></div>
+      </div>
+      <div class="product-preview-row">
+        <div class="device-pair-mockup">
+          <div class="laptop-shell"><div class="mock-category"><span>SEO</span><strong>62%</strong></div><div class="mock-category"><span>Trust</span><strong>68%</strong></div><div class="mock-category"><span>Conversion</span><strong>71%</strong></div></div>
+          <div class="phone-shell small"><strong>PDF</strong><span>Ready</span><p>Agency branded</p></div>
+        </div>
+        <div><h3>Laptop and Mobile Workflow</h3><p>Present live on a sales call, save the report, and export a branded PDF when the prospect needs something to review.</p></div>
+      </div>
+    </section>
+
+    <section class="marketing-section report-preview-section" id="report" aria-labelledby="reportPreviewTitle" data-reveal>
+      <div class="section-kicker">Reports</div>
+      <h2 id="reportPreviewTitle">Professional Reports Your Clients Actually Understand.</h2>
+      <p class="section-lede">The report uses business language, not dense technical jargon. Each section explains what is wrong, why it matters, and what should be improved.</p>
       <div class="report-preview-layout">
-        <article class="sample-report-shell" aria-label="Static sample report preview">
+        <article class="pdf-report-mockup sample-report-shell" aria-label="PDF report mockup">
           <div class="sample-report-top">
-            <div><span class="mock-agency-mark">NS</span><strong>Northstar Roofing</strong></div>
-            <span>Prepared by Maple Studio</span>
+            <div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div>
+            <span>PDF Report</span>
           </div>
           <div class="sample-score-row">
             <strong>74</strong>
-            <div><span>Overall Assessment</span><p>Good foundation with several high-impact improvements.</p></div>
-          </div>
-          <div class="sample-report-grid">
-            <span>Website Health <b>74%</b></span>
-            <span>SEO Visibility <b>62%</b></span>
-            <span>Trust and Credibility <b>68%</b></span>
-            <span>Conversion <b>71%</b></span>
-            <span>Technical Health <b>82%</b></span>
-            <span>Broken Pages <b>3 issues</b></span>
+            <div><span>Overall Assessment</span><p>Good foundation with several high-impact improvements to prioritize.</p></div>
           </div>
           <div class="sample-priorities">
-            <strong>Top Priorities</strong>
+            <strong>Recommended Improvements</strong>
             <ol>
-              <li>Make the primary quote request easier to find.</li>
-              <li>Add stronger proof near service pages.</li>
-              <li>Repair broken links found in the main navigation.</li>
+              <li>Move the primary quote request above the fold.</li>
+              <li>Add stronger trust proof near service pages.</li>
+              <li>Repair broken links in the main navigation.</li>
             </ol>
           </div>
         </article>
         <div class="report-highlight-list">
-          <h3>What the report includes</h3>
+          <h3>Built for client presentation</h3>
           <ul class="check-list">
-            <li>Clear website score and category breakdown</li>
-            <li>Website health, SEO, trust, conversion, and technical checks</li>
-            <li>Broken pages and link issue detection</li>
-            <li>Visual trust and design quality signals</li>
-            <li>Recommended improvements written for business owners</li>
-            <li>Agency branding and branded PDF export</li>
+            <li>Professional layout</li>
+            <li>Business-friendly explanations</li>
+            <li>Easy to understand scoring</li>
+            <li>White-labeled presentation</li>
+            <li>Downloadable branded PDF</li>
           </ul>
           <a class="secondary-btn" href="/sample-report" data-route data-public-event="sample_report_clicked">View Sample Report</a>
         </div>
       </div>
     </section>
 
-    <section class="marketing-section white-label-section" id="white-label" aria-labelledby="whiteLabelTitle">
-      <div class="section-kicker">White Label</div>
-      <h2 id="whiteLabelTitle">Present It as Your Own Platform.</h2>
-      <p class="section-lede">Your prospect sees your agency brand, not ours. Branding can populate the dashboard, scanner, reports, and PDF exports.</p>
-      <div class="brand-comparison">
-        <article>
-          <span>Default platform</span>
-          <strong>LeadCheck</strong>
-          <p>Public website and login experience.</p>
-        </article>
-        <article class="agency-branded-card">
-          <span>Agency-branded platform</span>
-          <strong>Maple Studio</strong>
-          <p>Logo, colors, contact details, booking link, favicon, title, and report disclaimer.</p>
-        </article>
+    <section class="marketing-section white-label-section visual-section" id="white-label" aria-labelledby="whiteLabelTitle" data-reveal>
+      <div class="split-copy">
+        <div class="section-kicker">White Label</div>
+        <h2 id="whiteLabelTitle">Your prospect sees your agency, not ours.</h2>
+        <p class="section-lede">Customize the agency logo, colors, application branding, report branding, PDF branding, contact information, booking link, favicon, and browser title.</p>
+        <ul class="check-list">
+          <li>Agency logo and colors</li>
+          <li>Dashboard branding</li>
+          <li>PDF report branding</li>
+          <li>Client-facing report presentation</li>
+        </ul>
+      </div>
+      <div class="white-label-mockup product-showcase">
+        <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Agency Workspace</strong></div>
+        <div class="mock-report-header"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>Website Assessment Platform</span></div>
+        <div class="color-swatch-row"><i></i><i></i><i></i><span>Brand system applied</span></div>
+        <div class="mock-category"><span>Dashboard header</span><strong>Branded</strong></div>
+        <div class="mock-category"><span>Report PDF</span><strong>Branded</strong></div>
+        <div class="mock-category"><span>Booking link</span><strong>Connected</strong></div>
       </div>
     </section>
 
-    <section class="marketing-section" aria-labelledby="useCasesTitle">
-      <div class="section-kicker">Use Cases</div>
-      <h2 id="useCasesTitle">Built for the Way Agencies Actually Sell.</h2>
-      <div class="feature-grid use-case-grid">
-        <article class="feature-card"><span class="feature-icon">Sales</span><h3>Sales Calls</h3><p>Open the assessment live and walk through the most important website problems with the prospect.</p></article>
-        <article class="feature-card"><span class="feature-icon">Outreach</span><h3>Cold Outreach</h3><p>Use the completed assessment as a personalized reason to contact or follow up with a business.</p></article>
-        <article class="feature-card"><span class="feature-icon">Proposal</span><h3>Proposals</h3><p>Support your recommendation with clear findings instead of relying only on a proposal document.</p></article>
-        <article class="feature-card"><span class="feature-icon">Follow-up</span><h3>Follow-Up</h3><p>Send the report after the call and give the prospect something useful to review.</p></article>
-        <article class="feature-card"><span class="feature-icon">Review</span><h3>Account Reviews</h3><p>Use updated assessments when discussing improvements with existing clients.</p></article>
-        <article class="feature-card"><span class="feature-icon">Freelance</span><h3>Freelance Prospecting</h3><p>Give independent designers a more professional way to present website opportunities.</p></article>
+    <section class="marketing-section" aria-labelledby="featuresTitle" data-reveal>
+      <div class="section-kicker">Score Breakdown</div>
+      <h2 id="featuresTitle">Every category becomes a clearer conversation.</h2>
+      <div class="score-card-grid">
+        <article><span>SEO</span><strong>62</strong><p>Visibility signals, page structure, and search basics.</p></article>
+        <article><span>Trust</span><strong>68</strong><p>Reviews, proof, credibility, and risk-reduction signals.</p></article>
+        <article><span>Conversion</span><strong>71</strong><p>Calls to action, forms, booking paths, and lead friction.</p></article>
+        <article><span>Technical</span><strong>82</strong><p>Mobile, speed, structure, and crawl health.</p></article>
+        <article><span>Performance</span><strong>76</strong><p>Load quality and visitor experience basics.</p></article>
+        <article><span>Design</span><strong>69</strong><p>Visual trust, hierarchy, clarity, and professional feel.</p></article>
       </div>
     </section>
 
-    <section class="marketing-section" aria-labelledby="featuresTitle">
-      <div class="section-kicker">Features</div>
-      <h2 id="featuresTitle">Everything You Need to Create and Present Better Website Assessments.</h2>
-      <div class="feature-group-grid">
-        <article><h3>Scanning</h3><ul><li>Scan business websites</li><li>Performance assessment</li><li>Trust and conversion analysis</li><li>SEO and technical checks</li><li>Prioritized findings</li></ul></article>
-        <article><h3>Reports</h3><ul><li>Professional report design</li><li>Business-focused explanations</li><li>Recommended fixes</li><li>Saved reports</li><li>PDF export</li></ul></article>
-        <article><h3>White Label</h3><ul><li>Agency logo</li><li>Agency colors</li><li>Contact details</li><li>Branded application</li><li>Branded PDFs</li></ul></article>
-        <article><h3>Workspace</h3><ul><li>Account dashboard</li><li>Scan history</li><li>Saved reports</li><li>Search and organization</li><li>Monthly usage tracking</li><li>Billing management</li></ul></article>
+    <section class="marketing-section sales-section visual-section" aria-labelledby="salesTitle" data-reveal>
+      <div class="sales-meeting-mockup product-showcase">
+        <div class="meeting-screen"><span>Sales Meeting</span><strong>Reviewing Website Assessment</strong><p>"Here are the three issues hurting trust and quote requests."</p></div>
+        <div class="meeting-notes"><i></i><i></i><i></i></div>
       </div>
-    </section>
-
-    <section class="marketing-section" aria-labelledby="evidenceTitle">
-      <div class="section-kicker">Before and After</div>
-      <h2 id="evidenceTitle">Replace Subjective Pitches With Clear Evidence.</h2>
-      <div class="comparison-panel evidence-panel">
-        <article><span>Without the platform</span><ul><li>Generic criticism</li><li>Manual screenshots</li><li>Technical jargon</li><li>No clear priority</li><li>Difficult follow-up</li></ul></article>
-        <article class="is-better"><span>With the platform</span><ul><li>Structured assessment</li><li>Clear website score</li><li>Prioritized issues</li><li>Business-focused explanations</li><li>Branded report</li></ul></article>
+      <div class="split-copy">
+        <div class="section-kicker">Sales Use Case</div>
+        <h2 id="salesTitle">Use the report where website projects are actually sold.</h2>
+        <p class="section-lede">Agencies use assessments during sales calls, discovery meetings, follow-up, cold outreach, and website proposals.</p>
+        <ul class="check-list">
+          <li>Walk prospects through the top priorities live</li>
+          <li>Send a branded PDF after the call</li>
+          <li>Support proposals with specific evidence</li>
+        </ul>
       </div>
-    </section>
-
-    <section class="marketing-section" aria-labelledby="screensTitle">
-      <div class="section-kicker">Product Screens</div>
-      <h2 id="screensTitle">See the Entire Workflow.</h2>
-      <div class="screen-gallery">
-        <article><span>Dashboard</span><strong>Recent reports, usage, and quick actions.</strong></article>
-        <article><span>New Audit</span><strong>Enter the prospect website and report context.</strong></article>
-        <article><span>Scanning</span><strong>Progress indicators while the audit runs.</strong></article>
-        <article><span>Completed Report</span><strong>Score, categories, priorities, and evidence.</strong></article>
-        <article><span>Saved Reports</span><strong>Search, reopen, duplicate, delete, or export.</strong></article>
-        <article><span>Branding</span><strong>Logo, colors, contact details, favicon, and disclaimer.</strong></article>
-        <article><span>PDF Report</span><strong>Agency-branded consulting document.</strong></article>
-      </div>
-    </section>
-
-    <section class="marketing-section" aria-labelledby="audienceTitle">
-      <div class="section-kicker">Who It Is For</div>
-      <h2 id="audienceTitle">Designed for Agencies That Sell Website and Marketing Services.</h2>
-      <div class="audience-list">
-        <span>Web design agencies</span><span>SEO agencies</span><span>Digital marketing agencies</span><span>GoHighLevel agencies</span><span>Freelance web designers</span><span>Sales representatives</span><span>Website consultants</span>
-      </div>
-      <p class="section-lede">Best suited for teams that actively prospect, run sales calls, send website proposals, or audit potential clients.</p>
     </section>
 
     <section class="marketing-section pricing-section" id="pricing" aria-labelledby="pricingTitle">
       <div class="section-kicker">Pricing</div>
-      <h2 id="pricingTitle">Simple Pricing.</h2>
+      <h2 id="pricingTitle">Simple pricing for agency prospecting.</h2>
       <article class="pricing-card featured pricing-main">
         <div>
           <span class="plan-name">Professional</span>
-          <strong>$99 USD <small>/ month</small></strong>
-          <p>100 completed website audits per billing period. A completed audit is a successful scan that returns a report. Failed scans are not counted by the app.</p>
+          <strong>$99 <small>/ month</small></strong>
+          <p>Includes 100 completed audits per billing period, white-label branding, saved reports, and branded PDF exports.</p>
         </div>
         <ul class="check-list">
-          <li>100 website audits per month</li>
-          <li>White-label application and reports</li>
-          <li>Saved reports and dashboard</li>
-          <li>Branded PDF exports</li>
-          <li>Agency branding controls</li>
-          <li>Stripe billing management</li>
+          <li>100 audits</li>
+          <li>White label</li>
+          <li>PDF exports</li>
+          <li>Dashboard</li>
+          <li>Saved reports</li>
         </ul>
-        <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Your Account</a>
-        <p class="pricing-note">Monthly billing. Unused audits do not roll over in the current app.</p>
+        <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Free</a>
       </article>
     </section>
 
-    <section class="marketing-section value-section" aria-labelledby="valueTitle">
-      <div class="section-kicker">Value</div>
-      <h2 id="valueTitle">One Website Project Can Cover the Software for Months.</h2>
-      <p class="section-lede">If the platform helps your agency present recommendations more clearly and contributes to winning even one additional website project, the subscription can be small relative to the value of that work. LeadCheck does not guarantee sales results; it gives you a clearer asset for the conversation.</p>
-    </section>
-
-    <section class="marketing-section trust-section" aria-labelledby="trustTitle">
-      <div class="section-kicker">Trust</div>
-      <h2 id="trustTitle">Built for Professional Client Conversations.</h2>
-      <div class="trust-grid">
-        <span>Secure account authentication</span><span>Private saved reports</span><span>User-specific data access</span><span>Stripe-managed payments</span><span>White-label branding</span><span>Professional PDF exports</span><span>Dashboard report history</span><span>Billing portal management</span>
+    <section class="marketing-section" aria-labelledby="whyTitle" data-reveal>
+      <div class="section-kicker">Why Agencies Buy</div>
+      <h2 id="whyTitle">A sharper way to show website opportunities.</h2>
+      <div class="feature-grid use-case-grid">
+        <article class="feature-card"><span class="feature-icon">Professional</span><h3>Look prepared</h3><p>Bring a polished assessment to the conversation instead of loose notes.</p></article>
+        <article class="feature-card"><span class="feature-icon">Fast</span><h3>Faster audits</h3><p>Create a structured report without manually building a deck for every prospect.</p></article>
+        <article class="feature-card"><span class="feature-icon">Authority</span><h3>More authority</h3><p>Support your recommendations with a clear score, categories, and evidence.</p></article>
+        <article class="feature-card"><span class="feature-icon">Clarity</span><h3>Better conversations</h3><p>Move from opinion to specific issues the prospect can understand.</p></article>
       </div>
     </section>
 
-    <section class="marketing-section" aria-labelledby="whyTitle">
-      <div class="section-kicker">Why Agencies Use It</div>
-      <h2 id="whyTitle">A Practical Tool for Stronger Website Conversations.</h2>
-      <div class="feature-grid">
-        <article class="feature-card"><h3>Less manual prep</h3><p>Create a structured assessment without assembling screenshots by hand.</p></article>
-        <article class="feature-card"><h3>Clearer explanations</h3><p>Translate website problems into business-friendly findings.</p></article>
-        <article class="feature-card"><h3>More professional follow-up</h3><p>Give prospects a branded report they can review after the call.</p></article>
-      </div>
-    </section>
-
-    <section class="marketing-section faq-section" id="faq" aria-labelledby="faqTitle">
+    <section class="marketing-section faq-section" id="faq" aria-labelledby="faqTitle" data-reveal>
       <div class="section-kicker">FAQ</div>
       <h2 id="faqTitle">Frequently Asked Questions</h2>
-      <details><summary>What does the platform scan?</summary><p>It evaluates website health, SEO visibility, trust and credibility, conversion signals, technical health, broken pages, and visual trust signals.</p></details>
-      <details><summary>How long does an assessment take?</summary><p>The scan screen currently communicates an estimated time of about 90 seconds, though timing can vary by website.</p></details>
-      <details><summary>Can I use my own branding?</summary><p>Yes. The app supports agency name, logo, colors, contact information, booking link, favicon, tagline, and report disclaimer.</p></details>
-      <details><summary>Will prospects see LeadCheck branding?</summary><p>The public marketing website uses LeadCheck branding. The authenticated application, reports, and PDFs use agency branding.</p></details>
-      <details><summary>Can I download reports as PDFs?</summary><p>Yes. Saved reports can be exported as branded PDFs from the application.</p></details>
-      <details><summary>Are reports saved?</summary><p>Yes. Completed reports save to the authenticated user's workspace and can be reopened later.</p></details>
+      <details><summary>What does the platform scan?</summary><p>It reviews website health, SEO visibility, trust, conversion, technical health, broken pages, performance, and visual trust signals.</p></details>
+      <details><summary>Can I use my own branding?</summary><p>Yes. Agency branding applies to the dashboard, scanner, reports, and PDF exports.</p></details>
+      <details><summary>Can I download PDFs?</summary><p>Yes. Saved reports can be exported as branded PDFs from the authenticated application.</p></details>
       <details><summary>How many audits are included?</summary><p>The Professional plan includes 100 completed audits per billing period.</p></details>
-      <details><summary>What happens when I reach the monthly limit?</summary><p>The app blocks additional audits until usage is available again in the billing period.</p></details>
-      <details><summary>Can I cancel my subscription?</summary><p>Billing is managed through Stripe's billing portal from inside the application.</p></details>
-      <details><summary>Can I use it during live sales calls?</summary><p>Yes. Agencies can open the assessment live, explain the findings, and export or share the branded report afterward.</p></details>
-      <details><summary>Is this only for web design agencies?</summary><p>No. It is also useful for SEO agencies, marketing agencies, GoHighLevel agencies, freelancers, consultants, and website sales teams.</p></details>
-      <details><summary>Does the platform build the website?</summary><p>No. It creates website assessments. Your agency decides the strategy, proposal, and implementation.</p></details>
-      <details><summary>Does the report guarantee I will close the prospect?</summary><p>No. It does not guarantee sales results. It provides clearer evidence for the sales conversation.</p></details>
-      <details><summary>What happens after I create my account?</summary><p>You verify your email if required, log in, subscribe through Stripe billing, set your branding, and start generating assessments.</p></details>
+      <details><summary>Will prospects see W Strategies branding?</summary><p>The public website uses W Strategies branding. Inside the app and reports, agencies can present their own brand.</p></details>
     </section>
 
-    <section class="marketing-cta" aria-labelledby="finalCtaTitle">
-      <h2 id="finalCtaTitle">Give Prospects a Clear Reason to Improve Their Website.</h2>
-      <p>Create professional website assessments under your own brand and bring more clarity to every sales conversation.</p>
+    <section class="marketing-cta final-dark-cta" aria-labelledby="finalCtaTitle" data-reveal>
+      <h2 id="finalCtaTitle">Start Delivering Better Website Audits Today.</h2>
+      <p>Create professional website assessments under your own brand and bring clearer evidence to every sales conversation.</p>
       <div class="hero-actions">
-        <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="final_signup_clicked">Start Your Account</a>
+        <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-cta-label="Create Your Account" data-public-event="final_signup_clicked">Create Your Account</a>
         <a class="secondary-btn" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
       </div>
     </section>
   </div>
 
-  <article class="public-page supporting-page" data-public-page="product" hidden>
-    <div class="supporting-hero"><div class="section-kicker">Product</div><h1>Website assessments built for agency sales workflows.</h1><p>LeadCheck combines scanning, saved reports, dashboard management, white-label branding, and branded PDF export in one focused workspace.</p></div>
-    <div class="supporting-grid"><section><h2>Scanner</h2><p>Enter a website URL and generate an assessment across performance, SEO, trust, conversion, technical health, and broken-page signals.</p></section><section><h2>Reports</h2><p>Reports organize scores, priorities, evidence, positives, and recommendations in language business owners can understand.</p></section><section><h2>Workspace</h2><p>Agencies can save, search, reopen, duplicate, delete, and export reports from the authenticated dashboard.</p></section><section><h2>White-label system</h2><p>Agency branding populates the dashboard, scanner, report header, PDFs, favicon, browser title, and contact areas.</p></section></div>
+  <article class="public-page supporting-page product-page" data-public-page="product" hidden>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Product</div><h1>A complete audit workspace for agency sales teams.</h1><p>Go deeper into the dashboard, scanner, reports, white-label system, PDF export, and saved-report workflow.</p></div>
+    <div class="product-preview-row" data-reveal><div class="product-showcase mini-dashboard-mockup"><div class="mock-browser-bar"><span></span><span></span><span></span><strong>Dashboard</strong></div><div class="metric-strip"><span>Reports <b>28</b></span><span>Usage <b>41/100</b></span><span>Plan <b>Pro</b></span></div><div class="mock-category"><span>Recent audit</span><strong>74</strong></div><div class="mock-category"><span>Saved PDF</span><strong>Ready</strong></div></div><div><h2>Dashboard</h2><p>Track recent assessments, monthly usage, report history, and quick actions from one workspace.</p></div></div>
+    <div class="product-preview-row reverse" data-reveal><div class="product-showcase"><div class="mock-scan-card glow-card"><span>Scanner</span><strong>https://prospect-site.example</strong><div class="mock-progress"><i style="width:88%"></i></div><small>Evaluating 38+ website factors</small></div></div><div><h2>Scanner</h2><p>Enter a website and let the existing scanning flow evaluate key sales, conversion, SEO, trust, and technical signals.</p></div></div>
+    <div class="product-preview-row" data-reveal><div class="pdf-report-mockup sample-report-shell"><div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>PDF Export</span></div><div class="sample-score-row"><strong>74</strong><div><span>Website Report</span><p>Priorities, explanations, evidence, and recommendations.</p></div></div></div><div><h2>Reports and PDF Export</h2><p>Generate consulting-style reports, save them in the dashboard, and export branded PDFs for follow-up.</p></div></div>
+    <div class="product-preview-row reverse" data-reveal><div class="white-label-mockup product-showcase"><div class="mock-report-header"><div><span class="mock-agency-mark">AG</span><strong>Your Agency</strong></div><span>White Label</span></div><div class="color-swatch-row"><i></i><i></i><i></i><span>Brand applied</span></div><div class="mock-category"><span>Dashboard</span><strong>Branded</strong></div><div class="mock-category"><span>Report</span><strong>Branded</strong></div></div><div><h2>White Label</h2><p>Use your agency logo, colors, contact details, booking link, favicon, and report disclaimer throughout the app experience.</p></div></div>
   </article>
 
-  <article class="public-page supporting-page" data-public-page="how-it-works" hidden>
-    <div class="supporting-hero"><div class="section-kicker">How It Works</div><h1>From signup to sales conversation.</h1><p>Create an account, subscribe through Stripe, set your agency branding, scan a prospect website, and present the assessment under your own brand.</p></div>
-    <ol class="large-step-list"><li><strong>Create your account.</strong><span>Use the existing signup flow and verify your email if required.</span></li><li><strong>Subscribe and set branding.</strong><span>Connect billing, add your logo, colors, contact details, booking link, and disclaimer.</span></li><li><strong>Run an audit.</strong><span>Enter a prospect URL and optional context, then launch the existing scan flow.</span></li><li><strong>Use the report.</strong><span>Open it live, save it in your dashboard, or export a branded PDF.</span></li></ol>
+  <article class="public-page supporting-page how-page" data-public-page="how-it-works" hidden>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">How It Works</div><h1>A visual walkthrough from URL to sales call.</h1><p>The workflow is designed to help agencies move quickly from prospect research to a clear website conversation.</p></div>
+    <ol class="walkthrough-list">
+      <li data-reveal><span>01</span><div><h2>Desktop Dashboard</h2><p>Start from the agency workspace and choose a new audit.</p></div></li>
+      <li data-reveal><span>02</span><div><h2>Enter Website</h2><p>Add the prospect URL and optional context for the assessment.</p></div></li>
+      <li data-reveal><span>03</span><div><h2>AI Scan</h2><p>The scan evaluates trust, conversion, SEO, design, technical, and performance factors.</p></div></li>
+      <li data-reveal><span>04</span><div><h2>Website Score</h2><p>The prospect gets a clear score and category breakdown.</p></div></li>
+      <li data-reveal><span>05</span><div><h2>Report</h2><p>Findings are translated into business-focused recommendations.</p></div></li>
+      <li data-reveal><span>06</span><div><h2>White Label</h2><p>The workspace and reports can show your agency brand.</p></div></li>
+      <li data-reveal><span>07</span><div><h2>Download PDF</h2><p>Export a branded report for follow-up or proposal support.</p></div></li>
+      <li data-reveal><span>08</span><div><h2>Use During Sales Call</h2><p>Walk the prospect through the highest-priority issues and next steps.</p></div></li>
+    </ol>
   </article>
 
   <article class="public-page supporting-page sample-report-page" data-public-page="sample-report" hidden>
-    <div class="supporting-hero"><div class="section-kicker">Sample Report</div><h1>Northstar Roofing Website Assessment.</h1><p>This is static fictional demo data. It does not load private reports or customer records.</p></div>
-    <section class="sample-report-shell full-sample-report"><div class="sample-report-top"><div><span class="mock-agency-mark">MS</span><strong>Maple Studio</strong></div><span>Prepared for Northstar Roofing</span></div><div class="sample-score-row"><strong>74</strong><div><span>Overall Assessment</span><p>The website has a workable foundation, but the report highlights improvements that could make the business easier to trust and contact.</p></div></div><div class="sample-report-grid"><span>Website Health <b>74%</b></span><span>SEO Visibility <b>62%</b></span><span>Trust and Credibility <b>68%</b></span><span>Conversion <b>71%</b></span><span>Technical Health <b>82%</b></span><span>Visual Trust <b>69%</b></span><span>Broken Pages <b>3 issues</b></span><span>Recommended Improvements <b>6</b></span></div><div class="sample-priorities"><strong>Recommended Improvements</strong><ol><li>Move the primary quote request above the fold on service pages.</li><li>Add recent project proof near the roofing service descriptions.</li><li>Make phone and booking options persistent on mobile.</li><li>Repair broken navigation links before sending paid traffic.</li><li>Clarify service-area language for local search visibility.</li><li>Add a short warranty or workmanship explanation near the CTA.</li></ol></div></section>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Sample Report</div><h1>Explore a fictional website assessment.</h1><p>This demo uses static Northstar Roofing data. It does not load private reports, Supabase records, or customer data.</p></div>
+    <div class="sample-demo-layout" data-reveal>
+      <nav class="sample-report-tabs" aria-label="Sample report sections">
+        <button type="button" class="active" data-sample-tab="overview">Overview</button>
+        <button type="button" data-sample-tab="priorities">Priorities</button>
+        <button type="button" data-sample-tab="recommendations">Recommendations</button>
+      </nav>
+      <section class="sample-report-shell full-sample-report">
+        <div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>Prepared for Northstar Roofing</span></div>
+        <div class="sample-tab-panel active" data-sample-panel="overview"><div class="sample-score-row"><strong>74</strong><div><span>Overall Assessment</span><p>The site has a workable foundation, but the assessment identifies improvements that could make the business easier to trust and contact.</p></div></div><div class="sample-report-grid"><span>SEO <b>62%</b></span><span>Trust <b>68%</b></span><span>Conversion <b>71%</b></span><span>Technical <b>82%</b></span><span>Performance <b>76%</b></span><span>Design <b>69%</b></span></div></div>
+        <div class="sample-tab-panel" data-sample-panel="priorities"><div class="sample-priorities"><strong>Top Priorities</strong><ol><li>Make the primary quote request visible above the fold.</li><li>Add recent project proof near the roofing services.</li><li>Repair broken navigation links before sending paid traffic.</li></ol></div></div>
+        <div class="sample-tab-panel" data-sample-panel="recommendations"><div class="sample-priorities"><strong>Recommended Improvements</strong><ol><li>Clarify service-area language for local search visibility.</li><li>Add trust proof near the main contact form.</li><li>Make phone and booking options persistent on mobile.</li><li>Add a short workmanship or warranty explanation near the CTA.</li></ol></div></div>
+      </section>
+    </div>
   </article>
 
-  <article class="public-page supporting-page" data-public-page="pricing" hidden>
-    <div class="supporting-hero"><div class="section-kicker">Pricing</div><h1>Professional plan, simple monthly billing.</h1><p>$99 USD per month includes 100 completed website audits per billing period, white-label reports, saved reports, branded PDF exports, and billing management.</p></div>
-    <article class="pricing-card featured pricing-main"><span class="plan-name">Professional</span><strong>$99 USD <small>/ month</small></strong><ul class="check-list"><li>100 completed website audits per month</li><li>White-label application and reports</li><li>Saved reports and dashboard</li><li>Branded PDF exports</li><li>Agency branding controls</li><li>Stripe billing management</li></ul><a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Your Account</a><p class="pricing-note">Unused audits do not roll over in the current app.</p></article>
+  <article class="public-page supporting-page pricing-page" data-public-page="pricing" hidden>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Pricing</div><h1>One plan for agencies ready to present better audits.</h1><p>Professional includes the core dashboard, white-label reports, PDF export, saved reports, and 100 completed audits per billing period.</p></div>
+    <div class="pricing-detail-grid" data-reveal>
+      <article class="pricing-card featured pricing-main"><span class="plan-name">Professional</span><strong>$99 <small>/ month</small></strong><ul class="check-list"><li>100 audits</li><li>White label</li><li>PDF exports</li><li>Dashboard</li><li>Saved reports</li><li>Stripe billing portal</li></ul><a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Free</a></article>
+      <aside><h2>Billing notes</h2><p>Billing is monthly through Stripe. A completed audit is a successful scan that returns a report. Unused audits do not roll over in the current app.</p><h2>Limits</h2><p>When the monthly audit limit is reached, the app blocks additional audits until usage is available again in the billing period.</p></aside>
+    </div>
+  </article>
+
+  <article class="public-page supporting-page faq-page" data-public-page="faq" hidden>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">FAQ</div><h1>Questions about the website audit platform.</h1><p>Search the most common questions agencies ask before creating an account.</p></div>
+    <label class="faq-search" data-reveal><span>Search FAQ</span><input type="search" id="publicFaqSearch" placeholder="Search audits, white label, billing, PDFs..." autocomplete="off"></label>
+    <section class="faq-section faq-list" data-reveal>
+      <details data-faq-item><summary>What does the platform scan?</summary><p>Website health, SEO visibility, trust, conversion, technical health, broken pages, performance, and visual trust signals.</p></details>
+      <details data-faq-item><summary>Can I white-label the app?</summary><p>Yes. Agency branding can apply to the dashboard, scanner, report pages, PDF exports, favicon, browser title, and contact information.</p></details>
+      <details data-faq-item><summary>Can I download reports as PDFs?</summary><p>Yes. Saved reports can be downloaded as branded PDF reports from inside the authenticated app.</p></details>
+      <details data-faq-item><summary>Are reports saved?</summary><p>Yes. Reports are saved to the authenticated user's workspace and can be reopened later.</p></details>
+      <details data-faq-item><summary>How many audits are included?</summary><p>The Professional plan includes 100 completed audits per billing period.</p></details>
+      <details data-faq-item><summary>Can prospects see your branding?</summary><p>The public website uses W Strategies branding. The app and reports can be presented under the agency brand.</p></details>
+      <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
+      <details data-faq-item><summary>Does it guarantee closed clients?</summary><p>No. The platform does not guarantee sales results. It helps agencies present clearer evidence and recommendations.</p></details>
+    </section>
   </article>
 
   <article class="public-page supporting-page" data-public-page="contact" hidden>
-    <div class="supporting-hero"><div class="section-kicker">Contact</div><h1>Questions before you start?</h1><p>The current public site does not include a connected contact form. Existing customers can use the authenticated workspace and billing portal for account management.</p></div>
-    <div class="supporting-grid"><section><h2>Presale questions</h2><p>Review the product, sample report, pricing, and FAQ pages for the current public details.</p></section><section><h2>Account access</h2><p>Use the login and password reset pages for existing accounts.</p><a class="secondary-btn" href="/login" data-route>Log In</a></section></div>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Contact</div><h1>Questions before you start?</h1><p>The current public site does not include a connected contact form. Existing customers can use the authenticated workspace and billing portal for account management.</p></div>
+    <div class="supporting-grid" data-reveal><section><h2>Presale questions</h2><p>Review the product, sample report, pricing, and FAQ pages for the current public details.</p></section><section><h2>Account access</h2><p>Use the login and password reset pages for existing accounts.</p><a class="secondary-btn" href="/login" data-route>Log In</a></section></div>
   </article>
 
   <article class="public-page supporting-page legal-page" data-public-page="privacy" hidden>
-    <div class="supporting-hero"><div class="section-kicker">Privacy</div><h1>Privacy Policy.</h1><p>This page summarizes the current product behavior and should be reviewed by counsel before broad commercial use.</p></div>
-    <section><h2>Data handled by the app</h2><p>LeadCheck uses account authentication, saved reports, agency branding information, billing status, and website scan inputs to operate the service. Reports belong to authenticated users and are protected by user-specific access rules.</p><h2>Payments</h2><p>Payments are managed by Stripe. The application stores billing status and Stripe identifiers needed to manage subscriptions.</p><h2>Analytics</h2><p>The public site preserves existing Meta Pixel tracking and server-side PostHog events already used by the application.</p></section>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Privacy</div><h1>Privacy Policy.</h1><p>This page summarizes the current product behavior and should be reviewed by counsel before broad commercial use.</p></div>
+    <section data-reveal><h2>Data handled by the app</h2><p>The platform uses account authentication, saved reports, agency branding information, billing status, and website scan inputs to operate the service. Reports belong to authenticated users and are protected by user-specific access rules.</p><h2>Payments</h2><p>Payments are managed by Stripe. The application stores billing status and Stripe identifiers needed to manage subscriptions.</p><h2>Analytics</h2><p>The public site preserves existing Meta Pixel tracking and server-side PostHog events already used by the application.</p></section>
   </article>
 
   <article class="public-page supporting-page legal-page" data-public-page="terms" hidden>
-    <div class="supporting-hero"><div class="section-kicker">Terms</div><h1>Terms of Service.</h1><p>This page is a practical placeholder for the current product and should be reviewed by counsel before broad commercial use.</p></div>
-    <section><h2>Service use</h2><p>LeadCheck provides website assessment software for agencies. The platform does not guarantee sales results, search rankings, revenue outcomes, or closed projects.</p><h2>Billing</h2><p>The Professional plan is billed monthly through Stripe and includes 100 completed audits per billing period. Unused audits do not roll over in the current app.</p><h2>Reports</h2><p>Reports are generated from available website signals at the time of scanning and should be reviewed by the agency before being presented as professional advice.</p></section>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Terms</div><h1>Terms of Service.</h1><p>This page is a practical placeholder for the current product and should be reviewed by counsel before broad commercial use.</p></div>
+    <section data-reveal><h2>Service use</h2><p>The platform provides website assessment software for agencies. It does not guarantee sales results, search rankings, revenue outcomes, or closed projects.</p><h2>Billing</h2><p>The Professional plan is billed monthly through Stripe and includes 100 completed audits per billing period. Unused audits do not roll over in the current app.</p><h2>Reports</h2><p>Reports are generated from available website signals at the time of scanning and should be reviewed by the agency before being presented as professional advice.</p></section>
   </article>
 
   <footer class="marketing-footer">
-    <div><strong>LeadCheck</strong><span>White-label website assessment software for agencies.</span></div>
+    <div><strong>W Strategies</strong><span>White-label website audit software for agencies.</span></div>
     <nav aria-label="Footer navigation">
+      <a href="/" data-route>Home</a>
       <a href="/product" data-route>Product</a>
       <a href="/how-it-works" data-route>How It Works</a>
       <a href="/sample-report" data-route>Sample Report</a>
       <a href="/pricing" data-route>Pricing</a>
+      <a href="/faq" data-route>FAQ</a>
       <a href="/login" data-route>Login</a>
-      <a href="/signup" data-route>Sign Up</a>
+      <a href="/signup" data-route>Start Free</a>
       <a href="/contact" data-route>Contact</a>
       <a href="/privacy" data-route>Privacy Policy</a>
       <a href="/terms" data-route>Terms of Service</a>
@@ -1305,43 +1339,48 @@ const ROUTE_TITLES = {
 const PUBLIC_PAGE_META = {
   home: {
     path: '/',
-    title: 'White-Label Website Audit Software for Agencies | LeadCheck',
+    title: 'White-Label Website Audit Software for Agencies | W Strategies',
     description: 'Create professional white-label website assessments for sales calls, outreach, and proposals. Scan websites, save reports, and export branded PDFs.',
   },
   product: {
     path: '/product',
-    title: 'Product | LeadCheck White-Label Website Assessments',
-    description: 'See how LeadCheck helps agencies scan websites, generate professional reports, save assessments, and present findings under their own brand.',
+    title: 'Product | W Strategies Website Audit Platform',
+    description: 'See how agencies scan websites, generate professional reports, save assessments, export PDFs, and present findings under their own brand.',
   },
   'how-it-works': {
     path: '/how-it-works',
-    title: 'How LeadCheck Works | Website Assessments for Agencies',
+    title: 'How It Works | W Strategies Website Audits',
     description: 'Learn the workflow from account setup to branded website assessment, saved report, and PDF export.',
   },
   'sample-report': {
     path: '/sample-report',
-    title: 'Sample Website Assessment Report | LeadCheck',
+    title: 'Sample Website Assessment Report | W Strategies',
     description: 'View a safe fictional sample website assessment report showing scores, categories, priorities, and recommendations.',
   },
   pricing: {
     path: '/pricing',
-    title: 'Pricing | LeadCheck Professional Plan',
-    description: 'LeadCheck Professional is $99 USD per month and includes 100 completed website audits, white-label reports, saved reports, and branded PDFs.',
+    title: 'Pricing | W Strategies Professional Plan',
+    description: 'The Professional plan is $99 USD per month and includes 100 completed website audits, white-label reports, saved reports, and branded PDFs.',
+  },
+  faq: {
+    path: '/faq',
+    title: 'FAQ | W Strategies Website Audit Platform',
+    description: 'Find answers about website audits, white-label branding, PDF reports, saved reports, billing, and agency use cases.',
   },
   contact: {
     path: '/contact',
-    title: 'Contact | LeadCheck',
-    description: 'Find presale and account access information for LeadCheck white-label website assessment software.',
+    title: 'Contact | W Strategies',
+    description: 'Find presale and account access information for W Strategies white-label website assessment software.',
   },
   privacy: {
     path: '/privacy',
-    title: 'Privacy Policy | LeadCheck',
-    description: 'Privacy overview for LeadCheck website assessment software.',
+    title: 'Privacy Policy | W Strategies',
+    description: 'Privacy overview for W Strategies website assessment software.',
   },
   terms: {
     path: '/terms',
-    title: 'Terms of Service | LeadCheck',
-    description: 'Terms overview for LeadCheck website assessment software.',
+    title: 'Terms of Service | W Strategies',
+    description: 'Terms overview for W Strategies website assessment software.',
   },
 };
 
@@ -1435,6 +1474,7 @@ function applyRouteSeo({ key = 'home', noindex = false } = {}) {
   document.title = noindex ? 'LeadCheck' : meta.title;
   setMetaContent('#metaDescription', noindex ? 'LeadCheck account access.' : meta.description);
   setMetaContent('#robotsMeta', noindex ? 'noindex,nofollow' : 'index,follow');
+  setMetaContent('#themeColorMeta', noindex ? '#F5F5F7' : '#06111f');
   setMetaContent('#canonicalUrl', canonical, 'href');
   setMetaContent('#ogTitle', meta.title);
   setMetaContent('#ogDescription', meta.description);
@@ -1459,6 +1499,7 @@ function renderPublicPage(key = 'home') {
     if (pageKey === 'home') trackPublicEvent('homepage_viewed');
     if (pageKey === 'pricing') trackPublicEvent('pricing_viewed');
   }
+  requestAnimationFrame(runPublicReveals);
 }
 
 function authPanelForPath(path = window.location.pathname) {
@@ -1593,7 +1634,7 @@ function updateAuthUserUI() {
   });
 
   document.querySelectorAll('[data-public-cta]').forEach(node => {
-    node.textContent = authenticated ? 'Open Dashboard' : 'Start Your Account';
+    node.textContent = authenticated ? 'Open Dashboard' : (node.dataset.publicCtaLabel || 'Start Free');
     node.setAttribute('href', authenticated ? '/app' : '/signup');
   });
 
@@ -2749,6 +2790,63 @@ function bindPublicMarketingControls() {
         question: item.querySelector('summary')?.textContent?.trim() || '',
       });
     });
+  });
+
+  document.querySelectorAll('[data-sample-tab]').forEach(button => {
+    button.addEventListener('click', () => {
+      const target = button.dataset.sampleTab || 'overview';
+      document.querySelectorAll('[data-sample-tab]').forEach(tab => {
+        tab.classList.toggle('active', tab === button);
+      });
+      document.querySelectorAll('[data-sample-panel]').forEach(panel => {
+        panel.classList.toggle('active', panel.dataset.samplePanel === target);
+      });
+      trackPublicEvent('sample_report_tab_clicked', { section: target });
+    });
+  });
+
+  const faqSearch = document.getElementById('publicFaqSearch');
+  faqSearch?.addEventListener('input', () => {
+    const query = faqSearch.value.trim().toLowerCase();
+    document.querySelectorAll('[data-faq-item]').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.hidden = Boolean(query) && !text.includes(query);
+    });
+  });
+
+  runPublicReveals();
+}
+
+function runPublicReveals() {
+  const revealItems = Array.from(document.querySelectorAll('.marketing-view [data-reveal]'));
+  if (!revealItems.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    revealItems.forEach(item => item.classList.add('is-visible'));
+    return;
+  }
+
+  if (!window.publicRevealObserver) {
+    window.publicRevealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        window.publicRevealObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  }
+
+  revealItems.forEach(item => {
+    const parentPage = item.closest('[data-public-page]');
+    if (parentPage?.hidden) return;
+    if (item.classList.contains('is-visible')) return;
+    const rect = item.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    if (rect.top < viewportHeight * 0.92 && rect.bottom > 0) {
+      item.classList.add('is-visible');
+      return;
+    }
+    window.publicRevealObserver.observe(item);
   });
 }
 
