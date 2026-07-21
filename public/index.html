@@ -25,7 +25,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-21-auth-fetch-fix">
+<link rel="stylesheet" href="/styles.css?v=2026-07-21-account-provision">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -983,9 +983,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-21-auth-fetch-fix"></script>
-<script src="/auth.js?v=2026-07-21-auth-fetch-fix"></script>
-<script src="/database.js?v=2026-07-21-auth-fetch-fix"></script>
+<script src="/branding.js?v=2026-07-21-account-provision"></script>
+<script src="/auth.js?v=2026-07-21-account-provision"></script>
+<script src="/database.js?v=2026-07-21-account-provision"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2198,11 +2198,20 @@ function handleAuthStateChange(event) {
 
   if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
     savedReportsLoaded = false;
-    syncBrandingFromDatabase();
-    loadSubscription();
+    provisionWorkspace()
+      .catch(error => console.warn('[LeadCheck] Workspace provisioning failed:', error))
+      .finally(() => {
+        syncBrandingFromDatabase();
+        loadSubscription();
+      });
   }
 
   renderRoute();
+}
+
+async function provisionWorkspace() {
+  if (!authProvider?.isAuthenticated?.() || !databaseService?.isReady?.()) return null;
+  return databaseService.ensureWorkspace();
 }
 
 function renderRoute() {
@@ -3846,6 +3855,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await authProvider.init();
   if (authProvider.client) {
     databaseService = new window.DatabaseService(authProvider.client);
+    await provisionWorkspace();
     await syncBrandingFromDatabase();
   }
   savedReportsLoaded = false;

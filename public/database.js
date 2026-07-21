@@ -231,6 +231,13 @@
       };
     }
 
+    async ensureWorkspace() {
+      const payload = await this.serverJson('/api/account/provision', { method: 'POST' });
+      const account = payload?.account || {};
+      if (account.user_id) this.profileSyncedFor = account.user_id;
+      return account;
+    }
+
     profilePayload(user, update = {}) {
       return {
         id: user.id,
