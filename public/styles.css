@@ -711,6 +711,122 @@ a {
   text-align: left;
 }
 
+.saved-reports-panel {
+  margin-top: 18px;
+}
+
+.reports-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.reports-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.saved-report-list {
+  display: grid;
+  gap: 10px;
+}
+
+.saved-report-card {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.saved-report-main {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.saved-report-title,
+.saved-report-meta {
+  display: block;
+  min-width: 0;
+}
+
+.saved-report-title {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 740;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saved-report-meta {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.saved-report-score {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(201, 151, 46, 0.24);
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: #6f5309;
+  padding: 0 12px;
+  font-size: 0.86rem;
+  font-weight: 780;
+}
+
+.saved-report-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.saved-report-actions .secondary-btn {
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 0.82rem;
+  box-shadow: none;
+}
+
+.danger-btn {
+  color: var(--red);
+  border-color: rgba(184, 93, 79, 0.26);
+  background: #fff9f7;
+}
+
+.danger-btn:hover {
+  color: var(--red);
+  border-color: rgba(184, 93, 79, 0.36);
+}
+
 .report-brand-header {
   display: flex;
   align-items: flex-start;
@@ -2711,6 +2827,10 @@ button:disabled {
 #resultsInner,
 .settings-form,
 .assessment-card,
+.reports-toolbar,
+.saved-report-list,
+.saved-report-card,
+.saved-report-main,
 .dashboard-hero,
 .dashboard-grid,
 .settings-grid,
@@ -2755,6 +2875,8 @@ button:disabled {
 .auth-message,
 .metric-card,
 .assessment-card,
+.reports-toolbar,
+.saved-report-card,
 .settings-header,
 .settings-form,
 .dashboard-brand-card,
@@ -3033,6 +3155,7 @@ button:disabled {
   .dashboard-hero,
   .settings-header,
   .settings-toggle-row,
+  .reports-panel-header,
   .report-brand-header {
     display: grid;
     grid-template-columns: 1fr;
@@ -3135,6 +3258,7 @@ button:disabled {
   .steps-grid,
   .dashboard-grid,
   .settings-grid,
+  .reports-toolbar,
   .lead-grid,
   .report-meta-grid,
   .priority-list,
@@ -3175,6 +3299,7 @@ button:disabled {
 
   .enterprise-header-actions,
   .settings-actions,
+  .saved-report-actions,
   .hero-actions,
   .report-actions {
     display: grid;
@@ -3184,6 +3309,7 @@ button:disabled {
 
   .enterprise-header-actions > *,
   .settings-actions > *,
+  .saved-report-actions > *,
   .hero-actions > *,
   .report-actions > *,
   .analyze-btn,
@@ -3200,6 +3326,8 @@ button:disabled {
   .dashboard-hero > div:first-child,
   .dashboard-brand-card,
   .assessment-card,
+  .reports-toolbar,
+  .saved-report-card,
   .settings-header,
   .settings-form,
   .report-hero,
@@ -3231,6 +3359,7 @@ button:disabled {
   .visual-trust-top,
   .evidence-signal-header,
   .rec-header,
+  .saved-report-main,
   .cat-score-row,
   .executive-metric {
     display: grid;

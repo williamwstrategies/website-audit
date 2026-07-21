@@ -300,13 +300,13 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="dashboard-grid">
           <article class="metric-card">
             <span>Reports</span>
-            <strong>Ready</strong>
-            <p>Assessment generation is available.</p>
+            <strong id="dashboardReportCount">0</strong>
+            <p id="dashboardReportCountLabel">Saved assessments.</p>
           </article>
           <article class="metric-card">
-            <span>Branding</span>
-            <strong>Active</strong>
-            <p>Reports inherit agency settings.</p>
+            <span>This Month</span>
+            <strong id="dashboardMonthlyReports">0</strong>
+            <p>Reports generated this month.</p>
           </article>
           <article class="metric-card">
             <span>Mode</span>
@@ -337,6 +337,18 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <button class="analyze-btn" id="analyzeBtn" type="submit">Generate Report</button>
           </form>
           <div id="error-box" role="alert" aria-live="polite"></div>
+        </section>
+
+        <section class="assessment-card saved-reports-panel" aria-label="Recent reports">
+          <div class="assessment-card-header reports-panel-header">
+            <div>
+              <div class="section-kicker">Recent Reports</div>
+              <h2>Latest Assessments</h2>
+              <p>Open recent saved reports or generate a new assessment.</p>
+            </div>
+            <a class="secondary-btn" href="/app/reports" data-route>View All</a>
+          </div>
+          <div id="dashboardReportsList" class="saved-report-list"></div>
         </section>
       </section>
 
@@ -416,14 +428,29 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div>
             <div class="section-kicker">Reports</div>
             <h2>Report Workspace</h2>
-            <p>Completed reports and shareable report links will appear here when report history is connected.</p>
+            <p>Search, open, duplicate, delete, and export saved website assessments.</p>
           </div>
           <a class="analyze-btn" href="/app/scan" data-route>Generate Report</a>
         </div>
-        <div class="empty-state">
-          <strong>No saved reports yet</strong>
-          <p>Generate an assessment to view the current report. Report history can be connected to persistent storage later.</p>
+        <div class="reports-toolbar">
+          <label class="lead-field">
+            <span class="lead-label">Search Reports</span>
+            <input class="url-input" type="search" id="reportsSearchInput" placeholder="Search by website">
+          </label>
+          <label class="lead-field">
+            <span class="lead-label">Sort By</span>
+            <select class="url-input" id="reportsSortSelect">
+              <option value="created_at.desc">Newest First</option>
+              <option value="created_at.asc">Oldest First</option>
+              <option value="website.asc">Website A-Z</option>
+              <option value="website_score.desc">Highest Score</option>
+              <option value="website_score.asc">Lowest Score</option>
+            </select>
+          </label>
+          <button class="secondary-btn" type="button" id="refreshReportsBtn">Refresh</button>
         </div>
+        <div class="auth-message" id="reportsMessage" hidden></div>
+        <div id="reportsList" class="saved-report-list"></div>
       </section>
 
       <section id="history-view" class="app-panel reports-view" hidden>
@@ -431,13 +458,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div>
             <div class="section-kicker">History</div>
             <h2>Assessment History</h2>
-            <p>Historical scan activity will appear here after persistent storage is introduced.</p>
+            <p>A chronological view of saved website assessments.</p>
           </div>
+          <a class="secondary-btn" href="/app/reports" data-route>Manage Reports</a>
         </div>
-        <div class="empty-state">
-          <strong>No history available</strong>
-          <p>The current frontend keeps assessment data only for the active session.</p>
-        </div>
+        <div id="historyList" class="saved-report-list compact-report-list"></div>
       </section>
 
       <div id="loading" aria-live="polite" aria-busy="true">
@@ -726,6 +751,11 @@ let brandingProvider = null;
 let authProvider = null;
 let databaseService = null;
 let pendingSavedReportId = null;
+let savedReports = [];
+let savedReportsLoaded = false;
+let savedReportsLoading = false;
+let reportsSearchTerm = '';
+let reportsSortOrder = 'created_at.desc';
 let pendingProtectedPath = '/app';
 
 const ROUTE_TITLES = {
@@ -765,9 +795,18 @@ function showAppPanel(panel) {
     reports: 'reports-view',
     history: 'history-view',
   };
-  Object.values(panels).forEach(id => setDisplay(id, 'none'));
+  Object.values(panels).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.hidden = true;
+    el.style.display = 'none';
+  });
   const activeId = panels[panel] || panels.dashboard;
-  setDisplay(activeId, 'block');
+  const activeEl = document.getElementById(activeId);
+  if (activeEl) {
+    activeEl.hidden = false;
+    activeEl.style.display = 'block';
+  }
 }
 
 function setActiveAppNav(key) {
@@ -863,6 +902,297 @@ function updateAuthUserUI() {
   });
 }
 
+function setReportsMessage(message = '', tone = 'default') {
+  const node = document.getElementById('reportsMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
+function hostFromWebsite(website) {
+  try {
+    return new URL(website).hostname.replace(/^www\./, '');
+  } catch {
+    return String(website || 'Untitled website').replace(/^https?:\/\//i, '').replace(/\/$/, '') || 'Untitled website';
+  }
+}
+
+function formatSavedReportDate(value) {
+  if (!value) return 'Date unavailable';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Date unavailable';
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function isThisMonth(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return false;
+  const now = new Date();
+  return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+}
+
+function savedReportScore(report) {
+  const data = asRecord(report.report_data);
+  const payload = asRecord(data.report || data);
+  return normalizeScore(firstDefinedValue(report.website_score, payload.total, payload.score, payload.websiteScore, payload.rating));
+}
+
+function savedReportPayload(report) {
+  const data = asRecord(report.report_data);
+  return asRecord(data.report || data);
+}
+
+function savedReportContext(report) {
+  return asRecord(asRecord(report.report_data).context);
+}
+
+function updateReportMetrics() {
+  const reportCount = document.getElementById('dashboardReportCount');
+  const reportCountLabel = document.getElementById('dashboardReportCountLabel');
+  const monthlyReports = document.getElementById('dashboardMonthlyReports');
+  const count = savedReports.length;
+  const monthly = savedReports.filter(report => isThisMonth(report.created_at)).length;
+  if (reportCount) reportCount.textContent = String(count);
+  if (reportCountLabel) reportCountLabel.textContent = count === 1 ? 'Saved assessment.' : 'Saved assessments.';
+  if (monthlyReports) monthlyReports.textContent = String(monthly);
+}
+
+function reportCardHtml(report, options = {}) {
+  const score = savedReportScore(report);
+  const title = hostFromWebsite(report.website);
+  const context = savedReportContext(report);
+  const prospect = asText(context.prospectName);
+  const date = formatSavedReportDate(report.created_at);
+  const compact = !!options.compact;
+
+  return `
+    <article class="saved-report-card ${compact ? 'compact' : ''}" data-report-id="${escHtml(report.id)}">
+      <button class="saved-report-main" type="button" data-report-action="open" data-report-id="${escHtml(report.id)}">
+        <span>
+          <span class="saved-report-title">${escHtml(title)}</span>
+          <span class="saved-report-meta">${escHtml(date)}${prospect ? ' • ' + escHtml(prospect) : ''}</span>
+        </span>
+        <span class="saved-report-score">${escHtml(formatPercent(score))}</span>
+      </button>
+      <div class="saved-report-actions">
+        <button class="secondary-btn" type="button" data-report-action="open" data-report-id="${escHtml(report.id)}">Open</button>
+        <button class="secondary-btn" type="button" data-report-action="export" data-report-id="${escHtml(report.id)}">Export</button>
+        ${compact ? '' : `<button class="secondary-btn" type="button" data-report-action="duplicate" data-report-id="${escHtml(report.id)}">Duplicate</button>`}
+        ${compact ? '' : `<button class="secondary-btn danger-btn" type="button" data-report-action="delete" data-report-id="${escHtml(report.id)}">Delete</button>`}
+      </div>
+    </article>
+  `;
+}
+
+function renderReportCollection(containerId, reports, options = {}) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (savedReportsLoading) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <strong>Loading reports</strong>
+        <p>Fetching saved assessments from your workspace.</p>
+      </div>
+    `;
+    return;
+  }
+
+  if (!databaseService?.isReady?.()) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <strong>Reports unavailable</strong>
+        <p>Database access is not connected for this session.</p>
+      </div>
+    `;
+    return;
+  }
+
+  if (!reports.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <strong>${escHtml(options.emptyTitle || 'No saved reports yet')}</strong>
+        <p>${escHtml(options.emptyText || 'Generate an assessment and it will appear here automatically.')}</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = reports.map(report => reportCardHtml(report, options)).join('');
+}
+
+function renderSavedReports() {
+  updateReportMetrics();
+  renderReportCollection('dashboardReportsList', savedReports.slice(0, 3), {
+    compact: true,
+    emptyTitle: 'No recent reports yet',
+    emptyText: 'Generate your first website assessment to start building report history.',
+  });
+  renderReportCollection('reportsList', savedReports, {
+    emptyTitle: reportsSearchTerm ? 'No matching reports' : 'No saved reports yet',
+    emptyText: reportsSearchTerm ? 'Try a different website search.' : 'Generate an assessment and it will save to this workspace.',
+  });
+  renderReportCollection('historyList', savedReports, {
+    compact: true,
+    emptyTitle: 'No history available',
+    emptyText: 'Completed assessments will appear here in chronological order.',
+  });
+}
+
+async function loadSavedReports({ force = false } = {}) {
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) {
+    savedReports = [];
+    savedReportsLoaded = false;
+    renderSavedReports();
+    return [];
+  }
+
+  if (savedReportsLoaded && !force) {
+    renderSavedReports();
+    return savedReports;
+  }
+
+  savedReportsLoading = true;
+  renderSavedReports();
+  setReportsMessage('');
+
+  try {
+    savedReports = await databaseService.listReports({
+      search: reportsSearchTerm,
+      sort: reportsSortOrder,
+      limit: 100,
+    });
+    savedReportsLoaded = true;
+    return savedReports;
+  } catch (error) {
+    console.warn('[LeadCheck] Saved reports could not load:', error?.message || error);
+    setReportsMessage(error?.message || 'Saved reports could not load.', 'error');
+    savedReports = [];
+    savedReportsLoaded = false;
+    return [];
+  } finally {
+    savedReportsLoading = false;
+    renderSavedReports();
+  }
+}
+
+async function openSavedReport(reportId, options = {}) {
+  if (!databaseService?.isReady?.()) return;
+  setReportsMessage('');
+
+  try {
+    const report = await databaseService.getReport(reportId);
+    const context = savedReportContext(report);
+    const payload = savedReportPayload(report);
+    pendingSavedReportId = report.id;
+    pendingScanResult = payload;
+    pendingWebsiteUrl = asText(payload.url) || report.website;
+    pendingProspectName = asText(context.prospectName);
+    renderResults(payload);
+    if (options.exportPdf) {
+      setTimeout(downloadReportPdf, 250);
+    }
+  } catch (error) {
+    console.error('[LeadCheck] Saved report could not open:', error?.message || error);
+    setReportsMessage(error?.message || 'Saved report could not open.', 'error');
+  }
+}
+
+async function duplicateSavedReport(reportId) {
+  if (!databaseService?.isReady?.()) return;
+  setReportsMessage('');
+
+  try {
+    await databaseService.duplicateReport(reportId);
+    savedReportsLoaded = false;
+    await loadSavedReports({ force: true });
+    setReportsMessage('Report duplicated.', 'success');
+  } catch (error) {
+    console.error('[LeadCheck] Report duplicate failed:', error?.message || error);
+    setReportsMessage(error?.message || 'Report could not be duplicated.', 'error');
+  }
+}
+
+async function deleteSavedReport(reportId) {
+  if (!databaseService?.isReady?.()) return;
+  const confirmed = window.confirm('Delete this saved report? This cannot be undone.');
+  if (!confirmed) return;
+  setReportsMessage('');
+
+  try {
+    await databaseService.deleteReport(reportId);
+    savedReports = savedReports.filter(report => report.id !== reportId);
+    savedReportsLoaded = true;
+    renderSavedReports();
+    setReportsMessage('Report deleted.', 'success');
+  } catch (error) {
+    console.error('[LeadCheck] Report delete failed:', error?.message || error);
+    setReportsMessage(error?.message || 'Report could not be deleted.', 'error');
+  }
+}
+
+function bindReportControls() {
+  const searchInput = document.getElementById('reportsSearchInput');
+  const sortSelect = document.getElementById('reportsSortSelect');
+  const refreshBtn = document.getElementById('refreshReportsBtn');
+  let searchTimer = null;
+
+  searchInput?.addEventListener('input', event => {
+    reportsSearchTerm = event.target.value.trim();
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      savedReportsLoaded = false;
+      loadSavedReports({ force: true });
+    }, 220);
+  });
+
+  sortSelect?.addEventListener('change', event => {
+    reportsSortOrder = event.target.value || 'created_at.desc';
+    savedReportsLoaded = false;
+    loadSavedReports({ force: true });
+  });
+
+  refreshBtn?.addEventListener('click', () => {
+    savedReportsLoaded = false;
+    loadSavedReports({ force: true });
+  });
+
+  document.addEventListener('click', event => {
+    const actionButton = event.target.closest('[data-report-action]');
+    if (!actionButton) return;
+    const action = actionButton.dataset.reportAction;
+    const reportId = actionButton.dataset.reportId;
+    if (!action || !reportId) return;
+    event.preventDefault();
+
+    if (action === 'open') openSavedReport(reportId);
+    if (action === 'export') openSavedReport(reportId, { exportPdf: true });
+    if (action === 'duplicate') duplicateSavedReport(reportId);
+    if (action === 'delete') deleteSavedReport(reportId);
+  });
+}
+
+function handleAuthStateChange(event) {
+  if (event === 'SIGNED_OUT') {
+    savedReports = [];
+    savedReportsLoaded = false;
+    savedReportsLoading = false;
+    if (databaseService) databaseService.profileSyncedFor = '';
+    renderSavedReports();
+  }
+
+  if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+    savedReportsLoaded = false;
+  }
+
+  renderRoute();
+}
+
 function renderRoute() {
   const path = window.location.pathname;
   const isLogin = isAuthRoute(path);
@@ -914,6 +1244,10 @@ function renderRoute() {
     else if (key === 'current-report' && pendingScanResult) showAppPanel('report');
     else if (key === 'scan') showAppPanel('scan');
     else showAppPanel('dashboard');
+
+    if (['dashboard', 'scan', 'reports', 'history'].includes(key)) {
+      loadSavedReports();
+    }
   }
 
   if (brandingProvider) {
@@ -1360,6 +1694,8 @@ async function persistGeneratedReport(result) {
     });
     pendingSavedReportId = savedReport?.id || null;
     console.log('[LeadCheck] Report saved:', pendingSavedReportId);
+    savedReportsLoaded = false;
+    loadSavedReports({ force: true });
     return savedReport;
   } catch (error) {
     console.warn('[LeadCheck] Report save skipped:', error?.message || error);
@@ -2279,16 +2615,18 @@ function resetApp() {
 document.addEventListener('DOMContentLoaded', async () => {
   brandingProvider = new window.BrandingProvider();
   authProvider = new window.AuthProvider({
-    onChange: () => renderRoute(),
+    onChange: handleAuthStateChange,
   });
   bindRouteLinks();
   bindAuthForms();
+  bindReportControls();
   bindBrandingForm();
   renderRoute();
   await authProvider.init();
   if (authProvider.client) {
     databaseService = new window.DatabaseService(authProvider.client);
   }
+  savedReportsLoaded = false;
   renderRoute();
 });
  
