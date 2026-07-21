@@ -466,6 +466,10 @@ a {
   color: var(--red);
 }
 
+.report-save-message {
+  margin-top: 12px;
+}
+
 .auth-user-chip {
   min-height: 34px;
   display: inline-flex;

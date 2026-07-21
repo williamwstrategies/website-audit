@@ -442,7 +442,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <select class="url-input" id="reportsSortSelect">
               <option value="created_at.desc">Newest First</option>
               <option value="created_at.asc">Oldest First</option>
-              <option value="website.asc">Website A-Z</option>
+              <option value="website_domain.asc">Website A-Z</option>
               <option value="website_score.desc">Highest Score</option>
               <option value="website_score.asc">Lowest Score</option>
             </select>
@@ -555,6 +555,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <div class="report-actions">
               <button class="download-pdf-btn" onclick="downloadReportPdf()">Download PDF</button>
             </div>
+            <div class="auth-message report-save-message" id="reportSaveMessage" role="status" hidden></div>
           </section>
 
           <div id="resultsInner">
@@ -751,6 +752,7 @@ let brandingProvider = null;
 let authProvider = null;
 let databaseService = null;
 let pendingSavedReportId = null;
+let loadingSavedReportId = '';
 let savedReports = [];
 let savedReportsLoaded = false;
 let savedReportsLoading = false;
@@ -766,6 +768,12 @@ const ROUTE_TITLES = {
   '/app/settings': 'Settings',
 };
 
+function savedReportIdFromPath(path = window.location.pathname) {
+  const match = String(path || '').match(/^\/app\/reports\/([^/?#]+)/);
+  if (!match || match[1] === 'current') return '';
+  return decodeURIComponent(match[1]);
+}
+
 function setHidden(el, hidden) {
   if (!el) return;
   el.hidden = hidden;
@@ -779,6 +787,7 @@ function setDisplay(id, value) {
 function appRouteKey(path = window.location.pathname) {
   if (path.startsWith('/app/settings')) return 'settings';
   if (path.startsWith('/app/reports/current')) return 'current-report';
+  if (savedReportIdFromPath(path)) return 'saved-report';
   if (path.startsWith('/app/reports')) return 'reports';
   if (path.startsWith('/app/history')) return 'history';
   if (path.startsWith('/app/scan')) return 'scan';
@@ -910,6 +919,49 @@ function setReportsMessage(message = '', tone = 'default') {
   node.dataset.tone = tone;
 }
 
+function setReportSaveMessage(message = '', tone = 'default') {
+  const node = document.getElementById('reportSaveMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
+function brandingRecordToFormState(record) {
+  if (!record) return null;
+  const branding = {
+    agencyName: asText(record.agency_name),
+    logoUrl: asText(record.logo_url || record.logo),
+    primaryAccent: asText(record.primary_color),
+    secondaryAccent: asText(record.secondary_color),
+    website: asText(record.website),
+    phone: asText(record.phone),
+    email: asText(record.email),
+    bookingLink: asText(record.booking_link),
+    faviconUrl: asText(record.favicon_url || record.favicon),
+    tagline: asText(record.tagline),
+    reportDisclaimer: asText(record.disclaimer || record.report_disclaimer),
+  };
+  return Object.fromEntries(Object.entries(branding).filter(([, value]) => value));
+}
+
+async function syncBrandingFromDatabase() {
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.() || !brandingProvider) return;
+
+  try {
+    const record = await databaseService.getAgencyBranding();
+    const branding = brandingRecordToFormState(record);
+    if (branding) brandingProvider.save(branding);
+  } catch (error) {
+    console.warn('[LeadCheck] Branding could not load from Supabase:', error?.message || error);
+  }
+}
+
+async function saveBrandingToDatabase(branding) {
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) return null;
+  return databaseService.updateAgencyBranding(branding);
+}
+
 function hostFromWebsite(website) {
   try {
     return new URL(website).hostname.replace(/^www\./, '');
@@ -939,7 +991,7 @@ function isThisMonth(value) {
 function savedReportScore(report) {
   const data = asRecord(report.report_data);
   const payload = asRecord(data.report || data);
-  return normalizeScore(firstDefinedValue(report.website_score, payload.total, payload.score, payload.websiteScore, payload.rating));
+  return normalizeScore(firstDefinedValue(report.website_score, report.score, payload.total, payload.score, payload.websiteScore, payload.rating));
 }
 
 function savedReportPayload(report) {
@@ -949,6 +1001,15 @@ function savedReportPayload(report) {
 
 function savedReportContext(report) {
   return asRecord(asRecord(report.report_data).context);
+}
+
+function reportWebsiteUrl(report) {
+  const payload = savedReportPayload(report);
+  return asText(report.website_url) || asText(report.website) || asText(payload.url) || asText(payload.websiteUrl);
+}
+
+function reportWebsiteDomain(report) {
+  return asText(report.website_domain) || hostFromWebsite(reportWebsiteUrl(report));
 }
 
 function updateReportMetrics() {
@@ -964,7 +1025,7 @@ function updateReportMetrics() {
 
 function reportCardHtml(report, options = {}) {
   const score = savedReportScore(report);
-  const title = hostFromWebsite(report.website);
+  const title = asText(report.website_name) || reportWebsiteDomain(report);
   const context = savedReportContext(report);
   const prospect = asText(context.prospectName);
   const date = formatSavedReportDate(report.created_at);
@@ -975,7 +1036,7 @@ function reportCardHtml(report, options = {}) {
       <button class="saved-report-main" type="button" data-report-action="open" data-report-id="${escHtml(report.id)}">
         <span>
           <span class="saved-report-title">${escHtml(title)}</span>
-          <span class="saved-report-meta">${escHtml(date)}${prospect ? ' • ' + escHtml(prospect) : ''}</span>
+          <span class="saved-report-meta">${escHtml(date)}${prospect ? ' - ' + escHtml(prospect) : ''}</span>
         </span>
         <span class="saved-report-score">${escHtml(formatPercent(score))}</span>
       </button>
@@ -1084,22 +1145,33 @@ async function loadSavedReports({ force = false } = {}) {
 async function openSavedReport(reportId, options = {}) {
   if (!databaseService?.isReady?.()) return;
   setReportsMessage('');
+  setReportSaveMessage('');
+  loadingSavedReportId = reportId;
 
   try {
-    const report = await databaseService.getReport(reportId);
+    const report = await databaseService.getReportById(reportId);
     const context = savedReportContext(report);
     const payload = savedReportPayload(report);
     pendingSavedReportId = report.id;
     pendingScanResult = payload;
-    pendingWebsiteUrl = asText(payload.url) || report.website;
+    pendingWebsiteUrl = asText(payload.url) || reportWebsiteUrl(report);
     pendingProspectName = asText(context.prospectName);
     renderResults(payload);
+    if (options.updateRoute !== false) {
+      window.history.replaceState({}, '', `/app/reports/${encodeURIComponent(report.id)}`);
+    }
     if (options.exportPdf) {
       setTimeout(downloadReportPdf, 250);
     }
   } catch (error) {
     console.error('[LeadCheck] Saved report could not open:', error?.message || error);
+    showAppPanel('reports');
+    if (window.location.pathname !== '/app/reports') {
+      window.history.replaceState({}, '', '/app/reports');
+    }
     setReportsMessage(error?.message || 'Saved report could not open.', 'error');
+  } finally {
+    loadingSavedReportId = '';
   }
 }
 
@@ -1182,12 +1254,14 @@ function handleAuthStateChange(event) {
     savedReports = [];
     savedReportsLoaded = false;
     savedReportsLoading = false;
+    loadingSavedReportId = '';
     if (databaseService) databaseService.profileSyncedFor = '';
     renderSavedReports();
   }
 
   if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
     savedReportsLoaded = false;
+    syncBrandingFromDatabase();
   }
 
   renderRoute();
@@ -1235,17 +1309,28 @@ function renderRoute() {
 
   if (isApp) {
     const key = appRouteKey(path);
-    const title = ROUTE_TITLES[path] || (key === 'current-report' ? 'Current Report' : ROUTE_TITLES['/app']);
+    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
-    setActiveAppNav(key === 'current-report' ? 'reports' : key === 'dashboard' ? 'dashboard' : key);
+    setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : key === 'dashboard' ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
     else if (key === 'reports') showAppPanel('reports');
     else if (key === 'history') showAppPanel('history');
+    else if (key === 'saved-report') {
+      const reportId = savedReportIdFromPath(path);
+      if (pendingSavedReportId === reportId && pendingScanResult) {
+        showAppPanel('report');
+      } else {
+        showAppPanel('loading');
+        if (loadingSavedReportId !== reportId) {
+          openSavedReport(reportId, { updateRoute: false });
+        }
+      }
+    }
     else if (key === 'current-report' && pendingScanResult) showAppPanel('report');
     else if (key === 'scan') showAppPanel('scan');
     else showAppPanel('dashboard');
 
-    if (['dashboard', 'scan', 'reports', 'history'].includes(key)) {
+    if (['dashboard', 'scan', 'reports', 'history', 'saved-report'].includes(key)) {
       loadSavedReports();
     }
   }
@@ -1443,13 +1528,25 @@ function bindBrandingForm() {
 
   brandingProvider.populateForm();
 
-  form.addEventListener('submit', event => {
+  form.addEventListener('submit', async event => {
     event.preventDefault();
-    brandingProvider.save(brandingProvider.readForm());
-    if (message) {
-      message.style.display = 'inline-flex';
-      message.style.color = 'var(--green)';
-      message.textContent = 'Branding saved.';
+    const branding = brandingProvider.readForm();
+    brandingProvider.save(branding);
+
+    try {
+      await saveBrandingToDatabase(branding);
+      if (message) {
+        message.style.display = 'inline-flex';
+        message.style.color = 'var(--green)';
+        message.textContent = 'Branding saved.';
+      }
+    } catch (error) {
+      console.warn('[LeadCheck] Branding could not save to Supabase:', error?.message || error);
+      if (message) {
+        message.style.display = 'inline-flex';
+        message.style.color = 'var(--red)';
+        message.textContent = 'Branding saved locally, but could not sync to the database.';
+      }
     }
   });
 
@@ -1458,12 +1555,23 @@ function bindBrandingForm() {
   });
 
   if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      brandingProvider.reset();
-      if (message) {
-        message.style.display = 'inline-flex';
-        message.style.color = 'var(--green)';
-        message.textContent = 'Branding reset.';
+    resetBtn.addEventListener('click', async () => {
+      const branding = brandingProvider.reset();
+
+      try {
+        await saveBrandingToDatabase(branding);
+        if (message) {
+          message.style.display = 'inline-flex';
+          message.style.color = 'var(--green)';
+          message.textContent = 'Branding reset.';
+        }
+      } catch (error) {
+        console.warn('[LeadCheck] Branding reset could not sync to Supabase:', error?.message || error);
+        if (message) {
+          message.style.display = 'inline-flex';
+          message.style.color = 'var(--red)';
+          message.textContent = 'Branding reset locally, but could not sync to the database.';
+        }
       }
     });
   }
@@ -1685,20 +1793,28 @@ async function persistGeneratedReport(result) {
 
   const website = asText(result.url) || pendingWebsiteUrl;
   const websiteScore = reportScoreFromResult(result);
+  setReportSaveMessage('Saving report...', 'default');
 
   try {
-    const savedReport = await databaseService.saveReport({
-      website,
+    const savedReport = await databaseService.createReport({
+      websiteUrl: website,
       websiteScore,
       reportData: buildPersistedReportData(result),
+      scanStatus: 'completed',
     });
     pendingSavedReportId = savedReport?.id || null;
+    if (pendingSavedReportId) {
+      window.history.replaceState({}, '', `/app/reports/${encodeURIComponent(pendingSavedReportId)}`);
+      renderRoute();
+    }
     console.log('[LeadCheck] Report saved:', pendingSavedReportId);
+    setReportSaveMessage('Report saved to your workspace.', 'success');
     savedReportsLoaded = false;
     loadSavedReports({ force: true });
     return savedReport;
   } catch (error) {
     console.warn('[LeadCheck] Report save skipped:', error?.message || error);
+    setReportSaveMessage('Report generated, but it could not be saved. You can still view and export it.', 'error');
     return null;
   }
 }
@@ -1978,8 +2094,10 @@ async function runAnalysis() {
   fireMetaOnce('auditStarted', 'AuditStarted');
   pendingScanResult = null;
   pendingSavedReportId = null;
+  loadingSavedReportId = '';
   pendingWebsiteUrl = url;
   fullResultsUnlocked = false;
+  setReportSaveMessage('');
  
   showAppPanel('loading');
   document.getElementById('analyzeBtn').disabled = true;
@@ -2166,7 +2284,10 @@ async function submitLeadCapture() {
 function renderResults(data) {
   stopLoadingTimers();
   showAppPanel('report');
-  window.history.replaceState({}, '', '/app/reports/current');
+  const reportPath = pendingSavedReportId
+    ? `/app/reports/${encodeURIComponent(pendingSavedReportId)}`
+    : '/app/reports/current';
+  window.history.replaceState({}, '', reportPath);
   renderRoute();
  
   const result = asRecord(data);
@@ -2595,8 +2716,10 @@ function resetApp() {
   pendingScanResult = null;
   pendingWebsiteUrl = null;
   pendingSavedReportId = null;
+  loadingSavedReportId = '';
   pendingProspectName = '';
   fullResultsUnlocked = false;
+  setReportSaveMessage('');
   showAppPanel('dashboard');
   document.getElementById('partialGate').style.display = 'none';
   document.getElementById('fullResults').style.display = 'none';
@@ -2625,6 +2748,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await authProvider.init();
   if (authProvider.client) {
     databaseService = new window.DatabaseService(authProvider.client);
+    await syncBrandingFromDatabase();
   }
   savedReportsLoaded = false;
   renderRoute();
