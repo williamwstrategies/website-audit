@@ -1,4 +1,5 @@
 (function () {
+  const BRANDING_BUCKET = 'agency-branding';
   const REPORT_LIST_FIELDS = [
     'id',
     'user_id',
@@ -84,17 +85,47 @@
     return {
       user_id: userId,
       agency_name: cleanText(branding.agencyName || branding.agency_name),
-      logo_url: cleanText(branding.logoUrl || branding.logo_url),
+      logo_url: cleanText(branding.logoStoragePath || branding.logoUrl || branding.logo_url),
       primary_color: cleanText(branding.primaryAccent || branding.primary_color),
       secondary_color: cleanText(branding.secondaryAccent || branding.secondary_color),
       website: cleanText(branding.website),
       email: cleanText(branding.email),
       phone: cleanText(branding.phone),
       booking_link: cleanText(branding.bookingLink || branding.booking_link),
-      favicon_url: cleanText(branding.faviconUrl || branding.favicon_url),
+      favicon_url: cleanText(branding.faviconStoragePath || branding.faviconUrl || branding.favicon_url),
       tagline: cleanText(branding.tagline),
       disclaimer: cleanText(branding.reportDisclaimer || branding.disclaimer),
     };
+  }
+
+  function extensionFromFile(file, fallback = 'png') {
+    const nameExt = cleanText(file?.name).split('.').pop().toLowerCase();
+    if (['png', 'jpg', 'jpeg', 'webp', 'svg', 'ico'].includes(nameExt)) return nameExt;
+    const typeMap = {
+      'image/png': 'png',
+      'image/jpeg': 'jpg',
+      'image/webp': 'webp',
+      'image/svg+xml': 'svg',
+      'image/x-icon': 'ico',
+      'image/vnd.microsoft.icon': 'ico',
+    };
+    return typeMap[file?.type] || fallback;
+  }
+
+  function contentTypeFromExtension(extension, fallback = 'image/png') {
+    const typeMap = {
+      png: 'image/png',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      webp: 'image/webp',
+      svg: 'image/svg+xml',
+      ico: 'image/x-icon',
+    };
+    return typeMap[extension] || fallback;
+  }
+
+  function isExternalUrl(value) {
+    return /^https?:\/\//i.test(cleanText(value));
   }
 
   class DatabaseService {
@@ -329,7 +360,7 @@
         .maybeSingle();
 
       if (error) throw error;
-      return data || null;
+      return data ? await this.resolveBrandingAssets(data) : null;
     }
 
     async updateAgencyBranding(branding = {}) {
@@ -343,11 +374,75 @@
         .single();
 
       if (error) throw error;
-      return data;
+      return this.resolveBrandingAssets(data);
     }
 
     async upsertAgencyBranding(branding = {}) {
       return this.updateAgencyBranding(branding);
+    }
+
+    async resolveBrandingAssetUrl(value, expiresIn = 60 * 60 * 24 * 7) {
+      const path = cleanText(value);
+      if (!path || isExternalUrl(path)) return path;
+
+      const client = this.requireClient();
+      const { data, error } = await client.storage
+        .from(BRANDING_BUCKET)
+        .createSignedUrl(path, expiresIn);
+
+      if (error) throw error;
+      return data?.signedUrl || '';
+    }
+
+    async resolveBrandingAssets(record = {}) {
+      const data = { ...record };
+      if (data.logo_url && !isExternalUrl(data.logo_url)) {
+        data.logo_storage_path = data.logo_url;
+        data.logo_resolved_url = await this.resolveBrandingAssetUrl(data.logo_url).catch(() => '');
+      }
+      if (data.favicon_url && !isExternalUrl(data.favicon_url)) {
+        data.favicon_storage_path = data.favicon_url;
+        data.favicon_resolved_url = await this.resolveBrandingAssetUrl(data.favicon_url).catch(() => '');
+      }
+      return data;
+    }
+
+    async uploadBrandingAsset(kind, file) {
+      const user = await this.requireUser();
+      const client = this.requireClient();
+      const safeKind = kind === 'favicon' ? 'favicon' : 'logo';
+      const extension = extensionFromFile(file, safeKind === 'favicon' ? 'ico' : 'png');
+      const contentType = file?.type || contentTypeFromExtension(extension);
+      const path = `${user.id}/${safeKind}.${extension}`;
+
+      const { error } = await client.storage
+        .from(BRANDING_BUCKET)
+        .upload(path, file, {
+          cacheControl: '3600',
+          contentType,
+          upsert: true,
+        });
+
+      if (error) throw error;
+
+      return {
+        path,
+        signedUrl: await this.resolveBrandingAssetUrl(path),
+      };
+    }
+
+    async removeBrandingAsset(path) {
+      const user = await this.requireUser();
+      const cleanPath = cleanText(path);
+      if (!cleanPath || isExternalUrl(cleanPath) || !cleanPath.startsWith(`${user.id}/`)) return true;
+
+      const client = this.requireClient();
+      const { error } = await client.storage
+        .from(BRANDING_BUCKET)
+        .remove([cleanPath]);
+
+      if (error) throw error;
+      return true;
     }
 
     async getSubscription() {

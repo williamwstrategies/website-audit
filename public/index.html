@@ -450,66 +450,127 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           </div>
           <span class="status-chip low">Future-proof</span>
         </div>
-        <form class="settings-form" id="brandingForm">
-          <label class="settings-toggle-row">
-            <span>
-              <strong>White-Label Mode</strong>
-              <small>Use agency branding throughout the application experience.</small>
-            </span>
-            <input type="checkbox" id="whiteLabelEnabledInput" name="whiteLabelEnabled">
-          </label>
-          <div class="settings-grid">
-            <label class="lead-field">
-              <span class="lead-label">Agency Name</span>
-              <input class="url-input" type="text" id="agencyNameInput" name="agencyName">
+        <div class="branding-layout">
+          <form class="settings-form branding-form" id="brandingForm" novalidate>
+            <label class="settings-toggle-row">
+              <span>
+                <strong>White-Label Mode</strong>
+                <small>Use agency branding throughout the application experience.</small>
+              </span>
+              <input type="checkbox" id="whiteLabelEnabledInput" name="whiteLabelEnabled">
             </label>
-            <label class="lead-field">
-              <span class="lead-label">Agency Logo URL</span>
-              <input class="url-input" type="url" id="agencyLogoInput" name="logoUrl" placeholder="https://.../logo.png">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Primary Accent Colour</span>
-              <input class="color-input" type="color" id="primaryAccentInput" name="primaryAccent">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Secondary Accent Colour</span>
-              <input class="color-input" type="color" id="secondaryAccentInput" name="secondaryAccent">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Website</span>
-              <input class="url-input" type="url" id="agencyWebsiteInput" name="website" placeholder="https://agency.com">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Phone Number</span>
-              <input class="url-input" type="tel" id="agencyPhoneInput" name="phone">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Email Address</span>
-              <input class="url-input" type="email" id="agencyEmailInput" name="email">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Booking Link</span>
-              <input class="url-input" type="url" id="agencyBookingInput" name="bookingLink">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Favicon URL</span>
-              <input class="url-input" type="url" id="agencyFaviconInput" name="faviconUrl" placeholder="https://.../favicon.png">
-            </label>
-            <label class="lead-field">
-              <span class="lead-label">Optional Tagline</span>
-              <input class="url-input" type="text" id="agencyTaglineInput" name="tagline">
-            </label>
-            <label class="lead-field lead-field-full">
-              <span class="lead-label">Optional Report Disclaimer</span>
-              <textarea class="url-input" id="reportDisclaimerInput" name="reportDisclaimer" rows="3"></textarea>
-            </label>
-          </div>
-          <div class="settings-actions">
-            <button class="analyze-btn" type="submit">Save Branding</button>
-            <button class="secondary-btn" type="button" id="resetBrandingBtn">Reset</button>
-            <span class="unlock-message" id="brandingMessage" role="status"></span>
-          </div>
-        </form>
+            <div class="settings-grid">
+              <label class="lead-field">
+                <span class="lead-label">Agency Name</span>
+                <input class="url-input" type="text" id="agencyNameInput" name="agencyName" autocomplete="organization">
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Optional Tagline</span>
+                <input class="url-input" type="text" id="agencyTaglineInput" name="tagline">
+              </label>
+              <div class="lead-field lead-field-full">
+                <span class="lead-label">Agency Logo</span>
+                <div class="asset-upload-row">
+                  <label class="file-upload-control">
+                    <span>Upload Logo</span>
+                    <input type="file" id="agencyLogoFileInput" name="logoFile" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                  </label>
+                  <input class="url-input" type="url" id="agencyLogoInput" name="logoUrl" placeholder="https://.../logo.png" aria-label="Agency logo URL">
+                </div>
+                <small class="field-help">PNG, JPG, WEBP, or SVG. Maximum 2 MB.</small>
+              </div>
+              <label class="lead-field">
+                <span class="lead-label">Primary Accent Colour</span>
+                <span class="color-pair">
+                  <input class="color-input" type="color" id="primaryAccentInput" name="primaryAccent" aria-label="Primary accent colour picker">
+                  <input class="url-input hex-input" type="text" id="primaryAccentHexInput" inputmode="text" placeholder="#f5c842" aria-label="Primary accent HEX colour">
+                </span>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Secondary Accent Colour</span>
+                <span class="color-pair">
+                  <input class="color-input" type="color" id="secondaryAccentInput" name="secondaryAccent" aria-label="Secondary accent colour picker">
+                  <input class="url-input hex-input" type="text" id="secondaryAccentHexInput" inputmode="text" placeholder="#1d1d1f" aria-label="Secondary accent HEX colour">
+                </span>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Website</span>
+                <input class="url-input" type="url" id="agencyWebsiteInput" name="website" placeholder="https://agency.com" autocomplete="url">
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Contact Email</span>
+                <input class="url-input" type="email" id="agencyEmailInput" name="email" autocomplete="email">
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Phone Number</span>
+                <input class="url-input" type="tel" id="agencyPhoneInput" name="phone" autocomplete="tel">
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Booking Link</span>
+                <input class="url-input" type="url" id="agencyBookingInput" name="bookingLink" placeholder="https://agency.com/book">
+              </label>
+              <div class="lead-field lead-field-full">
+                <span class="lead-label">Favicon</span>
+                <div class="asset-upload-row">
+                  <label class="file-upload-control">
+                    <span>Upload Favicon</span>
+                    <input type="file" id="agencyFaviconFileInput" name="faviconFile" accept="image/png,image/svg+xml,image/x-icon,image/vnd.microsoft.icon,.ico">
+                  </label>
+                  <input class="url-input" type="url" id="agencyFaviconInput" name="faviconUrl" placeholder="https://.../favicon.png" aria-label="Favicon URL">
+                </div>
+                <small class="field-help">PNG, SVG, or ICO. Maximum 512 KB.</small>
+              </div>
+              <label class="lead-field lead-field-full">
+                <span class="lead-label">Optional Report Disclaimer</span>
+                <textarea class="url-input" id="reportDisclaimerInput" name="reportDisclaimer" rows="3"></textarea>
+              </label>
+            </div>
+            <div class="auth-message branding-status" id="brandingMessage" role="status" hidden></div>
+            <div class="settings-actions">
+              <button class="analyze-btn" type="submit" id="saveBrandingBtn">Save Branding</button>
+              <button class="secondary-btn" type="button" id="resetBrandingBtn">Reset to Defaults</button>
+            </div>
+          </form>
+
+          <aside class="branding-preview-panel" aria-label="Branding preview">
+            <div class="panel-heading">
+              <div>
+                <div class="section-kicker">Live Preview</div>
+                <h2>Preview</h2>
+                <p>Changes update here before saving.</p>
+              </div>
+            </div>
+            <div class="preview-sidebar-card">
+              <div class="brand-lockup">
+                <span class="brand-mark" id="brandingPreviewLogoFallback">WA</span>
+                <img class="brand-logo-image" id="brandingPreviewLogoImage" alt="" hidden>
+                <span>
+                  <span class="brand-name" id="brandingPreviewAgencyName">Website Assessment Platform</span>
+                  <span class="brand-subtitle" id="brandingPreviewTagline">Website Assessment</span>
+                </span>
+              </div>
+              <a class="preview-nav-item active" href="#" onclick="return false;">Dashboard</a>
+              <a class="preview-nav-item" href="#" onclick="return false;">Reports</a>
+              <button class="analyze-btn preview-primary-button" id="brandingPreviewButton" type="button">New Audit</button>
+            </div>
+            <div class="preview-report-card">
+              <div class="report-brand-header">
+                <div class="brand-lockup">
+                  <span class="brand-mark" id="brandingPreviewReportLogoFallback">WA</span>
+                  <img class="brand-logo-image" id="brandingPreviewReportLogoImage" alt="" hidden>
+                  <span>
+                    <span class="brand-name" id="brandingPreviewReportAgency">Website Assessment Platform</span>
+                    <span class="brand-subtitle">Website Assessment</span>
+                  </span>
+                </div>
+                <div class="preview-score-chip">82 / 100</div>
+              </div>
+              <div class="preview-report-line"></div>
+              <div class="preview-report-line short"></div>
+              <div class="report-disclaimer" id="brandingPreviewDisclaimer"></div>
+            </div>
+          </aside>
+        </div>
       </section>
 
       <section id="reports-view" class="app-panel reports-view" hidden>
@@ -630,6 +691,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
       <div id="loading" aria-live="polite" aria-busy="true">
         <div class="loading-card">
+          <div class="brand-lockup loading-brand-lockup">
+            <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WA</span>
+            <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
+            <span>
+              <span class="brand-name" data-brand-name>Website Assessment Platform</span>
+              <span class="brand-subtitle" data-brand-platform>Website Assessment</span>
+            </span>
+          </div>
           <div class="spinner"></div>
           <p class="loading-text">Analyzing website...</p>
           <p class="loading-steps" id="loadingStep">Checking SEO visibility...</p>
@@ -816,6 +885,26 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <div class="report-disclaimer" data-brand-disclaimer></div>
               </section>
 
+              <section class="report-section report-footer-section">
+                <div class="report-footer-brand">
+                  <div class="brand-lockup">
+                    <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WA</span>
+                    <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
+                    <span>
+                      <span class="brand-name" data-brand-name>Website Assessment Platform</span>
+                      <span class="brand-subtitle" data-brand-tagline>Website Assessment</span>
+                    </span>
+                  </div>
+                  <div class="report-footer-links">
+                    <a data-brand-website href="#" target="_blank" rel="noopener">Website not set</a>
+                    <a data-brand-email href="#">Email not set</a>
+                    <span data-brand-phone>Phone not set</span>
+                    <a data-brand-booking href="#" target="_blank" rel="noopener">Booking link not set</a>
+                  </div>
+                </div>
+                <div class="report-disclaimer" data-brand-disclaimer></div>
+              </section>
+
               <section class="partial-gate" id="partialGate">
                 <div class="unlock-card">
                   <div class="unlock-title">Send assessment details</div>
@@ -903,6 +992,10 @@ const LOADING_STEPS = [
 const ANALYZE_API_URL = '/api/analyze';
 const LEAD_CAPTURE_API_URL = '/api/lead-capture';
 const SCAN_ESTIMATE_MS = 90000;
+const LOGO_MAX_BYTES = 2 * 1024 * 1024;
+const FAVICON_MAX_BYTES = 512 * 1024;
+const LOGO_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
+const FAVICON_IMAGE_TYPES = ['image/png', 'image/svg+xml', 'image/x-icon', 'image/vnd.microsoft.icon'];
  
 let stepIdx = 0;
 let stepTimer = null;
@@ -929,6 +1022,9 @@ let reportsFilter = 'all';
 let reportsVisibleCount = 20;
 let currentSubscription = null;
 let pendingProtectedPath = '/app';
+let brandingFormDirty = false;
+let brandingPreviewLogoObjectUrl = '';
+let brandingPreviewFaviconObjectUrl = '';
 
 const ROUTE_TITLES = {
   '/app': 'Dashboard',
@@ -1133,39 +1229,205 @@ function showToast(message = '', tone = 'info') {
   setTimeout(dismiss, 4600);
 }
 
-function brandingRecordToFormState(record) {
-  if (!record) return null;
-  const branding = {
-    agencyName: asText(record.agency_name),
-    logoUrl: asText(record.logo_url || record.logo),
-    primaryAccent: asText(record.primary_color),
-    secondaryAccent: asText(record.secondary_color),
-    website: asText(record.website),
-    phone: asText(record.phone),
-    email: asText(record.email),
-    bookingLink: asText(record.booking_link),
-    faviconUrl: asText(record.favicon_url || record.favicon),
-    tagline: asText(record.tagline),
-    reportDisclaimer: asText(record.disclaimer || record.report_disclaimer),
-  };
-  return Object.fromEntries(Object.entries(branding).filter(([, value]) => value));
-}
-
 async function syncBrandingFromDatabase() {
   if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.() || !brandingProvider) return;
 
   try {
-    const record = await databaseService.getAgencyBranding();
-    const branding = brandingRecordToFormState(record);
-    if (branding) brandingProvider.save(branding);
+    await brandingProvider.refreshBranding(databaseService);
+    renderBrandingPreview(brandingProvider.getBranding());
+    setBrandingDirty(false);
+    updateAuthUserUI();
   } catch (error) {
     console.warn('[LeadCheck] Branding could not load from Supabase:', error?.message || error);
   }
 }
 
 async function saveBrandingToDatabase(branding) {
-  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) return null;
-  return databaseService.updateAgencyBranding(branding);
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) return brandingProvider.save(branding);
+  return brandingProvider.updateBranding(databaseService, branding);
+}
+
+function setBrandingMessage(message = '', tone = 'default') {
+  const node = document.getElementById('brandingMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
+function setBrandingDirty(isDirty) {
+  brandingFormDirty = !!isDirty;
+  document.body.dataset.brandingDirty = brandingFormDirty ? 'true' : 'false';
+}
+
+function confirmBrandingNavigation() {
+  if (!brandingFormDirty) return true;
+  return window.confirm('You have unsaved branding changes. Leave without saving?');
+}
+
+function isValidUrl(value) {
+  const text = asText(value).trim();
+  if (!text) return true;
+  try {
+    const url = new URL(text);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+function isValidEmail(value) {
+  const text = asText(value).trim();
+  return !text || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text);
+}
+
+function isValidPhone(value) {
+  const text = asText(value).trim();
+  return !text || /^[+()\d\s.-]{7,30}$/.test(text);
+}
+
+function isValidHex(value) {
+  return /^#[0-9a-fA-F]{6}$/.test(asText(value).trim());
+}
+
+function isUploadedPath(value) {
+  const text = asText(value).trim();
+  return !!text && !/^https?:\/\//i.test(text);
+}
+
+function fileExtension(file) {
+  return asText(file?.name).split('.').pop().toLowerCase();
+}
+
+function validateImageFile(file, options) {
+  if (!file) return '';
+  const extension = fileExtension(file);
+  const typeAllowed = options.types.includes(file.type) || options.extensions.includes(extension);
+  if (!typeAllowed) return `${options.label} must be ${options.extensions.map(ext => ext.toUpperCase()).join(', ')}.`;
+  if (file.size > options.maxBytes) return `${options.label} must be smaller than ${Math.round(options.maxBytes / 1024)} KB.`;
+  return '';
+}
+
+function validateBrandingInput(branding) {
+  const errors = [];
+  if (!isValidHex(branding.primaryAccent)) errors.push('Primary accent colour must be a valid HEX value.');
+  if (!isValidHex(branding.secondaryAccent)) errors.push('Secondary accent colour must be a valid HEX value.');
+  if (!isValidUrl(branding.website)) errors.push('Agency website must be a valid URL.');
+  if (!isValidUrl(branding.bookingLink)) errors.push('Booking link must be a valid URL.');
+  if (branding.logoUrl && !isUploadedPath(branding.logoUrl) && !isValidUrl(branding.logoUrl)) errors.push('Agency logo URL must be a valid URL.');
+  if (branding.faviconUrl && !isUploadedPath(branding.faviconUrl) && !isValidUrl(branding.faviconUrl)) errors.push('Favicon URL must be a valid URL.');
+  if (!isValidEmail(branding.email)) errors.push('Contact email must be valid.');
+  if (!isValidPhone(branding.phone)) errors.push('Phone number must use digits and common phone symbols.');
+
+  const logoError = validateImageFile(document.getElementById('agencyLogoFileInput')?.files?.[0], {
+    label: 'Agency logo',
+    types: LOGO_IMAGE_TYPES,
+    extensions: ['png', 'jpg', 'jpeg', 'webp', 'svg'],
+    maxBytes: LOGO_MAX_BYTES,
+  });
+  const faviconError = validateImageFile(document.getElementById('agencyFaviconFileInput')?.files?.[0], {
+    label: 'Favicon',
+    types: FAVICON_IMAGE_TYPES,
+    extensions: ['png', 'svg', 'ico'],
+    maxBytes: FAVICON_MAX_BYTES,
+  });
+  if (logoError) errors.push(logoError);
+  if (faviconError) errors.push(faviconError);
+  return errors;
+}
+
+function setBrandingFormLoading(isLoading) {
+  const saveBtn = document.getElementById('saveBrandingBtn');
+  const resetBtn = document.getElementById('resetBrandingBtn');
+  const form = document.getElementById('brandingForm');
+  if (saveBtn) {
+    saveBtn.disabled = isLoading;
+    saveBtn.textContent = isLoading ? 'Saving...' : 'Save Branding';
+  }
+  if (resetBtn) resetBtn.disabled = isLoading;
+  form?.querySelectorAll('input, textarea, button').forEach(control => {
+    if (control.id === 'saveBrandingBtn' || control.id === 'resetBrandingBtn') return;
+    control.disabled = isLoading;
+  });
+}
+
+function updateObjectPreviewUrl(type, file) {
+  const previous = type === 'favicon' ? brandingPreviewFaviconObjectUrl : brandingPreviewLogoObjectUrl;
+  if (previous) URL.revokeObjectURL(previous);
+  const next = file ? URL.createObjectURL(file) : '';
+  if (type === 'favicon') brandingPreviewFaviconObjectUrl = next;
+  else brandingPreviewLogoObjectUrl = next;
+  return next;
+}
+
+function previewImageUrl(type, branding) {
+  const fileInput = document.getElementById(type === 'favicon' ? 'agencyFaviconFileInput' : 'agencyLogoFileInput');
+  const file = fileInput?.files?.[0] || null;
+  if (file) return updateObjectPreviewUrl(type, file);
+  return type === 'favicon' ? branding.faviconUrl : branding.logoUrl;
+}
+
+function setPreviewLogo(imageId, fallbackId, url, agencyName) {
+  const image = document.getElementById(imageId);
+  const fallback = document.getElementById(fallbackId);
+  if (fallback) fallback.textContent = agencyName.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'WA';
+  if (!image) return;
+  image.alt = `${agencyName} logo`;
+  image.onerror = () => {
+    image.hidden = true;
+    if (fallback) fallback.hidden = false;
+  };
+  if (url) {
+    image.src = url;
+    image.hidden = false;
+    if (fallback) fallback.hidden = true;
+  } else {
+    image.removeAttribute('src');
+    image.hidden = true;
+    if (fallback) fallback.hidden = false;
+  }
+}
+
+function renderBrandingPreview(branding = brandingProvider?.getBranding?.() || {}) {
+  const brand = {
+    ...window.DEFAULT_AGENCY_BRANDING,
+    ...branding,
+  };
+  const agencyName = brand.agencyName || 'Website Assessment Platform';
+  const tagline = brand.tagline || brand.platformLabel || 'Website Assessment';
+  const primary = isValidHex(brand.primaryAccent) ? brand.primaryAccent : '#f5c842';
+  const secondary = isValidHex(brand.secondaryAccent) ? brand.secondaryAccent : '#1d1d1f';
+  const logoUrl = previewImageUrl('logo', brand);
+
+  document.getElementById('brandingPreviewAgencyName')?.replaceChildren(document.createTextNode(agencyName));
+  document.getElementById('brandingPreviewTagline')?.replaceChildren(document.createTextNode(tagline));
+  document.getElementById('brandingPreviewReportAgency')?.replaceChildren(document.createTextNode(agencyName));
+  document.getElementById('brandingPreviewDisclaimer')?.replaceChildren(document.createTextNode(brand.reportDisclaimer || ''));
+  setPreviewLogo('brandingPreviewLogoImage', 'brandingPreviewLogoFallback', brand.whiteLabelEnabled ? logoUrl : '', agencyName);
+  setPreviewLogo('brandingPreviewReportLogoImage', 'brandingPreviewReportLogoFallback', brand.whiteLabelEnabled ? logoUrl : '', agencyName);
+
+  document.querySelectorAll('.branding-preview-panel').forEach(panel => {
+    panel.style.setProperty('--preview-accent', primary);
+    panel.style.setProperty('--preview-secondary', secondary);
+  });
+}
+
+function syncBrandingColorInputs(source) {
+  const primaryColor = document.getElementById('primaryAccentInput');
+  const primaryHex = document.getElementById('primaryAccentHexInput');
+  const secondaryColor = document.getElementById('secondaryAccentInput');
+  const secondaryHex = document.getElementById('secondaryAccentHexInput');
+  if (source === primaryColor && primaryHex) primaryHex.value = primaryColor.value;
+  if (source === primaryHex && primaryColor && isValidHex(primaryHex.value)) primaryColor.value = primaryHex.value;
+  if (source === secondaryColor && secondaryHex) secondaryHex.value = secondaryColor.value;
+  if (source === secondaryHex && secondaryColor && isValidHex(secondaryHex.value)) secondaryColor.value = secondaryHex.value;
+}
+
+function previewBrandingForm(event = null) {
+  if (!brandingProvider) return;
+  if (event?.target) syncBrandingColorInputs(event.target);
+  renderBrandingPreview(brandingProvider.readForm());
+  setBrandingDirty(true);
 }
 
 function hostFromWebsite(website) {
@@ -1701,7 +1963,12 @@ function renderRoute() {
 
   if (brandingProvider) {
     brandingProvider.apply(path);
-    brandingProvider.populateForm();
+    if (!brandingFormDirty || !path.startsWith('/app/branding')) {
+      brandingProvider.populateForm();
+    }
+    if (path.startsWith('/app/branding')) {
+      renderBrandingPreview(brandingFormDirty ? brandingProvider.readForm() : brandingProvider.getBranding());
+    }
   }
 
   updateAuthUserUI();
@@ -1724,6 +1991,7 @@ function bindRouteLinks() {
     const href = link.getAttribute('href');
     if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     event.preventDefault();
+    if (window.location.pathname.startsWith('/app/branding') && !href.startsWith('/app/branding') && !confirmBrandingNavigation()) return;
     document.body.classList.remove('app-nav-open');
     document.getElementById('mobileNavToggle')?.setAttribute('aria-expanded', 'false');
     navigateTo(href);
@@ -1899,59 +2167,92 @@ function bindAuthForms() {
 function bindBrandingForm() {
   const form = document.getElementById('brandingForm');
   const resetBtn = document.getElementById('resetBrandingBtn');
-  const message = document.getElementById('brandingMessage');
+  const logoFileInput = document.getElementById('agencyLogoFileInput');
+  const faviconFileInput = document.getElementById('agencyFaviconFileInput');
   if (!form || !brandingProvider) return;
 
   brandingProvider.populateForm();
+  renderBrandingPreview(brandingProvider.getBranding());
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    const branding = brandingProvider.readForm();
-    brandingProvider.save(branding);
+    let branding = brandingProvider.readForm();
+    const errors = validateBrandingInput(branding);
+    if (errors.length) {
+      setBrandingMessage(errors[0], 'error');
+      showToast(errors[0], 'error');
+      return;
+    }
 
+    setBrandingFormLoading(true);
+    setBrandingMessage('Saving branding...', 'default');
     try {
-      await saveBrandingToDatabase(branding);
-      if (message) {
-        message.style.display = 'inline-flex';
-        message.style.color = 'var(--green)';
-        message.textContent = 'Branding saved.';
+      const logoFile = logoFileInput?.files?.[0] || null;
+      const faviconFile = faviconFileInput?.files?.[0] || null;
+
+      if (logoFile) {
+        const uploaded = await databaseService.uploadBrandingAsset('logo', logoFile);
+        branding = { ...branding, logoUrl: uploaded.path, logoStoragePath: uploaded.path };
       }
+      if (faviconFile) {
+        const uploaded = await databaseService.uploadBrandingAsset('favicon', faviconFile);
+        branding = { ...branding, faviconUrl: uploaded.path, faviconStoragePath: uploaded.path };
+      }
+
+      await saveBrandingToDatabase(branding);
+      if (logoFileInput) logoFileInput.value = '';
+      if (faviconFileInput) faviconFileInput.value = '';
+      setBrandingDirty(false);
+      setBrandingMessage('Branding saved.', 'success');
+      renderBrandingPreview(brandingProvider.getBranding());
+      updateAuthUserUI();
       showToast('Branding saved.', 'success');
     } catch (error) {
       console.warn('[LeadCheck] Branding could not save to Supabase:', error?.message || error);
-      if (message) {
-        message.style.display = 'inline-flex';
-        message.style.color = 'var(--red)';
-        message.textContent = 'Branding saved locally, but could not sync to the database.';
-      }
-      showToast('Branding saved locally, but could not sync.', 'warning');
+      setBrandingMessage(error?.message || 'Branding could not be saved. Check storage setup and try again.', 'error');
+      showToast('Branding could not be saved.', 'error');
+    } finally {
+      setBrandingFormLoading(false);
     }
   });
 
-  form.addEventListener('input', () => {
-    brandingProvider.save(brandingProvider.readForm());
+  form.addEventListener('input', previewBrandingForm);
+  form.addEventListener('change', previewBrandingForm);
+
+  window.addEventListener('beforeunload', event => {
+    if (!brandingFormDirty) return;
+    event.preventDefault();
+    event.returnValue = '';
   });
 
   if (resetBtn) {
     resetBtn.addEventListener('click', async () => {
-      const branding = brandingProvider.reset();
+      if (!window.confirm('Reset branding to system defaults? Reports and account data will not be deleted.')) return;
 
+      const previousBranding = brandingProvider.getBranding();
+      const defaultBranding = { ...window.DEFAULT_AGENCY_BRANDING };
+      setBrandingFormLoading(true);
+      setBrandingMessage('Resetting branding...', 'default');
       try {
-        await saveBrandingToDatabase(branding);
-        if (message) {
-          message.style.display = 'inline-flex';
-          message.style.color = 'var(--green)';
-          message.textContent = 'Branding reset.';
-        }
+        await saveBrandingToDatabase(defaultBranding);
+        await Promise.allSettled([
+          databaseService?.removeBrandingAsset?.(previousBranding.logoStoragePath),
+          databaseService?.removeBrandingAsset?.(previousBranding.faviconStoragePath),
+        ]);
+        if (logoFileInput) logoFileInput.value = '';
+        if (faviconFileInput) faviconFileInput.value = '';
+        brandingProvider.reset();
+        setBrandingDirty(false);
+        setBrandingMessage('Branding reset.', 'success');
+        renderBrandingPreview(brandingProvider.getBranding());
+        updateAuthUserUI();
         showToast('Branding reset.', 'success');
       } catch (error) {
         console.warn('[LeadCheck] Branding reset could not sync to Supabase:', error?.message || error);
-        if (message) {
-          message.style.display = 'inline-flex';
-          message.style.color = 'var(--red)';
-          message.textContent = 'Branding reset locally, but could not sync to the database.';
-        }
-        showToast('Branding reset locally, but could not sync.', 'warning');
+        setBrandingMessage(error?.message || 'Branding could not be reset. Please try again.', 'error');
+        showToast('Branding could not be reset.', 'error');
+      } finally {
+        setBrandingFormLoading(false);
       }
     });
   }
