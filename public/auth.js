@@ -19,6 +19,10 @@
       .replace(/\/auth\/v1$/i, '');
   }
 
+  function normalizeSupabaseKey(rawKey) {
+    return String(rawKey || '').replace(/\s+/g, '');
+  }
+
   class AuthProvider {
     constructor(options = {}) {
       this.onChange = typeof options.onChange === 'function' ? options.onChange : () => {};
@@ -36,6 +40,7 @@
         if (!response.ok) throw new Error('Could not load authentication configuration.');
         this.config = await response.json();
         this.config.supabaseUrl = normalizeSupabaseUrl(this.config.supabaseUrl);
+        this.config.supabaseAnonKey = normalizeSupabaseKey(this.config.supabaseAnonKey);
 
         if (!this.config.supabaseUrl || !this.config.supabaseAnonKey) {
           this.error = 'Supabase is not configured yet. Add SUPABASE_URL and SUPABASE_ANON_KEY in Render.';

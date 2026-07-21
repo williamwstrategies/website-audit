@@ -43,9 +43,13 @@ function normalizeSupabasePublicUrl(rawUrl = '') {
     .replace(/\/auth\/v1$/i, '');
 }
 
+function normalizeSupabasePublicKey(rawKey = '') {
+  return String(rawKey || '').replace(/\s+/g, '');
+}
+
 app.get('/api/auth-config', (req, res) => {
   const supabaseUrl = normalizeSupabasePublicUrl(process.env.SUPABASE_URL || '');
-  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || '';
+  const supabaseAnonKey = normalizeSupabasePublicKey(process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || '');
 
   res.set('Cache-Control', 'no-store');
   res.json({

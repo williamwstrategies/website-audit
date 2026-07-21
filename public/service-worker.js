@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-07-21-auth-url-fix';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-07-21-auth-fetch-fix';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
