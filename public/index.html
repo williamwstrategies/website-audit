@@ -247,19 +247,26 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
 <div id="app-shell" class="route-view app-shell" hidden>
   <aside class="app-sidebar" aria-label="Application navigation">
-    <a class="brand-lockup app-brand-lockup" href="/app" data-route>
-      <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
-      <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
-      <span>
-        <span class="brand-name" data-brand-name>WStrategies Canada</span>
-        <span class="brand-subtitle" data-brand-platform>Website Assessment Platform</span>
-      </span>
-    </a>
-    <nav class="app-menu">
+    <div class="app-sidebar-top">
+      <a class="brand-lockup app-brand-lockup" href="/app" data-route>
+        <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
+        <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
+        <span>
+          <span class="brand-name" data-brand-name>WStrategies Canada</span>
+          <span class="brand-subtitle" data-brand-platform>Website Assessment Platform</span>
+        </span>
+      </a>
+      <button class="mobile-nav-toggle" id="mobileNavToggle" type="button" aria-expanded="false" aria-controls="appMenu">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <nav class="app-menu" id="appMenu">
       <a href="/app" data-route data-app-nav="dashboard">Dashboard</a>
-      <a href="/app/scan" data-route data-app-nav="scan">Scan Website</a>
+      <a href="/app/scan" data-route data-app-nav="scan">New Audit</a>
       <a href="/app/reports" data-route data-app-nav="reports">Reports</a>
-      <a href="/app/history" data-route data-app-nav="history">History</a>
+      <a href="/app/branding" data-route data-app-nav="branding">Branding</a>
+      <a href="/app/billing" data-route data-app-nav="billing">Billing</a>
       <a href="/app/settings" data-route data-app-nav="settings">Settings</a>
     </nav>
     <div class="sidebar-footer">
@@ -275,19 +282,23 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="enterprise-header-actions">
         <span class="auth-user-chip" data-auth-email hidden></span>
-        <a class="secondary-btn" href="/app/settings" data-route>Brand Settings</a>
-        <a class="analyze-btn" href="/app/scan" data-route>Generate Report</a>
+        <a class="secondary-btn" href="/app/branding" data-route>Branding</a>
+        <a class="analyze-btn" href="/app/scan" data-route>New Audit</a>
         <button class="secondary-btn logout-btn" id="logoutBtn" type="button">Logout</button>
       </div>
     </header>
 
     <main class="app-content">
       <section id="home-view" class="app-panel dashboard-panel">
-        <div class="dashboard-hero">
+        <div class="dashboard-hero app-page-hero">
           <div>
             <div class="section-kicker" data-brand-name>WStrategies Canada</div>
-            <h2>Website Assessment Platform</h2>
-            <p>Generate neutral, professional website assessments and review report activity from one focused workspace.</p>
+            <h2 id="dashboardGreeting">Good day.</h2>
+            <p>Review recent website assessments, track report usage, and start the next audit from one focused workspace.</p>
+            <div class="dashboard-hero-actions">
+              <a class="analyze-btn" href="/app/scan" data-route>Run New Audit</a>
+              <a class="secondary-btn" href="/app/reports" data-route>View Reports</a>
+            </div>
           </div>
           <div class="dashboard-brand-card">
             <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
@@ -299,9 +310,19 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
         <div class="dashboard-grid">
           <article class="metric-card">
-            <span>Reports</span>
+            <span>Total Reports</span>
             <strong id="dashboardReportCount">0</strong>
             <p id="dashboardReportCountLabel">Saved assessments.</p>
+          </article>
+          <article class="metric-card">
+            <span>Reports Used</span>
+            <strong id="dashboardReportsUsed">0 / 10</strong>
+            <p id="dashboardReportsUsedLabel">Current usage cycle.</p>
+          </article>
+          <article class="metric-card">
+            <span>Current Plan</span>
+            <strong id="dashboardCurrentPlan">Starter</strong>
+            <p id="dashboardPlanStatus">Trialing workspace.</p>
           </article>
           <article class="metric-card">
             <span>This Month</span>
@@ -309,18 +330,87 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <p>Reports generated this month.</p>
           </article>
           <article class="metric-card">
-            <span>Mode</span>
+            <span>Average Score</span>
+            <strong id="dashboardAverageScore">-</strong>
+            <p>Across saved assessments.</p>
+          </article>
+          <article class="metric-card">
+            <span>Workspace Mode</span>
             <strong id="whiteLabelStatus">White-label</strong>
-            <p>Application branding is agency-owned.</p>
+            <p>Agency-owned application branding.</p>
           </article>
         </div>
 
-        <section class="assessment-card" aria-label="Generate website assessment">
+        <div class="dashboard-layout">
+          <section class="workspace-panel dashboard-primary-panel" aria-label="Recent reports">
+            <div class="panel-heading reports-panel-header">
+              <div>
+                <div class="section-kicker">Recent Reports</div>
+                <h2>Latest Assessments</h2>
+                <p>Open recent saved reports or generate a new assessment.</p>
+              </div>
+              <a class="secondary-btn" href="/app/reports" data-route>View All</a>
+            </div>
+            <div id="dashboardReportsList" class="saved-report-list"></div>
+          </section>
+
+          <aside class="dashboard-side-stack" aria-label="Workspace shortcuts">
+            <section class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <div class="section-kicker">Quick Actions</div>
+                  <h2>Next Steps</h2>
+                </div>
+              </div>
+              <div class="quick-action-list">
+                <a href="/app/scan" data-route>
+                  <strong>Run New Audit</strong>
+                  <span>Create a website assessment.</span>
+                </a>
+                <a href="/app/reports" data-route>
+                  <strong>Manage Reports</strong>
+                  <span>Search, open, export, or delete.</span>
+                </a>
+                <a href="/app/branding" data-route>
+                  <strong>Update Branding</strong>
+                  <span>Control the agency identity.</span>
+                </a>
+              </div>
+            </section>
+
+            <section class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <div class="section-kicker">Recent Activity</div>
+                  <h2>Activity</h2>
+                </div>
+              </div>
+              <div id="dashboardActivityList" class="activity-list"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="scan-view" class="app-panel scan-panel" hidden>
+        <div class="app-page-hero scan-hero">
+          <div>
+            <div class="section-kicker">New Audit</div>
+            <h2>Generate Website Assessment</h2>
+            <p>Enter the prospect details and launch the existing website scan flow.</p>
+          </div>
+          <div class="scan-context-panel">
+            <span>Output</span>
+            <strong>Professional Report</strong>
+            <p>The completed assessment saves automatically to Reports.</p>
+          </div>
+        </div>
+
+        <section class="assessment-card audit-workspace-card" aria-label="Generate website assessment">
           <div class="assessment-card-header">
             <div>
-              <div class="section-kicker">Scan Website</div>
-              <h2>Generate Report</h2>
-              <p>Enter a website URL to create a professional website assessment.</p>
+              <div class="section-kicker">Audit Details</div>
+              <h2>Assessment Setup</h2>
+              <p>Only the website URL is required. The extra fields are saved with the report context.</p>
             </div>
           </div>
           <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
@@ -333,29 +423,28 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <span class="lead-label">Prepared For</span>
                 <input class="url-input" type="text" id="prospectInput" name="prospectName" placeholder="Prospect or company name" autocomplete="organization">
               </label>
+              <label class="lead-field">
+                <span class="lead-label">Company Name</span>
+                <input class="url-input" type="text" id="auditCompanyInput" name="companyName" placeholder="Company name" autocomplete="organization">
+              </label>
+              <label class="lead-field lead-field-full">
+                <span class="lead-label">Notes</span>
+                <textarea class="url-input" id="auditNotesInput" name="notes" rows="4" placeholder="Internal notes for this assessment"></textarea>
+              </label>
             </div>
-            <button class="analyze-btn" id="analyzeBtn" type="submit">Generate Report</button>
+            <div class="audit-form-actions">
+              <button class="analyze-btn" id="analyzeBtn" type="submit">Generate Report</button>
+              <a class="secondary-btn" href="/app/reports" data-route>Cancel</a>
+            </div>
           </form>
           <div id="error-box" role="alert" aria-live="polite"></div>
         </section>
-
-        <section class="assessment-card saved-reports-panel" aria-label="Recent reports">
-          <div class="assessment-card-header reports-panel-header">
-            <div>
-              <div class="section-kicker">Recent Reports</div>
-              <h2>Latest Assessments</h2>
-              <p>Open recent saved reports or generate a new assessment.</p>
-            </div>
-            <a class="secondary-btn" href="/app/reports" data-route>View All</a>
-          </div>
-          <div id="dashboardReportsList" class="saved-report-list"></div>
-        </section>
       </section>
 
-      <section id="settings-view" class="app-panel settings-view" hidden>
+      <section id="branding-view" class="app-panel settings-view" hidden>
         <div class="settings-header">
           <div>
-            <div class="section-kicker">Settings</div>
+            <div class="section-kicker">Branding</div>
             <h2>Branding</h2>
             <p>Configure the agency identity used by the application, reports, PDF exports, and future share links.</p>
           </div>
@@ -447,22 +536,96 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <option value="website_score.asc">Lowest Score</option>
             </select>
           </label>
+          <label class="lead-field">
+            <span class="lead-label">Filter</span>
+            <select class="url-input" id="reportsFilterSelect">
+              <option value="all">All Reports</option>
+              <option value="completed">Completed</option>
+              <option value="attention">Needs Attention</option>
+              <option value="strong">Strong Scores</option>
+            </select>
+          </label>
           <button class="secondary-btn" type="button" id="refreshReportsBtn">Refresh</button>
         </div>
         <div class="auth-message" id="reportsMessage" hidden></div>
+        <div class="reports-summary-row">
+          <span id="reportsCountSummary">0 reports</span>
+        </div>
         <div id="reportsList" class="saved-report-list"></div>
+        <div class="reports-pagination" id="reportsPagination" hidden>
+          <button class="secondary-btn" type="button" id="loadMoreReportsBtn">Show More</button>
+        </div>
       </section>
 
-      <section id="history-view" class="app-panel reports-view" hidden>
+      <section id="billing-view" class="app-panel billing-view" hidden>
         <div class="settings-header">
           <div>
-            <div class="section-kicker">History</div>
-            <h2>Assessment History</h2>
-            <p>A chronological view of saved website assessments.</p>
+            <div class="section-kicker">Billing</div>
+            <h2>Plan and Usage</h2>
+            <p>Subscription management will connect here when billing is enabled.</p>
           </div>
-          <a class="secondary-btn" href="/app/reports" data-route>Manage Reports</a>
+          <span class="status-chip low">Placeholder</span>
         </div>
-        <div id="historyList" class="saved-report-list compact-report-list"></div>
+        <div class="dashboard-grid">
+          <article class="metric-card">
+            <span>Plan</span>
+            <strong id="billingPlanName">Starter</strong>
+            <p id="billingPlanStatus">Trialing workspace.</p>
+          </article>
+          <article class="metric-card">
+            <span>Usage</span>
+            <strong id="billingUsageCount">0 / 10</strong>
+            <p>Audits available in this cycle.</p>
+          </article>
+          <article class="metric-card">
+            <span>Billing</span>
+            <strong>Not Connected</strong>
+            <p>Stripe will be added in a future phase.</p>
+          </article>
+        </div>
+        <section class="workspace-panel">
+          <div class="panel-heading">
+            <div>
+              <div class="section-kicker">Subscription</div>
+              <h2>Billing Placeholder</h2>
+              <p>This page is ready for plan selection, invoices, payment method updates, and audit limits.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="settings-view" class="app-panel settings-view" hidden>
+        <div class="settings-header">
+          <div>
+            <div class="section-kicker">Settings</div>
+            <h2>Workspace Settings</h2>
+            <p>General workspace controls are staged here for future application preferences.</p>
+          </div>
+          <span class="status-chip low">Coming Soon</span>
+        </div>
+        <div class="settings-list">
+          <article class="settings-list-item">
+            <div>
+              <strong>Team Access</strong>
+              <span>Invite members and assign roles in a future phase.</span>
+            </div>
+            <span class="status-chip partial">Planned</span>
+          </article>
+          <article class="settings-list-item">
+            <div>
+              <strong>Notifications</strong>
+              <span>Configure report and account notifications.</span>
+            </div>
+            <span class="status-chip partial">Planned</span>
+          </article>
+          <article class="settings-list-item">
+            <div>
+              <strong>Exports</strong>
+              <span>Set default PDF and share-link preferences.</span>
+            </div>
+            <span class="status-chip partial">Planned</span>
+          </article>
+        </div>
       </section>
 
       <div id="loading" aria-live="polite" aria-busy="true">
@@ -698,6 +861,8 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   </div>
 </div>
 
+<div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/branding.js"></script>
 <script src="/auth.js"></script>
@@ -747,6 +912,8 @@ let activeMetaScan = null;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
 let pendingProspectName = '';
+let pendingCompanyName = '';
+let pendingAuditNotes = '';
 let fullResultsUnlocked = false;
 let brandingProvider = null;
 let authProvider = null;
@@ -758,13 +925,17 @@ let savedReportsLoaded = false;
 let savedReportsLoading = false;
 let reportsSearchTerm = '';
 let reportsSortOrder = 'created_at.desc';
+let reportsFilter = 'all';
+let reportsVisibleCount = 20;
+let currentSubscription = null;
 let pendingProtectedPath = '/app';
 
 const ROUTE_TITLES = {
   '/app': 'Dashboard',
-  '/app/scan': 'Scan Website',
+  '/app/scan': 'New Audit',
   '/app/reports': 'Reports',
-  '/app/history': 'History',
+  '/app/branding': 'Branding',
+  '/app/billing': 'Billing',
   '/app/settings': 'Settings',
 };
 
@@ -786,10 +957,12 @@ function setDisplay(id, value) {
 
 function appRouteKey(path = window.location.pathname) {
   if (path.startsWith('/app/settings')) return 'settings';
+  if (path.startsWith('/app/branding')) return 'branding';
+  if (path.startsWith('/app/billing')) return 'billing';
   if (path.startsWith('/app/reports/current')) return 'current-report';
   if (savedReportIdFromPath(path)) return 'saved-report';
   if (path.startsWith('/app/reports')) return 'reports';
-  if (path.startsWith('/app/history')) return 'history';
+  if (path.startsWith('/app/history')) return 'reports';
   if (path.startsWith('/app/scan')) return 'scan';
   return 'dashboard';
 }
@@ -797,12 +970,13 @@ function appRouteKey(path = window.location.pathname) {
 function showAppPanel(panel) {
   const panels = {
     dashboard: 'home-view',
-    scan: 'home-view',
+    scan: 'scan-view',
     loading: 'loading',
     report: 'results',
     settings: 'settings-view',
+    branding: 'branding-view',
+    billing: 'billing-view',
     reports: 'reports-view',
-    history: 'history-view',
   };
   Object.values(panels).forEach(id => {
     const el = document.getElementById(id);
@@ -909,6 +1083,14 @@ function updateAuthUserUI() {
     node.hidden = !email;
     node.textContent = email;
   });
+
+  const greeting = document.getElementById('dashboardGreeting');
+  if (greeting) {
+    const hour = new Date().getHours();
+    const label = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+    const brandName = brandingProvider?.getBranding?.().agencyName || 'Workspace';
+    greeting.textContent = `${label}, ${brandName}.`;
+  }
 }
 
 function setReportsMessage(message = '', tone = 'default') {
@@ -925,6 +1107,30 @@ function setReportSaveMessage(message = '', tone = 'default') {
   node.hidden = !message;
   node.textContent = message;
   node.dataset.tone = tone;
+}
+
+function showToast(message = '', tone = 'info') {
+  const viewport = document.getElementById('toastViewport');
+  const text = asText(message);
+  if (!viewport || !text) return;
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.dataset.tone = tone;
+  toast.setAttribute('role', tone === 'error' ? 'alert' : 'status');
+  toast.innerHTML = `
+    <strong>${escHtml(tone.charAt(0).toUpperCase() + tone.slice(1))}</strong>
+    <span>${escHtml(text)}</span>
+    <button type="button" aria-label="Dismiss notification">x</button>
+  `;
+  viewport.appendChild(toast);
+
+  const dismiss = () => {
+    toast.classList.add('toast-exit');
+    setTimeout(() => toast.remove(), 180);
+  };
+  toast.querySelector('button')?.addEventListener('click', dismiss);
+  setTimeout(dismiss, 4600);
 }
 
 function brandingRecordToFormState(record) {
@@ -988,6 +1194,12 @@ function isThisMonth(value) {
   return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
 }
 
+function titleCase(value) {
+  return String(value || '')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\w\S*/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+}
+
 function savedReportScore(report) {
   const data = asRecord(report.report_data);
   const payload = asRecord(data.report || data);
@@ -1012,22 +1224,122 @@ function reportWebsiteDomain(report) {
   return asText(report.website_domain) || hostFromWebsite(reportWebsiteUrl(report));
 }
 
+function filteredReportsForWorkspace() {
+  return savedReports.filter(report => {
+    const score = savedReportScore(report);
+    const status = asText(report.scan_status).toLowerCase();
+    if (reportsFilter === 'completed') return !status || status === 'completed';
+    if (reportsFilter === 'attention') return score < 70;
+    if (reportsFilter === 'strong') return score >= 80;
+    return true;
+  });
+}
+
+function reportSkeletonHtml(count = 3) {
+  return Array.from({ length: count }).map(() => `
+    <article class="saved-report-card report-skeleton-card" aria-hidden="true">
+      <div class="saved-report-main skeleton-row">
+        <span>
+          <span class="skeleton-line wide"></span>
+          <span class="skeleton-line"></span>
+        </span>
+        <span class="skeleton-score"></span>
+      </div>
+      <div class="saved-report-actions">
+        <span class="skeleton-button"></span>
+        <span class="skeleton-button"></span>
+        <span class="skeleton-button"></span>
+      </div>
+    </article>
+  `).join('');
+}
+
+function activityItemHtml(report) {
+  const title = asText(report.website_name) || reportWebsiteDomain(report);
+  const context = savedReportContext(report);
+  const owner = asText(context.prospectName || context.companyName);
+  return `
+    <div class="activity-item">
+      <span class="activity-dot"></span>
+      <span>
+        <strong>${escHtml(title)}</strong>
+        <small>${escHtml(formatSavedReportDate(report.created_at))}${owner ? ' - ' + escHtml(owner) : ''}</small>
+      </span>
+    </div>
+  `;
+}
+
+function renderRecentActivity() {
+  const container = document.getElementById('dashboardActivityList');
+  if (!container) return;
+
+  if (savedReportsLoading) {
+    container.innerHTML = `
+      <div class="activity-skeleton" aria-hidden="true">
+        <span class="skeleton-line wide"></span>
+        <span class="skeleton-line"></span>
+        <span class="skeleton-line wide"></span>
+      </div>
+    `;
+    return;
+  }
+
+  if (!savedReports.length) {
+    container.innerHTML = `
+      <div class="empty-state compact-empty">
+        <strong>No activity yet</strong>
+        <p>Completed assessments will appear here.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = savedReports.slice(0, 5).map(activityItemHtml).join('');
+}
+
 function updateReportMetrics() {
   const reportCount = document.getElementById('dashboardReportCount');
   const reportCountLabel = document.getElementById('dashboardReportCountLabel');
   const monthlyReports = document.getElementById('dashboardMonthlyReports');
+  const reportsUsed = document.getElementById('dashboardReportsUsed');
+  const reportsUsedLabel = document.getElementById('dashboardReportsUsedLabel');
+  const averageScore = document.getElementById('dashboardAverageScore');
+  const currentPlan = document.getElementById('dashboardCurrentPlan');
+  const planStatus = document.getElementById('dashboardPlanStatus');
+  const billingPlanName = document.getElementById('billingPlanName');
+  const billingPlanStatus = document.getElementById('billingPlanStatus');
+  const billingUsageCount = document.getElementById('billingUsageCount');
   const count = savedReports.length;
   const monthly = savedReports.filter(report => isThisMonth(report.created_at)).length;
+  const scores = savedReports.map(savedReportScore).filter(score => Number.isFinite(score));
+  const avg = scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null;
+  const plan = titleCase(currentSubscription?.plan || 'starter');
+  const status = titleCase(currentSubscription?.status || 'trialing');
+  const used = Number.isFinite(Number(currentSubscription?.audits_used))
+    ? Number(currentSubscription.audits_used)
+    : count;
+  const limit = Number.isFinite(Number(currentSubscription?.audit_limit))
+    ? Number(currentSubscription.audit_limit)
+    : 10;
+
   if (reportCount) reportCount.textContent = String(count);
   if (reportCountLabel) reportCountLabel.textContent = count === 1 ? 'Saved assessment.' : 'Saved assessments.';
   if (monthlyReports) monthlyReports.textContent = String(monthly);
+  if (reportsUsed) reportsUsed.textContent = `${used} / ${limit}`;
+  if (reportsUsedLabel) reportsUsedLabel.textContent = limit > used ? `${Math.max(0, limit - used)} audits remaining.` : 'Audit limit reached.';
+  if (averageScore) averageScore.textContent = avg == null ? '-' : `${avg}%`;
+  if (currentPlan) currentPlan.textContent = plan;
+  if (planStatus) planStatus.textContent = `${status} workspace.`;
+  if (billingPlanName) billingPlanName.textContent = plan;
+  if (billingPlanStatus) billingPlanStatus.textContent = `${status} workspace.`;
+  if (billingUsageCount) billingUsageCount.textContent = `${used} / ${limit}`;
 }
 
 function reportCardHtml(report, options = {}) {
   const score = savedReportScore(report);
   const title = asText(report.website_name) || reportWebsiteDomain(report);
   const context = savedReportContext(report);
-  const prospect = asText(context.prospectName);
+  const prospect = asText(context.prospectName || context.companyName);
   const date = formatSavedReportDate(report.created_at);
   const compact = !!options.compact;
 
@@ -1042,7 +1354,7 @@ function reportCardHtml(report, options = {}) {
       </button>
       <div class="saved-report-actions">
         <button class="secondary-btn" type="button" data-report-action="open" data-report-id="${escHtml(report.id)}">Open</button>
-        <button class="secondary-btn" type="button" data-report-action="export" data-report-id="${escHtml(report.id)}">Export</button>
+        <button class="secondary-btn" type="button" data-report-action="export" data-report-id="${escHtml(report.id)}">Download PDF</button>
         ${compact ? '' : `<button class="secondary-btn" type="button" data-report-action="duplicate" data-report-id="${escHtml(report.id)}">Duplicate</button>`}
         ${compact ? '' : `<button class="secondary-btn danger-btn" type="button" data-report-action="delete" data-report-id="${escHtml(report.id)}">Delete</button>`}
       </div>
@@ -1055,12 +1367,7 @@ function renderReportCollection(containerId, reports, options = {}) {
   if (!container) return;
 
   if (savedReportsLoading) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <strong>Loading reports</strong>
-        <p>Fetching saved assessments from your workspace.</p>
-      </div>
-    `;
+    container.innerHTML = reportSkeletonHtml(options.compact ? 3 : 5);
     return;
   }
 
@@ -1088,21 +1395,31 @@ function renderReportCollection(containerId, reports, options = {}) {
 }
 
 function renderSavedReports() {
+  const filteredReports = filteredReportsForWorkspace();
+  const visibleReports = filteredReports.slice(0, reportsVisibleCount);
+  const countSummary = document.getElementById('reportsCountSummary');
+  const pagination = document.getElementById('reportsPagination');
+  const loadMore = document.getElementById('loadMoreReportsBtn');
+
   updateReportMetrics();
+  renderRecentActivity();
   renderReportCollection('dashboardReportsList', savedReports.slice(0, 3), {
     compact: true,
     emptyTitle: 'No recent reports yet',
     emptyText: 'Generate your first website assessment to start building report history.',
   });
-  renderReportCollection('reportsList', savedReports, {
-    emptyTitle: reportsSearchTerm ? 'No matching reports' : 'No saved reports yet',
-    emptyText: reportsSearchTerm ? 'Try a different website search.' : 'Generate an assessment and it will save to this workspace.',
+  renderReportCollection('reportsList', visibleReports, {
+    emptyTitle: reportsSearchTerm || reportsFilter !== 'all' ? 'No matching reports' : 'No saved reports yet',
+    emptyText: reportsSearchTerm || reportsFilter !== 'all' ? 'Adjust the search or filter to see more assessments.' : 'Generate an assessment and it will save to this workspace.',
   });
-  renderReportCollection('historyList', savedReports, {
-    compact: true,
-    emptyTitle: 'No history available',
-    emptyText: 'Completed assessments will appear here in chronological order.',
-  });
+
+  if (countSummary) {
+    countSummary.textContent = savedReportsLoading
+      ? 'Loading reports'
+      : `${filteredReports.length} ${filteredReports.length === 1 ? 'report' : 'reports'} shown`;
+  }
+  if (pagination) pagination.hidden = savedReportsLoading || filteredReports.length <= reportsVisibleCount;
+  if (loadMore) loadMore.textContent = `Show More (${Math.max(0, filteredReports.length - reportsVisibleCount)} remaining)`;
 }
 
 async function loadSavedReports({ force = false } = {}) {
@@ -1142,6 +1459,25 @@ async function loadSavedReports({ force = false } = {}) {
   }
 }
 
+async function loadSubscription() {
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) {
+    currentSubscription = null;
+    updateReportMetrics();
+    return null;
+  }
+
+  try {
+    currentSubscription = await databaseService.getSubscription();
+    updateReportMetrics();
+    return currentSubscription;
+  } catch (error) {
+    console.warn('[LeadCheck] Subscription could not load:', error?.message || error);
+    currentSubscription = null;
+    updateReportMetrics();
+    return null;
+  }
+}
+
 async function openSavedReport(reportId, options = {}) {
   if (!databaseService?.isReady?.()) return;
   setReportsMessage('');
@@ -1153,10 +1489,12 @@ async function openSavedReport(reportId, options = {}) {
     const context = savedReportContext(report);
     const payload = savedReportPayload(report);
     pendingSavedReportId = report.id;
-    pendingScanResult = payload;
-    pendingWebsiteUrl = asText(payload.url) || reportWebsiteUrl(report);
-    pendingProspectName = asText(context.prospectName);
-    renderResults(payload);
+      pendingScanResult = payload;
+      pendingWebsiteUrl = asText(payload.url) || reportWebsiteUrl(report);
+      pendingProspectName = asText(context.prospectName);
+      pendingCompanyName = asText(context.companyName);
+      pendingAuditNotes = asText(context.notes);
+      renderResults(payload);
     if (options.updateRoute !== false) {
       window.history.replaceState({}, '', `/app/reports/${encodeURIComponent(report.id)}`);
     }
@@ -1170,6 +1508,7 @@ async function openSavedReport(reportId, options = {}) {
       window.history.replaceState({}, '', '/app/reports');
     }
     setReportsMessage(error?.message || 'Saved report could not open.', 'error');
+    showToast(error?.message || 'Saved report could not open.', 'error');
   } finally {
     loadingSavedReportId = '';
   }
@@ -1184,9 +1523,11 @@ async function duplicateSavedReport(reportId) {
     savedReportsLoaded = false;
     await loadSavedReports({ force: true });
     setReportsMessage('Report duplicated.', 'success');
+    showToast('Report duplicated.', 'success');
   } catch (error) {
     console.error('[LeadCheck] Report duplicate failed:', error?.message || error);
     setReportsMessage(error?.message || 'Report could not be duplicated.', 'error');
+    showToast(error?.message || 'Report could not be duplicated.', 'error');
   }
 }
 
@@ -1202,20 +1543,25 @@ async function deleteSavedReport(reportId) {
     savedReportsLoaded = true;
     renderSavedReports();
     setReportsMessage('Report deleted.', 'success');
+    showToast('Report deleted.', 'success');
   } catch (error) {
     console.error('[LeadCheck] Report delete failed:', error?.message || error);
     setReportsMessage(error?.message || 'Report could not be deleted.', 'error');
+    showToast(error?.message || 'Report could not be deleted.', 'error');
   }
 }
 
 function bindReportControls() {
   const searchInput = document.getElementById('reportsSearchInput');
   const sortSelect = document.getElementById('reportsSortSelect');
+  const filterSelect = document.getElementById('reportsFilterSelect');
   const refreshBtn = document.getElementById('refreshReportsBtn');
+  const loadMoreBtn = document.getElementById('loadMoreReportsBtn');
   let searchTimer = null;
 
   searchInput?.addEventListener('input', event => {
     reportsSearchTerm = event.target.value.trim();
+    reportsVisibleCount = 20;
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
       savedReportsLoaded = false;
@@ -1225,13 +1571,26 @@ function bindReportControls() {
 
   sortSelect?.addEventListener('change', event => {
     reportsSortOrder = event.target.value || 'created_at.desc';
+    reportsVisibleCount = 20;
     savedReportsLoaded = false;
     loadSavedReports({ force: true });
   });
 
+  filterSelect?.addEventListener('change', event => {
+    reportsFilter = event.target.value || 'all';
+    reportsVisibleCount = 20;
+    renderSavedReports();
+  });
+
   refreshBtn?.addEventListener('click', () => {
+    reportsVisibleCount = 20;
     savedReportsLoaded = false;
     loadSavedReports({ force: true });
+  });
+
+  loadMoreBtn?.addEventListener('click', () => {
+    reportsVisibleCount += 20;
+    renderSavedReports();
   });
 
   document.addEventListener('click', event => {
@@ -1255,6 +1614,8 @@ function handleAuthStateChange(event) {
     savedReportsLoaded = false;
     savedReportsLoading = false;
     loadingSavedReportId = '';
+    reportsVisibleCount = 20;
+    currentSubscription = null;
     if (databaseService) databaseService.profileSyncedFor = '';
     renderSavedReports();
   }
@@ -1262,6 +1623,7 @@ function handleAuthStateChange(event) {
   if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
     savedReportsLoaded = false;
     syncBrandingFromDatabase();
+    loadSubscription();
   }
 
   renderRoute();
@@ -1309,12 +1671,13 @@ function renderRoute() {
 
   if (isApp) {
     const key = appRouteKey(path);
-    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : ROUTE_TITLES['/app']);
+    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
     setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : key === 'dashboard' ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
+    else if (key === 'branding') showAppPanel('branding');
+    else if (key === 'billing') showAppPanel('billing');
     else if (key === 'reports') showAppPanel('reports');
-    else if (key === 'history') showAppPanel('history');
     else if (key === 'saved-report') {
       const reportId = savedReportIdFromPath(path);
       if (pendingSavedReportId === reportId && pendingScanResult) {
@@ -1330,9 +1693,10 @@ function renderRoute() {
     else if (key === 'scan') showAppPanel('scan');
     else showAppPanel('dashboard');
 
-    if (['dashboard', 'scan', 'reports', 'history', 'saved-report'].includes(key)) {
+    if (['dashboard', 'scan', 'reports', 'saved-report', 'billing'].includes(key)) {
       loadSavedReports();
     }
+    if (['dashboard', 'billing'].includes(key)) loadSubscription();
   }
 
   if (brandingProvider) {
@@ -1360,9 +1724,21 @@ function bindRouteLinks() {
     const href = link.getAttribute('href');
     if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     event.preventDefault();
+    document.body.classList.remove('app-nav-open');
+    document.getElementById('mobileNavToggle')?.setAttribute('aria-expanded', 'false');
     navigateTo(href);
   });
   window.addEventListener('popstate', renderRoute);
+}
+
+function bindMobileNavigation() {
+  const toggle = document.getElementById('mobileNavToggle');
+  if (!toggle) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = document.body.classList.toggle('app-nav-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
 }
 
 function requireAuthProvider() {
@@ -1540,6 +1916,7 @@ function bindBrandingForm() {
         message.style.color = 'var(--green)';
         message.textContent = 'Branding saved.';
       }
+      showToast('Branding saved.', 'success');
     } catch (error) {
       console.warn('[LeadCheck] Branding could not save to Supabase:', error?.message || error);
       if (message) {
@@ -1547,6 +1924,7 @@ function bindBrandingForm() {
         message.style.color = 'var(--red)';
         message.textContent = 'Branding saved locally, but could not sync to the database.';
       }
+      showToast('Branding saved locally, but could not sync.', 'warning');
     }
   });
 
@@ -1565,6 +1943,7 @@ function bindBrandingForm() {
           message.style.color = 'var(--green)';
           message.textContent = 'Branding reset.';
         }
+        showToast('Branding reset.', 'success');
       } catch (error) {
         console.warn('[LeadCheck] Branding reset could not sync to Supabase:', error?.message || error);
         if (message) {
@@ -1572,6 +1951,7 @@ function bindBrandingForm() {
           message.style.color = 'var(--red)';
           message.textContent = 'Branding reset locally, but could not sync to the database.';
         }
+        showToast('Branding reset locally, but could not sync.', 'warning');
       }
     });
   }
@@ -1779,11 +2159,13 @@ function reportScoreFromResult(result) {
 function buildPersistedReportData(result) {
   return {
     report: result,
-    context: {
-      prospectName: pendingProspectName || '',
-      requestedWebsite: pendingWebsiteUrl || '',
-      generatedAt: new Date().toISOString(),
-      branding: brandingProvider?.getBranding?.() || null,
+      context: {
+        prospectName: pendingProspectName || '',
+        companyName: pendingCompanyName || '',
+        notes: pendingAuditNotes || '',
+        requestedWebsite: pendingWebsiteUrl || '',
+        generatedAt: new Date().toISOString(),
+        branding: brandingProvider?.getBranding?.() || null,
     },
   };
 }
@@ -1809,12 +2191,14 @@ async function persistGeneratedReport(result) {
     }
     console.log('[LeadCheck] Report saved:', pendingSavedReportId);
     setReportSaveMessage('Report saved to your workspace.', 'success');
+    showToast('Report saved to your workspace.', 'success');
     savedReportsLoaded = false;
     loadSavedReports({ force: true });
     return savedReport;
   } catch (error) {
     console.warn('[LeadCheck] Report save skipped:', error?.message || error);
     setReportSaveMessage('Report generated, but it could not be saved. You can still view and export it.', 'error');
+    showToast('Report generated, but it could not be saved.', 'warning');
     return null;
   }
 }
@@ -2080,6 +2464,8 @@ async function runAnalysis() {
   const raw = document.getElementById('urlInput').value;
   const url = normalizeUrl(raw);
   pendingProspectName = document.getElementById('prospectInput')?.value.trim() || '';
+  pendingCompanyName = document.getElementById('auditCompanyInput')?.value.trim() || '';
+  pendingAuditNotes = document.getElementById('auditNotesInput')?.value.trim() || '';
  
   const errBox = document.getElementById('error-box');
   errBox.style.display = 'none';
@@ -2147,11 +2533,12 @@ async function runAnalysis() {
  
 function showError(msg) {
   stopLoadingTimers();
-  showAppPanel('dashboard');
+  showAppPanel('scan');
   document.getElementById('analyzeBtn').disabled = false;
   const errBox = document.getElementById('error-box');
   errBox.style.display = 'block';
   errBox.textContent = msg;
+  showToast(msg, 'error');
 }
 
 function renderScoreHero(result) {
@@ -2169,7 +2556,7 @@ function renderScoreHero(result) {
   const reportWebsite = document.getElementById('reportWebsite');
   const reportProspectName = document.getElementById('reportProspectName');
   if (reportWebsite) reportWebsite.textContent = asText(result.url) || pendingWebsiteUrl || '-';
-  if (reportProspectName) reportProspectName.textContent = pendingProspectName || 'Prospect';
+  if (reportProspectName) reportProspectName.textContent = pendingProspectName || pendingCompanyName || 'Prospect';
 
   setTimeout(() => {
     const bar = document.getElementById('scoreBar');
@@ -2718,6 +3105,8 @@ function resetApp() {
   pendingSavedReportId = null;
   loadingSavedReportId = '';
   pendingProspectName = '';
+  pendingCompanyName = '';
+  pendingAuditNotes = '';
   fullResultsUnlocked = false;
   setReportSaveMessage('');
   showAppPanel('dashboard');
@@ -2741,6 +3130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     onChange: handleAuthStateChange,
   });
   bindRouteLinks();
+  bindMobileNavigation();
   bindAuthForms();
   bindReportControls();
   bindBrandingForm();
