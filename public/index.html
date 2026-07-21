@@ -1148,10 +1148,6 @@ function readableErrorMessage(error, fallback = 'Something went wrong. Please tr
     return text && text !== '{}' ? text : fallback;
   }
 
-  if (error.name === 'AuthRetryableFetchError') {
-    return 'Could not reach Supabase Auth. Check SUPABASE_URL and SUPABASE_ANON_KEY in Render, then redeploy.';
-  }
-
   const candidates = [
     error.message,
     error.error_description,
@@ -1166,7 +1162,14 @@ function readableErrorMessage(error, fallback = 'Something went wrong. Please tr
   for (const value of candidates) {
     if (typeof value !== 'string') continue;
     const text = value.trim();
-    if (text && text !== '{}') return text;
+    if (!text || text === '{}') continue;
+    if (error.name === 'AuthRetryableFetchError') {
+      if (/database error saving new user/i.test(text)) {
+        return 'Signup reached Supabase, but the database user setup trigger failed. Run the signup trigger repair SQL in Supabase, then try again.';
+      }
+      if (/^AuthRetryableFetchError$/i.test(text)) continue;
+    }
+    return text;
   }
 
   try {
@@ -1174,6 +1177,10 @@ function readableErrorMessage(error, fallback = 'Something went wrong. Please tr
     if (serialized && serialized !== '{}') return serialized;
   } catch {
     // Keep auth messages human-readable even for unusual SDK errors.
+  }
+
+  if (error.name === 'AuthRetryableFetchError') {
+    return 'Could not reach Supabase Auth. Check Supabase Auth logs, SUPABASE_URL, and SUPABASE_ANON_KEY, then redeploy.';
   }
 
   return fallback;
