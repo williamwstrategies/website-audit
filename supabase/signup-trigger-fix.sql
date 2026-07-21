@@ -1,6 +1,101 @@
 -- Signup trigger repair for Phase 5 billing defaults.
--- Run this if Supabase Auth signup returns "Database error saving new user"
--- or an empty "{}" message after the billing migration.
+-- Run this in Supabase SQL Editor if signup returns:
+-- "Database error saving new user", "AuthRetryableFetchError", or status 500.
+
+create extension if not exists pgcrypto;
+
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text not null,
+  full_name text,
+  agency_name text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.profiles add column if not exists email text;
+alter table public.profiles add column if not exists full_name text;
+alter table public.profiles add column if not exists agency_name text;
+alter table public.profiles add column if not exists created_at timestamptz not null default now();
+alter table public.profiles add column if not exists updated_at timestamptz not null default now();
+
+create table if not exists public.agency_branding (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  agency_name text,
+  logo_url text,
+  primary_color text,
+  secondary_color text,
+  website text,
+  email text,
+  phone text,
+  booking_link text,
+  favicon_url text,
+  tagline text,
+  disclaimer text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.agency_branding add column if not exists id uuid default gen_random_uuid();
+alter table public.agency_branding add column if not exists user_id uuid;
+alter table public.agency_branding add column if not exists agency_name text;
+alter table public.agency_branding add column if not exists logo_url text;
+alter table public.agency_branding add column if not exists primary_color text;
+alter table public.agency_branding add column if not exists secondary_color text;
+alter table public.agency_branding add column if not exists website text;
+alter table public.agency_branding add column if not exists email text;
+alter table public.agency_branding add column if not exists phone text;
+alter table public.agency_branding add column if not exists booking_link text;
+alter table public.agency_branding add column if not exists favicon_url text;
+alter table public.agency_branding add column if not exists tagline text;
+alter table public.agency_branding add column if not exists disclaimer text;
+alter table public.agency_branding add column if not exists created_at timestamptz not null default now();
+alter table public.agency_branding add column if not exists updated_at timestamptz not null default now();
+alter table public.agency_branding alter column id set default gen_random_uuid();
+
+create table if not exists public.subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  plan text not null default 'professional',
+  status text not null default 'incomplete',
+  audits_used integer not null default 0,
+  audit_limit integer not null default 100,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  stripe_price_id text,
+  payment_status text,
+  cancel_at_period_end boolean not null default false,
+  cancel_at timestamptz,
+  ended_at timestamptz,
+  current_period_start timestamptz,
+  current_period_end timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.subscriptions add column if not exists id uuid default gen_random_uuid();
+alter table public.subscriptions add column if not exists user_id uuid;
+alter table public.subscriptions add column if not exists plan text not null default 'professional';
+alter table public.subscriptions add column if not exists status text not null default 'incomplete';
+alter table public.subscriptions add column if not exists audits_used integer not null default 0;
+alter table public.subscriptions add column if not exists audit_limit integer not null default 100;
+alter table public.subscriptions add column if not exists stripe_customer_id text;
+alter table public.subscriptions add column if not exists stripe_subscription_id text;
+alter table public.subscriptions add column if not exists stripe_price_id text;
+alter table public.subscriptions add column if not exists payment_status text;
+alter table public.subscriptions add column if not exists cancel_at_period_end boolean not null default false;
+alter table public.subscriptions add column if not exists cancel_at timestamptz;
+alter table public.subscriptions add column if not exists ended_at timestamptz;
+alter table public.subscriptions add column if not exists current_period_start timestamptz;
+alter table public.subscriptions add column if not exists current_period_end timestamptz;
+alter table public.subscriptions add column if not exists created_at timestamptz not null default now();
+alter table public.subscriptions add column if not exists updated_at timestamptz not null default now();
+
+alter table public.subscriptions alter column id set default gen_random_uuid();
+alter table public.subscriptions alter column plan set default 'professional';
+alter table public.subscriptions alter column status set default 'incomplete';
+alter table public.subscriptions alter column audit_limit set default 100;
 
 create or replace function public.handle_new_auth_user()
 returns trigger
@@ -8,30 +103,28 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  v_full_name text := nullif(coalesce(new.raw_user_meta_data->>'name', ''), '');
+  v_agency_name text := nullif(coalesce(new.raw_user_meta_data->>'agency_name', ''), '');
 begin
-  insert into public.profiles (id, email, full_name, agency_name)
-  values (
-    new.id,
-    coalesce(new.email, ''),
-    nullif(coalesce(new.raw_user_meta_data->>'name', ''), ''),
-    nullif(coalesce(new.raw_user_meta_data->>'agency_name', ''), '')
-  )
-  on conflict (id) do update
+  update public.profiles
   set
-    email = excluded.email,
-    full_name = coalesce(excluded.full_name, public.profiles.full_name),
-    agency_name = coalesce(excluded.agency_name, public.profiles.agency_name),
-    updated_at = now();
+    email = coalesce(new.email, public.profiles.email, ''),
+    full_name = coalesce(v_full_name, public.profiles.full_name),
+    agency_name = coalesce(v_agency_name, public.profiles.agency_name),
+    updated_at = now()
+  where id = new.id;
+
+  if not found then
+    insert into public.profiles (id, email, full_name, agency_name)
+    values (new.id, coalesce(new.email, ''), v_full_name, v_agency_name);
+  end if;
 
   insert into public.agency_branding (user_id, agency_name)
-  values (
-    new.id,
-    coalesce(
-      nullif(new.raw_user_meta_data->>'agency_name', ''),
-      nullif(new.raw_user_meta_data->>'name', '')
-    )
-  )
-  on conflict (user_id) do nothing;
+  select new.id, coalesce(v_agency_name, v_full_name)
+  where not exists (
+    select 1 from public.agency_branding where user_id = new.id
+  );
 
   insert into public.subscriptions (
     user_id,
@@ -40,14 +133,15 @@ begin
     audit_limit,
     audits_used
   )
-  values (
+  select
     new.id,
     'professional',
     'incomplete',
     100,
     0
-  )
-  on conflict (user_id) do nothing;
+  where not exists (
+    select 1 from public.subscriptions where user_id = new.id
+  );
 
   return new;
 end;

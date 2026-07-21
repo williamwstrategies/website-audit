@@ -1174,7 +1174,12 @@ function readableErrorMessage(error, fallback = 'Something went wrong. Please tr
 
   try {
     const serialized = JSON.stringify(error);
-    if (serialized && serialized !== '{}') return serialized;
+    if (serialized && serialized !== '{}') {
+      if (error.name === 'AuthRetryableFetchError') {
+        return 'Signup reached Supabase, but Supabase returned a 500 while creating the user profile. Run the signup trigger repair SQL in Supabase, then try again.';
+      }
+      return serialized;
+    }
   } catch {
     // Keep auth messages human-readable even for unusual SDK errors.
   }
