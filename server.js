@@ -35,8 +35,16 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+function normalizeSupabasePublicUrl(rawUrl = '') {
+  return String(rawUrl || '')
+    .trim()
+    .replace(/\/+$/, '')
+    .replace(/\/rest\/v1$/i, '')
+    .replace(/\/auth\/v1$/i, '');
+}
+
 app.get('/api/auth-config', (req, res) => {
-  const supabaseUrl = process.env.SUPABASE_URL || '';
+  const supabaseUrl = normalizeSupabasePublicUrl(process.env.SUPABASE_URL || '');
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY || '';
 
   res.set('Cache-Control', 'no-store');

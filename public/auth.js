@@ -11,6 +11,14 @@
     return `${appOrigin()}${path}`;
   }
 
+  function normalizeSupabaseUrl(rawUrl) {
+    return String(rawUrl || '')
+      .trim()
+      .replace(/\/+$/, '')
+      .replace(/\/rest\/v1$/i, '')
+      .replace(/\/auth\/v1$/i, '');
+  }
+
   class AuthProvider {
     constructor(options = {}) {
       this.onChange = typeof options.onChange === 'function' ? options.onChange : () => {};
@@ -27,6 +35,7 @@
         const response = await fetch(AUTH_CONFIG_URL, { cache: 'no-store' });
         if (!response.ok) throw new Error('Could not load authentication configuration.');
         this.config = await response.json();
+        this.config.supabaseUrl = normalizeSupabaseUrl(this.config.supabaseUrl);
 
         if (!this.config.supabaseUrl || !this.config.supabaseAnonKey) {
           this.error = 'Supabase is not configured yet. Add SUPABASE_URL and SUPABASE_ANON_KEY in Render.';

@@ -25,7 +25,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-21-billing-pdf-2">
+<link rel="stylesheet" href="/styles.css?v=2026-07-21-auth-url-fix">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -983,9 +983,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-21-billing-pdf-2"></script>
-<script src="/auth.js?v=2026-07-21-billing-pdf-2"></script>
-<script src="/database.js?v=2026-07-21-billing-pdf-2"></script>
+<script src="/branding.js?v=2026-07-21-auth-url-fix"></script>
+<script src="/auth.js?v=2026-07-21-auth-url-fix"></script>
+<script src="/database.js?v=2026-07-21-auth-url-fix"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1141,11 +1141,46 @@ function authPanelForPath(path = window.location.pathname) {
   return 'login';
 }
 
+function readableErrorMessage(error, fallback = 'Something went wrong. Please try again.') {
+  if (!error) return fallback;
+  if (typeof error === 'string') {
+    const text = error.trim();
+    return text && text !== '{}' ? text : fallback;
+  }
+
+  const candidates = [
+    error.message,
+    error.error_description,
+    error.description,
+    error.msg,
+    error.details,
+    error.hint,
+    error.code,
+    error.name,
+  ];
+
+  for (const value of candidates) {
+    if (typeof value !== 'string') continue;
+    const text = value.trim();
+    if (text && text !== '{}') return text;
+  }
+
+  try {
+    const serialized = JSON.stringify(error);
+    if (serialized && serialized !== '{}') return serialized;
+  } catch {
+    // Keep auth messages human-readable even for unusual SDK errors.
+  }
+
+  return fallback;
+}
+
 function setAuthMessage(message = '', tone = 'default') {
   const node = document.getElementById('authMessage');
   if (!node) return;
-  node.hidden = !message;
-  node.textContent = message;
+  const text = readableErrorMessage(message, '');
+  node.hidden = !text;
+  node.textContent = text;
   node.dataset.tone = tone;
 }
 
@@ -2296,7 +2331,7 @@ async function withButtonLoading(button, loadingLabel, action) {
   try {
     return await action();
   } catch (error) {
-    setAuthMessage(error?.message || 'Authentication request failed. Please try again.', 'error');
+    setAuthMessage(readableErrorMessage(error, 'Authentication request failed. Please try again.'), 'error');
     return null;
   } finally {
     button.disabled = false;
@@ -2324,7 +2359,7 @@ function bindAuthForms() {
     withButtonLoading(button, 'Logging in...', async () => {
       const { error } = await authProvider.signIn({ email, password });
       if (error) {
-        setAuthMessage(error.message || 'Login failed. Please check your details.', 'error');
+        setAuthMessage(readableErrorMessage(error, 'Login failed. Please check your details.'), 'error');
         return;
       }
       navigateTo(pendingProtectedPath || '/app');
@@ -2345,7 +2380,7 @@ function bindAuthForms() {
     withButtonLoading(button, 'Creating account...', async () => {
       const { data, error } = await authProvider.signUp({ name, email, password });
       if (error) {
-        setAuthMessage(error.message || 'Sign up failed. Please try again.', 'error');
+        setAuthMessage(readableErrorMessage(error, 'Sign up failed. Please try again.'), 'error');
         return;
       }
 
@@ -2370,7 +2405,7 @@ function bindAuthForms() {
     withButtonLoading(resendVerificationBtn, 'Sending...', async () => {
       const { error } = await authProvider.resendVerification(email);
       if (error) {
-        setAuthMessage(error.message || 'Could not resend verification email.', 'error');
+        setAuthMessage(readableErrorMessage(error, 'Could not resend verification email.'), 'error');
         return;
       }
       setAuthMessage('Verification email sent. Please check your inbox.', 'success');
@@ -2388,7 +2423,7 @@ function bindAuthForms() {
     withButtonLoading(button, 'Sending...', async () => {
       const { error } = await authProvider.sendPasswordReset(email);
       if (error) {
-        setAuthMessage(error.message || 'Could not send reset email.', 'error');
+        setAuthMessage(readableErrorMessage(error, 'Could not send reset email.'), 'error');
         return;
       }
       setAuthMessage('Password reset email sent. Open the link in your inbox to continue.', 'success');
@@ -2412,7 +2447,7 @@ function bindAuthForms() {
     withButtonLoading(button, 'Updating...', async () => {
       const { error } = await authProvider.updatePassword(password);
       if (error) {
-        setAuthMessage(error.message || 'Could not update password. Open the latest reset link and try again.', 'error');
+        setAuthMessage(readableErrorMessage(error, 'Could not update password. Open the latest reset link and try again.'), 'error');
         return;
       }
       setAuthMessage('Password updated. Redirecting to your dashboard...', 'success');
