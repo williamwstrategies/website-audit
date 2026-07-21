@@ -3,19 +3,19 @@
   const SYSTEM_FAVICON = '/icons/icon-192.png';
   const DEFAULT_BRANDING = {
     whiteLabelEnabled: true,
-    agencyName: 'Website Assessment Platform',
+    agencyName: 'W Strategies',
     platformLabel: 'Website Assessment',
     logoUrl: '',
     logoStoragePath: '',
     faviconUrl: '',
     faviconStoragePath: '',
-    primaryAccent: '#f5c842',
-    secondaryAccent: '#1d1d1f',
+    primaryAccent: '#23a8ff',
+    secondaryAccent: '#75ceff',
     website: '',
     phone: '',
     email: '',
     bookingLink: '',
-    tagline: 'Website Assessment Platform',
+    tagline: 'Website audit platform',
     reportDisclaimer: 'This assessment is based on observable website signals at the time of review.',
   };
 
@@ -55,7 +55,7 @@
   }
 
   function initials(name) {
-    return String(name || 'Website Assessment Platform')
+    return String(name || DEFAULT_BRANDING.agencyName)
       .split(/\s+/)
       .filter(Boolean)
       .slice(0, 2)
