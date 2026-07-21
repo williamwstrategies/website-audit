@@ -281,9 +281,9 @@
       if (isApp) {
         document.title = `${agencyName} | ${routeTitle(route)}`;
       } else if (isLogin) {
-        document.title = 'LeadCheck Login';
+        document.title = 'W Strategies Account Access';
       } else {
-        document.title = 'LeadCheck - White-Label Website Assessment Software';
+        document.title = 'W Strategies - White-Label Website Audit Software';
       }
 
       const whiteLabelStatus = document.getElementById('whiteLabelStatus');

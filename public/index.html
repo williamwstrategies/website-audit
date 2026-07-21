@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-21-dark-public-site">
+<link rel="stylesheet" href="/styles.css?v=2026-07-21-public-site-unified">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -342,30 +342,138 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   </div>
 
   <article class="public-page supporting-page product-page" data-public-page="product" hidden>
-    <div class="supporting-hero" data-reveal><div class="section-kicker">Product</div><h1>A complete audit workspace for agency sales teams.</h1><p>Go deeper into the dashboard, scanner, reports, white-label system, PDF export, and saved-report workflow.</p></div>
-    <div class="product-preview-row" data-reveal><div class="product-showcase mini-dashboard-mockup"><div class="mock-browser-bar"><span></span><span></span><span></span><strong>Dashboard</strong></div><div class="metric-strip"><span>Reports <b>28</b></span><span>Usage <b>41/100</b></span><span>Plan <b>Pro</b></span></div><div class="mock-category"><span>Recent audit</span><strong>74</strong></div><div class="mock-category"><span>Saved PDF</span><strong>Ready</strong></div></div><div><h2>Dashboard</h2><p>Track recent assessments, monthly usage, report history, and quick actions from one workspace.</p></div></div>
-    <div class="product-preview-row reverse" data-reveal><div class="product-showcase"><div class="mock-scan-card glow-card"><span>Scanner</span><strong>https://prospect-site.example</strong><div class="mock-progress"><i style="width:88%"></i></div><small>Evaluating 38+ website factors</small></div></div><div><h2>Scanner</h2><p>Enter a website and let the existing scanning flow evaluate key sales, conversion, SEO, trust, and technical signals.</p></div></div>
-    <div class="product-preview-row" data-reveal><div class="pdf-report-mockup sample-report-shell"><div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>PDF Export</span></div><div class="sample-score-row"><strong>74</strong><div><span>Website Report</span><p>Priorities, explanations, evidence, and recommendations.</p></div></div></div><div><h2>Reports and PDF Export</h2><p>Generate consulting-style reports, save them in the dashboard, and export branded PDFs for follow-up.</p></div></div>
-    <div class="product-preview-row reverse" data-reveal><div class="white-label-mockup product-showcase"><div class="mock-report-header"><div><span class="mock-agency-mark">AG</span><strong>Your Agency</strong></div><span>White Label</span></div><div class="color-swatch-row"><i></i><i></i><i></i><span>Brand applied</span></div><div class="mock-category"><span>Dashboard</span><strong>Branded</strong></div><div class="mock-category"><span>Report</span><strong>Branded</strong></div></div><div><h2>White Label</h2><p>Use your agency logo, colors, contact details, booking link, favicon, and report disclaimer throughout the app experience.</p></div></div>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div>
+        <div class="section-kicker">Product</div>
+        <h1>A complete audit workspace for agency sales teams.</h1>
+        <p>Scan prospect websites, review scores, save reports, export PDFs, and present everything under your agency brand from one polished platform.</p>
+        <div class="hero-actions">
+          <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="product_signup_clicked">Start Free</a>
+          <a class="secondary-btn" href="/sample-report" data-route data-public-event="sample_report_clicked">View Sample Report</a>
+        </div>
+      </div>
+      <div class="product-showcase mini-dashboard-mockup">
+        <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Dashboard</strong></div>
+        <div class="metric-strip"><span>Reports saved <b>28</b></span><span>Audits used <b>41/100</b></span><span>Plan <b>Pro</b></span></div>
+        <div class="mock-category"><span>northstarroofing.example</span><strong>74</strong></div>
+        <div class="mock-category"><span>greenlinehvac.example</span><strong>63</strong></div>
+        <div class="mock-category"><span>ridgeviewdental.example</span><strong>81</strong></div>
+      </div>
+    </div>
+
+    <section class="public-section-panel" data-reveal>
+      <div class="section-kicker">Platform Overview</div>
+      <h2>Everything needed to turn a prospect website into a clear conversation.</h2>
+      <div class="feature-list-grid">
+        <article class="feature-card"><span class="feature-icon">Dashboard</span><h3>Audit workspace</h3><p>Track recent assessments, monthly usage, report history, and quick actions.</p></article>
+        <article class="feature-card"><span class="feature-icon">Scanner</span><h3>Website scan</h3><p>Use the existing scan flow to evaluate trust, SEO, conversion, technical, and design factors.</p></article>
+        <article class="feature-card"><span class="feature-icon">Reports</span><h3>Saved reports</h3><p>Open previous assessments, duplicate useful examples, and export branded PDFs.</p></article>
+        <article class="feature-card"><span class="feature-icon">Branding</span><h3>White label</h3><p>Apply agency identity across app surfaces, reports, PDFs, favicon, and browser title.</p></article>
+      </div>
+    </section>
+
+    <section class="product-preview-section" aria-label="Product details">
+      <div class="product-preview-row" data-reveal>
+        <div class="product-showcase">
+          <div class="mock-browser-bar"><span></span><span></span><span></span><strong>New Audit</strong></div>
+          <div class="mock-scan-card glow-card"><span>Website URL</span><strong>https://prospect-site.example</strong><div class="mock-progress"><i style="width:88%"></i></div><small>Evaluating 38+ website factors</small></div>
+        </div>
+        <div><div class="section-kicker">Website Scanner</div><h2>Run a focused assessment without changing the scanner.</h2><p>The public product experience explains the scan clearly while preserving the existing backend, Playwright flow, scoring logic, and report generation.</p></div>
+      </div>
+      <div class="product-preview-row reverse" data-reveal>
+        <div class="score-card-grid compact-score-grid">
+          <article><span>SEO</span><strong>62</strong><p>Visibility and structure.</p></article>
+          <article><span>Trust</span><strong>68</strong><p>Proof and credibility.</p></article>
+          <article><span>Conversion</span><strong>71</strong><p>Lead path clarity.</p></article>
+          <article><span>Technical</span><strong>82</strong><p>Health and speed.</p></article>
+        </div>
+        <div><div class="section-kicker">Score Categories</div><h2>Show the specific areas holding a website back.</h2><p>Scores turn vague recommendations into structured categories a business owner can understand and prioritize.</p></div>
+      </div>
+      <div class="product-preview-row" data-reveal>
+        <div class="pdf-report-mockup sample-report-shell">
+          <div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>PDF Export</span></div>
+          <div class="sample-score-row"><strong>74</strong><div><span>Website Report</span><p>Priorities, explanations, evidence, and recommendations.</p></div></div>
+          <div class="sample-priorities"><strong>Top priorities</strong><ol><li>Clarify the primary call to action.</li><li>Add project proof near service pages.</li><li>Repair broken service links.</li></ol></div>
+        </div>
+        <div><div class="section-kicker">Reports and PDFs</div><h2>Present a consulting-style report instead of loose notes.</h2><p>Reports are saved in the app and can be exported as branded PDFs for follow-up or proposal support.</p></div>
+      </div>
+      <div class="product-preview-row reverse" data-reveal>
+        <div class="device-pair-mockup">
+          <div class="laptop-shell"><div class="mock-category"><span>Dashboard</span><strong>Desktop</strong></div><div class="mock-category"><span>Report</span><strong>Responsive</strong></div><div class="mock-category"><span>PDF</span><strong>Ready</strong></div></div>
+          <div class="phone-shell small"><strong>74</strong><span>Score</span><p>Mobile ready</p></div>
+        </div>
+        <div><div class="section-kicker">Cross Device</div><h2>Use it live on calls and send it after.</h2><p>The public pages, app screens, and report previews share a consistent responsive presentation across desktop and mobile.</p></div>
+      </div>
+      <div class="product-preview-row" data-reveal>
+        <div class="white-label-mockup product-showcase">
+          <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Agency Workspace</strong></div>
+          <div class="mock-report-header"><div><span class="mock-agency-mark">AG</span><strong>Your Agency</strong></div><span>White Label</span></div>
+          <div class="color-swatch-row"><i></i><i></i><i></i><span>Brand applied</span></div>
+          <div class="mock-category"><span>Dashboard</span><strong>Branded</strong></div>
+          <div class="mock-category"><span>Report</span><strong>Branded</strong></div>
+          <div class="mock-category"><span>PDF</span><strong>Branded</strong></div>
+        </div>
+        <div><div class="section-kicker">White Label</div><h2>Your prospects see your agency.</h2><p>Agency branding can carry through the app experience, report pages, exported PDFs, and future shared links.</p></div>
+      </div>
+    </section>
+
+    <section class="marketing-cta final-dark-cta" data-reveal>
+      <h2>Build a stronger website assessment workflow.</h2>
+      <p>Start with a prospect URL and turn it into a professional report your agency can present with confidence.</p>
+      <div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="product_final_signup_clicked">Start Free</a><a class="secondary-btn" href="/pricing" data-route>View Pricing</a></div>
+    </section>
   </article>
 
   <article class="public-page supporting-page how-page" data-public-page="how-it-works" hidden>
-    <div class="supporting-hero" data-reveal><div class="section-kicker">How It Works</div><h1>A visual walkthrough from URL to sales call.</h1><p>The workflow is designed to help agencies move quickly from prospect research to a clear website conversation.</p></div>
-    <ol class="walkthrough-list">
-      <li data-reveal><span>01</span><div><h2>Desktop Dashboard</h2><p>Start from the agency workspace and choose a new audit.</p></div></li>
-      <li data-reveal><span>02</span><div><h2>Enter Website</h2><p>Add the prospect URL and optional context for the assessment.</p></div></li>
-      <li data-reveal><span>03</span><div><h2>AI Scan</h2><p>The scan evaluates trust, conversion, SEO, design, technical, and performance factors.</p></div></li>
-      <li data-reveal><span>04</span><div><h2>Website Score</h2><p>The prospect gets a clear score and category breakdown.</p></div></li>
-      <li data-reveal><span>05</span><div><h2>Report</h2><p>Findings are translated into business-focused recommendations.</p></div></li>
-      <li data-reveal><span>06</span><div><h2>White Label</h2><p>The workspace and reports can show your agency brand.</p></div></li>
-      <li data-reveal><span>07</span><div><h2>Download PDF</h2><p>Export a branded report for follow-up or proposal support.</p></div></li>
-      <li data-reveal><span>08</span><div><h2>Use During Sales Call</h2><p>Walk the prospect through the highest-priority issues and next steps.</p></div></li>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div>
+        <div class="section-kicker">How It Works</div>
+        <h1>A premium walkthrough from account to sales call.</h1>
+        <p>The workflow is designed to help agencies move quickly from prospect research to a clear website conversation.</p>
+      </div>
+      <div class="process-showcase product-showcase">
+        <div class="process-step active"><span>01</span><strong>Create account</strong></div>
+        <div class="process-step"><span>02</span><strong>Add branding</strong></div>
+        <div class="process-step"><span>03</span><strong>Run scan</strong></div>
+        <div class="process-step"><span>04</span><strong>Present report</strong></div>
+      </div>
+    </div>
+    <ol class="walkthrough-list premium-walkthrough">
+      <li data-reveal><span>01</span><div><h2>Create your account</h2><p>Sign up, verify your email, and enter the agency workspace.</p></div></li>
+      <li data-reveal><span>02</span><div><h2>Add your agency branding</h2><p>Set your agency name, logo, colors, contact details, booking link, favicon, and report disclaimer.</p></div></li>
+      <li data-reveal><span>03</span><div><h2>Enter a prospect's website</h2><p>Add the URL and optional prospect context on the New Audit page.</p></div></li>
+      <li data-reveal><span>04</span><div><h2>Run the scan</h2><p>The existing scanner evaluates the site across trust, conversion, SEO, technical, performance, and design signals.</p></div></li>
+      <li data-reveal><span>05</span><div><h2>Review the website score</h2><p>Use the overall score and category breakdown to frame the conversation.</p></div></li>
+      <li data-reveal><span>06</span><div><h2>Open the detailed report</h2><p>Review priorities, evidence, strengths, and practical recommendations.</p></div></li>
+      <li data-reveal><span>07</span><div><h2>Download or present the report</h2><p>Open it live during a call or export a branded PDF for follow-up.</p></div></li>
+      <li data-reveal><span>08</span><div><h2>Use it in your sales process</h2><p>Bring clearer proof to discovery, outreach, proposals, and follow-up.</p></div></li>
     </ol>
+    <section class="marketing-cta final-dark-cta" data-reveal>
+      <h2>See the output before you start.</h2>
+      <p>Explore the fictional sample report to understand how the final assessment is structured.</p>
+      <div class="hero-actions"><a class="analyze-btn" href="/sample-report" data-route>View Sample Report</a><a class="secondary-btn" href="/signup" data-route data-public-cta>Start Free</a></div>
+    </section>
   </article>
 
   <article class="public-page supporting-page sample-report-page" data-public-page="sample-report" hidden>
-    <div class="supporting-hero" data-reveal><div class="section-kicker">Sample Report</div><h1>Explore a fictional website assessment.</h1><p>This demo uses static Northstar Roofing data. It does not load private reports, Supabase records, or customer data.</p></div>
-    <div class="sample-demo-layout" data-reveal>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div>
+        <div class="section-kicker">Sample Report</div>
+        <h1>Explore a fictional website assessment.</h1>
+        <p>This demo uses static Northstar Roofing data. It does not load private reports, Supabase records, or customer data.</p>
+        <div class="public-mini-stats"><span>Overall score <b>74</b></span><span>Top priorities <b>3</b></span><span>Categories <b>6</b></span></div>
+      </div>
+      <div class="mobile-report-mockup">
+        <div class="phone-shell">
+          <div class="phone-notch"></div>
+          <strong>74</strong>
+          <span>Northstar Roofing</span>
+          <p>Good foundation with several high-impact improvements.</p>
+          <i></i><i></i><i></i>
+        </div>
+      </div>
+    </div>
+    <div class="sample-demo-layout premium-sample-layout" data-reveal>
       <nav class="sample-report-tabs" aria-label="Sample report sections">
         <button type="button" class="active" data-sample-tab="overview">Overview</button>
         <button type="button" data-sample-tab="priorities">Priorities</button>
@@ -373,24 +481,47 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </nav>
       <section class="sample-report-shell full-sample-report">
         <div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>Prepared for Northstar Roofing</span></div>
-        <div class="sample-tab-panel active" data-sample-panel="overview"><div class="sample-score-row"><strong>74</strong><div><span>Overall Assessment</span><p>The site has a workable foundation, but the assessment identifies improvements that could make the business easier to trust and contact.</p></div></div><div class="sample-report-grid"><span>SEO <b>62%</b></span><span>Trust <b>68%</b></span><span>Conversion <b>71%</b></span><span>Technical <b>82%</b></span><span>Performance <b>76%</b></span><span>Design <b>69%</b></span></div></div>
+        <div class="sample-tab-panel active" data-sample-panel="overview">
+          <div class="sample-score-row"><strong>74</strong><div><span>Overall Assessment</span><p>The site has a workable foundation, but the assessment identifies improvements that could make the business easier to trust and contact.</p></div></div>
+          <div class="sample-report-grid"><span>SEO <b>62%</b></span><span>Trust <b>68%</b></span><span>Conversion <b>71%</b></span><span>Technical <b>82%</b></span><span>Performance <b>76%</b></span><span>Design <b>69%</b></span></div>
+        </div>
         <div class="sample-tab-panel" data-sample-panel="priorities"><div class="sample-priorities"><strong>Top Priorities</strong><ol><li>Make the primary quote request visible above the fold.</li><li>Add recent project proof near the roofing services.</li><li>Repair broken navigation links before sending paid traffic.</li></ol></div></div>
         <div class="sample-tab-panel" data-sample-panel="recommendations"><div class="sample-priorities"><strong>Recommended Improvements</strong><ol><li>Clarify service-area language for local search visibility.</li><li>Add trust proof near the main contact form.</li><li>Make phone and booking options persistent on mobile.</li><li>Add a short workmanship or warranty explanation near the CTA.</li></ol></div></div>
       </section>
     </div>
+    <section class="public-section-panel" data-reveal>
+      <div class="section-kicker">Report Structure</div>
+      <h2>Built to be read by business owners, not just technicians.</h2>
+      <div class="feature-list-grid">
+        <article class="feature-card"><span class="feature-icon">Score</span><h3>Clear overview</h3><p>A simple overall score sets context before the detailed findings.</p></article>
+        <article class="feature-card"><span class="feature-icon">Evidence</span><h3>Prioritized findings</h3><p>Recommendations are tied to visible website issues and practical business impact.</p></article>
+        <article class="feature-card"><span class="feature-icon">PDF</span><h3>Follow-up ready</h3><p>Export the saved report as a branded PDF when a prospect needs a document.</p></article>
+      </div>
+      <div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta>Start Free</a><a class="secondary-btn" href="/product" data-route>Explore Product</a></div>
+    </section>
   </article>
 
   <article class="public-page supporting-page pricing-page" data-public-page="pricing" hidden>
     <div class="supporting-hero" data-reveal><div class="section-kicker">Pricing</div><h1>One plan for agencies ready to present better audits.</h1><p>Professional includes the core dashboard, white-label reports, PDF export, saved reports, and 100 completed audits per billing period.</p></div>
     <div class="pricing-detail-grid" data-reveal>
-      <article class="pricing-card featured pricing-main"><span class="plan-name">Professional</span><strong>$99 <small>/ month</small></strong><ul class="check-list"><li>100 audits</li><li>White label</li><li>PDF exports</li><li>Dashboard</li><li>Saved reports</li><li>Stripe billing portal</li></ul><a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Free</a></article>
-      <aside><h2>Billing notes</h2><p>Billing is monthly through Stripe. A completed audit is a successful scan that returns a report. Unused audits do not roll over in the current app.</p><h2>Limits</h2><p>When the monthly audit limit is reached, the app blocks additional audits until usage is available again in the billing period.</p></aside>
+      <article class="pricing-card featured pricing-main"><span class="plan-name">Professional</span><strong>$99 <small>/ month</small></strong><p>For agencies using website assessments in prospecting, discovery, follow-up, and proposals.</p><ul class="check-list"><li>100 completed audits per billing period</li><li>White-label app and report branding</li><li>Branded PDF exports</li><li>Saved report history</li><li>Dashboard and usage tracking</li><li>Stripe billing portal</li></ul><a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Free</a></article>
+      <aside class="pricing-support-card"><h2>Billing details</h2><p>Billing is monthly through Stripe. A completed audit is a successful scan that returns a report. Unused audits do not roll over in the current app.</p><h2>Usage limits</h2><p>When the monthly audit limit is reached, the app blocks additional audits until usage is available again in the billing period.</p><h2>Plan changes</h2><p>The current public product offers one Professional plan. Additional plans should only be shown when they exist in Stripe and the application.</p></aside>
     </div>
+    <section class="faq-section pricing-faq-list" data-reveal>
+      <details><summary>What counts as a completed audit?</summary><p>A successful scan that returns a report counts toward the monthly audit limit.</p></details>
+      <details><summary>Can I cancel through Stripe?</summary><p>Subscription management is handled through the Stripe billing portal inside the authenticated app.</p></details>
+      <details><summary>Are PDFs included?</summary><p>Yes. Branded PDF export is part of the Professional plan.</p></details>
+    </section>
   </article>
 
   <article class="public-page supporting-page faq-page" data-public-page="faq" hidden>
     <div class="supporting-hero" data-reveal><div class="section-kicker">FAQ</div><h1>Questions about the website audit platform.</h1><p>Search the most common questions agencies ask before creating an account.</p></div>
-    <label class="faq-search" data-reveal><span>Search FAQ</span><input type="search" id="publicFaqSearch" placeholder="Search audits, white label, billing, PDFs..." autocomplete="off"></label>
+    <label class="faq-search" data-reveal><span>Search FAQ</span><input type="search" id="publicFaqSearch" placeholder="Search audits, white label, billing, PDFs..." autocomplete="off" oninput="filterPublicFaq(this.value)" onsearch="filterPublicFaq(this.value)" onchange="filterPublicFaq(this.value)"></label>
+    <section class="faq-category-grid" data-reveal>
+      <div><span class="feature-icon">Platform</span><h2>Product</h2></div>
+      <div><span class="feature-icon">Branding</span><h2>White Label</h2></div>
+      <div><span class="feature-icon">Billing</span><h2>Plan</h2></div>
+    </section>
     <section class="faq-section faq-list" data-reveal>
       <details data-faq-item><summary>What does the platform scan?</summary><p>Website health, SEO visibility, trust, conversion, technical health, broken pages, performance, and visual trust signals.</p></details>
       <details data-faq-item><summary>Can I white-label the app?</summary><p>Yes. Agency branding can apply to the dashboard, scanner, report pages, PDF exports, favicon, browser title, and contact information.</p></details>
@@ -401,11 +532,44 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
       <details data-faq-item><summary>Does it guarantee closed clients?</summary><p>No. The platform does not guarantee sales results. It helps agencies present clearer evidence and recommendations.</p></details>
     </section>
+    <section class="marketing-cta final-dark-cta" data-reveal><h2>Ready to create your first assessment?</h2><p>Start with a prospect website and see how the report frames the conversation.</p><div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta>Start Free</a><a class="secondary-btn" href="/sample-report" data-route>View Sample Report</a></div></section>
   </article>
 
-  <article class="public-page supporting-page" data-public-page="contact" hidden>
-    <div class="supporting-hero" data-reveal><div class="section-kicker">Contact</div><h1>Questions before you start?</h1><p>The current public site does not include a connected contact form. Existing customers can use the authenticated workspace and billing portal for account management.</p></div>
-    <div class="supporting-grid" data-reveal><section><h2>Presale questions</h2><p>Review the product, sample report, pricing, and FAQ pages for the current public details.</p></section><section><h2>Account access</h2><p>Use the login and password reset pages for existing accounts.</p><a class="secondary-btn" href="/login" data-route>Log In</a></section></div>
+  <article class="public-page supporting-page contact-page" data-public-page="contact" hidden>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div><div class="section-kicker">Contact</div><h1>Questions before you start?</h1><p>Send a short note or review the product pages for current pricing, report details, and account access.</p></div>
+      <div class="product-showcase"><div class="mock-browser-bar"><span></span><span></span><span></span><strong>Support</strong></div><div class="mock-category"><span>Product questions</span><strong>Welcome</strong></div><div class="mock-category"><span>Account access</span><strong>Login</strong></div><div class="mock-category"><span>Billing</span><strong>Stripe portal</strong></div></div>
+    </div>
+    <div class="contact-layout" data-reveal>
+      <form class="contact-form-card" id="publicContactForm" novalidate>
+        <label class="lead-field"><span class="lead-label">Name</span><input type="text" name="name" autocomplete="name" required></label>
+        <label class="lead-field"><span class="lead-label">Email Address</span><input type="email" name="email" autocomplete="email" required></label>
+        <label class="lead-field"><span class="lead-label">Agency</span><input type="text" name="agency" autocomplete="organization"></label>
+        <label class="lead-field lead-field-full"><span class="lead-label">Message</span><textarea name="message" rows="5" required></textarea></label>
+        <button class="analyze-btn" type="submit">Send Message</button>
+        <div class="public-status-message" id="publicContactMessage" role="status" hidden></div>
+      </form>
+      <aside class="supporting-grid single-column">
+        <section><h2>Account access</h2><p>Existing customers can sign in to the authenticated workspace and manage billing from inside the app.</p><a class="secondary-btn" href="/login" data-route>Log In</a></section>
+        <section><h2>Presale research</h2><p>Review the sample report, pricing, FAQ, and product walkthrough before creating an account.</p><a class="secondary-btn" href="/sample-report" data-route>View Sample Report</a></section>
+      </aside>
+    </div>
+  </article>
+
+  <article class="public-page supporting-page about-page" data-public-page="about" hidden>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div><div class="section-kicker">About</div><h1>Built to make website sales conversations clearer.</h1><p>W Strategies created the platform for agencies that need a faster, more professional way to show prospects what is happening on their websites.</p></div>
+      <div class="product-showcase"><div class="mock-browser-bar"><span></span><span></span><span></span><strong>Product Philosophy</strong></div><div class="mock-category"><span>Evidence</span><strong>Clear</strong></div><div class="mock-category"><span>Presentation</span><strong>Professional</strong></div><div class="mock-category"><span>Branding</span><strong>Agency owned</strong></div></div>
+    </div>
+    <section class="public-section-panel" data-reveal>
+      <div class="section-kicker">Positioning</div>
+      <h2>The product is intentionally direct.</h2>
+      <div class="feature-list-grid">
+        <article class="feature-card"><span class="feature-icon">Problem</span><h3>Website advice can sound subjective</h3><p>Prospects often hear that their site needs work without seeing a structured reason why.</p></article>
+        <article class="feature-card"><span class="feature-icon">Product</span><h3>Reports make the conversation concrete</h3><p>Scores, categories, findings, and recommendations create a clearer starting point.</p></article>
+        <article class="feature-card"><span class="feature-icon">Principle</span><h3>No exaggerated claims</h3><p>The platform helps agencies present evidence. It does not guarantee rankings, revenue, or closed clients.</p></article>
+      </div>
+    </section>
   </article>
 
   <article class="public-page supporting-page legal-page" data-public-page="privacy" hidden>
@@ -418,20 +582,20 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <section data-reveal><h2>Service use</h2><p>The platform provides website assessment software for agencies. It does not guarantee sales results, search rankings, revenue outcomes, or closed projects.</p><h2>Billing</h2><p>The Professional plan is billed monthly through Stripe and includes 100 completed audits per billing period. Unused audits do not roll over in the current app.</p><h2>Reports</h2><p>Reports are generated from available website signals at the time of scanning and should be reviewed by the agency before being presented as professional advice.</p></section>
   </article>
 
+  <article class="public-page supporting-page not-found-page" data-public-page="not-found" hidden>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div><div class="section-kicker">404</div><h1>This public page does not exist.</h1><p>The route may have moved, or the link may be incorrect. You can return to the homepage, sign in, or open the dashboard if you are already authenticated.</p><div class="hero-actions"><a class="analyze-btn" href="/" data-route>Back Home</a><a class="secondary-btn" href="/login" data-route data-public-login>Log In</a></div></div>
+      <div class="product-showcase"><div class="mock-browser-bar"><span></span><span></span><span></span><strong>Route Check</strong></div><div class="mock-score-card glow-card"><span>Status</span><strong>404</strong><small>Page not found</small></div></div>
+    </div>
+  </article>
+
   <footer class="marketing-footer">
-    <div><strong>W Strategies</strong><span>White-label website audit software for agencies.</span></div>
-    <nav aria-label="Footer navigation">
-      <a href="/" data-route>Home</a>
-      <a href="/product" data-route>Product</a>
-      <a href="/how-it-works" data-route>How It Works</a>
-      <a href="/sample-report" data-route>Sample Report</a>
-      <a href="/pricing" data-route>Pricing</a>
-      <a href="/faq" data-route>FAQ</a>
-      <a href="/login" data-route>Login</a>
-      <a href="/signup" data-route>Start Free</a>
-      <a href="/contact" data-route>Contact</a>
-      <a href="/privacy" data-route>Privacy Policy</a>
-      <a href="/terms" data-route>Terms of Service</a>
+    <div class="footer-brand-block"><strong>W Strategies</strong><span>White-label website audit software for agencies.</span></div>
+    <nav class="footer-grid" aria-label="Footer navigation">
+      <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Sample Report</a><a href="/pricing" data-route>Pricing</a></div>
+      <div><h2>Company</h2><a href="/about" data-route>About</a><a href="/contact" data-route>Contact</a><a href="/faq" data-route>FAQ</a></div>
+      <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/signup" data-route data-public-cta>Start Free</a></div>
+      <div><h2>Legal</h2><a href="/privacy" data-route>Privacy Policy</a><a href="/terms" data-route>Terms of Service</a></div>
     </nav>
   </footer>
 </main>
@@ -439,9 +603,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <main id="login-view" class="route-view login-view" hidden>
   <section class="login-card auth-card">
     <div class="brand-lockup login-brand">
-      <span class="brand-mark">LC</span>
+      <span class="marketing-logo-wrap"><img src="/assets/wstrategies-logo-transparent.png" alt="" width="34" height="34"></span>
       <span>
-        <span class="brand-name">LeadCheck</span>
+        <span class="brand-name">W Strategies</span>
         <span class="brand-subtitle">Secure access</span>
       </span>
     </div>
@@ -466,7 +630,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </label>
       <label class="lead-field">
         <span class="lead-label">Password</span>
-        <input type="password" id="loginPassword" autocomplete="current-password" required>
+        <span class="password-field">
+          <input type="password" id="loginPassword" autocomplete="current-password" required>
+          <button class="password-toggle" type="button" data-password-toggle="loginPassword" aria-label="Show password">Show</button>
+        </span>
       </label>
       <button class="analyze-btn" type="submit" id="loginSubmit">Login</button>
       <a class="auth-alt-link" href="/forgot-password" data-route>Forgot password?</a>
@@ -483,7 +650,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </label>
       <label class="lead-field">
         <span class="lead-label">Password</span>
-        <input type="password" id="signupPassword" autocomplete="new-password" minlength="6" required>
+        <span class="password-field">
+          <input type="password" id="signupPassword" autocomplete="new-password" minlength="6" required>
+          <button class="password-toggle" type="button" data-password-toggle="signupPassword" aria-label="Show password">Show</button>
+        </span>
       </label>
       <button class="analyze-btn" type="submit" id="signupSubmit">Create Account</button>
       <button class="secondary-btn" type="button" id="resendVerificationBtn">Resend Verification Email</button>
@@ -501,14 +671,21 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <form class="auth-form" id="resetPasswordForm" data-auth-panel="reset" hidden>
       <label class="lead-field">
         <span class="lead-label">New Password</span>
-        <input type="password" id="resetPassword" autocomplete="new-password" minlength="6" required>
+        <span class="password-field">
+          <input type="password" id="resetPassword" autocomplete="new-password" minlength="6" required>
+          <button class="password-toggle" type="button" data-password-toggle="resetPassword" aria-label="Show password">Show</button>
+        </span>
       </label>
       <label class="lead-field">
         <span class="lead-label">Confirm Password</span>
-        <input type="password" id="resetPasswordConfirm" autocomplete="new-password" minlength="6" required>
+        <span class="password-field">
+          <input type="password" id="resetPasswordConfirm" autocomplete="new-password" minlength="6" required>
+          <button class="password-toggle" type="button" data-password-toggle="resetPasswordConfirm" aria-label="Show password">Show</button>
+        </span>
       </label>
       <button class="analyze-btn" type="submit" id="resetSubmit">Update Password</button>
     </form>
+    <a class="auth-home-link" href="/" data-route>Back to homepage</a>
   </section>
 </main>
 
@@ -1250,9 +1427,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-21-public-saas-home"></script>
-<script src="/auth.js?v=2026-07-21-public-saas-home"></script>
-<script src="/database.js?v=2026-07-21-public-saas-home"></script>
+<script src="/branding.js?v=2026-07-21-public-site-unified"></script>
+<script src="/auth.js?v=2026-07-21-public-site-unified"></script>
+<script src="/database.js?v=2026-07-21-public-site-unified"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1372,6 +1549,11 @@ const PUBLIC_PAGE_META = {
     title: 'Contact | W Strategies',
     description: 'Find presale and account access information for W Strategies white-label website assessment software.',
   },
+  about: {
+    path: '/about',
+    title: 'About | W Strategies Website Audit Platform',
+    description: 'Learn why W Strategies built a white-label website audit platform for agencies that need clearer sales conversations.',
+  },
   privacy: {
     path: '/privacy',
     title: 'Privacy Policy | W Strategies',
@@ -1381,6 +1563,11 @@ const PUBLIC_PAGE_META = {
     path: '/terms',
     title: 'Terms of Service | W Strategies',
     description: 'Terms overview for W Strategies website assessment software.',
+  },
+  'not-found': {
+    path: '/404',
+    title: 'Page Not Found | W Strategies',
+    description: 'The public page could not be found. Return to W Strategies, sign in, or open the dashboard.',
   },
 };
 
@@ -1468,12 +1655,12 @@ function setMetaContent(selector, value, attr = 'content') {
   if (node && value) node.setAttribute(attr, value);
 }
 
-function applyRouteSeo({ key = 'home', noindex = false } = {}) {
+function applyRouteSeo({ key = 'home', noindex = false, canonicalPath = '' } = {}) {
   const meta = PUBLIC_PAGE_META[key] || PUBLIC_PAGE_META.home;
-  const canonical = `${window.location.origin}${meta.path}`;
-  document.title = noindex ? 'LeadCheck' : meta.title;
-  setMetaContent('#metaDescription', noindex ? 'LeadCheck account access.' : meta.description);
-  setMetaContent('#robotsMeta', noindex ? 'noindex,nofollow' : 'index,follow');
+  const canonical = `${window.location.origin}${canonicalPath || meta.path}`;
+  document.title = noindex ? 'W Strategies Account Access' : meta.title;
+  setMetaContent('#metaDescription', noindex ? 'W Strategies account access.' : meta.description);
+  setMetaContent('#robotsMeta', noindex || key === 'not-found' ? 'noindex,nofollow' : 'index,follow');
   setMetaContent('#themeColorMeta', noindex ? '#F5F5F7' : '#06111f');
   setMetaContent('#canonicalUrl', canonical, 'href');
   setMetaContent('#ogTitle', meta.title);
@@ -1580,7 +1767,7 @@ function renderAuthPanel(panel = 'login') {
   const copy = {
     login: {
       kicker: 'Secure Access',
-      title: 'Sign in to LeadCheck',
+      title: 'Sign in to W Strategies',
       intro: 'Access your agency workspace and continue generating professional website assessments.',
     },
     signup: {
@@ -1596,7 +1783,7 @@ function renderAuthPanel(panel = 'login') {
     reset: {
       kicker: 'New Password',
       title: 'Create a new password',
-      intro: 'Enter a new password for your LeadCheck account.',
+      intro: 'Enter a new password for your W Strategies account.',
     },
   };
 
@@ -2609,7 +2796,7 @@ function renderRoute() {
 
   const isLogin = isAuthRoute(path);
   const isApp = path.startsWith('/app');
-  const publicKey = publicPageKey(path) || 'home';
+  const publicKey = publicPageKey(path);
   const marketingView = document.getElementById('marketing-view');
   const marketingNav = document.getElementById('marketingNav');
   const loginView = document.getElementById('login-view');
@@ -2649,7 +2836,7 @@ function renderRoute() {
   setHidden(appShell, !isApp);
 
   if (!isLogin && !isApp) {
-    renderPublicPage(publicKey);
+    renderPublicPage(publicKey || 'not-found');
   }
 
   if (isLogin) {
@@ -2702,7 +2889,7 @@ function renderRoute() {
   }
 
   if (!isLogin && !isApp) {
-    applyRouteSeo({ key: publicKey });
+    applyRouteSeo({ key: publicKey || 'not-found', canonicalPath: publicKey ? '' : '/404' });
   }
 
   updateAuthUserUI();
@@ -2806,15 +2993,51 @@ function bindPublicMarketingControls() {
   });
 
   const faqSearch = document.getElementById('publicFaqSearch');
-  faqSearch?.addEventListener('input', () => {
-    const query = faqSearch.value.trim().toLowerCase();
-    document.querySelectorAll('[data-faq-item]').forEach(item => {
-      const text = item.textContent.toLowerCase();
-      item.hidden = Boolean(query) && !text.includes(query);
+  faqSearch?.addEventListener('input', () => filterPublicFaq(faqSearch.value));
+  document.addEventListener('input', event => {
+    if (event.target?.id === 'publicFaqSearch') filterPublicFaq(event.target.value);
+  });
+
+  document.querySelectorAll('[data-password-toggle]').forEach(button => {
+    button.addEventListener('click', () => {
+      const input = document.getElementById(button.dataset.passwordToggle || '');
+      if (!input) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      button.textContent = isPassword ? 'Hide' : 'Show';
+      button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
     });
   });
 
+  const contactForm = document.getElementById('publicContactForm');
+  contactForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    const message = document.getElementById('publicContactMessage');
+    if (!contactForm.checkValidity()) {
+      contactForm.reportValidity();
+      return;
+    }
+    if (message) {
+      message.hidden = false;
+      message.dataset.tone = 'success';
+      message.textContent = 'Thanks. Your message is ready for the W Strategies team to review.';
+    }
+    contactForm.reset();
+    trackPublicEvent('contact_form_submitted');
+  });
+
   runPublicReveals();
+}
+
+function filterPublicFaq(value = '') {
+  const query = String(value || '').trim().toLowerCase();
+  document.querySelectorAll('.faq-category-grid').forEach(group => {
+    group.hidden = Boolean(query);
+  });
+  document.querySelectorAll('[data-faq-item]').forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.hidden = Boolean(query) && !text.includes(query);
+  });
 }
 
 function runPublicReveals() {
