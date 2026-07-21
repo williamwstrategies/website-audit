@@ -128,6 +128,19 @@
     return /^https?:\/\//i.test(cleanText(value));
   }
 
+  function fileNameFromDisposition(header, fallback) {
+    const value = cleanText(header);
+    const utfMatch = value.match(/filename\*=UTF-8''([^;]+)/i);
+    if (utfMatch) return decodeURIComponent(utfMatch[1]);
+    const match = value.match(/filename="?([^"]+)"?/i);
+    return match ? match[1] : fallback;
+  }
+
+  function clientRequestId(prefix = 'request') {
+    if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+    return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  }
+
   class DatabaseService {
     constructor(supabaseClient) {
       this.client = supabaseClient || null;
@@ -154,6 +167,68 @@
       const user = await this.getCurrentUser();
       if (!user) throw new Error('You must be logged in to use the database.');
       return user;
+    }
+
+    async getAccessToken() {
+      const client = this.requireClient();
+      const { data, error } = await client.auth.getSession();
+      if (error) throw error;
+      const token = data?.session?.access_token;
+      if (!token) throw new Error('You must be logged in to continue.');
+      return token;
+    }
+
+    async authHeaders(extra = {}) {
+      return {
+        ...extra,
+        Authorization: `Bearer ${await this.getAccessToken()}`,
+      };
+    }
+
+    async serverJson(path, options = {}) {
+      const headers = await this.authHeaders({
+        Accept: 'application/json',
+        ...(options.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        ...(options.headers || {}),
+      });
+
+      const response = await fetch(path, {
+        method: options.method || 'GET',
+        headers,
+        body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const error = new Error(payload.error || 'Request failed. Please try again.');
+        error.status = response.status;
+        error.code = payload.code || 'request_failed';
+        error.subscription = payload.subscription || null;
+        throw error;
+      }
+      return payload;
+    }
+
+    async serverBlob(path, options = {}) {
+      const headers = await this.authHeaders(options.headers || {});
+      const response = await fetch(path, {
+        method: options.method || 'GET',
+        headers,
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        const error = new Error(payload.error || 'Request failed. Please try again.');
+        error.status = response.status;
+        error.code = payload.code || 'request_failed';
+        error.subscription = payload.subscription || null;
+        throw error;
+      }
+
+      return {
+        blob: await response.blob(),
+        fileName: fileNameFromDisposition(response.headers.get('content-disposition'), options.fileName || 'website-assessment.pdf'),
+      };
     }
 
     profilePayload(user, update = {}) {
@@ -446,16 +521,41 @@
     }
 
     async getSubscription() {
-      const user = await this.requireUser();
-      const client = this.requireClient();
-      const { data, error } = await client
-        .from('subscriptions')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+      const payload = await this.serverJson('/api/billing/subscription');
+      return payload.subscription || null;
+    }
 
-      if (error) throw error;
-      return data || null;
+    async createCheckoutSession() {
+      return this.serverJson('/api/billing/checkout', {
+        method: 'POST',
+        body: {},
+      });
+    }
+
+    async createBillingPortalSession() {
+      return this.serverJson('/api/billing/portal', {
+        method: 'POST',
+        body: {},
+      });
+    }
+
+    async runAudit({ url, idempotencyKey, debug = false } = {}) {
+      return this.serverJson('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'X-Audit-Idempotency-Key': idempotencyKey || clientRequestId('audit'),
+        },
+        body: {
+          url,
+          ...(debug && { debug: true }),
+        },
+      });
+    }
+
+    async downloadReportPdf(reportId) {
+      return this.serverBlob(`/api/reports/${encodeURIComponent(reportId)}/pdf`, {
+        fileName: 'website-assessment.pdf',
+      });
     }
   }
 

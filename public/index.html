@@ -413,6 +413,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <p>Only the website URL is required. The extra fields are saved with the report context.</p>
             </div>
           </div>
+          <div class="billing-access-notice" id="scanBillingNotice" hidden>
+            <strong>Subscription required</strong>
+            <p id="scanBillingNoticeText">An active Professional subscription is required to run audits.</p>
+            <a class="secondary-btn" href="/app/billing" data-route>Manage Billing</a>
+          </div>
           <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
             <div class="lead-grid">
               <label class="lead-field">
@@ -623,34 +628,59 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div>
             <div class="section-kicker">Billing</div>
             <h2>Plan and Usage</h2>
-            <p>Subscription management will connect here when billing is enabled.</p>
+            <p>Manage your Professional subscription, billing details, invoices, and monthly audit usage.</p>
           </div>
-          <span class="status-chip low">Placeholder</span>
+          <span class="status-chip low" id="billingStatusChip">Inactive</span>
         </div>
         <div class="dashboard-grid">
           <article class="metric-card">
             <span>Plan</span>
-            <strong id="billingPlanName">Starter</strong>
-            <p id="billingPlanStatus">Trialing workspace.</p>
+            <strong id="billingPlanName">Professional</strong>
+            <p id="billingPlanStatus">Subscription status unavailable.</p>
           </article>
           <article class="metric-card">
             <span>Usage</span>
-            <strong id="billingUsageCount">0 / 10</strong>
-            <p>Audits available in this cycle.</p>
+            <strong id="billingUsageCount">0 / 100</strong>
+            <p id="billingUsageRemaining">Audits remaining this period.</p>
           </article>
           <article class="metric-card">
-            <span>Billing</span>
-            <strong>Not Connected</strong>
-            <p>Stripe will be added in a future phase.</p>
+            <span>Period End</span>
+            <strong id="billingPeriodEnd">Not available</strong>
+            <p id="billingRenewalDate">Renewal date unavailable.</p>
           </article>
         </div>
-        <section class="workspace-panel">
-          <div class="panel-heading">
+        <section class="workspace-panel billing-plan-panel">
+          <div class="panel-heading billing-plan-header">
             <div>
               <div class="section-kicker">Subscription</div>
-              <h2>Billing Placeholder</h2>
-              <p>This page is ready for plan selection, invoices, payment method updates, and audit limits.</p>
+              <h2>Professional</h2>
+              <p id="billingPriceLabel">$99 USD per month. Includes 100 completed audits per billing period.</p>
             </div>
+            <div class="billing-plan-price">$99<span>/mo</span></div>
+          </div>
+          <div class="billing-progress-block">
+            <div class="billing-progress-top">
+              <span id="billingPaymentStatus">Payment status unavailable</span>
+              <span id="billingUsagePercent">0%</span>
+            </div>
+            <div class="billing-progress-track">
+              <div class="billing-progress-fill" id="billingProgressFill"></div>
+            </div>
+          </div>
+          <div class="billing-feature-grid">
+            <span>100 website audits per month</span>
+            <span>White-label application</span>
+            <span>White-label reports</span>
+            <span>Saved reports</span>
+            <span>Premium PDF export</span>
+            <span>Billing portal access</span>
+          </div>
+          <div class="billing-status-notice" id="billingStatusNotice" role="status"></div>
+          <div class="auth-message" id="billingMessage" hidden></div>
+          <div class="billing-actions">
+            <button class="analyze-btn" type="button" id="billingSubscribeBtn">Subscribe</button>
+            <button class="secondary-btn" type="button" id="billingManageBtn">Manage Subscription</button>
+            <button class="secondary-btn" type="button" id="billingRefreshBtn">Refresh Status</button>
           </div>
         </section>
       </section>
@@ -1025,6 +1055,9 @@ let pendingProtectedPath = '/app';
 let brandingFormDirty = false;
 let brandingPreviewLogoObjectUrl = '';
 let brandingPreviewFaviconObjectUrl = '';
+let billingActivationPolling = false;
+let lastBillingReturnPath = '';
+let pdfExportingReportId = '';
 
 const ROUTE_TITLES = {
   '/app': 'Dashboard',
@@ -1462,6 +1495,90 @@ function titleCase(value) {
     .replace(/\w\S*/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
 }
 
+function defaultSubscriptionState() {
+  return {
+    exists: false,
+    plan: 'professional',
+    plan_name: 'Professional',
+    price_label: '$99 / month',
+    status: 'incomplete',
+    payment_status: '',
+    audits_used: 0,
+    audit_limit: 100,
+    audits_remaining: 100,
+    current_period_start: null,
+    current_period_end: null,
+    cancel_at_period_end: false,
+    can_run_audit: false,
+    can_export_pdf: false,
+    billing_configured: false,
+    webhook_configured: false,
+    stripe_customer_id: '',
+    stripe_subscription_id: '',
+  };
+}
+
+function normalizedSubscription() {
+  return {
+    ...defaultSubscriptionState(),
+    ...(currentSubscription || {}),
+  };
+}
+
+function subscriptionCanRunAudit(subscription = normalizedSubscription()) {
+  return subscription.can_run_audit === true;
+}
+
+function subscriptionCanExportPdf(subscription = normalizedSubscription()) {
+  return subscription.can_export_pdf === true;
+}
+
+function formatBillingDate(value) {
+  if (!value) return 'Not available';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Not available';
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function billingStatusLabel(subscription = normalizedSubscription()) {
+  if (subscription.cancel_at_period_end && subscriptionCanRunAudit(subscription)) return 'Cancelling at period end';
+  return titleCase(subscription.status || 'incomplete');
+}
+
+function billingNoticeText(subscription = normalizedSubscription()) {
+  if (!subscription.billing_configured) {
+    return 'Billing is not fully configured yet. Add Stripe and Supabase server environment variables in Render.';
+  }
+  if (subscriptionCanRunAudit(subscription)) {
+    if (subscription.cancel_at_period_end) {
+      return `Your subscription remains active until ${formatBillingDate(subscription.current_period_end)}.`;
+    }
+    return 'Your Professional subscription is active.';
+  }
+  if ((subscription.audits_remaining || 0) <= 0 && ['active', 'trialing'].includes(subscription.status)) {
+    return `Monthly audit limit reached. You have used ${subscription.audits_used} of ${subscription.audit_limit} audits this period.`;
+  }
+  if (subscription.status === 'past_due' || subscription.status === 'unpaid') {
+    return 'Your payment could not be processed. Update your payment method to continue running new audits.';
+  }
+  if (subscription.status === 'cancelled') {
+    return 'This subscription is cancelled. Existing reports are preserved.';
+  }
+  return 'An active Professional subscription is required to run new audits and export PDFs.';
+}
+
+function setBillingMessage(message = '', tone = 'default') {
+  const node = document.getElementById('billingMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
 function savedReportScore(report) {
   const data = asRecord(report.report_data);
   const payload = asRecord(data.report || data);
@@ -1571,30 +1688,73 @@ function updateReportMetrics() {
   const billingPlanName = document.getElementById('billingPlanName');
   const billingPlanStatus = document.getElementById('billingPlanStatus');
   const billingUsageCount = document.getElementById('billingUsageCount');
+  const billingUsageRemaining = document.getElementById('billingUsageRemaining');
+  const billingPeriodEnd = document.getElementById('billingPeriodEnd');
+  const billingRenewalDate = document.getElementById('billingRenewalDate');
+  const billingPaymentStatus = document.getElementById('billingPaymentStatus');
+  const billingUsagePercent = document.getElementById('billingUsagePercent');
+  const billingProgressFill = document.getElementById('billingProgressFill');
+  const billingStatusNotice = document.getElementById('billingStatusNotice');
+  const billingStatusChip = document.getElementById('billingStatusChip');
+  const billingPriceLabel = document.getElementById('billingPriceLabel');
+  const billingSubscribeBtn = document.getElementById('billingSubscribeBtn');
+  const billingManageBtn = document.getElementById('billingManageBtn');
+  const scanBillingNotice = document.getElementById('scanBillingNotice');
+  const scanBillingNoticeText = document.getElementById('scanBillingNoticeText');
+  const analyzeBtn = document.getElementById('analyzeBtn');
   const count = savedReports.length;
   const monthly = savedReports.filter(report => isThisMonth(report.created_at)).length;
   const scores = savedReports.map(savedReportScore).filter(score => Number.isFinite(score));
   const avg = scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null;
-  const plan = titleCase(currentSubscription?.plan || 'starter');
-  const status = titleCase(currentSubscription?.status || 'trialing');
-  const used = Number.isFinite(Number(currentSubscription?.audits_used))
-    ? Number(currentSubscription.audits_used)
-    : count;
-  const limit = Number.isFinite(Number(currentSubscription?.audit_limit))
-    ? Number(currentSubscription.audit_limit)
-    : 10;
+  const subscription = normalizedSubscription();
+  const plan = subscription.plan_name || titleCase(subscription.plan || 'professional');
+  const status = billingStatusLabel(subscription);
+  const used = Number.isFinite(Number(subscription.audits_used)) ? Number(subscription.audits_used) : 0;
+  const limit = Number.isFinite(Number(subscription.audit_limit)) ? Number(subscription.audit_limit) : 100;
+  const remaining = Math.max(0, Number(subscription.audits_remaining ?? (limit - used)) || 0);
+  const usagePercent = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
+  const notice = billingNoticeText(subscription);
+  const canRunAudit = subscriptionCanRunAudit(subscription);
+  const hasCustomer = !!subscription.stripe_customer_id;
 
   if (reportCount) reportCount.textContent = String(count);
   if (reportCountLabel) reportCountLabel.textContent = count === 1 ? 'Saved assessment.' : 'Saved assessments.';
   if (monthlyReports) monthlyReports.textContent = String(monthly);
   if (reportsUsed) reportsUsed.textContent = `${used} / ${limit}`;
-  if (reportsUsedLabel) reportsUsedLabel.textContent = limit > used ? `${Math.max(0, limit - used)} audits remaining.` : 'Audit limit reached.';
+  if (reportsUsedLabel) reportsUsedLabel.textContent = remaining > 0 ? `${remaining} audits remaining.` : 'Audit limit reached.';
   if (averageScore) averageScore.textContent = avg == null ? '-' : `${avg}%`;
   if (currentPlan) currentPlan.textContent = plan;
   if (planStatus) planStatus.textContent = `${status} workspace.`;
   if (billingPlanName) billingPlanName.textContent = plan;
   if (billingPlanStatus) billingPlanStatus.textContent = `${status} workspace.`;
   if (billingUsageCount) billingUsageCount.textContent = `${used} / ${limit}`;
+  if (billingUsageRemaining) billingUsageRemaining.textContent = `${remaining} audits remaining this period.`;
+  if (billingPeriodEnd) billingPeriodEnd.textContent = formatBillingDate(subscription.current_period_end);
+  if (billingRenewalDate) billingRenewalDate.textContent = subscriptionCanRunAudit(subscription)
+    ? `Next renewal: ${formatBillingDate(subscription.current_period_end)}`
+    : 'Renewal date unavailable.';
+  if (billingPaymentStatus) billingPaymentStatus.textContent = subscription.payment_status
+    ? `Payment status: ${titleCase(subscription.payment_status)}`
+    : `Subscription status: ${status}`;
+  if (billingUsagePercent) billingUsagePercent.textContent = `${usagePercent}%`;
+  if (billingProgressFill) billingProgressFill.style.width = `${usagePercent}%`;
+  if (billingStatusNotice) {
+    billingStatusNotice.textContent = notice;
+    billingStatusNotice.dataset.tone = canRunAudit ? 'success' : (subscription.status === 'past_due' || subscription.status === 'unpaid' ? 'warning' : 'default');
+  }
+  if (billingStatusChip) {
+    billingStatusChip.textContent = status;
+    billingStatusChip.className = `status-chip ${canRunAudit ? 'low' : 'high'}`;
+  }
+  if (billingPriceLabel) billingPriceLabel.textContent = `${subscription.price_label || '$99 / month'}. Includes ${limit} completed audits per billing period.`;
+  if (billingSubscribeBtn) billingSubscribeBtn.hidden = canRunAudit;
+  if (billingManageBtn) billingManageBtn.hidden = !hasCustomer;
+  if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
+  if (scanBillingNoticeText) scanBillingNoticeText.textContent = notice;
+  if (analyzeBtn && !analyzeBtn.dataset.scanning) {
+    analyzeBtn.disabled = !canRunAudit;
+    analyzeBtn.dataset.billingBlocked = canRunAudit ? 'false' : 'true';
+  }
 }
 
 function reportCardHtml(report, options = {}) {
@@ -1740,6 +1900,100 @@ async function loadSubscription() {
   }
 }
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function pollSubscriptionActivation() {
+  if (billingActivationPolling) return;
+  billingActivationPolling = true;
+  setBillingMessage('Your subscription is being activated. This usually takes only a few seconds.', 'default');
+
+  try {
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const subscription = await loadSubscription();
+      if (subscriptionCanRunAudit(subscription || normalizedSubscription())) {
+        setBillingMessage('Subscription active. Your workspace is ready.', 'success');
+        showToast('Subscription active.', 'success');
+        return;
+      }
+      await delay(1500);
+    }
+    setBillingMessage('Still waiting for Stripe to confirm the subscription. Refresh status in a few seconds.', 'warning');
+  } finally {
+    billingActivationPolling = false;
+  }
+}
+
+function handleBillingReturnState() {
+  const path = window.location.pathname;
+  if (lastBillingReturnPath === path) return;
+  lastBillingReturnPath = path;
+  if (path.startsWith('/app/billing/success')) {
+    pollSubscriptionActivation();
+  } else if (path.startsWith('/app/billing/cancelled')) {
+    setBillingMessage('Checkout was cancelled. No subscription changes were made.', 'warning');
+  }
+}
+
+async function startCheckout() {
+  if (!databaseService?.isReady?.()) return;
+  const button = document.getElementById('billingSubscribeBtn');
+  const original = button?.textContent || '';
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Opening Checkout...';
+  }
+  try {
+    setBillingMessage('Opening secure checkout...', 'default');
+    const session = await databaseService.createCheckoutSession();
+    if (!session?.url) throw new Error('Checkout could not be started.');
+    window.location.assign(session.url);
+  } catch (error) {
+    setBillingMessage(error?.message || 'Checkout could not be started.', 'error');
+    showToast(error?.message || 'Checkout could not be started.', 'error');
+    if (button) {
+      button.disabled = false;
+      button.textContent = original;
+    }
+  }
+}
+
+async function openBillingPortal() {
+  if (!databaseService?.isReady?.()) return;
+  const button = document.getElementById('billingManageBtn');
+  const original = button?.textContent || '';
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Opening Portal...';
+  }
+  try {
+    setBillingMessage('Opening billing portal...', 'default');
+    const session = await databaseService.createBillingPortalSession();
+    if (!session?.url) throw new Error('Billing portal could not be opened.');
+    window.location.assign(session.url);
+  } catch (error) {
+    setBillingMessage(error?.message || 'Billing portal could not be opened.', 'error');
+    showToast(error?.message || 'Billing portal could not be opened.', 'error');
+    if (button) {
+      button.disabled = false;
+      button.textContent = original;
+    }
+  }
+}
+
+function bindBillingControls() {
+  document.getElementById('billingSubscribeBtn')?.addEventListener('click', startCheckout);
+  document.getElementById('billingManageBtn')?.addEventListener('click', openBillingPortal);
+  document.getElementById('billingRefreshBtn')?.addEventListener('click', async event => {
+    await withButtonLoading(event.currentTarget, 'Refreshing...', async () => {
+      setBillingMessage('Refreshing subscription status...', 'default');
+      const subscription = await loadSubscription();
+      setBillingMessage(subscription ? 'Subscription status refreshed.' : 'Subscription status could not load.', subscription ? 'success' : 'error');
+    });
+  });
+}
+
 async function openSavedReport(reportId, options = {}) {
   if (!databaseService?.isReady?.()) return;
   setReportsMessage('');
@@ -1781,6 +2035,15 @@ async function duplicateSavedReport(reportId) {
   setReportsMessage('');
 
   try {
+    const subscription = await loadSubscription();
+    if (!subscriptionCanExportPdf(subscription || normalizedSubscription())) {
+      const message = billingNoticeText(subscription || normalizedSubscription());
+      setReportsMessage(message, 'warning');
+      showToast(message, 'warning');
+      navigateTo('/app/billing');
+      return;
+    }
+
     await databaseService.duplicateReport(reportId);
     savedReportsLoaded = false;
     await loadSavedReports({ force: true });
@@ -1864,7 +2127,7 @@ function bindReportControls() {
     event.preventDefault();
 
     if (action === 'open') openSavedReport(reportId);
-    if (action === 'export') openSavedReport(reportId, { exportPdf: true });
+    if (action === 'export') exportReportPdf(reportId, actionButton);
     if (action === 'duplicate') duplicateSavedReport(reportId);
     if (action === 'delete') deleteSavedReport(reportId);
   });
@@ -1893,6 +2156,13 @@ function handleAuthStateChange(event) {
 
 function renderRoute() {
   const path = window.location.pathname;
+  if (path === '/billing' || path.startsWith('/billing/')) {
+    const nextPath = path.replace(/^\/billing/, '/app/billing');
+    window.history.replaceState({}, '', `${nextPath}${window.location.search}${window.location.hash}`);
+    renderRoute();
+    return;
+  }
+
   const isLogin = isAuthRoute(path);
   const isApp = path.startsWith('/app');
   const marketingView = document.getElementById('marketing-view');
@@ -1938,7 +2208,10 @@ function renderRoute() {
     setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : key === 'dashboard' ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
     else if (key === 'branding') showAppPanel('branding');
-    else if (key === 'billing') showAppPanel('billing');
+    else if (key === 'billing') {
+      showAppPanel('billing');
+      handleBillingReturnState();
+    }
     else if (key === 'reports') showAppPanel('reports');
     else if (key === 'saved-report') {
       const reportId = savedReportIdFromPath(path);
@@ -2471,12 +2744,20 @@ function buildPersistedReportData(result) {
   };
 }
 
+function setCurrentReportPdfButton(disabled, label = 'Download PDF') {
+  const button = document.querySelector('.download-pdf-btn');
+  if (!button) return;
+  button.disabled = !!disabled;
+  button.textContent = label;
+}
+
 async function persistGeneratedReport(result) {
   if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) return null;
 
   const website = asText(result.url) || pendingWebsiteUrl;
   const websiteScore = reportScoreFromResult(result);
   setReportSaveMessage('Saving report...', 'default');
+  setCurrentReportPdfButton(true, 'Preparing PDF...');
 
   try {
     const savedReport = await databaseService.createReport({
@@ -2492,13 +2773,15 @@ async function persistGeneratedReport(result) {
     }
     console.log('[LeadCheck] Report saved:', pendingSavedReportId);
     setReportSaveMessage('Report saved to your workspace.', 'success');
+    setCurrentReportPdfButton(false);
     showToast('Report saved to your workspace.', 'success');
     savedReportsLoaded = false;
     loadSavedReports({ force: true });
     return savedReport;
   } catch (error) {
     console.warn('[LeadCheck] Report save skipped:', error?.message || error);
-    setReportSaveMessage('Report generated, but it could not be saved. You can still view and export it.', 'error');
+    setReportSaveMessage('Report generated, but it could not be saved. PDF export requires a saved report.', 'error');
+    setCurrentReportPdfButton(true, 'PDF Unavailable');
     showToast('Report generated, but it could not be saved.', 'warning');
     return null;
   }
@@ -2760,6 +3043,11 @@ function renderRatingComparison(result, scoreColor) {
     </div>
   `).join('');
 }
+
+function newAuditIdempotencyKey() {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  return `audit-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
  
 async function runAnalysis() {
   const raw = document.getElementById('urlInput').value;
@@ -2777,6 +3065,23 @@ async function runAnalysis() {
     return;
   }
 
+  if (!databaseService?.isReady?.()) {
+    errBox.style.display = 'block';
+    errBox.textContent = 'Database access is not connected for this session.';
+    return;
+  }
+
+  const subscription = await loadSubscription();
+  if (!subscriptionCanRunAudit(subscription || normalizedSubscription())) {
+    const message = billingNoticeText(subscription || normalizedSubscription());
+    errBox.style.display = 'block';
+    errBox.textContent = message;
+    setBillingMessage(message, 'warning');
+    showToast(message, 'warning');
+    navigateTo('/app/billing');
+    return;
+  }
+
   resetMetaScan(url);
   fireMetaOnce('auditStarted', 'AuditStarted');
   pendingScanResult = null;
@@ -2787,7 +3092,9 @@ async function runAnalysis() {
   setReportSaveMessage('');
  
   showAppPanel('loading');
-  document.getElementById('analyzeBtn').disabled = true;
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  analyzeBtn.dataset.scanning = 'true';
+  analyzeBtn.disabled = true;
  
   stepIdx = 0;
   document.querySelector('.loading-text').textContent = 'Analyzing website...';
@@ -2796,46 +3103,42 @@ async function runAnalysis() {
   stepTimer = setInterval(cycleStep, 1800);
  
   try {
-    const res = await fetch(ANALYZE_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
+    const data = await databaseService.runAudit({
+      url,
+      idempotencyKey: newAuditIdempotencyKey(),
     });
- 
-    const data = await res.json();
     finishLoadingProgress();
- 
-    if (!res.ok || data.error) {
-      const errorMessage = data.error || 'Analysis failed. Please try again.';
-      fireMetaOnce('auditFailed', 'AuditFailed', {
-        error: errorMessage,
-      });
-      showError(errorMessage);
-      return;
-    }
  
     pendingScanResult = data;
     pendingWebsiteUrl = asText(data.url) || url;
     renderResults(data);
-    persistGeneratedReport(data);
+    await persistGeneratedReport(data);
     fireMetaOnce('auditCompleted', 'AuditCompleted', {
       websiteScore: reportScoreFromResult(data),
     });
+    loadSubscription();
   } catch (err) {
     console.error('API request failed:', err);
     stopLoadingTimers();
     const errorMessage = err?.message || 'Could not reach the server. Please try again.';
+    if (err?.subscription) {
+      currentSubscription = err.subscription;
+      updateReportMetrics();
+    }
     fireMetaOnce('auditFailed', 'AuditFailed', {
       error: errorMessage,
     });
-    showError('We could not complete the scan right now. Please check the website URL and try again.');
+    showError(errorMessage || 'We could not complete the scan right now. Please check the website URL and try again.');
   }
 }
  
 function showError(msg) {
   stopLoadingTimers();
   showAppPanel('scan');
-  document.getElementById('analyzeBtn').disabled = false;
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  analyzeBtn.dataset.scanning = 'false';
+  analyzeBtn.disabled = false;
+  updateReportMetrics();
   const errBox = document.getElementById('error-box');
   errBox.style.display = 'block';
   errBox.textContent = msg;
@@ -3013,6 +3316,7 @@ function renderResults(data) {
   document.getElementById('fullResults').style.display = 'block';
   const actions = document.querySelector('.report-actions');
   if (actions) actions.style.display = 'flex';
+  setCurrentReportPdfButton(!pendingSavedReportId, pendingSavedReportId ? 'Download PDF' : 'Preparing PDF...');
   const unlockForm = document.getElementById('unlockLeadForm');
   if (unlockForm) unlockForm.reset();
   const unlockBtn = document.getElementById('unlockBtn');
@@ -3378,24 +3682,72 @@ function escHtml(str) {
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-function downloadReportPdf() {
-  const analyzedUrl = document.getElementById('analyzedUrl')?.textContent || 'website';
-  const brand = brandingProvider?.getBranding?.() || window.DEFAULT_AGENCY_BRANDING || {};
-  const agencyName = brand.whiteLabelEnabled === false ? 'Website Assessment' : (brand.agencyName || 'Agency');
-  let host = 'website';
-  try {
-    host = new URL(analyzedUrl).hostname.replace(/^www\./, '');
-  } catch {
-    host = analyzedUrl.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'website';
+function saveBlobDownload(blob, fileName) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName || 'website-assessment.pdf';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function exportReportPdf(reportId, button = null) {
+  if (!reportId || !databaseService?.isReady?.()) {
+    const message = 'PDF export requires a saved report.';
+    setReportSaveMessage(message, 'error');
+    showToast(message, 'error');
+    return;
+  }
+  if (pdfExportingReportId) return;
+
+  const subscription = await loadSubscription();
+  if (!subscriptionCanExportPdf(subscription || normalizedSubscription())) {
+    const message = billingNoticeText(subscription || normalizedSubscription());
+    setReportsMessage(message, 'warning');
+    setReportSaveMessage(message, 'warning');
+    setBillingMessage(message, 'warning');
+    showToast(message, 'warning');
+    navigateTo('/app/billing');
+    return;
   }
 
-  const originalTitle = document.title;
-  document.title = `${agencyName} Website Assessment - ${host}`;
-  window.print();
+  pdfExportingReportId = reportId;
+  const original = button?.textContent || '';
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Generating PDF...';
+  }
+  setReportSaveMessage('Generating PDF...', 'default');
 
-  setTimeout(() => {
-    document.title = originalTitle;
-  }, 1000);
+  try {
+    const { blob, fileName } = await databaseService.downloadReportPdf(reportId);
+    saveBlobDownload(blob, fileName);
+    setReportSaveMessage('PDF ready.', 'success');
+    setReportsMessage('PDF ready.', 'success');
+    showToast('PDF ready.', 'success');
+  } catch (error) {
+    if (error?.subscription) {
+      currentSubscription = error.subscription;
+      updateReportMetrics();
+    }
+    const message = error?.message || 'PDF export failed. Please try again.';
+    setReportSaveMessage(message, 'error');
+    setReportsMessage(message, 'error');
+    showToast(message, 'error');
+  } finally {
+    pdfExportingReportId = '';
+    if (button) {
+      button.disabled = false;
+      button.textContent = original;
+    }
+  }
+}
+
+function downloadReportPdf() {
+  const button = document.querySelector('.download-pdf-btn');
+  exportReportPdf(pendingSavedReportId, button);
 }
  
 function resetApp() {
@@ -3413,7 +3765,10 @@ function resetApp() {
   showAppPanel('dashboard');
   document.getElementById('partialGate').style.display = 'none';
   document.getElementById('fullResults').style.display = 'none';
-  document.getElementById('analyzeBtn').disabled = false;
+  const analyzeBtn = document.getElementById('analyzeBtn');
+  analyzeBtn.dataset.scanning = 'false';
+  analyzeBtn.disabled = false;
+  updateReportMetrics();
   document.getElementById('auditForm').reset();
   document.getElementById('unlockLeadForm').reset();
   const unlockMessage = document.getElementById('unlockMessage');
@@ -3434,6 +3789,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindMobileNavigation();
   bindAuthForms();
   bindReportControls();
+  bindBillingControls();
   bindBrandingForm();
   renderRoute();
   await authProvider.init();
