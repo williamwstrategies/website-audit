@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-07-21-billing-pdf';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-07-21-billing-pdf-2';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
@@ -47,7 +47,18 @@ self.addEventListener('fetch', event => {
 
   if (url.origin !== self.location.origin) return;
 
-  if (url.pathname === '/api/analyze' || url.pathname === '/api/auth-config') {
+  const networkOnlyPaths = new Set([
+    '/api/analyze',
+    '/api/auth-config',
+    '/api/billing/config',
+    '/api/billing/subscription',
+    '/styles.css',
+    '/branding.js',
+    '/auth.js',
+    '/database.js',
+  ]);
+
+  if (networkOnlyPaths.has(url.pathname) || url.pathname.startsWith('/api/reports/')) {
     event.respondWith(fetch(event.request));
     return;
   }
