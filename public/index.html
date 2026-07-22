@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-22-demo-render-fix">
+<link rel="stylesheet" href="/styles.css?v=2026-07-22-demo-no-account">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -465,7 +465,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     </div>
     <div class="demo-report-notice" id="demoReportNotice" data-reveal>
       <strong>This demonstration uses fictional data.</strong>
-      <span>Create an account to generate reports using real websites. No scanner, Playwright, credits, customer reports, or Supabase report data are used on this page.</span>
+      <span>No account is needed for this demo. The website you enter is shown at the top for personalization; the findings below always use one predefined fictional report.</span>
     </div>
     <div class="public-demo-report-mount" id="publicDemoReportMount" data-reveal></div>
     <section class="public-section-panel" data-reveal>
@@ -1424,9 +1424,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-22-demo-render-fix"></script>
-<script src="/auth.js?v=2026-07-22-demo-render-fix"></script>
-<script src="/database.js?v=2026-07-22-demo-render-fix"></script>
+<script src="/branding.js?v=2026-07-22-demo-no-account"></script>
+<script src="/auth.js?v=2026-07-22-demo-no-account"></script>
+<script src="/database.js?v=2026-07-22-demo-no-account"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -3748,7 +3748,7 @@ function restoreReportShellToApp() {
 function requestedDemoWebsite() {
   const params = new URLSearchParams(window.location.search);
   const requested = params.get('website') || document.getElementById('sampleDemoUrl')?.value || document.getElementById('heroDemoUrl')?.value || '';
-  return normalizeUrl(requested) || DEMO_REPORT_DATA.url;
+  return demoDisplayWebsite(requested);
 }
 
 function demoReportDataForWebsite(website) {
@@ -3760,7 +3760,20 @@ function demoReportDataForWebsite(website) {
 }
 
 function demoRequestKey(website) {
-  return normalizeUrl(website || '') || DEMO_REPORT_DATA.url;
+  return demoDisplayWebsite(website);
+}
+
+function demoDisplayWebsite(raw) {
+  const value = String(raw || '').trim();
+  if (!value) return DEMO_REPORT_DATA.url;
+  if (/\s/.test(value)) return value.slice(0, 120);
+  const normalized = normalizeUrl(value);
+  try {
+    const parsed = new URL(normalized);
+    return parsed.hostname.includes('.') ? parsed.href.replace(/\/$/, '') : value.slice(0, 120);
+  } catch {
+    return value.slice(0, 120);
+  }
 }
 
 function renderStaticDemoReport(website) {
@@ -3812,17 +3825,6 @@ function renderStaticDemoReport(website) {
   }
 }
 
-function validDemoWebsite(raw) {
-  const normalized = normalizeUrl(raw || '');
-  if (!normalized) return null;
-  try {
-    const parsed = new URL(normalized);
-    return parsed.hostname.includes('.') ? normalized : null;
-  } catch {
-    return null;
-  }
-}
-
 function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading = false } = {}) {
   const loading = document.getElementById('demoLoadingCard');
   const notice = document.getElementById('demoReportNotice');
@@ -3865,14 +3867,7 @@ function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading 
 }
 
 function startDemoFromWebsite(website) {
-  const normalizedWebsite = validDemoWebsite(website);
-  if (!normalizedWebsite) {
-    showToast('Enter a valid website URL to generate the demo report.', 'warning');
-    const visibleInput = [document.getElementById('heroDemoUrl'), document.getElementById('sampleDemoUrl')]
-      .find(input => input && !input.closest('[hidden]'));
-    visibleInput?.focus();
-    return;
-  }
+  const normalizedWebsite = demoDisplayWebsite(website);
   trackPublicEvent('demo_started', { requested_website: normalizedWebsite });
   navigateTo(`/sample-report?website=${encodeURIComponent(normalizedWebsite)}&scan=1`);
 }
