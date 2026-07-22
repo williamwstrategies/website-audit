@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-22-demo-depth">
+<link rel="stylesheet" href="/styles.css?v=2026-07-22-demo-render-fix">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1424,9 +1424,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-22-demo-depth"></script>
-<script src="/auth.js?v=2026-07-22-demo-depth"></script>
-<script src="/database.js?v=2026-07-22-demo-depth"></script>
+<script src="/branding.js?v=2026-07-22-demo-render-fix"></script>
+<script src="/auth.js?v=2026-07-22-demo-render-fix"></script>
+<script src="/database.js?v=2026-07-22-demo-render-fix"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1503,6 +1503,8 @@ let lastBillingReturnPath = '';
 let pdfExportingReportId = '';
 let demoScanTimer = null;
 let demoProgressTimer = null;
+let demoLoadingActive = false;
+let activeDemoRequestKey = '';
 let reportOriginalParent = null;
 let reportOriginalNextSibling = null;
 const viewedPublicPages = new Set();
@@ -3702,6 +3704,7 @@ function stopDemoScanTimers() {
   clearInterval(demoProgressTimer);
   demoScanTimer = null;
   demoProgressTimer = null;
+  demoLoadingActive = false;
 }
 
 function setDemoLoadingProgress(percent, stepText = '') {
@@ -3717,7 +3720,7 @@ function setDemoLoadingProgress(percent, stepText = '') {
 function mountReportForPublicDemo() {
   const results = document.getElementById('results');
   const mount = document.getElementById('publicDemoReportMount');
-  if (!results || !mount) return;
+  if (!results || !mount) return false;
 
   if (!reportOriginalParent) {
     reportOriginalParent = results.parentNode;
@@ -3729,6 +3732,7 @@ function mountReportForPublicDemo() {
   results.style.display = 'block';
   results.classList.add('public-demo-results');
   document.body.dataset.publicDemoReport = 'true';
+  return true;
 }
 
 function restoreReportShellToApp() {
@@ -3755,6 +3759,59 @@ function demoReportDataForWebsite(website) {
   };
 }
 
+function demoRequestKey(website) {
+  return normalizeUrl(website || '') || DEMO_REPORT_DATA.url;
+}
+
+function renderStaticDemoReport(website) {
+  const normalizedWebsite = demoRequestKey(website);
+  const loading = document.getElementById('demoLoadingCard');
+  const notice = document.getElementById('demoReportNotice');
+  const mount = document.getElementById('publicDemoReportMount');
+  const sampleInput = document.getElementById('sampleDemoUrl');
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('scan') === '1') {
+    params.delete('scan');
+    const query = params.toString();
+    window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`);
+  }
+  if (sampleInput) sampleInput.value = normalizedWebsite;
+  if (loading) loading.hidden = true;
+  if (notice) notice.hidden = false;
+  if (mount) mount.hidden = false;
+
+  try {
+    if (!mountReportForPublicDemo()) throw new Error('Demo report shell is not available.');
+    pendingWebsiteUrl = normalizedWebsite;
+    pendingProspectName = 'Northstar Roofing';
+    pendingCompanyName = 'Northstar Roofing';
+    pendingAuditNotes = 'Static public demonstration report.';
+    pendingSavedReportId = null;
+    pendingScanResult = demoReportDataForWebsite(normalizedWebsite);
+    renderResults(pendingScanResult, { publicDemo: true });
+    activeDemoRequestKey = normalizedWebsite;
+    demoLoadingActive = false;
+    trackPublicEvent('demo_completed', { requested_website: normalizedWebsite });
+    return true;
+  } catch (error) {
+    console.warn('[LeadCheck] Demo report render failed; retrying static demo report.', error);
+    requestAnimationFrame(() => {
+      try {
+        mountReportForPublicDemo();
+        pendingScanResult = demoReportDataForWebsite(normalizedWebsite);
+        renderResults(pendingScanResult, { publicDemo: true });
+        activeDemoRequestKey = normalizedWebsite;
+        demoLoadingActive = false;
+        trackPublicEvent('demo_completed', { requested_website: normalizedWebsite, retry: true });
+      } catch (retryError) {
+        demoLoadingActive = false;
+        console.error('[LeadCheck] Static demo report fallback failed:', retryError);
+      }
+    });
+    return false;
+  }
+}
+
 function validDemoWebsite(raw) {
   const normalized = normalizeUrl(raw || '');
   if (!normalized) return null;
@@ -3771,23 +3828,16 @@ function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading 
   const notice = document.getElementById('demoReportNotice');
   const mount = document.getElementById('publicDemoReportMount');
   const sampleInput = document.getElementById('sampleDemoUrl');
-  const normalizedWebsite = normalizeUrl(website || '') || DEMO_REPORT_DATA.url;
+  const normalizedWebsite = demoRequestKey(website);
   if (sampleInput) sampleInput.value = normalizedWebsite;
-  mountReportForPublicDemo();
+  const requestKey = `${normalizedWebsite}|${withLoading ? 'loading' : 'instant'}`;
+
+  if (withLoading && demoLoadingActive && activeDemoRequestKey === requestKey) return;
+  if (!withLoading && activeDemoRequestKey === requestKey && mount?.querySelector('#results')) return;
 
   const finish = () => {
     stopDemoScanTimers();
-    if (loading) loading.hidden = true;
-    if (notice) notice.hidden = false;
-    if (mount) mount.hidden = false;
-    pendingWebsiteUrl = normalizedWebsite;
-    pendingProspectName = 'Northstar Roofing';
-    pendingCompanyName = 'Northstar Roofing';
-    pendingAuditNotes = 'Static public demonstration report.';
-    pendingSavedReportId = null;
-    pendingScanResult = demoReportDataForWebsite(normalizedWebsite);
-    renderResults(pendingScanResult, { publicDemo: true });
-    trackPublicEvent('demo_completed', { requested_website: normalizedWebsite });
+    renderStaticDemoReport(normalizedWebsite);
   };
 
   if (!withLoading) {
@@ -3795,6 +3845,9 @@ function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading 
     return;
   }
 
+  stopDemoScanTimers();
+  activeDemoRequestKey = requestKey;
+  demoLoadingActive = true;
   if (notice) notice.hidden = true;
   if (mount) mount.hidden = true;
   if (loading) loading.hidden = false;
