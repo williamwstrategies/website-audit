@@ -60,7 +60,7 @@ create table if not exists public.subscriptions (
   plan text not null default 'professional',
   status text not null default 'incomplete',
   audits_used integer not null default 0,
-  audit_limit integer not null default 100,
+  audit_limit integer not null default 10,
   stripe_customer_id text,
   stripe_subscription_id text,
   stripe_price_id text,
@@ -79,7 +79,7 @@ alter table public.subscriptions add column if not exists user_id uuid;
 alter table public.subscriptions add column if not exists plan text not null default 'professional';
 alter table public.subscriptions add column if not exists status text not null default 'incomplete';
 alter table public.subscriptions add column if not exists audits_used integer not null default 0;
-alter table public.subscriptions add column if not exists audit_limit integer not null default 100;
+alter table public.subscriptions add column if not exists audit_limit integer not null default 10;
 alter table public.subscriptions add column if not exists stripe_customer_id text;
 alter table public.subscriptions add column if not exists stripe_subscription_id text;
 alter table public.subscriptions add column if not exists stripe_price_id text;
@@ -95,7 +95,35 @@ alter table public.subscriptions add column if not exists updated_at timestamptz
 alter table public.subscriptions alter column id set default gen_random_uuid();
 alter table public.subscriptions alter column plan set default 'professional';
 alter table public.subscriptions alter column status set default 'incomplete';
-alter table public.subscriptions alter column audit_limit set default 100;
+alter table public.subscriptions alter column audit_limit set default 10;
+
+create table if not exists public.billing_trial_claims (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
+  user_id uuid references auth.users(id) on delete set null,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  checkout_session_id text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.billing_trial_claims add column if not exists id uuid default gen_random_uuid();
+alter table public.billing_trial_claims add column if not exists email text;
+alter table public.billing_trial_claims add column if not exists user_id uuid;
+alter table public.billing_trial_claims add column if not exists stripe_customer_id text;
+alter table public.billing_trial_claims add column if not exists stripe_subscription_id text;
+alter table public.billing_trial_claims add column if not exists checkout_session_id text;
+alter table public.billing_trial_claims add column if not exists created_at timestamptz not null default now();
+
+create unique index if not exists billing_trial_claims_email_key
+on public.billing_trial_claims (email);
+
+alter table public.billing_trial_claims enable row level security;
+
+drop policy if exists "Trial claims are service role only" on public.billing_trial_claims;
+
+revoke all on public.billing_trial_claims from anon, authenticated;
+grant all on public.billing_trial_claims to service_role;
 
 alter table public.subscriptions drop constraint if exists subscriptions_user_id_fkey;
 alter table public.subscriptions drop constraint if exists subscriptions_user_id_auth_users_fkey;
@@ -202,7 +230,7 @@ begin
     new.id,
     'professional',
     'incomplete',
-    100,
+    10,
     0
   where not exists (
     select 1 from public.subscriptions where user_id = new.id
@@ -216,3 +244,26 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row execute function public.handle_new_auth_user();
+
+insert into public.billing_trial_claims (
+  email,
+  user_id,
+  stripe_customer_id,
+  stripe_subscription_id
+)
+select distinct on (lower(trim(auth.users.email)))
+  lower(trim(auth.users.email)),
+  auth.users.id,
+  subscriptions.stripe_customer_id,
+  subscriptions.stripe_subscription_id
+from auth.users
+join public.subscriptions
+  on subscriptions.user_id = auth.users.id
+where auth.users.email is not null
+  and trim(auth.users.email) <> ''
+  and (
+    subscriptions.status in ('trialing', 'active', 'past_due', 'unpaid', 'cancelled')
+    or subscriptions.stripe_customer_id is not null
+    or subscriptions.stripe_subscription_id is not null
+  )
+on conflict (email) do nothing;

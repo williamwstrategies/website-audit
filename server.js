@@ -103,13 +103,29 @@ app.post('/api/account/provision', async (req, res) => {
 app.post('/api/billing/checkout', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
-    const session = await billing.createCheckoutSession(req, user);
+    const session = await billing.createCheckoutSession(req, user, req.body || {});
     posthog.capture({
       distinctId: user.id,
       event: 'checkout_started',
       properties: { plan: billing.PROFESSIONAL_PLAN.key },
     });
     res.json(session);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/billing/start-paid-now', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const result = await billing.startPaidSubscriptionNow(req, user);
+    posthog.capture({
+      distinctId: user.id,
+      event: 'trial_started_paid_now',
+      properties: { plan: billing.PROFESSIONAL_PLAN.key },
+    });
+    res.json(result);
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
     res.status(statusCode).json(body);

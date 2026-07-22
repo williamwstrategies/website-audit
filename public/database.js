@@ -532,8 +532,15 @@
       return payload.subscription || null;
     }
 
-    async createCheckoutSession() {
+    async createCheckoutSession(options = {}) {
       return this.serverJson('/api/billing/checkout', {
+        method: 'POST',
+        body: options,
+      });
+    }
+
+    async startPaidSubscriptionNow() {
+      return this.serverJson('/api/billing/start-paid-now', {
         method: 'POST',
         body: {},
       });
