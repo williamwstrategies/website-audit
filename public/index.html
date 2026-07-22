@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-22-contrast-fix">
+<link rel="stylesheet" href="/styles.css?v=2026-07-22-demo-ux">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -61,7 +61,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/" data-route>Home</a>
       <a href="/product" data-route>Product</a>
       <a href="/how-it-works" data-route>How It Works</a>
-      <a href="/sample-report" data-route>Sample Report</a>
+      <a href="/sample-report" data-route>Demo Report</a>
       <a href="/pricing" data-route>Pricing</a>
       <a href="/faq" data-route>FAQ</a>
       <a class="mobile-nav-only" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
@@ -80,11 +80,15 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="marketing-copy">
         <div class="badge">White-label website audits for agencies</div>
         <h1 id="homeHeroTitle">Don't Just Tell Prospects Their Website Needs Work. <span>Show Them.</span></h1>
-        <p class="hero-sub">Scan a prospect's website, generate a professional assessment, and present the findings under your agency's brand during sales calls, outreach, and proposals.</p>
-        <div class="hero-actions">
-          <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="hero_signup_clicked">Start Trial</a>
-          <a class="secondary-btn" href="/sample-report" data-route data-public-event="sample_report_clicked">View Sample Report</a>
-        </div>
+        <p class="hero-sub">Generate a professional white-label website assessment in under a minute. Try the demo first, then create real reports under your agency brand.</p>
+        <form class="hero-demo-scanner" id="heroDemoForm" novalidate>
+          <label class="lead-field">
+            <span class="lead-label">Website URL</span>
+            <input class="url-input" id="heroDemoUrl" type="url" placeholder="https://examplebusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+          </label>
+          <button class="analyze-btn" type="submit">Generate Demo Report</button>
+          <small>No signup required. Experience the exact report your clients will receive.</small>
+        </form>
         <div class="hero-proof-row" aria-label="Product facts">
           <span>White Label</span>
           <span>PDF Reports</span>
@@ -92,44 +96,22 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         </div>
       </div>
 
-      <div class="product-showcase desktop-dashboard-mockup screenshot-float" aria-label="Desktop dashboard mockup">
-        <div class="mock-browser-bar">
-          <span></span><span></span><span></span>
-          <strong>W Strategies Audit Suite</strong>
+      <div class="product-showcase hero-demo-preview screenshot-float" aria-label="Interactive demo preview">
+        <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Demo Assessment</strong></div>
+        <div class="demo-preview-score">
+          <span>Northstar Roofing</span>
+          <strong>41</strong>
+          <small>Static fictional demo data</small>
         </div>
-        <div class="dashboard-mock-top">
-          <div><small>Dashboard</small><strong>Website assessments</strong></div>
-          <a href="/signup" data-route data-public-cta data-public-event="hero_mockup_signup_clicked">Start Trial</a>
+        <div class="demo-preview-grid">
+          <span>SEO <b>28</b></span>
+          <span>Trust <b>34</b></span>
+          <span>Conversion <b>22</b></span>
+          <span>Technical <b>63</b></span>
+          <span>Performance <b>58</b></span>
+          <span>Design <b>39</b></span>
         </div>
-        <div class="mock-dashboard-grid">
-          <div class="mock-scan-card glow-card">
-            <span>Enter Website</span>
-            <strong>northstarroofing.example</strong>
-            <div class="mock-progress"><i style="width:76%"></i></div>
-            <small>AI scan running across 38+ sales and website factors</small>
-          </div>
-          <div class="mock-score-card glow-card">
-            <span>Website Score</span>
-            <strong>74</strong>
-            <small>Report ready</small>
-          </div>
-        </div>
-        <div class="mock-report-card glow-card">
-          <div class="mock-report-header">
-            <div>
-              <span class="mock-agency-mark">WS</span>
-              <strong>W Strategies</strong>
-            </div>
-            <span>Website Assessment</span>
-          </div>
-          <div class="mock-category"><span>Website Health</span><strong>74%</strong></div>
-          <div class="mock-category"><span>Trust</span><strong>68%</strong></div>
-          <div class="mock-category"><span>Conversion</span><strong>71%</strong></div>
-          <div class="mock-priority-list">
-            <span>Top priorities</span>
-            <p>Clarify the call to action, strengthen proof, and repair broken service links.</p>
-          </div>
-        </div>
+        <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
       </div>
     </section>
 
@@ -173,10 +155,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="product-preview-row">
         <div class="product-showcase mini-dashboard-mockup">
           <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Dashboard</strong></div>
-          <div class="metric-strip"><span>Reports saved <b>28</b></span><span>Audits used <b>41/100</b></span><span>Avg score <b>72</b></span></div>
-          <div class="mock-category"><span>northstarroofing.example</span><strong>74</strong></div>
-          <div class="mock-category"><span>greenlinehvac.example</span><strong>63</strong></div>
-          <div class="mock-category"><span>ridgeviewdental.example</span><strong>81</strong></div>
+          <div class="metric-strip"><span>Reports saved <b>28</b></span><span>Audits used <b>41/100</b></span><span>Demo score <b>41</b></span></div>
+          <div class="mock-category"><span>northstarroofing.example</span><strong>41</strong></div>
+          <div class="mock-category"><span>High priorities</span><strong>6</strong></div>
+          <div class="mock-category"><span>Broken links</span><strong>14</strong></div>
         </div>
         <div><h3>Desktop Dashboard</h3><p>Manage audits, reopen reports, track usage, and move quickly from prospect research to professional presentation.</p></div>
       </div>
@@ -184,9 +166,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="mobile-report-mockup">
           <div class="phone-shell">
             <div class="phone-notch"></div>
-            <strong>74</strong>
+            <strong>41</strong>
             <span>Website Score</span>
-            <p>Top priority: make the quote request easier to find.</p>
+            <p>Top priority: make the quote request impossible to miss.</p>
             <i></i><i></i><i></i>
           </div>
         </div>
@@ -194,7 +176,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="product-preview-row">
         <div class="device-pair-mockup">
-          <div class="laptop-shell"><div class="mock-category"><span>SEO</span><strong>62%</strong></div><div class="mock-category"><span>Trust</span><strong>68%</strong></div><div class="mock-category"><span>Conversion</span><strong>71%</strong></div></div>
+          <div class="laptop-shell"><div class="mock-category"><span>SEO</span><strong>28%</strong></div><div class="mock-category"><span>Trust</span><strong>34%</strong></div><div class="mock-category"><span>Conversion</span><strong>22%</strong></div></div>
           <div class="phone-shell small"><strong>PDF</strong><span>Ready</span><p>Agency branded</p></div>
         </div>
         <div><h3>Laptop and Mobile Workflow</h3><p>Present live on a sales call, save the report, and export a branded PDF when the prospect needs something to review.</p></div>
@@ -212,15 +194,15 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <span>PDF Report</span>
           </div>
           <div class="sample-score-row">
-            <strong>74</strong>
-            <div><span>Overall Assessment</span><p>Good foundation with several high-impact improvements to prioritize.</p></div>
+            <strong>41</strong>
+            <div><span>Overall Assessment</span><p>Weak foundation with several high-impact improvements to prioritize.</p></div>
           </div>
           <div class="sample-priorities">
             <strong>Recommended Improvements</strong>
             <ol>
-              <li>Move the primary quote request above the fold.</li>
-              <li>Add stronger trust proof near service pages.</li>
-              <li>Repair broken links in the main navigation.</li>
+              <li>Add unique titles and metadata to core pages.</li>
+              <li>Move reviews and proof closer to quote requests.</li>
+              <li>Repair broken service, review, and navigation links.</li>
             </ol>
           </div>
         </article>
@@ -233,7 +215,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <li>White-labeled presentation</li>
             <li>Downloadable branded PDF</li>
           </ul>
-          <a class="secondary-btn" href="/sample-report" data-route data-public-event="sample_report_clicked">View Sample Report</a>
+          <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
         </div>
       </div>
     </section>
@@ -264,12 +246,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="section-kicker">Score Breakdown</div>
       <h2 id="featuresTitle">Every category becomes a clearer conversation.</h2>
       <div class="score-card-grid">
-        <article><span>SEO</span><strong>62</strong><p>Visibility signals, page structure, and search basics.</p></article>
-        <article><span>Trust</span><strong>68</strong><p>Reviews, proof, credibility, and risk-reduction signals.</p></article>
-        <article><span>Conversion</span><strong>71</strong><p>Calls to action, forms, booking paths, and lead friction.</p></article>
-        <article><span>Technical</span><strong>82</strong><p>Mobile, speed, structure, and crawl health.</p></article>
-        <article><span>Performance</span><strong>76</strong><p>Load quality and visitor experience basics.</p></article>
-        <article><span>Design</span><strong>69</strong><p>Visual trust, hierarchy, clarity, and professional feel.</p></article>
+        <article><span>SEO</span><strong>28</strong><p>Visibility signals, page structure, and search basics.</p></article>
+        <article><span>Trust</span><strong>34</strong><p>Reviews, proof, credibility, and risk-reduction signals.</p></article>
+        <article><span>Conversion</span><strong>22</strong><p>Calls to action, forms, booking paths, and lead friction.</p></article>
+        <article><span>Technical</span><strong>63</strong><p>Mobile, speed, structure, and crawl health.</p></article>
+        <article><span>Performance</span><strong>58</strong><p>Load quality and visitor experience basics.</p></article>
+        <article><span>Design</span><strong>39</strong><p>Visual trust, hierarchy, clarity, and professional feel.</p></article>
       </div>
     </section>
 
@@ -350,15 +332,15 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <p>Scan prospect websites, review scores, save reports, export PDFs, and present everything under your agency brand from one polished platform.</p>
         <div class="hero-actions">
           <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="product_signup_clicked">Start Trial</a>
-          <a class="secondary-btn" href="/sample-report" data-route data-public-event="sample_report_clicked">View Sample Report</a>
+          <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
         </div>
       </div>
       <div class="product-showcase mini-dashboard-mockup">
         <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Dashboard</strong></div>
         <div class="metric-strip"><span>Reports saved <b>28</b></span><span>Audits used <b>41/100</b></span><span>Plan <b>Pro</b></span></div>
-        <div class="mock-category"><span>northstarroofing.example</span><strong>74</strong></div>
-        <div class="mock-category"><span>greenlinehvac.example</span><strong>63</strong></div>
-        <div class="mock-category"><span>ridgeviewdental.example</span><strong>81</strong></div>
+        <div class="mock-category"><span>northstarroofing.example</span><strong>41</strong></div>
+        <div class="mock-category"><span>High priorities</span><strong>6</strong></div>
+        <div class="mock-category"><span>Broken links</span><strong>14</strong></div>
       </div>
     </div>
 
@@ -383,25 +365,25 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="product-preview-row reverse" data-reveal>
         <div class="score-card-grid compact-score-grid">
-          <article><span>SEO</span><strong>62</strong><p>Visibility and structure.</p></article>
-          <article><span>Trust</span><strong>68</strong><p>Proof and credibility.</p></article>
-          <article><span>Conversion</span><strong>71</strong><p>Lead path clarity.</p></article>
-          <article><span>Technical</span><strong>82</strong><p>Health and speed.</p></article>
+          <article><span>SEO</span><strong>28</strong><p>Visibility and structure.</p></article>
+          <article><span>Trust</span><strong>34</strong><p>Proof and credibility.</p></article>
+          <article><span>Conversion</span><strong>22</strong><p>Lead path clarity.</p></article>
+          <article><span>Technical</span><strong>63</strong><p>Health and speed.</p></article>
         </div>
         <div><div class="section-kicker">Score Categories</div><h2>Show the specific areas holding a website back.</h2><p>Scores turn vague recommendations into structured categories a business owner can understand and prioritize.</p></div>
       </div>
       <div class="product-preview-row" data-reveal>
         <div class="pdf-report-mockup sample-report-shell">
           <div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>PDF Export</span></div>
-          <div class="sample-score-row"><strong>74</strong><div><span>Website Report</span><p>Priorities, explanations, evidence, and recommendations.</p></div></div>
-          <div class="sample-priorities"><strong>Top priorities</strong><ol><li>Clarify the primary call to action.</li><li>Add project proof near service pages.</li><li>Repair broken service links.</li></ol></div>
+          <div class="sample-score-row"><strong>41</strong><div><span>Website Report</span><p>Priorities, explanations, evidence, and recommendations.</p></div></div>
+          <div class="sample-priorities"><strong>Top priorities</strong><ol><li>Clarify the primary call to action.</li><li>Add review proof near quote requests.</li><li>Repair broken service links.</li></ol></div>
         </div>
         <div><div class="section-kicker">Reports and PDFs</div><h2>Present a consulting-style report instead of loose notes.</h2><p>Reports are saved in the app and can be exported as branded PDFs for follow-up or proposal support.</p></div>
       </div>
       <div class="product-preview-row reverse" data-reveal>
         <div class="device-pair-mockup">
           <div class="laptop-shell"><div class="mock-category"><span>Dashboard</span><strong>Desktop</strong></div><div class="mock-category"><span>Report</span><strong>Responsive</strong></div><div class="mock-category"><span>PDF</span><strong>Ready</strong></div></div>
-          <div class="phone-shell small"><strong>74</strong><span>Score</span><p>Mobile ready</p></div>
+          <div class="phone-shell small"><strong>41</strong><span>Score</span><p>Mobile ready</p></div>
         </div>
         <div><div class="section-kicker">Cross Device</div><h2>Use it live on calls and send it after.</h2><p>The public pages, app screens, and report previews share a consistent responsive presentation across desktop and mobile.</p></div>
       </div>
@@ -451,54 +433,60 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     </ol>
     <section class="marketing-cta final-dark-cta" data-reveal>
       <h2>See the output before you start.</h2>
-      <p>Explore the fictional sample report to understand how the final assessment is structured.</p>
-      <div class="hero-actions"><a class="analyze-btn" href="/sample-report" data-route>View Sample Report</a><a class="secondary-btn" href="/signup" data-route data-public-cta>Start Trial</a></div>
+      <p>Explore the fictional demo report to understand how the final assessment is structured.</p>
+      <div class="hero-actions"><a class="analyze-btn" href="/sample-report" data-route>View Example Report</a><a class="secondary-btn" href="/signup" data-route data-public-cta>Start Trial</a></div>
     </section>
   </article>
 
   <article class="public-page supporting-page sample-report-page" data-public-page="sample-report" hidden>
-    <div class="supporting-hero page-hero-grid" data-reveal>
+    <div class="supporting-hero page-hero-grid demo-report-hero" data-reveal>
       <div>
-        <div class="section-kicker">Sample Report</div>
-        <h1>Explore a fictional website assessment.</h1>
-        <p>This demo uses static Northstar Roofing data. It does not load private reports, Supabase records, or customer data.</p>
-        <div class="public-mini-stats"><span>Overall score <b>74</b></span><span>Top priorities <b>3</b></span><span>Categories <b>6</b></span></div>
+        <div class="section-kicker">Interactive Demo</div>
+        <h1>Experience the report before creating an account.</h1>
+        <p>Enter any website URL. The scanner animation will use your requested website, then render a complete fictional Northstar Roofing report using the same report components as the application.</p>
+        <form class="hero-demo-scanner compact-demo-scanner" id="sampleDemoForm" novalidate>
+          <label class="lead-field">
+            <span class="lead-label">Requested Website</span>
+            <input class="url-input" id="sampleDemoUrl" type="url" placeholder="https://joesroofing.com" autocomplete="url" autocorrect="off" spellcheck="false">
+          </label>
+          <button class="analyze-btn" type="submit">Generate Demo Report</button>
+        </form>
       </div>
-      <div class="mobile-report-mockup">
-        <div class="phone-shell">
-          <div class="phone-notch"></div>
-          <strong>74</strong>
-          <span>Northstar Roofing</span>
-          <p>Good foundation with several high-impact improvements.</p>
-          <i></i><i></i><i></i>
+      <div class="demo-loading-card" id="demoLoadingCard" hidden>
+        <div class="loading-orbit"></div>
+        <span class="section-kicker">Demo scan</span>
+        <h2>Generating demo report...</h2>
+        <p id="demoLoadingStep">Analyzing website...</p>
+        <div class="loading-progress">
+          <div class="loading-progress-top"><span>Demo progress</span><span id="demoLoadingPct">0%</span></div>
+          <div class="loading-progress-track"><div class="loading-progress-fill" id="demoLoadingFill"></div></div>
         </div>
       </div>
     </div>
-    <div class="sample-demo-layout premium-sample-layout" data-reveal>
-      <nav class="sample-report-tabs" aria-label="Sample report sections">
-        <button type="button" class="active" data-sample-tab="overview">Overview</button>
-        <button type="button" data-sample-tab="priorities">Priorities</button>
-        <button type="button" data-sample-tab="recommendations">Recommendations</button>
-      </nav>
-      <section class="sample-report-shell full-sample-report">
-        <div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>Prepared for Northstar Roofing</span></div>
-        <div class="sample-tab-panel active" data-sample-panel="overview">
-          <div class="sample-score-row"><strong>74</strong><div><span>Overall Assessment</span><p>The site has a workable foundation, but the assessment identifies improvements that could make the business easier to trust and contact.</p></div></div>
-          <div class="sample-report-grid"><span>SEO <b>62%</b></span><span>Trust <b>68%</b></span><span>Conversion <b>71%</b></span><span>Technical <b>82%</b></span><span>Performance <b>76%</b></span><span>Design <b>69%</b></span></div>
-        </div>
-        <div class="sample-tab-panel" data-sample-panel="priorities"><div class="sample-priorities"><strong>Top Priorities</strong><ol><li>Make the primary quote request visible above the fold.</li><li>Add recent project proof near the roofing services.</li><li>Repair broken navigation links before sending paid traffic.</li></ol></div></div>
-        <div class="sample-tab-panel" data-sample-panel="recommendations"><div class="sample-priorities"><strong>Recommended Improvements</strong><ol><li>Clarify service-area language for local search visibility.</li><li>Add trust proof near the main contact form.</li><li>Make phone and booking options persistent on mobile.</li><li>Add a short workmanship or warranty explanation near the CTA.</li></ol></div></div>
-      </section>
+    <div class="demo-report-notice" id="demoReportNotice" data-reveal>
+      <strong>This demonstration uses fictional data.</strong>
+      <span>Create an account to generate reports using real websites. No scanner, Playwright, credits, customer reports, or Supabase report data are used on this page.</span>
     </div>
+    <div class="public-demo-report-mount" id="publicDemoReportMount" data-reveal></div>
     <section class="public-section-panel" data-reveal>
-      <div class="section-kicker">Report Structure</div>
-      <h2>Built to be read by business owners, not just technicians.</h2>
+      <div class="section-kicker">Included</div>
+      <h2>Everything you just saw is included.</h2>
       <div class="feature-list-grid">
-        <article class="feature-card"><span class="feature-icon">Score</span><h3>Clear overview</h3><p>A simple overall score sets context before the detailed findings.</p></article>
-        <article class="feature-card"><span class="feature-icon">Evidence</span><h3>Prioritized findings</h3><p>Recommendations are tied to visible website issues and practical business impact.</p></article>
-        <article class="feature-card"><span class="feature-icon">PDF</span><h3>Follow-up ready</h3><p>Export the saved report as a branded PDF when a prospect needs a document.</p></article>
+        <article class="feature-card"><span class="feature-icon">Score</span><h3>Website Score</h3><p>Overall score, score bar, health status, and lead impact context.</p></article>
+        <article class="feature-card"><span class="feature-icon">SEO</span><h3>SEO Analysis</h3><p>Metadata, headings, service pages, and local visibility signals.</p></article>
+        <article class="feature-card"><span class="feature-icon">Trust</span><h3>Trust Review</h3><p>Reviews, proof, credibility, guarantees, and confidence signals.</p></article>
+        <article class="feature-card"><span class="feature-icon">CTA</span><h3>Conversion Audit</h3><p>Calls-to-action, contact methods, forms, booking paths, and lead friction.</p></article>
+        <article class="feature-card"><span class="feature-icon">PDF</span><h3>White-Label PDF</h3><p>Saved reports, branded exports, dashboard history, and agency branding.</p></article>
+        <article class="feature-card"><span class="feature-icon">Fix</span><h3>Prioritized Actions</h3><p>High, medium, and low priority recommendations with business impact.</p></article>
       </div>
-      <div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta>Start Trial</a><a class="secondary-btn" href="/product" data-route>Explore Product</a></div>
+      <div class="marketing-cta inline-demo-cta">
+        <h2>Ready to generate reports using real websites?</h2>
+        <p>Create your account and start generating professional website assessments under your own brand.</p>
+        <div class="hero-actions">
+          <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="demo_signup_clicked">Create Your Free Account</a>
+          <a class="secondary-btn" href="/pricing" data-route data-public-event="demo_pricing_clicked">See Pricing</a>
+        </div>
+      </div>
     </section>
   </article>
 
@@ -533,7 +521,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
       <details data-faq-item><summary>Does it guarantee closed clients?</summary><p>No. The platform does not guarantee sales results. It helps agencies present clearer evidence and recommendations.</p></details>
     </section>
-    <section class="marketing-cta final-dark-cta" data-reveal><h2>Ready to create your first assessment?</h2><p>Start with a prospect website and see how the report frames the conversation.</p><div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta>Start Trial</a><a class="secondary-btn" href="/sample-report" data-route>View Sample Report</a></div></section>
+    <section class="marketing-cta final-dark-cta" data-reveal><h2>Ready to create your first assessment?</h2><p>Start with a prospect website and see how the report frames the conversation.</p><div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta>Start Trial</a><a class="secondary-btn" href="/sample-report" data-route>View Example Report</a></div></section>
   </article>
 
   <article class="public-page supporting-page contact-page" data-public-page="contact" hidden>
@@ -552,7 +540,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </form>
       <aside class="supporting-grid single-column">
         <section><h2>Account access</h2><p>Existing customers can sign in to the authenticated workspace and manage billing from inside the app.</p><a class="secondary-btn" href="/login" data-route>Log In</a></section>
-        <section><h2>Presale research</h2><p>Review the sample report, pricing, FAQ, and product walkthrough before creating an account.</p><a class="secondary-btn" href="/sample-report" data-route>View Sample Report</a></section>
+        <section><h2>Presale research</h2><p>Review the demo report, pricing, FAQ, and product walkthrough before creating an account.</p><a class="secondary-btn" href="/sample-report" data-route>View Example Report</a></section>
       </aside>
     </div>
   </article>
@@ -593,7 +581,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   <footer class="marketing-footer">
     <div class="footer-brand-block"><strong>W Strategies</strong><span>White-label website audit software for agencies.</span></div>
     <nav class="footer-grid" aria-label="Footer navigation">
-      <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Sample Report</a><a href="/pricing" data-route>Pricing</a></div>
+      <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Demo Report</a><a href="/pricing" data-route>Pricing</a></div>
       <div><h2>Company</h2><a href="/about" data-route>About</a><a href="/contact" data-route>Contact</a><a href="/faq" data-route>FAQ</a></div>
       <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/signup" data-route data-public-cta>Start Trial</a></div>
       <div><h2>Legal</h2><a href="/privacy" data-route>Privacy Policy</a><a href="/terms" data-route>Terms of Service</a></div>
@@ -711,7 +699,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/app/scan" data-route data-app-nav="scan">New Audit</a>
       <a href="/app/reports" data-route data-app-nav="reports">Reports</a>
       <a href="/app/branding" data-route data-app-nav="branding">Branding</a>
-      <a href="/app/billing" data-route data-app-nav="billing">Billing</a>
+      <a href="/app/billing" data-route data-app-nav="billing" id="billingNavLink">Billing</a>
       <a href="/app/settings" data-route data-app-nav="settings">Settings</a>
     </nav>
     <div class="sidebar-footer">
@@ -735,6 +723,13 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
     <main class="app-content">
       <section id="home-view" class="app-panel dashboard-panel">
+        <div class="workspace-banner" id="subscriptionBanner" hidden>
+          <div>
+            <strong id="subscriptionBannerTitle">Choose a plan to continue</strong>
+            <p id="subscriptionBannerText">Upgrade to generate professional website assessments.</p>
+          </div>
+          <a class="analyze-btn" href="/app/billing" data-route id="subscriptionBannerCta">Upgrade</a>
+        </div>
         <div class="dashboard-hero app-page-hero">
           <div>
             <div class="section-kicker" data-brand-name>W Strategies</div>
@@ -1071,9 +1066,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <section id="billing-view" class="app-panel billing-view" hidden>
         <div class="settings-header">
           <div>
-            <div class="section-kicker">Billing</div>
-            <h2>Plan and Usage</h2>
-            <p>Manage your Professional subscription, billing details, invoices, and monthly audit usage.</p>
+            <div class="section-kicker" id="billingHeaderKicker">Billing</div>
+            <h2 id="billingHeaderTitle">Plan and Usage</h2>
+            <p id="billingHeaderCopy">Manage your Professional subscription, billing details, invoices, and monthly audit usage.</p>
           </div>
           <span class="status-chip low" id="billingStatusChip">Inactive</span>
         </div>
@@ -1429,9 +1424,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-22-contrast-fix"></script>
-<script src="/auth.js?v=2026-07-22-contrast-fix"></script>
-<script src="/database.js?v=2026-07-22-contrast-fix"></script>
+<script src="/branding.js?v=2026-07-22-demo-ux"></script>
+<script src="/auth.js?v=2026-07-22-demo-ux"></script>
+<script src="/database.js?v=2026-07-22-demo-ux"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1468,6 +1463,7 @@ const LOADING_STEPS = [
 const ANALYZE_API_URL = '/api/analyze';
 const LEAD_CAPTURE_API_URL = '/api/lead-capture';
 const SCAN_ESTIMATE_MS = 90000;
+const DEMO_SCAN_DURATION_MS = 6200;
 const LOGO_MAX_BYTES = 2 * 1024 * 1024;
 const FAVICON_MAX_BYTES = 512 * 1024;
 const LOGO_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
@@ -1504,7 +1500,135 @@ let brandingPreviewFaviconObjectUrl = '';
 let billingActivationPolling = false;
 let lastBillingReturnPath = '';
 let pdfExportingReportId = '';
+let demoScanTimer = null;
+let demoProgressTimer = null;
+let reportOriginalParent = null;
+let reportOriginalNextSibling = null;
 const viewedPublicPages = new Set();
+
+const DEMO_SCAN_STEPS = [
+  'Analyzing website...',
+  'Checking SEO',
+  'Measuring technical health',
+  'Evaluating trust signals',
+  'Looking for broken links',
+  'Measuring performance',
+  'Reviewing conversion opportunities',
+  'Prioritizing recommendations',
+  'Generating report...',
+];
+
+const DEMO_REPORT_DATA = {
+  url: 'https://northstarroofing.example',
+  total: 41,
+  score: 41,
+  websiteScore: 41,
+  maxScore: 100,
+  categories: {
+    websiteHealth: { label: 'Website Health', score: 41, max: 100 },
+    seoVisibility: { label: 'SEO', score: 28, max: 100 },
+    localTrust: { label: 'Trust & Credibility', score: 34, max: 100 },
+    leadConversion: { label: 'Conversion', score: 22, max: 100 },
+    technical: { label: 'Technical', score: 63, max: 100 },
+    performance: { label: 'Performance', score: 58, max: 100 },
+    design: { label: 'Design', score: 39, max: 100 },
+  },
+  visualTrust: {
+    result: false,
+    status: 'Weak',
+    score: 5,
+    max: 15,
+    message: 'The page does not show enough visible proof, review context, or design polish to quickly build visitor confidence.',
+    breakdown: [
+      { label: 'Hero clarity', score: 1, max: 3, evidence: 'The first screen does not make the primary roofing service or next step obvious.' },
+      { label: 'Trust proof', score: 1, max: 3, evidence: 'Reviews, project proof, and warranty reassurance are not close to the main CTA.' },
+      { label: 'Visual hierarchy', score: 1, max: 3, evidence: 'Important service and contact details compete with low-priority content.' },
+      { label: 'Mobile confidence', score: 1, max: 3, evidence: 'The mobile path to call or request a quote is not persistent.' },
+      { label: 'Professional polish', score: 1, max: 3, evidence: 'Large image files and inconsistent spacing make the page feel less refined.' },
+    ],
+  },
+  brokenLinks: {
+    brokenInternal: ['/roof-repair', '/storm-damage', '/service-areas/east-side', '/gallery/recent-work', '/warranty'],
+    brokenExternal: ['https://facebook.example/northstar-old'],
+    invalidLinks: ['/#estimate-now', 'javascript:void(0)'],
+    missingExpectedPages: ['/reviews', '/service-areas', '/financing', '/emergency-roof-repair', '/roof-replacement'],
+    redirectIssues: ['/contact-us'],
+  },
+  issues: [
+    { title: 'Missing page titles', description: 'Several core pages use generic or repeated browser titles, which makes local search context weaker.', priority: 'High' },
+    { title: 'Weak meta descriptions', description: 'Search snippets do not clearly explain roofing services, service area, or why a homeowner should click.', priority: 'High' },
+    { title: 'No clear primary CTA', description: 'Visitors are not consistently guided toward calling, booking, or requesting an estimate.', priority: 'High' },
+    { title: 'Missing service pages', description: 'Important services such as emergency repair and storm damage do not have dedicated pages.', priority: 'High' },
+    { title: 'Missing reviews near conversion sections', description: 'Trust proof is separated from the forms and quote requests where visitors make decisions.', priority: 'Medium' },
+    { title: 'Weak heading structure', description: 'The page headings do not create a clear hierarchy for visitors or search engines.', priority: 'Medium' },
+    { title: 'Large image files', description: 'Several large images may slow the perceived loading experience, especially on mobile.', priority: 'Medium' },
+    { title: 'Broken links', description: 'Multiple navigation and service links lead to missing or invalid destinations.', priority: 'High' },
+  ],
+  criticalFlags: [
+    { title: 'Quote request path is unclear', description: 'The fastest path to request an estimate is not obvious above the fold.', priority: 'High' },
+    { title: 'Broken service links found', description: 'Dead links can interrupt high-intent visitors and reduce trust.', priority: 'High' },
+  ],
+  recommendations: [
+    { title: 'Rewrite titles and metadata', priority: 'High', fix: 'Create unique page titles and meta descriptions for the homepage, roofing services, repairs, and service areas.', impact: 'Improves search clarity and makes the site easier to understand before the click.' },
+    { title: 'Create dedicated service pages', priority: 'High', fix: 'Add focused pages for roof repair, replacement, storm damage, emergency roofing, and service areas.', impact: 'Gives prospects and search engines clearer paths to the exact service they need.' },
+    { title: 'Strengthen trust signals', priority: 'High', fix: 'Move reviews, project proof, warranties, certifications, and insurance language closer to quote requests.', impact: 'Reduces hesitation before a homeowner contacts the company.' },
+    { title: 'Make the CTA persistent', priority: 'High', fix: 'Add a clear Request Estimate button and click-to-call action in the header and mobile footer.', impact: 'Makes the next step obvious from every major section.' },
+    { title: 'Repair broken links', priority: 'Medium', fix: 'Fix missing service URLs, invalid anchors, outdated social links, and redirect chains.', impact: 'Removes dead ends that make the business feel less reliable.' },
+    { title: 'Improve mobile usability', priority: 'Medium', fix: 'Tighten spacing, reduce image weight, and keep contact actions visible on small screens.', impact: 'Improves the experience for homeowners researching from a phone.' },
+    { title: 'Add conversion sections', priority: 'Medium', fix: 'Add proof-backed estimate sections after services, reviews, and project examples.', impact: 'Turns passive service information into stronger lead-generation moments.' },
+  ],
+  positives: [
+    'HTTPS is available on the requested website.',
+    'The business name is visible on the homepage.',
+    'Core roofing services are mentioned in body copy.',
+  ],
+  checks: {
+    titleTag: false,
+    metaDescription: false,
+    headingStructure: 'partial',
+    cta: false,
+    phone: true,
+    contactForm: 'partial',
+    reviewsVisible: false,
+    servicesListed: 'partial',
+    https: true,
+    mobileUsability: 'partial',
+  },
+  evidenceFound: {
+    pagesList: [
+      { path: '/', type: 'homepage', source: 'homepage' },
+      { path: '/services', type: 'services', source: 'homepage-link' },
+      { path: '/roof-repair', type: 'missing page', source: 'homepage-link' },
+      { path: '/contact', type: 'contact', source: 'homepage-link' },
+      { path: '/reviews', type: 'missing expected page', source: 'slug guess' },
+    ],
+    contactMethodsDetected: {
+      phone: true,
+      form: 'partial: form exists but lacks context',
+      booking: false,
+      email: false,
+      address: false,
+    },
+    checkEvidence: {
+      phone: { result: true, evidence: 'Phone number detected in header.' },
+      cta: { result: false, evidence: 'No strong above-the-fold estimate CTA detected.' },
+      reviewsVisible: { result: false, evidence: 'No review or testimonial section detected near the primary CTA.' },
+      servicesListed: { result: 'partial', evidence: 'Services are mentioned, but dedicated pages are missing.' },
+      googleSignals: { result: false, evidence: 'No visible Google map or review signal detected.' },
+      contactForm: { result: 'partial', evidence: 'A form was detected but is not clearly framed around quote requests.' },
+      contactMethods: { result: 'partial', evidence: 'Phone and form detected; booking, email, and address were not visible.' },
+      professionalSignals: { result: false, evidence: 'License, insurance, warranty, and project proof were not prominent.' },
+      riskReversal: { result: false, evidence: 'No warranty, guarantee, or free estimate reassurance near conversion areas.' },
+    },
+    brokenLinks: {
+      brokenInternal: ['/roof-repair', '/storm-damage', '/service-areas/east-side', '/gallery/recent-work', '/warranty'],
+      brokenExternal: ['https://facebook.example/northstar-old'],
+      invalidLinks: ['/#estimate-now', 'javascript:void(0)'],
+      missingExpectedPages: ['/reviews', '/service-areas', '/financing', '/emergency-roof-repair', '/roof-replacement'],
+      redirectIssues: ['/contact-us'],
+    },
+  },
+};
 
 const ROUTE_TITLES = {
   '/app': 'Dashboard',
@@ -1533,8 +1657,8 @@ const PUBLIC_PAGE_META = {
   },
   'sample-report': {
     path: '/sample-report',
-    title: 'Sample Website Assessment Report | W Strategies',
-    description: 'View a safe fictional sample website assessment report showing scores, categories, priorities, and recommendations.',
+    title: 'Demo Website Assessment Report | W Strategies',
+    description: 'Explore a safe fictional demo website assessment report showing scores, categories, priorities, and recommendations.',
   },
   pricing: {
     path: '/pricing',
@@ -1579,6 +1703,7 @@ const LEGACY_APP_ROUTE_ALIASES = {
   '/new-audit': '/app/scan',
   '/branding': '/app/branding',
   '/billing': '/app/billing',
+  '/upgrade': '/app/billing',
   '/settings': '/app/settings',
 };
 
@@ -1674,6 +1799,10 @@ function applyRouteSeo({ key = 'home', noindex = false, canonicalPath = '' } = {
 
 function renderPublicPage(key = 'home') {
   const pageKey = PUBLIC_PAGE_META[key] ? key : 'home';
+  if (pageKey !== 'sample-report') {
+    stopDemoScanTimers();
+    restoreReportShellToApp();
+  }
   document.querySelectorAll('[data-public-page]').forEach(page => {
     page.hidden = page.dataset.publicPage !== pageKey;
   });
@@ -1687,6 +1816,13 @@ function renderPublicPage(key = 'home') {
     viewedPublicPages.add(pageKey);
     if (pageKey === 'home') trackPublicEvent('homepage_viewed');
     if (pageKey === 'pricing') trackPublicEvent('pricing_viewed');
+  }
+  if (pageKey === 'sample-report') {
+    const params = new URLSearchParams(window.location.search);
+    renderPublicDemoReport({
+      website: params.get('website') || DEMO_REPORT_DATA.url,
+      withLoading: params.get('scan') === '1',
+    });
   }
   requestAnimationFrame(runPublicReveals);
 }
@@ -2204,6 +2340,16 @@ function billingNoticeText(subscription = normalizedSubscription()) {
   return 'An active Professional subscription is required to run new audits and export PDFs.';
 }
 
+function trialRemainingText(subscription = normalizedSubscription()) {
+  if (subscription.status !== 'trialing') return '';
+  const endDate = new Date(subscription.current_period_end || '');
+  if (Number.isNaN(endDate.getTime())) return 'Trial active';
+  const days = Math.ceil((endDate.getTime() - Date.now()) / 86400000);
+  if (days <= 0) return 'Trial ends today';
+  if (days === 1) return 'Trial ends tomorrow';
+  return `${days} days remaining`;
+}
+
 function setBillingMessage(message = '', tone = 'default') {
   const node = document.getElementById('billingMessage');
   if (!node) return;
@@ -2333,6 +2479,15 @@ function updateReportMetrics() {
   const billingSubscribeBtn = document.getElementById('billingSubscribeBtn');
   const billingStartPaidBtn = document.getElementById('billingStartPaidBtn');
   const billingManageBtn = document.getElementById('billingManageBtn');
+  const billingNavLink = document.getElementById('billingNavLink');
+  const billingHeaderKicker = document.getElementById('billingHeaderKicker');
+  const billingHeaderTitle = document.getElementById('billingHeaderTitle');
+  const billingHeaderCopy = document.getElementById('billingHeaderCopy');
+  const appPageTitle = document.getElementById('appPageTitle');
+  const subscriptionBanner = document.getElementById('subscriptionBanner');
+  const subscriptionBannerTitle = document.getElementById('subscriptionBannerTitle');
+  const subscriptionBannerText = document.getElementById('subscriptionBannerText');
+  const subscriptionBannerCta = document.getElementById('subscriptionBannerCta');
   const scanBillingNotice = document.getElementById('scanBillingNotice');
   const scanBillingNoticeText = document.getElementById('scanBillingNoticeText');
   const analyzeBtn = document.getElementById('analyzeBtn');
@@ -2352,6 +2507,8 @@ function updateReportMetrics() {
   const hasCustomer = !!subscription.stripe_customer_id;
   const isTrialing = subscription.status === 'trialing';
   const canStartPaidNow = subscription.can_start_paid_now === true || (isTrialing && !!subscription.stripe_subscription_id);
+  const trialText = trialRemainingText(subscription);
+  const needsUpgrade = !canRunAudit;
 
   if (reportCount) reportCount.textContent = String(count);
   if (reportCountLabel) reportCountLabel.textContent = count === 1 ? 'Saved assessment.' : 'Saved assessments.';
@@ -2360,7 +2517,7 @@ function updateReportMetrics() {
   if (reportsUsedLabel) reportsUsedLabel.textContent = remaining > 0 ? `${remaining} audits remaining.` : 'Audit limit reached.';
   if (averageScore) averageScore.textContent = avg == null ? '-' : `${avg}%`;
   if (currentPlan) currentPlan.textContent = plan;
-  if (planStatus) planStatus.textContent = `${status} workspace.`;
+  if (planStatus) planStatus.textContent = isTrialing && trialText ? `${trialText}.` : `${status} workspace.`;
   if (billingPlanName) billingPlanName.textContent = plan;
   if (billingPlanStatus) billingPlanStatus.textContent = `${status} workspace.`;
   if (billingUsageCount) billingUsageCount.textContent = `${used} / ${limit}`;
@@ -2385,12 +2542,34 @@ function updateReportMetrics() {
   if (billingPriceLabel) billingPriceLabel.textContent = isTrialing
     ? `7-day free trial: ${limit} scans included. Start paid billing anytime for ${subscription.paid_audit_limit || 100} monthly scans.`
     : `${subscription.price_label || '$79.99 / month'}. Includes ${limit} completed audits per billing period.`;
+  if (billingNavLink) billingNavLink.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
+  if (appPageTitle && window.location.pathname.startsWith('/app/billing')) appPageTitle.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
+  if (billingHeaderKicker) billingHeaderKicker.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
+  if (billingHeaderTitle) billingHeaderTitle.textContent = needsUpgrade ? 'Choose a Plan' : 'Plan and Usage';
+  if (billingHeaderCopy) billingHeaderCopy.textContent = needsUpgrade
+    ? 'Choose the Professional plan to continue generating reports, exporting PDFs, and using your agency branding.'
+    : 'Manage your Professional subscription, billing details, invoices, and monthly audit usage.';
   if (billingSubscribeBtn) {
     billingSubscribeBtn.hidden = canRunAudit || canStartPaidNow || (subscription.status === 'active' && hasCustomer);
-    billingSubscribeBtn.textContent = subscription.status === 'incomplete' ? 'Start Trial' : 'Subscribe';
+    billingSubscribeBtn.textContent = subscription.status === 'incomplete' ? 'Start Trial' : 'Subscribe Now';
   }
   if (billingStartPaidBtn) billingStartPaidBtn.hidden = !canStartPaidNow;
   if (billingManageBtn) billingManageBtn.hidden = !hasCustomer;
+  if (subscriptionBanner) {
+    subscriptionBanner.hidden = canRunAudit && !isTrialing;
+    subscriptionBanner.dataset.tone = needsUpgrade ? 'upgrade' : 'trial';
+  }
+  if (subscriptionBannerTitle) {
+    subscriptionBannerTitle.textContent = needsUpgrade
+      ? (subscription.status === 'cancelled' ? 'Your trial has ended' : 'Choose a plan to continue')
+      : `Trial active: ${trialText || '7-day trial'}`;
+  }
+  if (subscriptionBannerText) {
+    subscriptionBannerText.textContent = needsUpgrade
+      ? 'Upgrade to continue creating website reports and exporting branded PDFs.'
+      : `${remaining} trial scans remaining. Start paid billing anytime if you need more credits.`;
+  }
+  if (subscriptionBannerCta) subscriptionBannerCta.textContent = needsUpgrade ? 'Upgrade' : 'Manage Trial';
   if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
   if (scanBillingNoticeText) scanBillingNoticeText.textContent = notice;
   if (analyzeBtn && !analyzeBtn.dataset.scanning) {
@@ -2881,7 +3060,9 @@ function renderRoute() {
   }
 
   if (authProvider?.ready && isLogin && authProvider.isAuthenticated() && !path.startsWith('/reset-password')) {
-    window.history.replaceState({}, '', '/app');
+    const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
+    if (needsPlanSelection) localStorage.removeItem('leadcheck.pendingPlanSelection');
+    window.history.replaceState({}, '', needsPlanSelection ? '/app/billing' : '/app');
     renderRoute();
     return;
   }
@@ -2901,6 +3082,8 @@ function renderRoute() {
   }
 
   if (isApp) {
+    stopDemoScanTimers();
+    restoreReportShellToApp();
     applyRouteSeo({ noindex: true });
     const key = appRouteKey(path);
     const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : ROUTE_TITLES['/app']);
@@ -3026,6 +3209,18 @@ function bindMobileNavigation() {
 }
 
 function bindPublicMarketingControls() {
+  const heroDemoForm = document.getElementById('heroDemoForm');
+  heroDemoForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    startDemoFromWebsite(document.getElementById('heroDemoUrl')?.value || '');
+  });
+
+  const sampleDemoForm = document.getElementById('sampleDemoForm');
+  sampleDemoForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    startDemoFromWebsite(document.getElementById('sampleDemoUrl')?.value || '');
+  });
+
   document.querySelectorAll('.faq-section details').forEach(item => {
     item.addEventListener('toggle', () => {
       if (!item.open) return;
@@ -3044,7 +3239,7 @@ function bindPublicMarketingControls() {
       document.querySelectorAll('[data-sample-panel]').forEach(panel => {
         panel.classList.toggle('active', panel.dataset.samplePanel === target);
       });
-      trackPublicEvent('sample_report_tab_clicked', { section: target });
+      trackPublicEvent('demo_report_tab_clicked', { section: target });
     });
   });
 
@@ -3174,7 +3369,9 @@ function bindAuthForms() {
         setAuthMessage(readableErrorMessage(error, 'Login failed. Please check your details.'), 'error');
         return;
       }
-      navigateTo(pendingProtectedPath || '/app');
+      const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
+      if (needsPlanSelection) localStorage.removeItem('leadcheck.pendingPlanSelection');
+      navigateTo(needsPlanSelection ? '/app/billing' : (pendingProtectedPath || '/app'));
       pendingProtectedPath = '/app';
     });
   });
@@ -3197,11 +3394,13 @@ function bindAuthForms() {
       }
 
       if (data?.session) {
-        navigateTo('/app');
+        localStorage.removeItem('leadcheck.pendingPlanSelection');
+        navigateTo('/app/billing');
         return;
       }
 
-      setAuthMessage('Check your email to verify your account, then return here to login.', 'success');
+      localStorage.setItem('leadcheck.pendingPlanSelection', 'true');
+      setAuthMessage('Check your email to verify your account. After login, we will take you straight to plan selection.', 'success');
     });
   });
 
@@ -3461,9 +3660,136 @@ function stopLoadingTimers() {
   stepTimer = null;
   progressTimer = null;
 }
+
+function stopDemoScanTimers() {
+  clearTimeout(demoScanTimer);
+  clearInterval(demoProgressTimer);
+  demoScanTimer = null;
+  demoProgressTimer = null;
+}
+
+function setDemoLoadingProgress(percent, stepText = '') {
+  const bounded = Math.max(0, Math.min(100, Math.round(percent)));
+  const fill = document.getElementById('demoLoadingFill');
+  const pct = document.getElementById('demoLoadingPct');
+  const step = document.getElementById('demoLoadingStep');
+  if (fill) fill.style.width = `${bounded}%`;
+  if (pct) pct.textContent = `${bounded}%`;
+  if (step && stepText) step.textContent = stepText;
+}
+
+function mountReportForPublicDemo() {
+  const results = document.getElementById('results');
+  const mount = document.getElementById('publicDemoReportMount');
+  if (!results || !mount) return;
+
+  if (!reportOriginalParent) {
+    reportOriginalParent = results.parentNode;
+    reportOriginalNextSibling = results.nextSibling;
+  }
+
+  if (results.parentNode !== mount) mount.appendChild(results);
+  results.hidden = false;
+  results.style.display = 'block';
+  results.classList.add('public-demo-results');
+  document.body.dataset.publicDemoReport = 'true';
+}
+
+function restoreReportShellToApp() {
+  const results = document.getElementById('results');
+  if (!results || !reportOriginalParent || results.parentNode === reportOriginalParent) return;
+  reportOriginalParent.insertBefore(results, reportOriginalNextSibling);
+  results.classList.remove('public-demo-results');
+  results.hidden = true;
+  results.style.display = 'none';
+  document.body.dataset.publicDemoReport = 'false';
+}
+
+function requestedDemoWebsite() {
+  const params = new URLSearchParams(window.location.search);
+  const requested = params.get('website') || document.getElementById('sampleDemoUrl')?.value || document.getElementById('heroDemoUrl')?.value || '';
+  return normalizeUrl(requested) || DEMO_REPORT_DATA.url;
+}
+
+function demoReportDataForWebsite(website) {
+  return {
+    ...DEMO_REPORT_DATA,
+    url: website || DEMO_REPORT_DATA.url,
+    requestedWebsite: website || DEMO_REPORT_DATA.url,
+  };
+}
+
+function validDemoWebsite(raw) {
+  const normalized = normalizeUrl(raw || '');
+  if (!normalized) return null;
+  try {
+    const parsed = new URL(normalized);
+    return parsed.hostname.includes('.') ? normalized : null;
+  } catch {
+    return null;
+  }
+}
+
+function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading = false } = {}) {
+  const loading = document.getElementById('demoLoadingCard');
+  const notice = document.getElementById('demoReportNotice');
+  const mount = document.getElementById('publicDemoReportMount');
+  const sampleInput = document.getElementById('sampleDemoUrl');
+  const normalizedWebsite = normalizeUrl(website || '') || DEMO_REPORT_DATA.url;
+  if (sampleInput) sampleInput.value = normalizedWebsite;
+  mountReportForPublicDemo();
+
+  const finish = () => {
+    stopDemoScanTimers();
+    if (loading) loading.hidden = true;
+    if (notice) notice.hidden = false;
+    if (mount) mount.hidden = false;
+    pendingWebsiteUrl = normalizedWebsite;
+    pendingProspectName = 'Northstar Roofing';
+    pendingCompanyName = 'Northstar Roofing';
+    pendingAuditNotes = 'Static public demonstration report.';
+    pendingSavedReportId = null;
+    pendingScanResult = demoReportDataForWebsite(normalizedWebsite);
+    renderResults(pendingScanResult, { publicDemo: true });
+    trackPublicEvent('demo_completed', { requested_website: normalizedWebsite });
+  };
+
+  if (!withLoading) {
+    finish();
+    return;
+  }
+
+  if (notice) notice.hidden = true;
+  if (mount) mount.hidden = true;
+  if (loading) loading.hidden = false;
+  setDemoLoadingProgress(0, DEMO_SCAN_STEPS[0]);
+  trackPublicEvent('demo_loading', { requested_website: normalizedWebsite });
+
+  const startedAt = Date.now();
+  demoProgressTimer = setInterval(() => {
+    const elapsed = Date.now() - startedAt;
+    const pct = Math.min(96, (elapsed / DEMO_SCAN_DURATION_MS) * 100);
+    const stepIndex = Math.min(DEMO_SCAN_STEPS.length - 1, Math.floor((pct / 100) * DEMO_SCAN_STEPS.length));
+    setDemoLoadingProgress(pct, DEMO_SCAN_STEPS[stepIndex]);
+  }, 180);
+  demoScanTimer = setTimeout(finish, DEMO_SCAN_DURATION_MS);
+}
+
+function startDemoFromWebsite(website) {
+  const normalizedWebsite = validDemoWebsite(website);
+  if (!normalizedWebsite) {
+    showToast('Enter a valid website URL to generate the demo report.', 'warning');
+    const visibleInput = [document.getElementById('heroDemoUrl'), document.getElementById('sampleDemoUrl')]
+      .find(input => input && !input.closest('[hidden]'));
+    visibleInput?.focus();
+    return;
+  }
+  trackPublicEvent('demo_started', { requested_website: normalizedWebsite });
+  navigateTo(`/sample-report?website=${encodeURIComponent(normalizedWebsite)}&scan=1`);
+}
  
 function normalizeUrl(raw) {
-  let url = raw.trim();
+  let url = String(raw || '').trim();
   if (!url) return null;
   if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
   return url;
@@ -3698,14 +4024,47 @@ function getScoreContext(score, max = 100) {
 }
 
 function getCategoryDisplay(key, label) {
-  const normalized = String(key || '').toLowerCase();
+  const normalized = `${String(key || '')} ${asText(label)}`.toLowerCase();
   const fallback = asText(label) || key;
+  if (normalized.includes('website') && normalized.includes('health')) return 'Website Health';
   if (normalized.includes('lead') || normalized.includes('conversion')) return 'Conversion';
-  if (normalized.includes('trust') || normalized.includes('local')) return 'Trust & Credibility';
-  if (normalized.includes('seo') || normalized.includes('visibility')) return 'SEO Visibility';
-  if (normalized.includes('technical') || normalized.includes('speed')) return 'Technical Health';
-  if (normalized.includes('visual') || normalized.includes('user')) return 'User Experience';
+  if (normalized.includes('trust') || normalized.includes('local') || normalized.includes('credibility')) return 'Trust & Credibility';
+  if (normalized.includes('seo') || normalized.includes('visibility')) return 'SEO';
+  if (normalized.includes('technical')) return 'Technical';
+  if (normalized.includes('performance') || normalized.includes('speed')) return 'Performance';
+  if (normalized.includes('visual') || normalized.includes('design') || normalized.includes('user')) return 'Design';
   return fallback || 'Website Performance';
+}
+
+function normalizedCategoryMax(score, max) {
+  const numericMax = Number(max);
+  if (Number.isFinite(numericMax) && numericMax > 0) return numericMax;
+  const numericScore = Number(score);
+  if (Number.isFinite(numericScore) && numericScore > 100) return numericScore;
+  return 100;
+}
+
+function categoryPercent(score, max) {
+  const numericScore = Number.isFinite(Number(score)) ? Number(score) : 0;
+  const numericMax = normalizedCategoryMax(numericScore, max);
+  if (!numericMax) return 0;
+  return Math.max(0, Math.min(100, (numericScore / numericMax) * 100));
+}
+
+function normalizedReportCategories(result) {
+  const rows = [];
+  const seen = new Set();
+  objectEntries(asRecord(result.categories)).forEach(([key, rawCat]) => {
+    const cat = asRecord(rawCat);
+    const score = Number.isFinite(Number(cat.score)) ? Number(cat.score) : 0;
+    const max = normalizedCategoryMax(score, cat.max);
+    const label = getCategoryDisplay(key, asText(cat.label));
+    const canonical = label.toLowerCase();
+    if (seen.has(canonical)) return;
+    seen.add(canonical);
+    rows.push({ key, label, score, max, pct: categoryPercent(score, max) });
+  });
+  return rows;
 }
 
 function getCategorySummary(label, score, max) {
@@ -3771,11 +4130,19 @@ function getBusinessImpact(label, priority) {
 
 function issuePriority(rawIssue, index = 0) {
   const issue = asRecord(rawIssue);
+  const explicitPriority = asText(issue.priority).toLowerCase();
   const severity = asText(issue.severity).toLowerCase();
   const impact = asText(issue.impact).toLowerCase();
+  if (explicitPriority.includes('high')) return 'High';
+  if (explicitPriority.includes('medium') || explicitPriority.includes('moderate')) return 'Medium';
+  if (explicitPriority.includes('low')) return 'Low';
   if (severity.includes('critical') || severity.includes('high') || impact.includes('high') || index === 0) return 'High';
   if (severity.includes('partial') || severity.includes('medium') || impact.includes('medium')) return 'Medium';
   return 'Medium';
+}
+
+function recommendationPriority(rawRecommendation, index = 0) {
+  return issuePriority(rawRecommendation, index);
 }
 
 function issueImpactText(rawIssue) {
@@ -3921,8 +4288,6 @@ async function runAnalysis() {
   const subscription = await loadSubscription();
   if (!subscriptionCanRunAudit(subscription || normalizedSubscription())) {
     const message = billingNoticeText(subscription || normalizedSubscription());
-    errBox.style.display = 'block';
-    errBox.textContent = message;
     setBillingMessage(message, 'warning');
     showToast(message, 'warning');
     navigateTo('/app/billing');
@@ -4011,7 +4376,7 @@ function renderScoreHero(result) {
 
   setTimeout(() => {
     const bar = document.getElementById('scoreBar');
-    bar.style.width      = (total / maxScore * 100) + '%';
+    bar.style.width      = categoryPercent(total, maxScore) + '%';
     bar.style.background = color;
   }, 100);
 
@@ -4020,16 +4385,12 @@ function renderScoreHero(result) {
 
 function buildReportRequestData(result) {
   const root = asRecord(result);
-  const categories = asRecord(root.categories);
-  const categorySummary = objectEntries(categories).map(([key, rawCat]) => {
-    const cat = asRecord(rawCat);
-    return {
-      key,
-      label: asText(cat.label) || key,
-      score: Number.isFinite(Number(cat.score)) ? Number(cat.score) : null,
-      max: Number.isFinite(Number(cat.max)) ? Number(cat.max) : null,
-    };
-  });
+  const categorySummary = normalizedReportCategories(root).map(category => ({
+    key: category.key,
+    label: category.label,
+    score: category.score,
+    max: category.max,
+  }));
 
   return {
     score: normalizeScore(firstDefinedValue(root.total, root.score, root.websiteScore, root.rating)),
@@ -4119,14 +4480,17 @@ async function submitLeadCapture() {
   }
 }
 
-function renderResults(data) {
+function renderResults(data, options = {}) {
   stopLoadingTimers();
-  showAppPanel('report');
-  const reportPath = pendingSavedReportId
-    ? `/app/reports/${encodeURIComponent(pendingSavedReportId)}`
-    : '/app/reports/current';
-  window.history.replaceState({}, '', reportPath);
-  renderRoute();
+  const publicDemo = options.publicDemo === true;
+  if (!publicDemo) {
+    showAppPanel('report');
+    const reportPath = pendingSavedReportId
+      ? `/app/reports/${encodeURIComponent(pendingSavedReportId)}`
+      : '/app/reports/current';
+    window.history.replaceState({}, '', reportPath);
+    renderRoute();
+  }
  
   const result = asRecord(data);
   const { color } = renderScoreHero(result);
@@ -4159,11 +4523,15 @@ function renderResults(data) {
   if (finalAssessment) finalAssessment.textContent = buildFinalAssessment(result, score, context);
 
   fullResultsUnlocked = true;
-  document.getElementById('partialGate').style.display = 'block';
+  document.getElementById('partialGate').style.display = publicDemo ? 'none' : 'block';
   document.getElementById('fullResults').style.display = 'block';
   const actions = document.querySelector('.report-actions');
-  if (actions) actions.style.display = 'flex';
-  setCurrentReportPdfButton(!pendingSavedReportId, pendingSavedReportId ? 'Download PDF' : 'Preparing PDF...');
+  if (actions) actions.style.display = publicDemo ? 'none' : 'flex';
+  if (publicDemo) {
+    setReportSaveMessage('This is a fictional demo report. Create an account to scan real websites.', 'default');
+  } else {
+    setCurrentReportPdfButton(!pendingSavedReportId, pendingSavedReportId ? 'Download PDF' : 'Preparing PDF...');
+  }
   const unlockForm = document.getElementById('unlockLeadForm');
   if (unlockForm) unlockForm.reset();
   const unlockBtn = document.getElementById('unlockBtn');
@@ -4197,14 +4565,13 @@ function renderResults(data) {
  
   const catsGrid = document.getElementById('catsGrid');
   catsGrid.innerHTML = '';
-  const categories = asRecord(result.categories);
-  for (const [key, rawCat] of objectEntries(categories)) {
-    const cat = asRecord(rawCat);
-    const catScore = Number.isFinite(Number(cat.score)) ? Number(cat.score) : 0;
-    const catMax = Number(cat.max) || 1;
-    const pct = catScore / catMax;
+  const categories = normalizedReportCategories(result);
+  categories.forEach(cat => {
+    const catScore = cat.score;
+    const catMax = cat.max;
+    const pct = cat.pct;
     const c = getScoreColor(catScore, catMax);
-    const label = getCategoryDisplay(key, asText(cat.label));
+    const label = cat.label;
     const catContext = getScoreContext(catScore, catMax);
     catsGrid.innerHTML += `
       <div class="cat-card">
@@ -4214,7 +4581,7 @@ function renderResults(data) {
           <span style="color:var(--muted);font-size:0.85rem">/ ${catMax}</span>
         </div>
         <div class="cat-bar-wrap">
-          <div class="cat-bar-fill" style="width:${pct*100}%;background:${c}"></div>
+          <div class="cat-bar-fill" style="width:${pct}%;background:${c}"></div>
         </div>
         <div class="category-meta">
           <span class="status-chip ${escHtml(catContext.tone)}">${escHtml(catContext.status)}</span>
@@ -4223,7 +4590,7 @@ function renderResults(data) {
         <div class="cat-summary">${escHtml(getCategorySummary(label, catScore, catMax))}</div>
         <div class="cat-business-impact"><span class="consulting-chip-label">Business Impact</span><br>${escHtml(getBusinessImpact(label, catContext.priority))}</div>
       </div>`;
-  }
+  });
   const brokenSummary = getBrokenLinksSummary(result);
   const brokenColor = brokenSummary.totalIssues > 0 ? 'var(--report-risk)' : 'var(--report-good)';
   const brokenPriority = brokenSummary.totalIssues > 0 ? 'High' : 'Low';
@@ -4313,11 +4680,13 @@ function renderResults(data) {
       const fix = asText(rec.fix) || asText(rec.recommendation);
       const impact = asText(rec.impact);
       const fixItems = splitFixItems(fix);
+      const priority = recommendationPriority(rec, i);
       recsList.innerHTML += `
         <div class="rec-card">
           <div class="rec-header">
             <span class="rec-num">${i + 1}</span>
             <span class="rec-title">${escHtml(title)}</span>
+            <span class="status-chip ${escHtml(priority.toLowerCase())}">${escHtml(priority)} Priority</span>
           </div>
           <div class="rec-body">
             <div class="rec-fix">
