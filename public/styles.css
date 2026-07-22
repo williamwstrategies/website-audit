@@ -1651,6 +1651,25 @@ button:disabled {
 .report-shell {
   display: grid;
   gap: 32px;
+  --report-bg: #06111f;
+  --report-bg-soft: #0a1a31;
+  --report-card: rgba(9, 25, 46, 0.9);
+  --report-card-soft: rgba(255, 255, 255, 0.065);
+  --report-card-hover: rgba(255, 255, 255, 0.09);
+  --report-text: #f7fbff;
+  --report-muted: #9fb1c7;
+  --report-muted-strong: #d7e6f7;
+  --report-border: rgba(255, 255, 255, 0.12);
+  --report-border-strong: rgba(121, 214, 255, 0.28);
+  --report-accent-blue: #23a8ff;
+  --report-accent-blue-soft: rgba(35, 168, 255, 0.12);
+  --report-accent-gold-soft: rgba(245, 200, 66, 0.13);
+  color: var(--report-text);
+}
+
+.report-shell .report-hero,
+.report-shell .report-section {
+  color: var(--report-text);
 }
 
 .report-hero {
@@ -4179,6 +4198,207 @@ button:disabled {
 
 .report-footer-links a:hover {
   color: var(--text);
+}
+
+.report-shell .report-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--report-border);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(35, 168, 255, 0.16), transparent 36rem),
+    radial-gradient(circle at 88% 14%, rgba(245, 200, 66, 0.12), transparent 26rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+    var(--report-card);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+}
+
+.report-shell .report-brand-header,
+.report-shell .report-hero-topline,
+.report-shell .report-footer-brand,
+.report-shell .executive-panel,
+.report-shell .priority-card,
+.report-shell .cat-card,
+.report-shell .visual-trust-card,
+.report-shell .visual-trust-item,
+.report-shell .positive-item,
+.report-shell .issue-item,
+.report-shell .rec-card,
+.report-shell .evidence-pages,
+.report-shell .evidence-signal,
+.report-shell .final-assessment-card,
+.report-shell .unlock-card {
+  border-color: var(--report-border);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032)),
+    var(--report-card);
+  color: var(--report-text);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.18);
+}
+
+.report-shell .executive-panel,
+.report-shell .visual-trust-item,
+.report-shell .rec-fix,
+.report-shell .evidence-page-type,
+.report-shell .unlock-message {
+  border-color: var(--report-border);
+  background: var(--report-card-soft);
+  color: var(--report-text);
+}
+
+.report-shell .report-section {
+  border-top-color: var(--report-border);
+}
+
+.report-shell .report-hero-topline {
+  padding: 12px 14px;
+  border-bottom: 0;
+  border-radius: 16px;
+  color: var(--report-muted);
+}
+
+.report-shell .report-meta-grid > div {
+  border-color: var(--report-border);
+  background: var(--report-card-soft);
+}
+
+.report-shell .brand-name,
+.report-shell .score-number,
+.report-shell .score-denom,
+.report-shell .executive-panel h2,
+.report-shell .report-section-heading h2,
+.report-shell .priority-title,
+.report-shell .issue-title,
+.report-shell .rec-title,
+.report-shell .visual-trust-title,
+.report-shell .visual-trust-score,
+.report-shell .cat-score-text,
+.report-shell .positive-text,
+.report-shell .final-assessment-card,
+.report-shell strong {
+  color: var(--report-text);
+}
+
+.report-shell .brand-subtitle,
+.report-shell .report-contact-block,
+.report-shell .report-contact-block a,
+.report-shell .report-meta-label,
+.report-shell .score-label,
+.report-shell .score-verdict,
+.report-shell .analyzed-url,
+.report-shell .executive-panel p,
+.report-shell .executive-metric span,
+.report-shell .report-section-heading p,
+.report-shell .cat-summary,
+.report-shell .cat-business-impact,
+.report-shell .cat-detail-list,
+.report-shell .visual-trust-desc,
+.report-shell .visual-trust-note,
+.report-shell .visual-trust-item-evidence,
+.report-shell .issue-desc,
+.report-shell .rec-impact,
+.report-shell .evidence-snippet,
+.report-shell .evidence-page-source,
+.report-shell .report-footer-links,
+.report-shell .unlock-copy,
+.report-shell .lead-label {
+  color: var(--report-muted);
+}
+
+.report-shell .report-section-heading span,
+.report-shell .cat-name,
+.report-shell .finding-label,
+.report-shell .consulting-chip-label,
+.report-shell .evidence-pages-label,
+.report-shell .evidence-page-path,
+.report-shell .evidence-signal-name,
+.report-shell .executive-kicker {
+  color: var(--report-accent-blue);
+}
+
+.report-shell .score-bar-wrap,
+.report-shell .cat-bar-wrap {
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.report-shell .priority-rank,
+.report-shell .rec-num,
+.report-shell .brand-mark,
+.report-shell .brand-logo-fallback {
+  border-color: rgba(245, 200, 66, 0.24);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(245, 200, 66, 0.26), transparent 52%),
+    rgba(255, 255, 255, 0.08);
+  color: #ffe29a;
+}
+
+.report-shell .status-chip,
+.report-shell .passed-chip,
+.report-shell .evidence-badge,
+.report-shell .audit-proof-pill,
+.report-shell .reassurance-chip,
+.report-shell .evidence-page-type {
+  border-color: var(--report-border);
+  background: var(--report-card-soft);
+  color: var(--report-muted-strong);
+}
+
+.report-shell .status-chip.high,
+.report-shell .badge-no {
+  border-color: rgba(255, 107, 107, 0.28);
+  background: rgba(255, 107, 107, 0.12);
+  color: #ffd0d0;
+}
+
+.report-shell .status-chip.medium,
+.report-shell .status-chip.partial,
+.report-shell .badge-partial {
+  border-color: rgba(245, 200, 66, 0.3);
+  background: rgba(245, 200, 66, 0.13);
+  color: #ffe29a;
+}
+
+.report-shell .status-chip.low,
+.report-shell .badge-yes,
+.report-shell .passed-chip {
+  border-color: rgba(95, 216, 148, 0.28);
+  background: rgba(95, 216, 148, 0.12);
+  color: #c7f8dc;
+}
+
+.report-shell .rec-fix {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.report-shell .fix-steps li {
+  color: var(--report-muted-strong);
+}
+
+.report-shell .evidence-page-row,
+.report-shell .executive-metric {
+  border-color: var(--report-border);
+}
+
+.report-shell .report-save-message,
+.report-shell .report-disclaimer {
+  border-color: var(--report-border);
+  background: var(--report-card-soft);
+  color: var(--report-muted);
+}
+
+.report-shell input,
+.report-shell textarea,
+.report-shell select,
+.report-shell .url-input {
+  border-color: var(--report-border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--report-text);
+}
+
+.report-shell input::placeholder,
+.report-shell textarea::placeholder {
+  color: rgba(215, 230, 247, 0.48);
 }
 
 .loading-brand-lockup {
