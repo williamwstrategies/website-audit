@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-22-demo-ux">
+<link rel="stylesheet" href="/styles.css?v=2026-07-22-progress-bars">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1229,7 +1229,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                   <span class="score-number" id="scoreNum">0</span>
                   <span class="score-denom" id="scoreDenom">/100</span>
                 </div>
-                <div class="score-bar-wrap">
+                <div class="score-bar-wrap" id="scoreBarTrack" role="meter" aria-label="Overall website health score" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                   <div class="score-bar-fill" id="scoreBar"></div>
                 </div>
                 <p class="score-verdict" id="scoreVerdict"></p>
@@ -1424,9 +1424,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-22-demo-ux"></script>
-<script src="/auth.js?v=2026-07-22-demo-ux"></script>
-<script src="/database.js?v=2026-07-22-demo-ux"></script>
+<script src="/branding.js?v=2026-07-22-progress-bars"></script>
+<script src="/auth.js?v=2026-07-22-progress-bars"></script>
+<script src="/database.js?v=2026-07-22-progress-bars"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2530,7 +2530,7 @@ function updateReportMetrics() {
     ? `Payment status: ${titleCase(subscription.payment_status)}`
     : `Subscription status: ${status}`;
   if (billingUsagePercent) billingUsagePercent.textContent = `${usagePercent}%`;
-  if (billingProgressFill) billingProgressFill.style.width = `${usagePercent}%`;
+  if (billingProgressFill) billingProgressFill.style.width = progressPercent(usagePercent);
   if (billingStatusNotice) {
     billingStatusNotice.textContent = notice;
     billingStatusNotice.dataset.tone = canRunAudit ? 'success' : (subscription.status === 'past_due' || subscription.status === 'unpaid' ? 'warning' : 'default');
@@ -3624,8 +3624,8 @@ function setLoadingProgress(percent, label) {
   const fill = document.getElementById('loadingProgressFill');
   const pct = document.getElementById('loadingProgressPct');
   const eta = document.getElementById('loadingProgressEta');
-  if (fill) fill.style.width = bounded + '%';
-  if (pct) pct.textContent = bounded + '%';
+  if (fill) fill.style.width = progressPercent(bounded);
+  if (pct) pct.textContent = progressPercent(bounded);
   if (eta && label) eta.textContent = label;
 }
 
@@ -3673,8 +3673,8 @@ function setDemoLoadingProgress(percent, stepText = '') {
   const fill = document.getElementById('demoLoadingFill');
   const pct = document.getElementById('demoLoadingPct');
   const step = document.getElementById('demoLoadingStep');
-  if (fill) fill.style.width = `${bounded}%`;
-  if (pct) pct.textContent = `${bounded}%`;
+  if (fill) fill.style.width = progressPercent(bounded);
+  if (pct) pct.textContent = progressPercent(bounded);
   if (step && stepText) step.textContent = stepText;
 }
 
@@ -3897,6 +3897,13 @@ function normalizeScore(score) {
 
 function formatPercent(value) {
   return `${Math.round(value * 10) / 10}%`;
+}
+
+function progressPercent(value) {
+  const numeric = Number(value);
+  const bounded = Number.isFinite(numeric) ? Math.max(0, Math.min(100, numeric)) : 0;
+  const rounded = Math.round(bounded * 10) / 10;
+  return `${rounded}%`;
 }
 
 function reportScoreFromResult(result) {
@@ -4376,8 +4383,17 @@ function renderScoreHero(result) {
 
   setTimeout(() => {
     const bar = document.getElementById('scoreBar');
-    bar.style.width      = categoryPercent(total, maxScore) + '%';
-    bar.style.background = color;
+    const percent = categoryPercent(total, maxScore);
+    if (bar) {
+      bar.style.width = progressPercent(percent);
+      bar.style.background = color;
+    }
+    const track = document.getElementById('scoreBarTrack');
+    if (track) {
+      track.setAttribute('aria-valuemax', String(maxScore));
+      track.setAttribute('aria-valuenow', String(Math.max(0, Math.min(maxScore, total))));
+      track.setAttribute('aria-valuetext', `${progressPercent(percent)} filled`);
+    }
   }, 100);
 
   return { total, maxScore, color };
@@ -4580,8 +4596,8 @@ function renderResults(data, options = {}) {
           <span class="cat-score-text" style="color:${c}">${catScore}</span>
           <span style="color:var(--muted);font-size:0.85rem">/ ${catMax}</span>
         </div>
-        <div class="cat-bar-wrap">
-          <div class="cat-bar-fill" style="width:${pct}%;background:${c}"></div>
+        <div class="cat-bar-wrap" role="meter" aria-label="${escHtml(label)} score" aria-valuemin="0" aria-valuemax="${escHtml(catMax)}" aria-valuenow="${escHtml(catScore)}" aria-valuetext="${escHtml(progressPercent(pct))} filled">
+          <div class="cat-bar-fill" style="width:${progressPercent(pct)};background:${c}"></div>
         </div>
         <div class="category-meta">
           <span class="status-chip ${escHtml(catContext.tone)}">${escHtml(catContext.status)}</span>

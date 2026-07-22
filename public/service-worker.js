@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-07-22-demo-ux';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-07-22-progress-bars';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
