@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-22-trial-credits">
+<link rel="stylesheet" href="/styles.css?v=2026-07-22-contrast-fix">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1429,9 +1429,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-22-trial-credits"></script>
-<script src="/auth.js?v=2026-07-22-trial-credits"></script>
-<script src="/database.js?v=2026-07-22-trial-credits"></script>
+<script src="/branding.js?v=2026-07-22-contrast-fix"></script>
+<script src="/auth.js?v=2026-07-22-contrast-fix"></script>
+<script src="/database.js?v=2026-07-22-contrast-fix"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2061,6 +2061,8 @@ function renderBrandingPreview(branding = brandingProvider?.getBranding?.() || {
   document.querySelectorAll('.branding-preview-panel').forEach(panel => {
     panel.style.setProperty('--preview-accent', primary);
     panel.style.setProperty('--preview-secondary', secondary);
+    panel.style.setProperty('--preview-accent-contrast', window.getReadableTextColor?.(primary) || '#1d1d1f');
+    panel.style.setProperty('--preview-secondary-contrast', window.getReadableTextColor?.(secondary) || '#1d1d1f');
   });
 }
 

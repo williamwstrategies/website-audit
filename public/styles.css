@@ -11,6 +11,8 @@
   --accent: #f5c842;
   --accent-strong: #c9972e;
   --accent-soft: #fff7d6;
+  --accent-contrast: #1d1d1f;
+  --accent-strong-contrast: #1d1d1f;
   --green: #5f8f6d;
   --yellow: #b18423;
   --red: #b85d4f;
@@ -1223,7 +1225,7 @@ textarea:focus {
   border: 1px solid color-mix(in srgb, var(--accent-strong) 44%, white);
   border-radius: var(--radius-pill);
   background: var(--accent);
-  color: var(--text);
+  color: var(--accent-contrast, var(--text));
   padding: 0 24px;
   font-family: inherit;
   font-size: 0.96rem;
@@ -6506,18 +6508,28 @@ button:disabled {
   --background-secondary: #0a1a31;
   --surface-primary: rgba(9, 25, 46, 0.84);
   --surface-secondary: rgba(255, 255, 255, 0.07);
-  --surface-elevated: #f8fbff;
+  --surface-elevated: rgba(12, 32, 56, 0.94);
   --text-primary: #f7fbff;
   --text-secondary: #d7e6f7;
   --text-muted: #9fb1c7;
   --border-default: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(121, 214, 255, 0.34);
-  --brand-primary: #23a8ff;
-  --brand-primary-hover: #75ceff;
-  --brand-primary-soft: rgba(35, 168, 255, 0.16);
-  --brand-glow: rgba(35, 168, 255, 0.28);
+  --brand-primary: var(--accent);
+  --brand-primary-hover: color-mix(in srgb, var(--accent) 72%, white);
+  --brand-primary-soft: color-mix(in srgb, var(--accent) 18%, transparent);
+  --brand-glow: color-mix(in srgb, var(--accent) 28%, transparent);
+  --text: var(--text-primary);
+  --muted: var(--text-muted);
+  --muted-2: rgba(215, 230, 247, 0.62);
+  --surface: var(--surface-primary);
+  --surface-soft: var(--surface-secondary);
+  --line: var(--border-default);
+  --line-strong: var(--border-strong);
+  --shadow-card: 0 24px 70px rgba(0, 0, 0, 0.25);
+  --shadow-hover: 0 30px 86px rgba(0, 0, 0, 0.3), 0 0 42px var(--brand-glow);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.14);
   background:
-    radial-gradient(circle at 18% 0%, rgba(35, 168, 255, 0.2), transparent 34rem),
+    radial-gradient(circle at 18% 0%, var(--brand-glow), transparent 34rem),
     radial-gradient(circle at 84% 18%, rgba(86, 104, 255, 0.14), transparent 30rem),
     linear-gradient(180deg, #06111f 0%, #071426 54%, #08101d 100%);
   color: var(--text-primary);
@@ -6549,13 +6561,13 @@ button:disabled {
 }
 
 .app-shell .brand-mark {
-  border: 1px solid rgba(52, 180, 255, 0.22);
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 34%, transparent);
   border-radius: 14px;
   background:
-    radial-gradient(circle at 30% 20%, rgba(49, 178, 255, 0.28), transparent 48%),
+    radial-gradient(circle at 30% 20%, var(--brand-glow), transparent 48%),
     rgba(255, 255, 255, 0.08);
-  color: #79d6ff;
-  box-shadow: 0 12px 34px rgba(34, 167, 255, 0.18);
+  color: color-mix(in srgb, var(--brand-primary) 28%, white);
+  box-shadow: 0 12px 34px var(--brand-glow);
 }
 
 .app-shell .brand-name,
@@ -6588,7 +6600,7 @@ button:disabled {
 .app-shell .scan-context-panel span,
 .app-shell .billing-progress-top,
 .app-shell .billing-plan-price span {
-  color: #79d6ff;
+  color: var(--brand-primary-hover);
 }
 
 .app-shell .enterprise-header {
@@ -6607,7 +6619,7 @@ button:disabled {
 
 .app-shell .app-menu a:hover,
 .app-shell .app-menu a.active {
-  border-color: rgba(121, 214, 255, 0.28);
+  border-color: color-mix(in srgb, var(--brand-primary) 34%, transparent);
   background: var(--brand-primary-soft);
   color: #ffffff;
 }
@@ -6669,20 +6681,20 @@ button:disabled {
 .app-shell .metric-card:hover,
 .app-shell .workspace-panel:hover,
 .app-shell .saved-report-card:hover {
-  border-color: rgba(121, 214, 255, 0.28);
-  box-shadow: 0 30px 86px rgba(0, 0, 0, 0.3), 0 0 42px rgba(35, 168, 255, 0.08);
+  border-color: color-mix(in srgb, var(--brand-primary) 34%, transparent);
+  box-shadow: var(--shadow-hover);
 }
 
 .app-shell .analyze-btn {
-  border: 1px solid rgba(121, 214, 255, 0.38);
-  background: linear-gradient(180deg, #47bcff, #1296ee);
-  color: #03101f;
-  box-shadow: 0 16px 40px rgba(35, 168, 255, 0.26);
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 52%, white);
+  background: linear-gradient(180deg, var(--brand-primary-hover), var(--brand-primary));
+  color: var(--accent-contrast, #03101f);
+  box-shadow: 0 16px 40px var(--brand-glow);
 }
 
 .app-shell .analyze-btn:hover {
-  background: linear-gradient(180deg, #75ceff, #22a8ff);
-  box-shadow: 0 20px 54px rgba(35, 168, 255, 0.34);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--brand-primary) 58%, white), var(--brand-primary));
+  box-shadow: 0 20px 54px var(--brand-glow);
 }
 
 .app-shell .secondary-btn,
@@ -6700,7 +6712,7 @@ button:disabled {
 .app-shell .retry-btn:hover,
 .app-shell .saved-report-actions .secondary-btn:hover,
 .app-shell .file-upload-control:hover {
-  border-color: rgba(121, 214, 255, 0.34);
+  border-color: color-mix(in srgb, var(--brand-primary) 42%, transparent);
   color: #ffffff;
   background: rgba(255, 255, 255, 0.1);
 }
@@ -6728,9 +6740,9 @@ button:disabled {
 .app-shell input:focus,
 .app-shell select:focus,
 .app-shell textarea:focus {
-  border-color: rgba(121, 214, 255, 0.5);
+  border-color: color-mix(in srgb, var(--brand-primary) 58%, transparent);
   background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 0 4px rgba(35, 168, 255, 0.16);
+  box-shadow: 0 0 0 4px var(--brand-primary-soft);
 }
 
 .app-shell .saved-report-main {
@@ -6741,7 +6753,7 @@ button:disabled {
 .app-shell .status-chip,
 .app-shell .auth-user-chip,
 .app-shell .preview-score-chip {
-  border-color: rgba(121, 214, 255, 0.28);
+  border-color: color-mix(in srgb, var(--brand-primary) 34%, transparent);
   background: var(--brand-primary-soft);
   color: #dff5ff;
 }
@@ -6759,7 +6771,33 @@ button:disabled {
 
 .app-shell .billing-progress-fill,
 .app-shell .loading-progress-fill {
-  background: linear-gradient(90deg, #47bcff, #1296ee);
+  background: linear-gradient(90deg, var(--brand-primary-hover), var(--brand-primary));
+}
+
+.app-shell .reports-summary-row {
+  padding: 10px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-control);
+  background: rgba(255, 255, 255, 0.075);
+  color: var(--text-primary);
+  font-weight: 720;
+}
+
+.app-shell .billing-access-notice,
+.app-shell .billing-status-notice {
+  border-color: var(--border-default);
+  background: rgba(255, 255, 255, 0.075);
+  color: var(--text-secondary);
+}
+
+.app-shell .billing-access-notice p,
+.app-shell .billing-status-notice p {
+  color: var(--text-secondary);
+}
+
+.app-shell .billing-access-notice strong,
+.app-shell .billing-status-notice strong {
+  color: var(--text-primary);
 }
 
 .app-shell .mobile-nav-toggle {
@@ -6773,8 +6811,66 @@ button:disabled {
 .app-shell input:focus-visible,
 .app-shell select:focus-visible,
 .app-shell textarea:focus-visible {
-  outline: 3px solid rgba(35, 168, 255, 0.42);
+  outline: 3px solid color-mix(in srgb, var(--brand-primary) 50%, transparent);
   outline-offset: 3px;
+}
+
+.app-shell #branding-view .settings-header,
+.app-shell #branding-view .settings-form,
+.app-shell #branding-view .branding-preview-panel {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)),
+    rgba(8, 22, 42, 0.94);
+  color: var(--text-primary);
+}
+
+.app-shell #branding-view .settings-form,
+.app-shell #branding-view .branding-preview-panel {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.app-shell #branding-view .settings-toggle-row {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.app-shell #branding-view .settings-toggle-row strong,
+.app-shell #branding-view .brand-name,
+.app-shell #branding-view h2 {
+  color: var(--text-primary);
+}
+
+.app-shell #branding-view .settings-toggle-row small,
+.app-shell #branding-view .brand-subtitle,
+.app-shell #branding-view .field-help,
+.app-shell #branding-view .lead-label,
+.app-shell #branding-view .panel-heading p {
+  color: var(--text-muted);
+}
+
+.app-shell #branding-view .preview-sidebar-card,
+.app-shell #branding-view .preview-report-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035)),
+    rgba(255, 255, 255, 0.045);
+}
+
+.app-shell #branding-view .preview-nav-item.active,
+.app-shell #branding-view .preview-score-chip {
+  border-color: color-mix(in srgb, var(--preview-accent) 46%, white);
+  background: color-mix(in srgb, var(--preview-accent) 22%, white);
+  color: #06111f;
+}
+
+.app-shell #branding-view .preview-primary-button {
+  border-color: color-mix(in srgb, var(--preview-secondary) 42%, white);
+  background: var(--preview-accent);
+  color: var(--preview-accent-contrast, #1d1d1f);
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--preview-accent) 28%, transparent);
+}
+
+.app-shell #branding-view .preview-primary-button:hover {
+  background: color-mix(in srgb, var(--preview-accent) 84%, white);
+  color: var(--preview-accent-contrast, #1d1d1f);
 }
 
 @media (max-height: 860px) and (min-width: 1081px) {

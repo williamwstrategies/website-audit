@@ -49,6 +49,24 @@
     };
   }
 
+  function channelLuminance(value) {
+    const channel = value / 255;
+    return channel <= 0.03928
+      ? channel / 12.92
+      : ((channel + 0.055) / 1.055) ** 2.4;
+  }
+
+  function relativeLuminance(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    return (0.2126 * channelLuminance(r)) +
+      (0.7152 * channelLuminance(g)) +
+      (0.0722 * channelLuminance(b));
+  }
+
+  function readableTextColor(hex) {
+    return relativeLuminance(hex) > 0.48 ? '#1d1d1f' : '#ffffff';
+  }
+
   function rgba(hex, alpha) {
     const { r, g, b } = hexToRgb(hex);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
@@ -240,6 +258,8 @@
       document.documentElement.style.setProperty('--accent', primary);
       document.documentElement.style.setProperty('--accent-strong', secondary);
       document.documentElement.style.setProperty('--accent-soft', rgba(primary, 0.18));
+      document.documentElement.style.setProperty('--accent-contrast', readableTextColor(primary));
+      document.documentElement.style.setProperty('--accent-strong-contrast', readableTextColor(secondary));
       document.documentElement.style.setProperty('--agency-secondary', secondary);
       document.body.dataset.whiteLabelMode = brand.whiteLabelEnabled ? 'enabled' : 'disabled';
 
@@ -356,5 +376,6 @@
   }
 
   window.DEFAULT_AGENCY_BRANDING = DEFAULT_BRANDING;
+  window.getReadableTextColor = readableTextColor;
   window.BrandingProvider = BrandingProvider;
 })();
