@@ -81,11 +81,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="badge">White-label website audits for agencies</div>
         <h1 id="homeHeroTitle">Don't Just Tell Prospects Their Website Needs Work. <span>Show Them.</span></h1>
         <p class="hero-sub">Generate a professional white-label website assessment in under a minute. Try the demo first, then create real reports under your agency brand.</p>
-        <form class="hero-demo-scanner" id="heroDemoForm" novalidate>
+        <form class="hero-demo-scanner" id="heroDemoForm" action="/sample-report" method="get" novalidate>
           <label class="lead-field">
             <span class="lead-label">Website URL</span>
-            <input class="url-input" id="heroDemoUrl" type="url" placeholder="https://examplebusiness.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+            <input class="url-input" id="heroDemoUrl" name="website" type="text" inputmode="url" placeholder="examplebusiness.com" autocomplete="url" autocorrect="off" spellcheck="false">
           </label>
+          <input type="hidden" name="scan" value="1">
           <button class="analyze-btn" type="submit">Generate Demo Report</button>
           <small>No signup required. Experience the exact report your clients will receive.</small>
         </form>
@@ -444,11 +445,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="section-kicker">Interactive Demo</div>
         <h1>Experience the report before creating an account.</h1>
         <p>Enter any website URL. The scanner animation will use your requested website, then render a complete fictional Northstar Roofing report using the same report components as the application.</p>
-        <form class="hero-demo-scanner compact-demo-scanner" id="sampleDemoForm" novalidate>
+        <form class="hero-demo-scanner compact-demo-scanner" id="sampleDemoForm" action="/sample-report" method="get" novalidate>
           <label class="lead-field">
             <span class="lead-label">Requested Website</span>
-            <input class="url-input" id="sampleDemoUrl" type="url" placeholder="https://joesroofing.com" autocomplete="url" autocorrect="off" spellcheck="false">
+            <input class="url-input" id="sampleDemoUrl" name="website" type="text" inputmode="url" placeholder="joesroofing.com" autocomplete="url" autocorrect="off" spellcheck="false">
           </label>
+          <input type="hidden" name="scan" value="1">
           <button class="analyze-btn" type="submit">Generate Demo Report</button>
         </form>
       </div>
@@ -3250,13 +3252,13 @@ function bindPublicMarketingControls() {
   const heroDemoForm = document.getElementById('heroDemoForm');
   heroDemoForm?.addEventListener('submit', event => {
     event.preventDefault();
-    startDemoFromWebsite(document.getElementById('heroDemoUrl')?.value || '');
+    startDemoFromWebsite(event.currentTarget?.querySelector('[name="website"]')?.value || '');
   });
 
   const sampleDemoForm = document.getElementById('sampleDemoForm');
   sampleDemoForm?.addEventListener('submit', event => {
     event.preventDefault();
-    startDemoFromWebsite(document.getElementById('sampleDemoUrl')?.value || '');
+    startDemoFromWebsite(event.currentTarget?.querySelector('[name="website"]')?.value || '');
   });
 
   document.querySelectorAll('.faq-section details').forEach(item => {
@@ -5122,8 +5124,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     let refreshing = false;
+    let formInputTouched = false;
+    document.addEventListener('input', event => {
+      if (event.target?.matches?.('input, textarea, select')) formInputTouched = true;
+    }, { capture: true });
+    document.addEventListener('change', event => {
+      if (event.target?.matches?.('input, textarea, select')) formInputTouched = true;
+    }, { capture: true });
+    const shouldDelayRefresh = () => {
+      const active = document.activeElement;
+      if (active?.matches?.('input, textarea, select')) return true;
+      return formInputTouched;
+    };
+
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (refreshing) return;
+      if (shouldDelayRefresh()) {
+        console.info('[LeadCheck] Service worker update ready; reload delayed while form input is active.');
+        return;
+      }
       refreshing = true;
       window.location.reload();
     });
