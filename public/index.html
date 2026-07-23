@@ -1577,6 +1577,7 @@ let lastBillingReturnPath = '';
 let pdfExportingReportId = '';
 let demoScanTimer = null;
 let demoProgressTimer = null;
+let demoFallbackTimer = null;
 let demoLoadingActive = false;
 let activeDemoRequestKey = '';
 let reportOriginalParent = null;
@@ -1979,10 +1980,13 @@ function renderPublicPage(key = 'home') {
   }
   if (pageKey === 'sample-report') {
     const params = new URLSearchParams(window.location.search);
+    const requestedWebsite = params.get('website') || DEMO_REPORT_DATA.url;
     renderPublicDemoReport({
-      website: params.get('website') || DEMO_REPORT_DATA.url,
+      website: requestedWebsite,
       withLoading: params.get('scan') === '1',
+      force: true,
     });
+    schedulePublicDemoFallback(requestedWebsite);
   }
   requestAnimationFrame(runPublicReveals);
 }
@@ -3990,8 +3994,10 @@ function stopLoadingTimers() {
 function stopDemoScanTimers() {
   clearTimeout(demoScanTimer);
   clearInterval(demoProgressTimer);
+  clearTimeout(demoFallbackTimer);
   demoScanTimer = null;
   demoProgressTimer = null;
+  demoFallbackTimer = null;
   demoLoadingActive = false;
 }
 
@@ -4107,6 +4113,21 @@ function verifyPublicDemoReportRender(website, { scrollToReport = false, retry =
   });
 }
 
+function schedulePublicDemoFallback(website) {
+  clearTimeout(demoFallbackTimer);
+  demoFallbackTimer = setTimeout(() => {
+    if (window.location.pathname !== '/sample-report') return;
+    if (demoLoadingActive) {
+      schedulePublicDemoFallback(website);
+      return;
+    }
+    if (!publicDemoReportIsMounted()) {
+      console.warn('[LeadCheck] Demo report did not mount after route render; forcing static demo.');
+      renderStaticDemoReport(website || requestedDemoWebsite(), { scrollToReport: false, retry: true });
+    }
+  }, 1400);
+}
+
 function renderStaticDemoReport(website, { scrollToReport = false, retry = false } = {}) {
   const normalizedWebsite = demoRequestKey(website);
   const loading = document.getElementById('demoLoadingCard');
@@ -4137,6 +4158,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
     demoLoadingActive = false;
     trackPublicEvent('demo_completed', { requested_website: normalizedWebsite });
     verifyPublicDemoReportRender(normalizedWebsite, { scrollToReport, retry });
+    schedulePublicDemoFallback(normalizedWebsite);
     return true;
   } catch (error) {
     console.warn('[LeadCheck] Demo report render failed; retrying static demo report.', error);
@@ -4159,7 +4181,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
   }
 }
 
-function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading = false } = {}) {
+function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading = false, force = false } = {}) {
   const loading = document.getElementById('demoLoadingCard');
   const notice = document.getElementById('demoReportNotice');
   const mount = document.getElementById('publicDemoReportMount');
@@ -4169,7 +4191,7 @@ function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading 
   const requestKey = `${normalizedWebsite}|${withLoading ? 'loading' : 'instant'}`;
 
   if (withLoading && demoLoadingActive && activeDemoRequestKey === requestKey) return;
-  if (!withLoading && activeDemoRequestKey === requestKey && mount?.querySelector('#results')) return;
+  if (!withLoading && !force && activeDemoRequestKey === requestKey && mount?.querySelector('#results')) return;
 
   const finish = () => {
     stopDemoScanTimers();
