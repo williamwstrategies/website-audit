@@ -110,6 +110,33 @@
     });
   }
 
+  function setOptionalText(selector, value) {
+    const text = cleanText(value);
+    document.querySelectorAll(selector).forEach(node => {
+      node.textContent = text;
+      node.hidden = !text;
+    });
+  }
+
+  function setOptionalHref(selector, href, label) {
+    const safeHref = cleanText(href);
+    const safeLabel = cleanText(label);
+    document.querySelectorAll(selector).forEach(node => {
+      node.textContent = safeLabel;
+      node.hidden = !(safeHref && safeLabel);
+      node.toggleAttribute('aria-disabled', !(safeHref && safeLabel));
+      if (safeHref) node.setAttribute('href', safeHref);
+      else node.removeAttribute('href');
+    });
+  }
+
+  function collapseEmptyBrandContactGroups() {
+    document.querySelectorAll('.report-contact-block, .report-footer-links').forEach(group => {
+      const hasVisibleContact = Array.from(group.children).some(child => !child.hidden);
+      group.hidden = !hasVisibleContact;
+    });
+  }
+
   function routeTitle(route) {
     if (route.startsWith('/app/reports/current')) return 'Website Assessment';
     if (/^\/app\/reports\/[^/?#]+/.test(route)) return 'Website Assessment';
@@ -303,15 +330,13 @@
       setText('[data-brand-platform]', platformLabel);
       setText('[data-brand-tagline]', brand.tagline || platformLabel);
       setText('[data-brand-logo-text]', initials(agencyName));
-      setText('[data-brand-phone]', brand.phone || 'Phone not set');
+      setOptionalText('[data-brand-phone]', brand.phone);
       setText('[data-brand-disclaimer]', brand.reportDisclaimer || '');
 
-      setHref('[data-brand-email]', brand.email ? `mailto:${brand.email}` : '#');
-      setText('[data-brand-email]', brand.email || 'Email not set');
-      setHref('[data-brand-website]', brand.website || '#');
-      setText('[data-brand-website]', brand.website || 'Website not set');
-      setHref('[data-brand-booking]', brand.bookingLink || '#');
-      setText('[data-brand-booking]', brand.bookingLink ? 'Book a consultation' : 'Booking link not set');
+      setOptionalHref('[data-brand-email]', brand.email ? `mailto:${brand.email}` : '', brand.email);
+      setOptionalHref('[data-brand-website]', brand.website, brand.website);
+      setOptionalHref('[data-brand-booking]', brand.bookingLink, brand.bookingLink ? 'Book a consultation' : '');
+      collapseEmptyBrandContactGroups();
       setText('[data-platform-powered]', brand.poweredBy || 'Powered by Website Strategy Scan');
       document.querySelectorAll('[data-platform-powered]').forEach(node => {
         node.hidden = !(isApp && !this.whiteLabelAllowed);
