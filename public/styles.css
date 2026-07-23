@@ -7277,6 +7277,7 @@ button:disabled {
 .public-demo-report-mount {
   width: min(var(--container), calc(100% - 32px));
   margin: 0 auto 28px;
+  scroll-margin-top: 104px;
 }
 
 .public-demo-report-mount #results {

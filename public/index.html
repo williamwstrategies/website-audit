@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-23-demo-flow-fix">
+<link rel="stylesheet" href="/styles.css?v=2026-07-23-report-first">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -465,11 +465,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         </div>
       </div>
     </div>
+    <div class="public-demo-report-mount" id="publicDemoReportMount" data-reveal tabindex="-1"></div>
     <div class="demo-report-notice" id="demoReportNotice" data-reveal>
       <strong>This demonstration uses fictional data.</strong>
       <span>No account is needed for this demo. The website you enter is shown at the top for personalization; the findings below always use one predefined fictional report.</span>
     </div>
-    <div class="public-demo-report-mount" id="publicDemoReportMount" data-reveal></div>
     <section class="public-section-panel" data-reveal>
       <div class="section-kicker">Included</div>
       <h2>Everything you just saw is included.</h2>
@@ -1426,9 +1426,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-23-demo-flow-fix"></script>
-<script src="/auth.js?v=2026-07-23-demo-flow-fix"></script>
-<script src="/database.js?v=2026-07-23-demo-flow-fix"></script>
+<script src="/branding.js?v=2026-07-23-report-first"></script>
+<script src="/auth.js?v=2026-07-23-report-first"></script>
+<script src="/database.js?v=2026-07-23-report-first"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -3778,7 +3778,50 @@ function demoDisplayWebsite(raw) {
   }
 }
 
-function renderStaticDemoReport(website) {
+function publicDemoReportIsMounted() {
+  const mount = document.getElementById('publicDemoReportMount');
+  return Boolean(
+    mount?.querySelector('#results') &&
+    document.getElementById('scoreNum')?.textContent?.trim()
+  );
+}
+
+function revealPublicDemoReport({ scrollToReport = false } = {}) {
+  const mount = document.getElementById('publicDemoReportMount');
+  const notice = document.getElementById('demoReportNotice');
+  if (notice) notice.hidden = true;
+  if (!mount) return;
+  mount.hidden = false;
+  if (!scrollToReport) return;
+  setTimeout(() => {
+    mount.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    mount.focus?.({ preventScroll: true });
+  }, 120);
+}
+
+function verifyPublicDemoReportRender(website, { scrollToReport = false, retry = false } = {}) {
+  requestAnimationFrame(() => {
+    if (publicDemoReportIsMounted()) {
+      revealPublicDemoReport({ scrollToReport });
+      return;
+    }
+
+    if (!retry) {
+      console.warn('[LeadCheck] Demo report mount was empty; retrying render.');
+      setTimeout(() => renderStaticDemoReport(website, { scrollToReport, retry: true }), 120);
+      return;
+    }
+
+    const notice = document.getElementById('demoReportNotice');
+    if (notice) {
+      notice.hidden = false;
+      const message = notice.querySelector('span');
+      if (message) message.textContent = 'The demo report is still loading. Refresh this page if it does not appear.';
+    }
+  });
+}
+
+function renderStaticDemoReport(website, { scrollToReport = false, retry = false } = {}) {
   const normalizedWebsite = demoRequestKey(website);
   const loading = document.getElementById('demoLoadingCard');
   const notice = document.getElementById('demoReportNotice');
@@ -3792,7 +3835,7 @@ function renderStaticDemoReport(website) {
   }
   if (sampleInput) sampleInput.value = normalizedWebsite;
   if (loading) loading.hidden = true;
-  if (notice) notice.hidden = false;
+  if (notice) notice.hidden = true;
   if (mount) mount.hidden = false;
 
   try {
@@ -3807,6 +3850,7 @@ function renderStaticDemoReport(website) {
     activeDemoRequestKey = normalizedWebsite;
     demoLoadingActive = false;
     trackPublicEvent('demo_completed', { requested_website: normalizedWebsite });
+    verifyPublicDemoReportRender(normalizedWebsite, { scrollToReport, retry });
     return true;
   } catch (error) {
     console.warn('[LeadCheck] Demo report render failed; retrying static demo report.', error);
@@ -3818,8 +3862,10 @@ function renderStaticDemoReport(website) {
         activeDemoRequestKey = normalizedWebsite;
         demoLoadingActive = false;
         trackPublicEvent('demo_completed', { requested_website: normalizedWebsite, retry: true });
+        verifyPublicDemoReportRender(normalizedWebsite, { scrollToReport, retry: true });
       } catch (retryError) {
         demoLoadingActive = false;
+        if (notice) notice.hidden = false;
         console.error('[LeadCheck] Static demo report fallback failed:', retryError);
       }
     });
@@ -3841,7 +3887,7 @@ function renderPublicDemoReport({ website = requestedDemoWebsite(), withLoading 
 
   const finish = () => {
     stopDemoScanTimers();
-    renderStaticDemoReport(normalizedWebsite);
+    renderStaticDemoReport(normalizedWebsite, { scrollToReport: withLoading });
   };
 
   if (!withLoading) {
