@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-23-mobile-demo-v3">
+<link rel="stylesheet" href="/styles.css?v=2026-07-23-mobile-demo-v4">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1498,9 +1498,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-23-mobile-demo-v3"></script>
-<script src="/auth.js?v=2026-07-23-mobile-demo-v3"></script>
-<script src="/database.js?v=2026-07-23-mobile-demo-v3"></script>
+<script src="/branding.js?v=2026-07-23-mobile-demo-v4"></script>
+<script src="/auth.js?v=2026-07-23-mobile-demo-v4"></script>
+<script src="/database.js?v=2026-07-23-mobile-demo-v4"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -4087,8 +4087,12 @@ function revealPublicDemoReport({ scrollToReport = false } = {}) {
   if (notice) notice.hidden = true;
   if (!mount) return;
   mount.hidden = false;
+  mount.classList.add('is-visible');
+  mount.querySelectorAll('[data-reveal]').forEach(item => item.classList.add('is-visible'));
   if (!scrollToReport) return;
   setTimeout(() => {
+    const top = Math.max(0, mount.getBoundingClientRect().top + window.scrollY - 16);
+    window.scrollTo({ top, behavior: 'auto' });
     mount.scrollIntoView({ behavior: 'smooth', block: 'start' });
     mount.focus?.({ preventScroll: true });
   }, 120);
