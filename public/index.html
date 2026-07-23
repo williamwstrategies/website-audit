@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta id="themeColorMeta" name="theme-color" content="#06111f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="LeadCheck">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>White-Label Website Audit Software for Agencies | W Strategies</title>
 <meta id="metaDescription" name="description" content="Create professional white-label website assessments for sales calls, outreach, and proposals. Scan websites, save reports, and export branded PDFs.">
 <meta id="robotsMeta" name="robots" content="index,follow">
@@ -40,7 +40,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles.css?v=2026-07-23-plan-branding-v2">
 </head>
-<body>
+<body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
 
 <header class="marketing-nav" id="marketingNav" aria-label="W Strategies public navigation">
@@ -3321,6 +3321,9 @@ function renderRoute() {
   const loginView = document.getElementById('login-view');
   const appShell = document.getElementById('app-shell');
   const appPageTitle = document.getElementById('appPageTitle');
+  document.body.classList.toggle('is-public-route', !isLogin && !isApp);
+  document.body.classList.toggle('is-auth-route', isLogin);
+  document.body.classList.toggle('is-app-route', isApp);
 
   if (authProvider && !authProvider.ready && isApp) {
     setHidden(marketingView, true);

@@ -41,7 +41,7 @@
 
 html {
   box-sizing: border-box;
-  background: var(--bg);
+  background: #06111f;
   color: var(--text);
   scroll-behavior: smooth;
 }
@@ -49,6 +49,7 @@ html {
 body {
   width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   background: var(--bg);
   color: var(--text);
@@ -58,6 +59,15 @@ body {
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+body.is-public-route,
+body.is-auth-route,
+body.is-app-route {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(35, 168, 255, 0.24), transparent 34rem),
+    radial-gradient(circle at 86% 12%, rgba(86, 104, 255, 0.18), transparent 30rem),
+    linear-gradient(180deg, #06111f 0%, #071426 52%, #08101d 100%);
 }
 
 body::selection {
@@ -90,6 +100,7 @@ a {
 
 .route-view {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .marketing-nav {
@@ -5473,6 +5484,9 @@ button:disabled {
   background: rgba(5, 13, 27, 0.82);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 .marketing-nav .brand-name,
@@ -5526,6 +5540,11 @@ button:disabled {
   position: relative;
   isolation: isolate;
   min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
   overflow: hidden;
   background:
     radial-gradient(circle at 18% 0%, rgba(35, 168, 255, 0.24), transparent 34rem),
