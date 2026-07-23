@@ -461,6 +461,12 @@ a {
   color: var(--green);
 }
 
+.auth-message[data-tone="warning"] {
+  border-color: rgba(201, 151, 46, 0.26);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
 .auth-message[data-tone="error"],
 .auth-warning {
   border-color: rgba(184, 93, 79, 0.24);
@@ -4116,6 +4122,27 @@ button:disabled {
   align-items: start;
 }
 
+.branding-upgrade-panel {
+  grid-column: 1 / -1;
+}
+
+.upgrade-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.upgrade-panel p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
 .branding-form {
   margin: 0;
 }
@@ -4195,6 +4222,27 @@ button:disabled {
   box-shadow: var(--shadow-card);
   --preview-accent: var(--accent);
   --preview-secondary: var(--accent-strong);
+}
+
+.app-shell .branding-preview-panel,
+.app-shell .preview-sidebar-card,
+.app-shell .preview-report-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.05)),
+    rgba(9, 25, 46, 0.9);
+  color: var(--text-primary);
+}
+
+.app-shell .preview-report-line {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.app-shell .branding-form input:disabled,
+.app-shell .branding-form textarea:disabled,
+.app-shell .branding-form button:disabled,
+.app-shell .branding-form .file-upload-control:has(input:disabled) {
+  opacity: 0.58;
+  cursor: not-allowed;
 }
 
 .preview-sidebar-card,
@@ -4284,6 +4332,13 @@ button:disabled {
 
 .report-footer-links a:hover {
   color: var(--text);
+}
+
+.platform-powered {
+  margin-top: 12px;
+  color: var(--report-muted);
+  font-size: 0.82rem;
+  font-weight: 760;
 }
 
 .report-shell .report-hero {
@@ -6097,6 +6152,7 @@ button:disabled {
   flex-direction: column;
   gap: 14px;
   padding: 28px;
+  min-height: 100%;
 }
 
 .marketing-view .pricing-tier-grid .pricing-main {
@@ -6128,13 +6184,29 @@ button:disabled {
 .marketing-view .pricing-main strong {
   display: block;
   margin: 10px 0 14px;
-  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-size: clamp(2.45rem, 3.8vw, 3.2rem);
   line-height: 1;
 }
 
 .marketing-view .pricing-card strong small,
 .marketing-view .pricing-main strong small {
   color: var(--public-muted);
+  font-size: 0.38em;
+}
+
+.marketing-view .pricing-tier-grid .pricing-card > p {
+  min-height: 3.1em;
+  margin: 0;
+  color: var(--public-muted);
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.marketing-view .pricing-tier-grid .check-list {
+  flex: 1;
+  color: var(--public-muted);
+  font-size: 0.94rem;
+  line-height: 1.45;
 }
 
 .marketing-view .feature-comparison-panel {
@@ -7120,6 +7192,55 @@ button:disabled {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.app-shell .app-plan-card {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-primary);
+}
+
+.app-shell .app-plan-card:hover,
+.app-shell .app-plan-card.selected {
+  border-color: color-mix(in srgb, var(--brand-primary) 42%, transparent);
+  background: var(--brand-primary-soft);
+  color: var(--text-primary);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.22);
+}
+
+.app-shell .app-plan-card span,
+.app-shell .app-plan-card strong {
+  color: var(--text-primary);
+}
+
+.app-shell .app-plan-card small {
+  color: var(--text-muted);
+}
+
+.app-shell .quick-action-list a:hover {
+  border-color: color-mix(in srgb, var(--brand-primary) 34%, transparent);
+  background: var(--brand-primary-soft);
+}
+
+.app-shell .auth-message,
+.app-shell .upgrade-panel {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+}
+
+.app-shell .auth-message[data-tone="warning"],
+.app-shell .upgrade-panel {
+  border-color: color-mix(in srgb, var(--brand-primary) 34%, transparent);
+  background: var(--brand-primary-soft);
+}
+
+.app-shell .upgrade-panel strong {
+  color: var(--text-primary);
+}
+
+.app-shell .upgrade-panel p {
+  color: var(--text-muted);
+}
+
 .app-shell .url-input,
 .app-shell input[type="url"],
 .app-shell input[type="text"],
@@ -7405,10 +7526,13 @@ button:disabled {
   gap: 14px;
   min-height: 330px;
   padding: 28px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
-  background: var(--surface);
-  box-shadow: var(--shadow-card);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.045)),
+    rgba(9, 25, 46, 0.88);
+  color: var(--public-text);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
 }
 
 .demo-loading-card[hidden] {
@@ -7417,11 +7541,12 @@ button:disabled {
 
 .demo-loading-card h2 {
   margin: 0;
+  color: var(--public-text);
 }
 
 .demo-loading-card p {
   margin: 0;
-  color: var(--muted);
+  color: var(--public-muted);
   font-weight: 700;
 }
 
@@ -7431,14 +7556,16 @@ button:disabled {
   display: grid;
   gap: 4px;
   padding: 16px 18px;
-  border: 1px solid rgba(201, 151, 46, 0.24);
+  border: 1px solid rgba(245, 200, 66, 0.22);
   border-radius: 18px;
-  background: #fffdf4;
-  color: var(--muted);
+  background:
+    linear-gradient(180deg, rgba(245, 200, 66, 0.13), rgba(255, 255, 255, 0.045)),
+    rgba(9, 25, 46, 0.9);
+  color: var(--public-muted);
 }
 
 .demo-report-notice strong {
-  color: var(--text);
+  color: var(--public-text);
 }
 
 .public-demo-report-mount {

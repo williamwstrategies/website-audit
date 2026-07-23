@@ -433,30 +433,16 @@
     }
 
     async getAgencyBranding() {
-      const user = await this.requireUser();
-      const client = this.requireClient();
-      const { data, error } = await client
-        .from('agency_branding')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (error) throw error;
-      return data ? await this.resolveBrandingAssets(data) : null;
+      const payload = await this.serverJson('/api/branding');
+      return payload.branding ? await this.resolveBrandingAssets(payload.branding) : null;
     }
 
     async updateAgencyBranding(branding = {}) {
-      const user = await this.ensureUserProfile();
-      const client = this.requireClient();
-
-      const { data, error } = await client
-        .from('agency_branding')
-        .upsert(brandingPayload(user.id, branding), { onConflict: 'user_id' })
-        .select('*')
-        .single();
-
-      if (error) throw error;
-      return this.resolveBrandingAssets(data);
+      const payload = await this.serverJson('/api/branding', {
+        method: 'PUT',
+        body: brandingPayload('', branding),
+      });
+      return this.resolveBrandingAssets(payload.branding || {});
     }
 
     async upsertAgencyBranding(branding = {}) {

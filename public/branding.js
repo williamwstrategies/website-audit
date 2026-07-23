@@ -18,6 +18,21 @@
     tagline: 'Website audit platform',
     reportDisclaimer: 'This assessment is based on observable website signals at the time of review.',
   };
+  const PLATFORM_BRANDING = {
+    ...DEFAULT_BRANDING,
+    whiteLabelEnabled: false,
+    agencyName: 'Website Strategy Scan',
+    platformLabel: 'Website Assessment',
+    logoUrl: '',
+    logoStoragePath: '',
+    faviconUrl: '',
+    faviconStoragePath: '',
+    primaryAccent: '#f5c842',
+    secondaryAccent: '#1d1d1f',
+    tagline: 'Website Assessment',
+    reportDisclaimer: 'This assessment is based on observable website signals at the time of review.',
+    poweredBy: 'Powered by Website Strategy Scan',
+  };
 
   function safeJsonParse(raw) {
     try {
@@ -152,6 +167,7 @@
       this.storage = storage;
       this.branding = this.load();
       this.isLoading = false;
+      this.whiteLabelAllowed = true;
     }
 
     load() {
@@ -168,6 +184,25 @@
         disclaimer: this.branding.reportDisclaimer,
         isLoading: this.isLoading,
       };
+    }
+
+    getEffectiveBranding() {
+      const canUseAgencyBranding = this.whiteLabelAllowed && this.branding.whiteLabelEnabled;
+      const brand = canUseAgencyBranding ? this.branding : PLATFORM_BRANDING;
+      return {
+        ...brand,
+        primaryColor: brand.primaryAccent,
+        secondaryColor: brand.secondaryAccent,
+        disclaimer: brand.reportDisclaimer,
+        isLoading: this.isLoading,
+      };
+    }
+
+    setWhiteLabelAccess(isAllowed, options = {}) {
+      this.whiteLabelAllowed = !!isAllowed;
+      document.body.dataset.whiteLabelAllowed = this.whiteLabelAllowed ? 'true' : 'false';
+      if (options.apply !== false) this.apply();
+      return this.getEffectiveBranding();
     }
 
     setLoading(isLoading) {
@@ -244,12 +279,12 @@
     }
 
     apply(route = window.location.pathname) {
-      const brand = this.branding;
       const isApp = route.startsWith('/app');
       const isLogin = route.startsWith('/login') ||
         route.startsWith('/signup') ||
         route.startsWith('/forgot-password') ||
         route.startsWith('/reset-password');
+      const brand = isApp ? this.getEffectiveBranding() : this.branding;
       const agencyName = brand.agencyName || DEFAULT_BRANDING.agencyName;
       const platformLabel = brand.platformLabel || DEFAULT_BRANDING.platformLabel;
       const primary = normalizeHex(brand.primaryAccent, DEFAULT_BRANDING.primaryAccent);
@@ -262,6 +297,7 @@
       document.documentElement.style.setProperty('--accent-strong-contrast', readableTextColor(secondary));
       document.documentElement.style.setProperty('--agency-secondary', secondary);
       document.body.dataset.whiteLabelMode = brand.whiteLabelEnabled ? 'enabled' : 'disabled';
+      document.body.dataset.whiteLabelAllowed = this.whiteLabelAllowed ? 'true' : 'false';
 
       setText('[data-brand-name]', agencyName);
       setText('[data-brand-platform]', platformLabel);
@@ -276,6 +312,10 @@
       setText('[data-brand-website]', brand.website || 'Website not set');
       setHref('[data-brand-booking]', brand.bookingLink || '#');
       setText('[data-brand-booking]', brand.bookingLink ? 'Book a consultation' : 'Booking link not set');
+      setText('[data-platform-powered]', brand.poweredBy || 'Powered by Website Strategy Scan');
+      document.querySelectorAll('[data-platform-powered]').forEach(node => {
+        node.hidden = !(isApp && !this.whiteLabelAllowed);
+      });
 
       document.querySelectorAll('[data-brand-logo-img]').forEach(img => {
         img.alt = `${agencyName} logo`;
@@ -376,6 +416,7 @@
   }
 
   window.DEFAULT_AGENCY_BRANDING = DEFAULT_BRANDING;
+  window.PLATFORM_REPORT_BRANDING = PLATFORM_BRANDING;
   window.getReadableTextColor = readableTextColor;
   window.BrandingProvider = BrandingProvider;
 })();

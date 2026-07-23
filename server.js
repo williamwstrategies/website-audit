@@ -116,6 +116,42 @@ app.get('/api/billing/subscription', async (req, res) => {
   }
 });
 
+app.get('/api/branding', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const [subscription, brandingRecord] = await Promise.all([
+      billing.getSubscriptionStatus(user.id),
+      billing.getAgencyBrandingForUser(user.id).catch(() => null),
+    ]);
+    res.set('Cache-Control', 'no-store');
+    res.json({ branding: brandingRecord || null, subscription });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.put('/api/branding', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const subscription = await billing.getSubscriptionStatus(user.id);
+    if (!subscription.can_white_label) {
+      return res.status(403).json({
+        error: 'Upgrade to Professional to remove Website Strategy Scan branding and present reports under your own agency.',
+        code: 'white_label_upgrade_required',
+        subscription,
+      });
+    }
+
+    const branding = await billing.updateAgencyBrandingForUser(user.id, req.body || {});
+    res.set('Cache-Control', 'no-store');
+    res.json({ branding, subscription });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.get('/api/billing/diagnostics', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
@@ -396,7 +432,12 @@ app.get('/api/reports/:reportId/pdf', async (req, res) => {
       billing.getReportForUser(user.id, reportId),
       billing.getAgencyBrandingForUser(user.id).catch(() => null),
     ]);
-    const pdf = await generateReportPdf({ report, branding: brandingRecord || {} });
+    const effectiveBranding = billing.reportBrandingForSubscription(brandingRecord || {}, subscription);
+    const pdf = await generateReportPdf({
+      report,
+      branding: effectiveBranding,
+      showPoweredBy: subscription.platform_branding_required,
+    });
 
     posthog.capture({
       distinctId: user.id,
