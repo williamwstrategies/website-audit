@@ -539,10 +539,10 @@
       });
     }
 
-    async startPaidSubscriptionNow() {
+    async startPaidSubscriptionNow(options = {}) {
       return this.serverJson('/api/billing/start-paid-now', {
         method: 'POST',
-        body: {},
+        body: options,
       });
     }
 

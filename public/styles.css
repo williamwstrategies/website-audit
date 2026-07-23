@@ -4023,6 +4023,92 @@ button:disabled {
   gap: 10px;
 }
 
+.app-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.app-plan-card {
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid rgba(29, 29, 31, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.app-plan-card:hover,
+.app-plan-card.selected {
+  transform: translateY(-2px);
+  border-color: rgba(201, 151, 46, 0.4);
+  background: #ffffff;
+  box-shadow: 0 18px 42px rgba(29, 29, 31, 0.08);
+}
+
+.app-plan-card.current {
+  box-shadow: inset 0 0 0 1px rgba(201, 151, 46, 0.35);
+}
+
+.app-plan-card em {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(201, 151, 46, 0.13);
+  color: #8a6312;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.app-plan-card span,
+.app-plan-card strong,
+.app-plan-card small {
+  display: block;
+}
+
+.app-plan-card span {
+  font-weight: 800;
+}
+
+.app-plan-card strong {
+  font-size: 1.25rem;
+}
+
+.app-plan-card small {
+  color: var(--muted);
+}
+
+@media (max-width: 1100px) {
+  .marketing-view .pricing-tier-grid,
+  .marketing-view .compact-pricing-grid,
+  .app-plan-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .marketing-view .pricing-tier-grid,
+  .marketing-view .compact-pricing-grid,
+  .app-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-view .feature-comparison-panel {
+    padding: 20px;
+  }
+}
+
 .branding-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
@@ -5995,6 +6081,45 @@ button:disabled {
     rgba(9, 25, 46, 0.88);
 }
 
+.marketing-view .pricing-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.marketing-view .compact-pricing-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.marketing-view .pricing-tier-grid .pricing-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px;
+}
+
+.marketing-view .pricing-tier-grid .pricing-main {
+  max-width: none;
+  margin: 0;
+}
+
+.marketing-view .pricing-tier-grid .pricing-card .analyze-btn,
+.marketing-view .pricing-tier-grid .pricing-card .secondary-btn {
+  margin-top: auto;
+}
+
+.marketing-view .plan-badge {
+  width: fit-content;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(35, 168, 255, 0.16);
+  color: var(--public-cyan);
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
 .marketing-view .plan-name {
   color: var(--public-cyan);
 }
@@ -6010,6 +6135,48 @@ button:disabled {
 .marketing-view .pricing-card strong small,
 .marketing-view .pricing-main strong small {
   color: var(--public-muted);
+}
+
+.marketing-view .feature-comparison-panel {
+  width: min(var(--container), calc(100% - 32px));
+  margin: 28px auto 0;
+  padding: 28px;
+  border: 1px solid var(--public-line);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.045)),
+    rgba(9, 25, 46, 0.82);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.marketing-view .comparison-table-wrap {
+  overflow-x: auto;
+}
+
+.marketing-view .feature-comparison-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  color: var(--public-text);
+}
+
+.marketing-view .feature-comparison-table th,
+.marketing-view .feature-comparison-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.marketing-view .feature-comparison-table th:nth-child(3),
+.marketing-view .feature-comparison-table td:nth-child(3) {
+  color: var(--public-cyan);
+}
+
+.marketing-view .fair-use-note {
+  margin: 18px 0 0;
+  color: var(--public-muted);
+  font-size: 0.92rem;
 }
 
 .marketing-view .feature-grid,

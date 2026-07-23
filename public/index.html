@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-23-report-first">
+<link rel="stylesheet" href="/styles.css?v=2026-07-23-subscription-plans">
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -275,23 +275,32 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
     <section class="marketing-section pricing-section" id="pricing" aria-labelledby="pricingTitle">
       <div class="section-kicker">Pricing</div>
-      <h2 id="pricingTitle">Simple pricing for agency prospecting.</h2>
-      <article class="pricing-card featured pricing-main">
-        <div>
+      <h2 id="pricingTitle">Choose the plan that fits your agency.</h2>
+      <p class="section-lede">Every plan includes white-label reports, branded PDFs, dashboard history, and everything you need to close more website clients.</p>
+      <div class="pricing-tier-grid compact-pricing-grid">
+        <article class="pricing-card">
+          <span class="plan-name">Starter</span>
+          <strong>$49 <small>/ month</small></strong>
+          <p>For freelancers and solo web designers.</p>
+          <ul class="check-list"><li>30 website scans per month</li><li>White-label reports</li><li>Branded PDF exports</li><li>Agency branding</li></ul>
+          <a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start Starter</a>
+        </article>
+        <article class="pricing-card featured pricing-main">
+          <span class="plan-badge">Most Popular</span>
           <span class="plan-name">Professional</span>
-          <strong>$79.99 <small>/ month</small></strong>
-          <p>Start with a 7-day free trial that includes 10 scans. Paid billing includes 100 completed audits per billing period, white-label branding, saved reports, and branded PDF exports.</p>
-        </div>
-        <ul class="check-list">
-          <li>7-day free trial</li>
-          <li>100 audits</li>
-          <li>White label</li>
-          <li>PDF exports</li>
-          <li>Dashboard</li>
-          <li>Saved reports</li>
-        </ul>
-        <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Trial</a>
-      </article>
+          <strong>$79 <small>/ month</small></strong>
+          <p>For small and growing marketing agencies.</p>
+          <ul class="check-list"><li>150 website scans per month</li><li>Priority support</li><li>Saved report history</li><li>Best fit for active sales teams</li></ul>
+          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start Professional</a>
+        </article>
+        <article class="pricing-card">
+          <span class="plan-name">Growth</span>
+          <strong>$149 <small>/ month</small></strong>
+          <p>For established agencies and small teams.</p>
+          <ul class="check-list"><li>500 website scans per month</li><li>Priority support</li><li>Branded PDF exports</li><li>Built for larger prospect lists</li></ul>
+          <a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start Growth</a>
+        </article>
+      </div>
     </section>
 
     <section class="marketing-section" aria-labelledby="whyTitle" data-reveal>
@@ -311,7 +320,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details><summary>What does the platform scan?</summary><p>It reviews website health, SEO visibility, trust, conversion, technical health, broken pages, performance, and visual trust signals.</p></details>
       <details><summary>Can I use my own branding?</summary><p>Yes. Agency branding applies to the dashboard, scanner, reports, and PDF exports.</p></details>
       <details><summary>Can I download PDFs?</summary><p>Yes. Saved reports can be exported as branded PDFs from the authenticated application.</p></details>
-      <details><summary>How many audits are included?</summary><p>The 7-day free trial includes 10 scans. The paid Professional plan includes 100 completed audits per billing period.</p></details>
+      <details><summary>How many assessments are included?</summary><p>Starter includes 30 scans per month, Professional includes 150, Growth includes 500, and Enterprise supports custom high-volume usage.</p></details>
       <details><summary>Will prospects see W Strategies branding?</summary><p>The public website uses W Strategies branding. Inside the app and reports, agencies can present their own brand.</p></details>
     </section>
 
@@ -493,15 +502,38 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   </article>
 
   <article class="public-page supporting-page pricing-page" data-public-page="pricing" hidden>
-    <div class="supporting-hero" data-reveal><div class="section-kicker">Pricing</div><h1>One plan for agencies ready to present better audits.</h1><p>Professional starts with a 7-day free trial and 10 scans. Paid billing then includes the core dashboard, white-label reports, PDF export, saved reports, and 100 completed audits per billing period.</p></div>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Pricing</div><h1>Choose the plan that fits your agency.</h1><p>Every plan includes white-label reports, branded PDFs, dashboard history, and everything you need to close more website clients.</p></div>
+    <div class="pricing-tier-grid full-pricing-grid" data-reveal>
+      <article class="pricing-card"><span class="plan-name">Starter</span><strong>$49 <small>/ month</small></strong><p>Designed for freelancers and solo web designers.</p><ul class="check-list"><li>30 website scans per month</li><li>White-label reports</li><li>Branded PDF exports</li><li>Dashboard history</li><li>Saved reports</li><li>Agency branding</li></ul><a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start Starter</a></article>
+      <article class="pricing-card featured pricing-main"><span class="plan-badge">Most Popular</span><span class="plan-name">Professional</span><strong>$79 <small>/ month</small></strong><p>Designed for small and growing marketing agencies.</p><ul class="check-list"><li>150 website scans per month</li><li>White-label reports</li><li>Branded PDF exports</li><li>Dashboard history</li><li>Saved reports</li><li>Agency branding</li><li>Priority support</li></ul><a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start Professional</a></article>
+      <article class="pricing-card"><span class="plan-name">Growth</span><strong>$149 <small>/ month</small></strong><p>Designed for established agencies and small teams.</p><ul class="check-list"><li>500 website scans per month</li><li>White-label reports</li><li>Branded PDF exports</li><li>Dashboard history</li><li>Saved reports</li><li>Agency branding</li><li>Priority support</li></ul><a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start Growth</a></article>
+      <article class="pricing-card"><span class="plan-name">Enterprise</span><strong>Contact <small>Sales</small></strong><p>For teams that need custom scan limits, onboarding, and dedicated support.</p><ul class="check-list"><li>Unlimited scans subject to fair use</li><li>Custom scan limits</li><li>Team features in the future</li><li>Priority onboarding</li><li>Dedicated support</li></ul><a class="secondary-btn" href="/contact" data-route data-plan-key="enterprise" data-public-event="enterprise_contact_clicked">Contact Sales</a></article>
+    </div>
+    <section class="feature-comparison-panel" data-reveal>
+      <div class="panel-heading"><div><div class="section-kicker">Comparison</div><h2>Plan comparison</h2></div></div>
+      <div class="comparison-table-wrap">
+        <table class="feature-comparison-table">
+          <thead><tr><th>Feature</th><th>Starter</th><th>Professional</th><th>Growth</th><th>Enterprise</th></tr></thead>
+          <tbody>
+            <tr><th>Website Scans</th><td>30 / month</td><td>150 / month</td><td>500 / month</td><td>Unlimited fair use</td></tr>
+            <tr><th>White Label</th><td>Included</td><td>Included</td><td>Included</td><td>Included</td></tr>
+            <tr><th>PDF Export</th><td>Included</td><td>Included</td><td>Included</td><td>Included</td></tr>
+            <tr><th>Dashboard</th><td>Included</td><td>Included</td><td>Included</td><td>Included</td></tr>
+            <tr><th>Saved Reports</th><td>Included</td><td>Included</td><td>Included</td><td>Included</td></tr>
+            <tr><th>Agency Branding</th><td>Included</td><td>Included</td><td>Included</td><td>Included</td></tr>
+            <tr><th>Priority Support</th><td>-</td><td>Included</td><td>Included</td><td>Dedicated support</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fair-use-note">Unlimited plans are subject to a reasonable fair use policy. Automated or abusive scanning activity may require a custom Enterprise agreement.</p>
+    </section>
     <div class="pricing-detail-grid" data-reveal>
-      <article class="pricing-card featured pricing-main"><span class="plan-name">Professional</span><strong>$79.99 <small>/ month</small></strong><p>Start with a 7-day free trial and 10 scans, then continue monthly for agency website assessments.</p><ul class="check-list"><li>7-day free trial with 10 scans</li><li>100 completed audits per paid billing period</li><li>Start paid billing early for more credits</li><li>White-label app and report branding</li><li>Branded PDF exports</li><li>Saved report history</li><li>Dashboard and usage tracking</li><li>Stripe billing portal</li></ul><a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="pricing_signup_clicked">Start Trial</a></article>
-      <aside class="pricing-support-card"><h2>Billing details</h2><p>Billing is monthly through Stripe after the 7-day free trial. If the trial scans are used early, the account can start paid billing immediately to unlock the paid scan allowance. A completed audit is a successful scan that returns a report.</p><h2>Usage limits</h2><p>Trial workspaces include 10 scans. Paid workspaces include 100 scans per billing period. Unused audits do not roll over in the current app.</p><h2>Plan changes</h2><p>The current public product offers one Professional plan. Additional plans should only be shown when they exist in Stripe and the application.</p></aside>
+      <aside class="pricing-support-card"><h2>Billing details</h2><p>Billing is monthly through Stripe. A completed assessment is a successful scan that returns a report.</p><h2>Rollover balance</h2><p>Unused scans roll into the next billing period up to one additional month of allowance.</p><h2>Plan changes</h2><p>Plans can be managed through the secure Stripe billing portal inside the application.</p></aside>
     </div>
     <section class="faq-section pricing-faq-list" data-reveal>
-      <details><summary>What counts as a completed audit?</summary><p>A successful scan that returns a report counts toward the monthly audit limit.</p></details>
+      <details><summary>What counts as a completed assessment?</summary><p>A successful scan that returns a report counts toward the monthly allowance. Failed scans and public demo reports do not count.</p></details>
       <details><summary>Can I cancel through Stripe?</summary><p>Subscription management is handled through the Stripe billing portal inside the authenticated app.</p></details>
-      <details><summary>Are PDFs included?</summary><p>Yes. Branded PDF export is part of the Professional plan.</p></details>
+      <details><summary>Are PDFs included?</summary><p>Yes. Branded PDF export is included on every self-serve plan.</p></details>
     </section>
   </article>
 
@@ -518,7 +550,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details data-faq-item><summary>Can I white-label the app?</summary><p>Yes. Agency branding can apply to the dashboard, scanner, report pages, PDF exports, favicon, browser title, and contact information.</p></details>
       <details data-faq-item><summary>Can I download reports as PDFs?</summary><p>Yes. Saved reports can be downloaded as branded PDF reports from inside the authenticated app.</p></details>
       <details data-faq-item><summary>Are reports saved?</summary><p>Yes. Reports are saved to the authenticated user's workspace and can be reopened later.</p></details>
-      <details data-faq-item><summary>How many audits are included?</summary><p>The 7-day free trial includes 10 scans. Paid Professional workspaces include 100 completed audits per billing period.</p></details>
+      <details data-faq-item><summary>How many assessments are included?</summary><p>Starter includes 30 scans per month, Professional includes 150, Growth includes 500, and Enterprise supports custom fair-use usage.</p></details>
       <details data-faq-item><summary>Can prospects see your branding?</summary><p>The public website uses W Strategies branding. The app and reports can be presented under the agency brand.</p></details>
       <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
       <details data-faq-item><summary>Does it guarantee closed clients?</summary><p>No. The platform does not guarantee sales results. It helps agencies present clearer evidence and recommendations.</p></details>
@@ -570,7 +602,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
   <article class="public-page supporting-page legal-page" data-public-page="terms" hidden>
     <div class="supporting-hero" data-reveal><div class="section-kicker">Terms</div><h1>Terms of Service.</h1><p>This page is a practical placeholder for the current product and should be reviewed by counsel before broad commercial use.</p></div>
-    <section data-reveal><h2>Service use</h2><p>The platform provides website assessment software for agencies. It does not guarantee sales results, search rankings, revenue outcomes, or closed projects.</p><h2>Billing</h2><p>The Professional plan starts with a 7-day free trial that includes 10 scans, is billed monthly through Stripe after the trial, and includes 100 completed audits per paid billing period. Trial users can start paid billing early if they need more scans. Unused audits do not roll over in the current app.</p><h2>Reports</h2><p>Reports are generated from available website signals at the time of scanning and should be reviewed by the agency before being presented as professional advice.</p></section>
+    <section data-reveal><h2>Service use</h2><p>The platform provides website assessment software for agencies. It does not guarantee sales results, search rankings, revenue outcomes, or closed projects.</p><h2>Billing</h2><p>Plans are billed monthly through Stripe. Starter, Professional, and Growth include monthly scan allowances with rollover up to one additional month. Trial users can start paid billing early if they need more scans.</p><h2>Reports</h2><p>Reports are generated from available website signals at the time of scanning and should be reviewed by the agency before being presented as professional advice.</p></section>
   </article>
 
   <article class="public-page supporting-page not-found-page" data-public-page="not-found" hidden>
@@ -730,7 +762,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <strong id="subscriptionBannerTitle">Choose a plan to continue</strong>
             <p id="subscriptionBannerText">Upgrade to generate professional website assessments.</p>
           </div>
-          <a class="analyze-btn" href="/app/billing" data-route id="subscriptionBannerCta">Upgrade</a>
+          <a class="analyze-btn" href="/app/billing" data-route id="subscriptionBannerCta" data-public-event="upgrade_clicked">Upgrade</a>
         </div>
         <div class="dashboard-hero app-page-hero">
           <div>
@@ -757,9 +789,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <p id="dashboardReportCountLabel">Saved assessments.</p>
           </article>
           <article class="metric-card">
-            <span>Reports Used</span>
+            <span>Usage</span>
             <strong id="dashboardReportsUsed">0 / 10</strong>
-            <p id="dashboardReportsUsedLabel">Current usage cycle.</p>
+            <p id="dashboardReportsUsedLabel">Remaining scans.</p>
           </article>
           <article class="metric-card">
             <span>Current Plan</span>
@@ -767,9 +799,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <p id="dashboardPlanStatus">Trialing workspace.</p>
           </article>
           <article class="metric-card">
-            <span>This Month</span>
+            <span>Prospects Audited This Month</span>
             <strong id="dashboardMonthlyReports">0</strong>
-            <p>Reports generated this month.</p>
+            <p>Successful assessments completed this month.</p>
           </article>
           <article class="metric-card">
             <span>Average Score</span>
@@ -857,8 +889,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           </div>
           <div class="billing-access-notice" id="scanBillingNotice" hidden>
             <strong>Subscription required</strong>
-            <p id="scanBillingNoticeText">An active Professional subscription is required to run audits.</p>
-            <a class="secondary-btn" href="/app/billing" data-route>Manage Billing</a>
+            <p id="scanBillingNoticeText">Choose a plan to run website assessments.</p>
+            <div class="hero-actions">
+              <a class="analyze-btn" href="/app/billing" data-route data-public-event="upgrade_clicked">Upgrade Plan</a>
+              <a class="secondary-btn" href="/pricing" data-route data-public-event="upgrade_clicked">View Pricing</a>
+            </div>
           </div>
           <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
             <div class="lead-grid">
@@ -1070,7 +1105,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div>
             <div class="section-kicker" id="billingHeaderKicker">Billing</div>
             <h2 id="billingHeaderTitle">Plan and Usage</h2>
-            <p id="billingHeaderCopy">Manage your Professional subscription, billing details, invoices, and monthly audit usage.</p>
+            <p id="billingHeaderCopy">Manage your subscription, billing details, invoices, and monthly assessment usage.</p>
           </div>
           <span class="status-chip low" id="billingStatusChip">Inactive</span>
         </div>
@@ -1095,10 +1130,33 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div class="panel-heading billing-plan-header">
             <div>
               <div class="section-kicker">Subscription</div>
-              <h2>Professional</h2>
-              <p id="billingPriceLabel">7-day free trial includes 10 scans. Paid plan is $79.99 USD per month and includes 100 completed audits per billing period.</p>
+              <h2 id="billingPlanTitle">Choose a plan</h2>
+              <p id="billingPriceLabel">Every plan includes white-label reports, branded PDFs, dashboard history, and saved reports.</p>
             </div>
-            <div class="billing-plan-price">$79.99<span>/mo</span></div>
+            <div class="billing-plan-price" id="billingPlanPrice">$79<span>/mo</span></div>
+          </div>
+          <div class="app-plan-grid" id="billingPlanGrid" aria-label="Subscription plans">
+            <button class="app-plan-card" type="button" data-billing-plan="starter">
+              <span>Starter</span>
+              <strong>$49/mo</strong>
+              <small>30 scans monthly</small>
+            </button>
+            <button class="app-plan-card recommended" type="button" data-billing-plan="professional">
+              <em>Most Popular</em>
+              <span>Professional</span>
+              <strong>$79/mo</strong>
+              <small>150 scans monthly</small>
+            </button>
+            <button class="app-plan-card" type="button" data-billing-plan="growth">
+              <span>Growth</span>
+              <strong>$149/mo</strong>
+              <small>500 scans monthly</small>
+            </button>
+            <a class="app-plan-card contact" href="/contact" data-route data-billing-plan="enterprise">
+              <span>Enterprise</span>
+              <strong>Contact Sales</strong>
+              <small>Custom fair-use limits</small>
+            </a>
           </div>
           <div class="billing-progress-block">
             <div class="billing-progress-top">
@@ -1110,12 +1168,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             </div>
           </div>
           <div class="billing-feature-grid">
-            <span>10 scans during the 7-day trial</span>
-            <span>100 website audits per paid month</span>
+            <span>Monthly scan allowance with rollover</span>
+            <span>White-label reports for sales calls</span>
             <span>White-label application</span>
-            <span>White-label reports</span>
+            <span>Branded PDF exports</span>
             <span>Saved reports</span>
-            <span>Premium PDF export</span>
+            <span>Agency branding</span>
           </div>
           <div class="billing-status-notice" id="billingStatusNotice" role="status"></div>
           <div class="auth-message" id="billingMessage" hidden></div>
@@ -1123,6 +1181,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <button class="analyze-btn" type="button" id="billingSubscribeBtn">Start Trial</button>
             <button class="analyze-btn" type="button" id="billingStartPaidBtn" hidden>Start Paid Now</button>
             <button class="secondary-btn" type="button" id="billingManageBtn">Manage Subscription</button>
+            <a class="secondary-btn" href="/pricing" data-route id="billingPricingBtn" data-public-event="upgrade_clicked">View Pricing</a>
             <button class="secondary-btn" type="button" id="billingRefreshBtn">Refresh Status</button>
           </div>
         </section>
@@ -1426,9 +1485,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-23-report-first"></script>
-<script src="/auth.js?v=2026-07-23-report-first"></script>
-<script src="/database.js?v=2026-07-23-report-first"></script>
+<script src="/branding.js?v=2026-07-23-subscription-plans"></script>
+<script src="/auth.js?v=2026-07-23-subscription-plans"></script>
+<script src="/database.js?v=2026-07-23-subscription-plans"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1510,6 +1569,47 @@ let activeDemoRequestKey = '';
 let reportOriginalParent = null;
 let reportOriginalNextSibling = null;
 const viewedPublicPages = new Set();
+const APP_PLANS = {
+  starter: {
+    key: 'starter',
+    name: 'Starter',
+    priceLabel: '$49 / month',
+    priceShort: '$49/mo',
+    monthlyAllowance: 30,
+    maxBalance: 60,
+    description: 'For freelancers and solo web designers.',
+  },
+  professional: {
+    key: 'professional',
+    name: 'Professional',
+    priceLabel: '$79 / month',
+    priceShort: '$79/mo',
+    monthlyAllowance: 150,
+    maxBalance: 300,
+    badge: 'Most Popular',
+    description: 'For small and growing marketing agencies.',
+  },
+  growth: {
+    key: 'growth',
+    name: 'Growth',
+    priceLabel: '$149 / month',
+    priceShort: '$149/mo',
+    monthlyAllowance: 500,
+    maxBalance: 1000,
+    description: 'For established agencies and small teams.',
+  },
+  enterprise: {
+    key: 'enterprise',
+    name: 'Enterprise',
+    priceLabel: 'Contact Sales',
+    priceShort: 'Contact Sales',
+    monthlyAllowance: null,
+    maxBalance: null,
+    unlimited: true,
+    description: 'For custom limits, onboarding, and dedicated support.',
+  },
+};
+let selectedBillingPlan = 'professional';
 
 const DEMO_SCAN_STEPS = [
   'Analyzing website...',
@@ -1703,7 +1803,7 @@ const PUBLIC_PAGE_META = {
   pricing: {
     path: '/pricing',
     title: 'Pricing | W Strategies Professional Plan',
-    description: 'The Professional plan starts with a 7-day free trial and 10 scans, then is $79.99 USD per month and includes 100 completed website audits, white-label reports, saved reports, and branded PDFs.',
+    description: 'Choose Starter, Professional, Growth, or Enterprise based on your agency size and expected prospecting volume. Every plan includes white-label reports, saved history, agency branding, and branded PDFs.',
   },
   faq: {
     path: '/faq',
@@ -1855,7 +1955,10 @@ function renderPublicPage(key = 'home') {
   if (!viewedPublicPages.has(pageKey)) {
     viewedPublicPages.add(pageKey);
     if (pageKey === 'home') trackPublicEvent('homepage_viewed');
-    if (pageKey === 'pricing') trackPublicEvent('pricing_viewed');
+    if (pageKey === 'pricing') {
+      trackPublicEvent('pricing_viewed');
+      trackPublicEvent('plan_viewed', { plan: 'all', source: 'pricing_page' });
+    }
   }
   if (pageKey === 'sample-report') {
     const params = new URLSearchParams(window.location.search);
@@ -2292,22 +2395,48 @@ function titleCase(value) {
     .replace(/\w\S*/g, word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
 }
 
+function appPlanForKey(value) {
+  return APP_PLANS[String(value || '').toLowerCase()] || APP_PLANS.professional;
+}
+
+function selectedPlan() {
+  return appPlanForKey(selectedBillingPlan);
+}
+
+function scanAllowanceLabel(plan = selectedPlan()) {
+  if (plan.unlimited) return 'Unlimited fair use';
+  return `${plan.monthlyAllowance} scans monthly`;
+}
+
+function scanBalanceText(value, fallback = 'Unlimited') {
+  if (value === null || value === undefined) return fallback;
+  return String(value);
+}
+
 function defaultSubscriptionState() {
+  const plan = appPlanForKey('professional');
   return {
     exists: false,
-    plan: 'professional',
-    plan_name: 'Professional',
-    price_label: '$79.99 / month',
+    plan: plan.key,
+    plan_name: plan.name,
+    price_label: plan.priceLabel,
     trial_days: 7,
     trial_audit_limit: 10,
-    paid_audit_limit: 100,
+    paid_audit_limit: plan.monthlyAllowance,
+    monthly_allowance: 10,
+    remaining_scans: 10,
+    remaining_balance: 10,
+    maximum_rollover: plan.maxBalance,
     status: 'incomplete',
     payment_status: '',
     audits_used: 0,
+    used_scans: 0,
     audit_limit: 10,
     audits_remaining: 10,
+    unlimited: false,
     current_period_start: null,
     current_period_end: null,
+    renewal_date: null,
     cancel_at_period_end: false,
     can_run_audit: false,
     can_export_pdf: false,
@@ -2351,6 +2480,8 @@ function billingStatusLabel(subscription = normalizedSubscription()) {
 }
 
 function billingNoticeText(subscription = normalizedSubscription()) {
+  const plan = appPlanForKey(subscription.plan);
+  const planName = subscription.plan_name || plan.name;
   if (!subscription.billing_configured) {
     return 'Billing is not fully configured yet. Add Stripe and Supabase server environment variables in Render.';
   }
@@ -2358,18 +2489,21 @@ function billingNoticeText(subscription = normalizedSubscription()) {
     const remaining = Math.max(0, Number(subscription.audits_remaining) || 0);
     const limit = Number(subscription.audit_limit) || 10;
     if (remaining <= 0) {
-      return `Trial scan limit reached. Start paid billing now to unlock ${subscription.paid_audit_limit || 100} monthly scans.`;
+      return `Trial scan limit reached. Start paid billing now to unlock ${subscription.paid_audit_limit || plan.monthlyAllowance || 0} monthly scans.`;
     }
     return `Your 7-day trial includes ${limit} scans. You have ${remaining} trial scans remaining.`;
   }
   if (subscriptionCanRunAudit(subscription)) {
+    if (subscription.unlimited) {
+      return `${planName} is active with custom fair-use scan access.`;
+    }
     if (subscription.cancel_at_period_end) {
       return `Your subscription remains active until ${formatBillingDate(subscription.current_period_end)}.`;
     }
-    return `Your Professional subscription is active with ${subscription.paid_audit_limit || subscription.audit_limit || 100} scans per billing period.`;
+    return `${planName} is active with ${subscription.monthly_allowance || subscription.audit_limit || plan.monthlyAllowance} scans per month and rollover up to ${subscription.maximum_rollover || plan.maxBalance}.`;
   }
   if ((subscription.audits_remaining || 0) <= 0 && ['active', 'trialing'].includes(subscription.status)) {
-    return `Monthly audit limit reached. You have used ${subscription.audits_used} of ${subscription.audit_limit} audits this period.`;
+    return 'You have used all of your available scans for this billing period. Upgrade your plan or wait until your next renewal date to continue generating reports.';
   }
   if (subscription.status === 'past_due' || subscription.status === 'unpaid') {
     return 'Your payment could not be processed. Update your payment method to continue running new audits.';
@@ -2377,7 +2511,7 @@ function billingNoticeText(subscription = normalizedSubscription()) {
   if (subscription.status === 'cancelled') {
     return 'This subscription is cancelled. Existing reports are preserved.';
   }
-  return 'An active Professional subscription is required to run new audits and export PDFs.';
+  return 'Choose a plan to generate professional website assessments and export branded PDFs.';
 }
 
 function trialRemainingText(subscription = normalizedSubscription()) {
@@ -2515,6 +2649,8 @@ function updateReportMetrics() {
   const billingProgressFill = document.getElementById('billingProgressFill');
   const billingStatusNotice = document.getElementById('billingStatusNotice');
   const billingStatusChip = document.getElementById('billingStatusChip');
+  const billingPlanTitle = document.getElementById('billingPlanTitle');
+  const billingPlanPrice = document.getElementById('billingPlanPrice');
   const billingPriceLabel = document.getElementById('billingPriceLabel');
   const billingSubscribeBtn = document.getElementById('billingSubscribeBtn');
   const billingStartPaidBtn = document.getElementById('billingStartPaidBtn');
@@ -2536,12 +2672,15 @@ function updateReportMetrics() {
   const scores = savedReports.map(savedReportScore).filter(score => Number.isFinite(score));
   const avg = scores.length ? Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length) : null;
   const subscription = normalizedSubscription();
-  const plan = subscription.plan_name || titleCase(subscription.plan || 'professional');
+  const currentPlanObject = appPlanForKey(subscription.plan);
+  if (!selectedBillingPlan || subscriptionCanRunAudit(subscription)) selectedBillingPlan = currentPlanObject.key;
+  const chosenPlan = selectedPlan();
+  const plan = subscription.plan_name || currentPlanObject.name;
   const status = billingStatusLabel(subscription);
-  const used = Number.isFinite(Number(subscription.audits_used)) ? Number(subscription.audits_used) : 0;
-  const limit = Number.isFinite(Number(subscription.audit_limit)) ? Number(subscription.audit_limit) : 100;
-  const remaining = Math.max(0, Number(subscription.audits_remaining ?? (limit - used)) || 0);
-  const usagePercent = limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
+  const used = Number.isFinite(Number(subscription.used_scans ?? subscription.audits_used)) ? Number(subscription.used_scans ?? subscription.audits_used) : 0;
+  const limit = subscription.unlimited ? null : (Number.isFinite(Number(subscription.monthly_allowance ?? subscription.audit_limit)) ? Number(subscription.monthly_allowance ?? subscription.audit_limit) : chosenPlan.monthlyAllowance);
+  const remaining = subscription.unlimited ? null : Math.max(0, Number(subscription.remaining_scans ?? subscription.audits_remaining ?? ((limit || 0) - used)) || 0);
+  const usagePercent = subscription.unlimited || !limit ? 0 : Math.min(100, Math.round((used / limit) * 100));
   const notice = billingNoticeText(subscription);
   const canRunAudit = subscriptionCanRunAudit(subscription);
   const hasCustomer = !!subscription.stripe_customer_id;
@@ -2553,22 +2692,22 @@ function updateReportMetrics() {
   if (reportCount) reportCount.textContent = String(count);
   if (reportCountLabel) reportCountLabel.textContent = count === 1 ? 'Saved assessment.' : 'Saved assessments.';
   if (monthlyReports) monthlyReports.textContent = String(monthly);
-  if (reportsUsed) reportsUsed.textContent = `${used} / ${limit}`;
-  if (reportsUsedLabel) reportsUsedLabel.textContent = remaining > 0 ? `${remaining} audits remaining.` : 'Audit limit reached.';
+  if (reportsUsed) reportsUsed.textContent = subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
+  if (reportsUsedLabel) reportsUsedLabel.textContent = subscription.unlimited ? 'Enterprise fair-use access.' : (remaining > 0 ? `${remaining} scans remaining.` : 'Scan limit reached.');
   if (averageScore) averageScore.textContent = avg == null ? '-' : `${avg}%`;
   if (currentPlan) currentPlan.textContent = plan;
   if (planStatus) planStatus.textContent = isTrialing && trialText ? `${trialText}.` : `${status} workspace.`;
   if (billingPlanName) billingPlanName.textContent = plan;
   if (billingPlanStatus) billingPlanStatus.textContent = `${status} workspace.`;
-  if (billingUsageCount) billingUsageCount.textContent = `${used} / ${limit}`;
-  if (billingUsageRemaining) billingUsageRemaining.textContent = `${remaining} audits remaining this period.`;
-  if (billingPeriodEnd) billingPeriodEnd.textContent = formatBillingDate(subscription.current_period_end);
+  if (billingUsageCount) billingUsageCount.textContent = subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
+  if (billingUsageRemaining) billingUsageRemaining.textContent = subscription.unlimited ? 'Unlimited fair-use balance.' : `${remaining} remaining balance.`;
+  if (billingPeriodEnd) billingPeriodEnd.textContent = formatBillingDate(subscription.renewal_date || subscription.current_period_end);
   if (billingRenewalDate) billingRenewalDate.textContent = subscriptionCanRunAudit(subscription)
-    ? `Next renewal: ${formatBillingDate(subscription.current_period_end)}`
+    ? `Next renewal: ${formatBillingDate(subscription.renewal_date || subscription.current_period_end)}`
     : 'Renewal date unavailable.';
   if (billingPaymentStatus) billingPaymentStatus.textContent = subscription.payment_status
     ? `Payment status: ${titleCase(subscription.payment_status)}`
-    : `Subscription status: ${status}`;
+    : (subscription.unlimited ? 'Enterprise fair-use access' : `Progress: ${used} / ${limit || chosenPlan.monthlyAllowance}`);
   if (billingUsagePercent) billingUsagePercent.textContent = `${usagePercent}%`;
   if (billingProgressFill) billingProgressFill.style.width = progressPercent(usagePercent);
   if (billingStatusNotice) {
@@ -2579,19 +2718,30 @@ function updateReportMetrics() {
     billingStatusChip.textContent = status;
     billingStatusChip.className = `status-chip ${canRunAudit ? 'low' : 'high'}`;
   }
-  if (billingPriceLabel) billingPriceLabel.textContent = isTrialing
-    ? `7-day free trial: ${limit} scans included. Start paid billing anytime for ${subscription.paid_audit_limit || 100} monthly scans.`
-    : `${subscription.price_label || '$79.99 / month'}. Includes ${limit} completed audits per billing period.`;
+  document.querySelectorAll('[data-billing-plan]').forEach(card => {
+    const key = card.dataset.billingPlan;
+    card.classList.toggle('selected', key === chosenPlan.key);
+    card.classList.toggle('current', key === subscription.plan && canRunAudit);
+  });
+  if (billingPlanTitle) billingPlanTitle.textContent = chosenPlan.key === 'enterprise' ? 'Enterprise' : `${chosenPlan.name} plan`;
+  if (billingPlanPrice) billingPlanPrice.innerHTML = chosenPlan.key === 'enterprise'
+    ? 'Contact <span>Sales</span>'
+    : `${chosenPlan.priceShort.replace('/mo', '')}<span>/mo</span>`;
+  if (billingPriceLabel) billingPriceLabel.textContent = chosenPlan.key === 'enterprise'
+    ? 'Enterprise includes custom scan limits, priority onboarding, and dedicated support.'
+    : `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} with rollover up to ${chosenPlan.maxBalance}.`;
   if (billingNavLink) billingNavLink.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (appPageTitle && window.location.pathname.startsWith('/app/billing')) appPageTitle.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (billingHeaderKicker) billingHeaderKicker.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (billingHeaderTitle) billingHeaderTitle.textContent = needsUpgrade ? 'Choose a Plan' : 'Plan and Usage';
   if (billingHeaderCopy) billingHeaderCopy.textContent = needsUpgrade
-    ? 'Choose the Professional plan to continue generating reports, exporting PDFs, and using your agency branding.'
-    : 'Manage your Professional subscription, billing details, invoices, and monthly audit usage.';
+    ? 'Choose the plan that fits your agency to continue generating professional reports.'
+    : 'Manage your subscription, billing details, invoices, and monthly assessment usage.';
   if (billingSubscribeBtn) {
-    billingSubscribeBtn.hidden = canRunAudit || canStartPaidNow || (subscription.status === 'active' && hasCustomer);
-    billingSubscribeBtn.textContent = subscription.status === 'incomplete' ? 'Start Trial' : 'Subscribe Now';
+    billingSubscribeBtn.hidden = chosenPlan.key === 'enterprise' || canStartPaidNow || (subscription.status === 'active' && hasCustomer && chosenPlan.key === subscription.plan);
+    billingSubscribeBtn.textContent = hasCustomer && subscription.status === 'active'
+      ? 'Manage Plan'
+      : (subscription.status === 'incomplete' ? `Start ${chosenPlan.name}` : `Choose ${chosenPlan.name}`);
   }
   if (billingStartPaidBtn) billingStartPaidBtn.hidden = !canStartPaidNow;
   if (billingManageBtn) billingManageBtn.hidden = !hasCustomer;
@@ -2606,8 +2756,8 @@ function updateReportMetrics() {
   }
   if (subscriptionBannerText) {
     subscriptionBannerText.textContent = needsUpgrade
-      ? 'Upgrade to continue creating website reports and exporting branded PDFs.'
-      : `${remaining} trial scans remaining. Start paid billing anytime if you need more credits.`;
+      ? 'Upgrade your plan or wait until your next renewal date to continue generating reports.'
+      : `${scanBalanceText(remaining)} trial scans remaining. Start paid billing anytime if you need more scans.`;
   }
   if (subscriptionBannerCta) subscriptionBannerCta.textContent = needsUpgrade ? 'Upgrade' : 'Manage Trial';
   if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
@@ -2799,6 +2949,17 @@ function handleBillingReturnState() {
 
 async function startCheckout() {
   if (!databaseService?.isReady?.()) return;
+  const plan = selectedPlan();
+  if (plan.key === 'enterprise') {
+    navigateTo('/contact');
+    return;
+  }
+  const subscription = normalizedSubscription();
+  if (subscription.stripe_customer_id && subscription.status === 'active') {
+    trackPublicEvent('plan_selected', { plan: plan.key, source: 'billing_portal' });
+    await openBillingPortal();
+    return;
+  }
   const button = document.getElementById('billingSubscribeBtn');
   const original = button?.textContent || '';
   if (button) {
@@ -2807,7 +2968,8 @@ async function startCheckout() {
   }
   try {
     setBillingMessage('Opening secure checkout...', 'default');
-    const session = await databaseService.createCheckoutSession();
+    trackPublicEvent('plan_selected', { plan: plan.key });
+    const session = await databaseService.createCheckoutSession({ plan: plan.key });
     if (!session?.url) throw new Error('Checkout could not be started.');
     window.location.assign(session.url);
   } catch (error) {
@@ -2822,6 +2984,7 @@ async function startCheckout() {
 
 async function startPaidNow() {
   if (!databaseService?.isReady?.()) return;
+  const plan = selectedPlan();
   const button = document.getElementById('billingStartPaidBtn');
   const original = button?.textContent || '';
   if (button) {
@@ -2830,7 +2993,7 @@ async function startPaidNow() {
   }
   try {
     setBillingMessage('Ending trial and starting paid billing...', 'default');
-    const result = await databaseService.startPaidSubscriptionNow();
+    const result = await databaseService.startPaidSubscriptionNow({ plan: plan.key });
     if (result?.url) {
       window.location.assign(result.url);
       return;
@@ -2877,6 +3040,18 @@ function bindBillingControls() {
   document.getElementById('billingSubscribeBtn')?.addEventListener('click', startCheckout);
   document.getElementById('billingStartPaidBtn')?.addEventListener('click', startPaidNow);
   document.getElementById('billingManageBtn')?.addEventListener('click', openBillingPortal);
+  document.querySelectorAll('[data-billing-plan]').forEach(control => {
+    control.addEventListener('click', event => {
+      const key = control.dataset.billingPlan;
+      if (!key) return;
+      selectedBillingPlan = key;
+      localStorage.setItem('leadcheck.selectedPlan', key);
+      trackPublicEvent(key === 'enterprise' ? 'upgrade_clicked' : 'plan_viewed', { plan: key, source: 'billing' });
+      updateReportMetrics();
+      if (control.tagName === 'A') return;
+      event.preventDefault();
+    });
+  });
   document.getElementById('billingRefreshBtn')?.addEventListener('click', async event => {
     await withButtonLoading(event.currentTarget, 'Refreshing...', async () => {
       setBillingMessage('Refreshing subscription status...', 'default');
@@ -3203,12 +3378,28 @@ function preserveMarketingAttribution(href) {
   return `${basePath}${query ? `?${query}` : ''}${hashPart ? `#${hashPart}` : ''}`;
 }
 
+function trackProductAnalytics(eventName, params = {}) {
+  const allowed = new Set(['plan_viewed', 'plan_selected', 'upgrade_clicked']);
+  if (!allowed.has(eventName)) return;
+  fetch('/api/analytics/event', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      event: eventName,
+      page_path: window.location.pathname,
+      properties: params,
+    }),
+    keepalive: true,
+  }).catch(() => {});
+}
+
 function trackPublicEvent(eventName, params = {}) {
   if (!eventName) return;
   trackMetaCustomEvent(eventName, {
     page_path: window.location.pathname,
     ...params,
   });
+  trackProductAnalytics(eventName, params);
 }
 
 function bindRouteLinks() {
@@ -3218,6 +3409,11 @@ function bindRouteLinks() {
     let href = link.getAttribute('href');
     if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     event.preventDefault();
+    if (link.dataset.planKey) {
+      selectedBillingPlan = link.dataset.planKey;
+      localStorage.setItem('leadcheck.selectedPlan', selectedBillingPlan);
+      trackPublicEvent('plan_selected', { plan: selectedBillingPlan, source: 'public_pricing' });
+    }
     if (window.location.pathname.startsWith('/app/branding') && !href.startsWith('/app/branding') && !confirmBrandingNavigation()) return;
     document.body.classList.remove('app-nav-open');
     document.body.classList.remove('marketing-nav-open');
@@ -5145,6 +5341,8 @@ function resetApp() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const initialPlan = String(new URLSearchParams(window.location.search).get('plan') || localStorage.getItem('leadcheck.selectedPlan') || '').toLowerCase();
+  if (initialPlan && APP_PLANS[initialPlan]) selectedBillingPlan = initialPlan;
   brandingProvider = new window.BrandingProvider();
   authProvider = new window.AuthProvider({
     onChange: handleAuthStateChange,

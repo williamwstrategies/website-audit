@@ -22,7 +22,23 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
       posthog.capture({
         distinctId: result.id,
         event: 'checkout_completed',
-        properties: { stripe_event_id: result.id },
+        properties: { stripe_event_id: result.id, plan: result.subscription?.plan || '' },
+      });
+      posthog.capture({
+        distinctId: result.id,
+        event: 'subscription_started',
+        properties: { stripe_event_id: result.id, plan: result.subscription?.plan || '' },
+      });
+    }
+    if (result.planChange === 'upgraded' || result.planChange === 'downgraded') {
+      posthog.capture({
+        distinctId: result.id,
+        event: result.planChange === 'upgraded' ? 'subscription_upgraded' : 'subscription_downgraded',
+        properties: {
+          stripe_event_id: result.id,
+          previous_plan: result.previousPlan,
+          current_plan: result.currentPlan,
+        },
       });
     }
     res.json({ received: true });
@@ -34,6 +50,30 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+const ALLOWED_CLIENT_ANALYTICS_EVENTS = new Set([
+  'plan_viewed',
+  'plan_selected',
+  'upgrade_clicked',
+]);
+
+app.post('/api/analytics/event', (req, res) => {
+  const event = String(req.body?.event || '').trim();
+  if (!ALLOWED_CLIENT_ANALYTICS_EVENTS.has(event)) {
+    return res.status(400).json({ error: 'Unsupported analytics event.' });
+  }
+
+  const distinctId = String(req.body?.distinctId || req.headers['x-posthog-distinct-id'] || req.ip || 'anonymous').trim();
+  posthog.capture({
+    distinctId,
+    event,
+    properties: {
+      ...(req.body?.properties && typeof req.body.properties === 'object' ? req.body.properties : {}),
+      page_path: req.body?.page_path || '',
+    },
+  });
+  res.json({ ok: true });
+});
 
 function normalizeSupabasePublicUrl(rawUrl = '') {
   return String(rawUrl || '')
@@ -106,8 +146,13 @@ app.post('/api/billing/checkout', async (req, res) => {
     const session = await billing.createCheckoutSession(req, user, req.body || {});
     posthog.capture({
       distinctId: user.id,
+      event: 'plan_selected',
+      properties: { plan: session.plan?.key || req.body?.plan || billing.PROFESSIONAL_PLAN.key },
+    });
+    posthog.capture({
+      distinctId: user.id,
       event: 'checkout_started',
-      properties: { plan: billing.PROFESSIONAL_PLAN.key },
+      properties: { plan: session.plan?.key || req.body?.plan || billing.PROFESSIONAL_PLAN.key },
     });
     res.json(session);
   } catch (error) {
@@ -119,11 +164,11 @@ app.post('/api/billing/checkout', async (req, res) => {
 app.post('/api/billing/start-paid-now', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
-    const result = await billing.startPaidSubscriptionNow(req, user);
+    const result = await billing.startPaidSubscriptionNow(req, user, req.body || {});
     posthog.capture({
       distinctId: user.id,
       event: 'trial_started_paid_now',
-      properties: { plan: billing.PROFESSIONAL_PLAN.key },
+      properties: { plan: req.body?.plan || billing.PROFESSIONAL_PLAN.key },
     });
     res.json(result);
   } catch (error) {
@@ -150,15 +195,15 @@ app.post('/api/billing/portal', async (req, res) => {
 
 function auditBlockMessage(reason, subscription = {}) {
   if (reason === 'audit_limit_reached') {
-    return `Monthly audit limit reached. You have used ${subscription.audits_used || 0} of ${subscription.audit_limit || 0} audits in your current billing period.`;
+    return 'You have used all of your available scans for this billing period. Upgrade your plan or wait until your next renewal date to continue generating reports.';
   }
   if (reason === 'subscription_expired') {
     return 'Your subscription period has ended. Manage billing to continue running audits.';
   }
   if (reason === 'no_subscription') {
-    return 'An active Professional subscription is required to run audits.';
+    return 'Choose a subscription plan to start generating professional website assessments.';
   }
-  return 'An active Professional subscription is required to run audits.';
+  return 'Choose an active subscription plan to continue generating professional website assessments.';
 }
 
 function auditBlockStatus(reason) {
@@ -269,11 +314,13 @@ app.post('/api/analyze', async (req, res) => {
       const subscription = billing.normalizeSubscriptionForClient(reservation?.subscription);
       posthog.capture({
         distinctId: authContext.user.id,
-        event: 'audit_limit_reached',
+        event: 'scan_limit_reached',
         properties: {
           reason: reservation?.reason || 'subscription_unavailable',
+          plan: subscription.plan,
           audits_used: subscription.audits_used,
           audit_limit: subscription.audit_limit,
+          remaining_scans: subscription.remaining_scans,
           ...(sessionId && { $session_id: sessionId }),
         },
       });
@@ -333,7 +380,7 @@ app.get('/api/reports/:reportId/pdf', async (req, res) => {
     const subscription = await billing.getSubscriptionStatus(user.id);
     if (!subscription.can_export_pdf) {
       return res.status(402).json({
-        error: 'An active Professional subscription is required to export PDFs.',
+        error: 'Choose an active subscription plan to export branded PDFs.',
         code: 'subscription_required',
         subscription,
       });
