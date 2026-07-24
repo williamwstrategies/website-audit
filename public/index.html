@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-24-support-email-v2">
+<link rel="stylesheet" href="/styles.css?v=2026-07-24-meta-conversions-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1599,9 +1599,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-24-support-email-v2"></script>
-<script src="/auth.js?v=2026-07-24-support-email-v2"></script>
-<script src="/database.js?v=2026-07-24-support-email-v2"></script>
+<script src="/branding.js?v=2026-07-24-meta-conversions-v1"></script>
+<script src="/auth.js?v=2026-07-24-meta-conversions-v1"></script>
+<script src="/database.js?v=2026-07-24-meta-conversions-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -3116,6 +3116,7 @@ async function pollSubscriptionActivation() {
     for (let attempt = 0; attempt < 8; attempt += 1) {
       const subscription = await loadSubscription();
       if (subscriptionCanRunAudit(subscription || normalizedSubscription())) {
+        trackSubscriptionConversion(subscription || normalizedSubscription(), 'stripe_success');
         setBillingMessage('Subscription active. Your workspace is ready.', 'success');
         showToast('Subscription active.', 'success');
         return;
@@ -3163,6 +3164,8 @@ async function startCheckout() {
     trackPublicEvent('plan_selected', { plan: plan.key });
     const session = await databaseService.createCheckoutSession({ plan: plan.key });
     if (!session?.url) throw new Error('Checkout could not be started.');
+    rememberPendingCheckoutMeta(session, plan.key, 'billing_checkout');
+    trackCheckoutInitiated(session.plan?.key || plan.key, 'billing_checkout');
     window.location.assign(session.url);
   } catch (error) {
     setBillingMessage(error?.message || 'Checkout could not be started.', 'error');
@@ -3187,11 +3190,14 @@ async function startPaidNow() {
     setBillingMessage('Ending trial and starting paid billing...', 'default');
     const result = await databaseService.startPaidSubscriptionNow({ plan: plan.key });
     if (result?.url) {
+      rememberPendingCheckoutMeta(result, plan.key, 'start_paid_now_checkout');
+      trackCheckoutInitiated(result.plan?.key || plan.key, 'start_paid_now_checkout');
       window.location.assign(result.url);
       return;
     }
     currentSubscription = result?.subscription || await loadSubscription();
     updateReportMetrics();
+    trackSubscriptionConversion(currentSubscription || normalizedSubscription(), 'start_paid_now');
     setBillingMessage('Paid billing started. Your paid scan allowance is being refreshed.', 'success');
     showToast('Paid billing started.', 'success');
     await loadSubscription();
@@ -3887,6 +3893,8 @@ function bindAuthForms() {
         return;
       }
 
+      trackSignupConversion(data);
+
       if (data?.session) {
         localStorage.removeItem('leadcheck.pendingPlanSelection');
         navigateTo('/app/billing');
@@ -4114,6 +4122,100 @@ function trackMetaCustomEvent(eventName, params = {}) {
   } catch {
     // Pixel blockers should never interrupt the scanner.
   }
+}
+
+function metaPlanValue(plan = {}) {
+  const match = String(plan.priceLabel || '').match(/[\d.]+/);
+  const value = match ? Number(match[0]) : 0;
+  return Number.isFinite(value) ? value : 0;
+}
+
+function metaPlanParams(planKey, source = '') {
+  const plan = appPlanForKey(planKey);
+  const value = metaPlanValue(plan);
+  return {
+    content_name: `${plan.name} subscription`,
+    content_category: 'subscription',
+    content_type: 'product',
+    content_ids: [plan.key],
+    plan: plan.key,
+    source,
+    ...(value > 0 ? { value, currency: 'USD' } : {}),
+  };
+}
+
+function trackMetaEventOnce(storageKey, eventName, params = {}) {
+  const key = `leadcheck.meta.${storageKey}`;
+  try {
+    if (localStorage.getItem(key)) return false;
+    localStorage.setItem(key, new Date().toISOString());
+  } catch {
+    // Storage privacy settings should not prevent conversion tracking.
+  }
+  trackMetaEvent(eventName, params);
+  return true;
+}
+
+function rememberPendingCheckoutMeta(session = {}, planKey = selectedBillingPlan, source = 'billing') {
+  try {
+    sessionStorage.setItem('leadcheck.pendingCheckoutMeta', JSON.stringify({
+      sessionId: session.id || '',
+      plan: session.plan?.key || planKey,
+      source,
+      createdAt: Date.now(),
+    }));
+  } catch {
+    // Storage privacy settings should never interrupt checkout.
+  }
+}
+
+function readPendingCheckoutMeta() {
+  try {
+    return JSON.parse(sessionStorage.getItem('leadcheck.pendingCheckoutMeta') || '{}') || {};
+  } catch {
+    return {};
+  }
+}
+
+function clearPendingCheckoutMeta() {
+  try {
+    sessionStorage.removeItem('leadcheck.pendingCheckoutMeta');
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
+function checkoutSessionIdFromUrl() {
+  return new URLSearchParams(window.location.search).get('session_id') || '';
+}
+
+function trackSignupConversion(authData = {}) {
+  const userId = authData?.user?.id || authData?.session?.user?.id || 'browser';
+  const plan = selectedPlan();
+  trackMetaEventOnce(`registration.${userId}`, 'CompleteRegistration', {
+    content_name: 'Account signup',
+    content_category: 'subscription_service',
+    status: 'completed',
+    selected_plan: plan.key,
+  });
+}
+
+function trackCheckoutInitiated(planKey = selectedBillingPlan, source = 'billing') {
+  trackMetaEvent('InitiateCheckout', metaPlanParams(planKey, source));
+}
+
+function trackSubscriptionConversion(subscription = {}, source = 'stripe_success') {
+  const pending = readPendingCheckoutMeta();
+  const planKey = subscription.plan || pending.plan || selectedBillingPlan;
+  const checkoutSessionId = checkoutSessionIdFromUrl() || pending.sessionId || '';
+  const subscriptionId = subscription.stripe_subscription_id || '';
+  const dedupeId = checkoutSessionId || subscriptionId || `${planKey}.${subscription.status || 'active'}`;
+  const tracked = trackMetaEventOnce(`subscription.${dedupeId}`, 'Subscribe', {
+    ...metaPlanParams(planKey, source || pending.source || 'stripe_success'),
+    subscription_status: subscription.status || '',
+    checkout_session: checkoutSessionId ? 'present' : '',
+  });
+  if (tracked) clearPendingCheckoutMeta();
 }
 
 function resetMetaScan(websiteUrl) {
