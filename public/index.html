@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-24-subscribe-flow-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-07-24-subscribe-success-only-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1638,9 +1638,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-24-subscribe-flow-v1"></script>
-<script src="/auth.js?v=2026-07-24-subscribe-flow-v1"></script>
-<script src="/database.js?v=2026-07-24-subscribe-flow-v1"></script>
+<script src="/branding.js?v=2026-07-24-subscribe-success-only-v1"></script>
+<script src="/auth.js?v=2026-07-24-subscribe-success-only-v1"></script>
+<script src="/database.js?v=2026-07-24-subscribe-success-only-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -3261,7 +3261,6 @@ async function pollSubscriptionActivation() {
     for (let attempt = 0; attempt < 8; attempt += 1) {
       const subscription = await loadSubscription();
       if (subscriptionCanRunAudit(subscription || normalizedSubscription())) {
-        trackSubscriptionConversion(subscription || normalizedSubscription(), 'stripe_success');
         clearRequiredPlanSelection();
         syncRequiredPlanModal();
         setBillingMessage('Subscription active. Your workspace is ready.', 'success');
@@ -3354,7 +3353,6 @@ async function startPaidNow() {
     }
     currentSubscription = result?.subscription || await loadSubscription();
     updateReportMetrics();
-    trackSubscriptionConversion(currentSubscription || normalizedSubscription(), 'start_paid_now');
     setBillingMessage('Paid billing started. Your paid scan allowance is being refreshed.', 'success');
     showToast('Paid billing started.', 'success');
     await loadSubscription();
@@ -4423,6 +4421,7 @@ function trackSubscriptionConversion(subscription = {}, source = 'stripe_success
 }
 
 function trackStripeSuccessReturnConversion() {
+  if (!window.location.pathname.startsWith('/app/billing/success')) return;
   const planKey = checkoutPlanFromUrl() || readPendingCheckoutMeta().plan || selectedBillingPlan;
   if (APP_PLANS[planKey]) {
     selectedBillingPlan = planKey;
