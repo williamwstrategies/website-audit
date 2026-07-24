@@ -21,6 +21,18 @@ services:
         sync: false
       - key: SUPPORT_EMAIL_FROM
         sync: false
+      - key: LIFECYCLE_EMAIL_SECRET
+        sync: false
+      - key: LIFECYCLE_EMAIL_FROM
+        sync: false
+      - key: LIFECYCLE_EMAIL_REPLY_TO
+        sync: false
+      - key: LIFECYCLE_EMAILS_ENABLED
+        sync: false
+      - key: LIFECYCLE_EMAIL_MAX_PER_RUN
+        sync: false
+      - key: LIFECYCLE_EMAIL_INTERVAL_MINUTES
+        sync: false
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_ANON_KEY

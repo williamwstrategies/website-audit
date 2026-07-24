@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const { analyzeWebsite } = require('./api/analyze');
 const { PostHog } = require('posthog-node');
 const billing = require('./lib/billing');
+const lifecycleEmails = require('./lib/lifecycle-emails');
 const { generateReportPdf } = require('./lib/pdf');
 
 const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
@@ -94,6 +95,12 @@ function requestOrigin(req) {
   const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
   const host = req.get('x-forwarded-host') || req.get('host') || '';
   return host ? `${protocol}://${host}` : '';
+}
+
+function safeCompare(left = '', right = '') {
+  const a = Buffer.from(String(left || ''));
+  const b = Buffer.from(String(right || ''));
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 function supportEmailRecipients(value = '') {
@@ -286,6 +293,83 @@ async function sendSupportNotification(payload) {
     webhook,
   };
 }
+
+function lifecycleRequestSecret(req) {
+  const authorization = cleanSupportText(req.get('authorization'), 2000);
+  const bearer = authorization.match(/^Bearer\s+(.+)$/i)?.[1] || '';
+  return cleanSupportText(req.get('x-lifecycle-secret') || bearer || req.query.secret || req.body?.secret, 2000);
+}
+
+function requireLifecycleSecret(req) {
+  const configured = cleanSupportText(process.env.LIFECYCLE_EMAIL_SECRET, 2000);
+  if (!configured) {
+    throw billing.httpError(503, 'LIFECYCLE_EMAIL_SECRET is not configured.', 'lifecycle_secret_missing');
+  }
+  if (!safeCompare(lifecycleRequestSecret(req), configured)) {
+    throw billing.httpError(401, 'Lifecycle email access is not authorized.', 'lifecycle_unauthorized');
+  }
+}
+
+function lifecycleDryRun(req) {
+  return /^(1|true|yes)$/i.test(cleanSupportText(req.query.dryRun || req.query.dry_run || req.body?.dryRun || req.body?.dry_run, 20));
+}
+
+app.all('/api/lifecycle/abandoned-signups/run', async (req, res) => {
+  try {
+    requireLifecycleSecret(req);
+    const result = await lifecycleEmails.runAbandonedSignupCampaign({
+      dryRun: lifecycleDryRun(req),
+      limit: req.query.limit || req.body?.limit,
+    });
+    posthog.capture({
+      distinctId: 'lifecycle-email-runner',
+      event: 'lifecycle_abandoned_signup_run',
+      properties: {
+        dry_run: result.dryRun,
+        eligible: result.eligible,
+        sent: result.sent,
+        failed: result.failed,
+      },
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.get('/api/email/unsubscribe', async (req, res) => {
+  const email = cleanSupportText(req.query.email, 320);
+  const campaign = cleanSupportText(req.query.campaign || lifecycleEmails.CAMPAIGN_KEY, 80);
+  const token = cleanSupportText(req.query.token, 200);
+
+  try {
+    if (!lifecycleEmails.verifyToken(email, campaign, token)) {
+      throw billing.httpError(400, 'This unsubscribe link is invalid or expired.', 'unsubscribe_invalid');
+    }
+    await lifecycleEmails.unsubscribe(email, campaign);
+    res.set('Cache-Control', 'no-store');
+    res.type('html').send(`<!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>Unsubscribed</title>
+          <style>
+            body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f5f7;color:#1d1d1f;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+            main{width:min(520px,calc(100% - 32px));padding:28px;border:1px solid #e5e5ea;border-radius:18px;background:#fff;box-shadow:0 18px 48px rgba(0,0,0,.08)}
+            h1{margin:0 0 10px;font-size:28px;letter-spacing:0}
+            p{margin:0;color:#6e6e73;line-height:1.6}
+          </style>
+        </head>
+        <body><main><h1>You are unsubscribed.</h1><p>You will no longer receive account setup reminders from Website Strategy Scan.</p></main></body>
+      </html>`);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
 
 app.post('/api/analytics/event', (req, res) => {
   const event = String(req.body?.event || '').trim();
@@ -907,8 +991,44 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+let lifecycleEmailRunInProgress = false;
+
+function lifecycleEmailIntervalMs() {
+  const minutes = Number(process.env.LIFECYCLE_EMAIL_INTERVAL_MINUTES || 60);
+  const safeMinutes = Number.isFinite(minutes) && minutes >= 15 ? minutes : 60;
+  return safeMinutes * 60 * 1000;
+}
+
+async function runScheduledLifecycleEmails() {
+  if (lifecycleEmailRunInProgress) return;
+  lifecycleEmailRunInProgress = true;
+  try {
+    const result = await lifecycleEmails.runAbandonedSignupCampaign({ dryRun: false });
+    console.log('[LeadCheck] Lifecycle email run complete:', {
+      eligible: result.eligible,
+      sent: result.sent,
+      failed: result.failed,
+    });
+  } catch (error) {
+    console.warn('[LeadCheck] Lifecycle email run failed:', error?.message || error);
+  } finally {
+    lifecycleEmailRunInProgress = false;
+  }
+}
+
+function startLifecycleEmailScheduler() {
+  if (!lifecycleEmails.envFlag('LIFECYCLE_EMAILS_ENABLED')) return;
+  const firstRunDelayMs = Number(process.env.NODE_ENV === 'production' ? 120000 : 15000);
+  setTimeout(runScheduledLifecycleEmails, firstRunDelayMs);
+  setInterval(runScheduledLifecycleEmails, lifecycleEmailIntervalMs());
+  console.log('[LeadCheck] Lifecycle email scheduler enabled.');
+}
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`LeadCheck running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`LeadCheck running on http://localhost:${PORT}`);
+  startLifecycleEmailScheduler();
+});
 
 process.on('SIGINT', async () => {
   await posthog.shutdown();
