@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-07-24-subscribe-success-only-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-07-24-account-setup-retry-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',

@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-24-subscribe-success-only-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-07-24-account-setup-retry-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1638,9 +1638,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-24-subscribe-success-only-v1"></script>
-<script src="/auth.js?v=2026-07-24-subscribe-success-only-v1"></script>
-<script src="/database.js?v=2026-07-24-subscribe-success-only-v1"></script>
+<script src="/branding.js?v=2026-07-24-account-setup-retry-v1"></script>
+<script src="/auth.js?v=2026-07-24-account-setup-retry-v1"></script>
+<script src="/database.js?v=2026-07-24-account-setup-retry-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -3293,6 +3293,33 @@ function handleBillingReturnState() {
   }
 }
 
+function checkoutAccountRaceError(error) {
+  return ['supabase_user_project_mismatch', 'supabase_request_failed'].includes(error?.code)
+    || /finishing setup|cannot find|foreign key/i.test(error?.message || '');
+}
+
+async function createCheckoutSessionWithAccountRetry(options = {}) {
+  const delays = [0, 1200];
+  let lastError = null;
+
+  for (let attempt = 0; attempt < delays.length; attempt += 1) {
+    if (delays[attempt]) {
+      setBillingMessage('Finishing your account setup...', 'default');
+      setRequiredPlanMessage('Finishing your account setup...', 'default');
+      await delay(delays[attempt]);
+    }
+
+    try {
+      return await databaseService.createCheckoutSession(options);
+    } catch (error) {
+      lastError = error;
+      if (!checkoutAccountRaceError(error) || attempt === delays.length - 1) throw error;
+    }
+  }
+
+  throw lastError || new Error('Checkout could not be started.');
+}
+
 async function startCheckout(source = 'billing_checkout') {
   if (!databaseService?.isReady?.()) return;
   const checkoutSource = typeof source === 'string' ? source : 'billing_checkout';
@@ -3317,7 +3344,7 @@ async function startCheckout(source = 'billing_checkout') {
     setBillingMessage('Opening secure checkout...', 'default');
     setRequiredPlanMessage('Opening secure checkout...', 'default');
     trackPublicEvent('plan_selected', { plan: plan.key, source: checkoutSource });
-    const session = await databaseService.createCheckoutSession({ plan: plan.key });
+    const session = await createCheckoutSessionWithAccountRetry({ plan: plan.key });
     if (!session?.url) throw new Error('Checkout could not be started.');
     rememberPendingCheckoutMeta(session, plan.key, checkoutSource);
     trackCheckoutInitiated(session.plan?.key || plan.key, checkoutSource);
