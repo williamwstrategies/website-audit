@@ -13,6 +13,8 @@ services:
         sync: false
       - key: GHL_WEBHOOK_URL
         sync: false
+      - key: SUPPORT_WEBHOOK_URL
+        sync: false
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_ANON_KEY

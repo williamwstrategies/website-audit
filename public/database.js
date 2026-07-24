@@ -539,6 +539,13 @@
       });
     }
 
+    async submitSupportRequest(request = {}) {
+      return this.serverJson('/api/support/request', {
+        method: 'POST',
+        body: request,
+      });
+    }
+
     async runAudit({ url, idempotencyKey, debug = false } = {}) {
       return this.serverJson('/api/analyze', {
         method: 'POST',

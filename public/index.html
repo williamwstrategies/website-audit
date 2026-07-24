@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-23-report-contact-v5">
+<link rel="stylesheet" href="/styles.css?v=2026-07-24-support-portal-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -736,6 +736,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/app" data-route data-app-nav="dashboard">Dashboard</a>
       <a href="/app/scan" data-route data-app-nav="scan">New Audit</a>
       <a href="/app/reports" data-route data-app-nav="reports">Reports</a>
+      <a href="/app/support" data-route data-app-nav="support">Support</a>
       <a href="/app/branding" data-route data-app-nav="branding">Branding</a>
       <a href="/app/billing" data-route data-app-nav="billing" id="billingNavLink">Billing</a>
       <a href="/app/settings" data-route data-app-nav="settings">Settings</a>
@@ -1108,6 +1109,105 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div id="reportsList" class="saved-report-list"></div>
         <div class="reports-pagination" id="reportsPagination" hidden>
           <button class="secondary-btn" type="button" id="loadMoreReportsBtn">Show More</button>
+        </div>
+      </section>
+
+      <section id="support-view" class="app-panel support-view" hidden>
+        <div class="settings-header">
+          <div>
+            <div class="section-kicker">Support</div>
+            <h2>Customer Service Portal</h2>
+            <p>Send product issues, report problems, billing questions, or feature requests directly from the workspace.</p>
+          </div>
+          <span class="status-chip partial">Webhook Ready</span>
+        </div>
+
+        <div class="support-layout">
+          <section class="workspace-panel support-request-panel">
+            <div class="panel-heading">
+              <div>
+                <div class="section-kicker">New Request</div>
+                <h2>What needs attention?</h2>
+                <p>Include the affected website, report, or page when it helps us understand the problem faster.</p>
+              </div>
+            </div>
+
+            <form class="support-form" id="supportRequestForm" novalidate>
+              <div class="settings-grid">
+                <label class="lead-field">
+                  <span class="lead-label">Category</span>
+                  <select class="url-input" id="supportCategoryInput" name="category" required>
+                    <option value="bug">Bug or Broken Page</option>
+                    <option value="report">Report Problem</option>
+                    <option value="billing">Billing Question</option>
+                    <option value="account">Account Access</option>
+                    <option value="feature">Feature Request</option>
+                    <option value="other">Other</option>
+                  </select>
+                </label>
+                <label class="lead-field">
+                  <span class="lead-label">Urgency</span>
+                  <select class="url-input" id="supportUrgencyInput" name="urgency" required>
+                    <option value="normal">Normal</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="low">Low</option>
+                  </select>
+                </label>
+                <label class="lead-field lead-field-full">
+                  <span class="lead-label">Subject</span>
+                  <input class="url-input" type="text" id="supportSubjectInput" name="subject" placeholder="Short summary of the issue" maxlength="160" required>
+                </label>
+                <label class="lead-field lead-field-full">
+                  <span class="lead-label">Details</span>
+                  <textarea class="url-input" id="supportDetailsInput" name="message" rows="6" placeholder="Tell us what happened, what you expected, and anything that would help reproduce it." minlength="10" required></textarea>
+                </label>
+                <label class="lead-field lead-field-full">
+                  <span class="lead-label">Affected Website, Report, or Page</span>
+                  <input class="url-input" type="text" id="supportAffectedUrlInput" name="affectedUrl" placeholder="https://example.com or /app/reports/...">
+                </label>
+                <label class="lead-field">
+                  <span class="lead-label">Preferred Reply</span>
+                  <select class="url-input" id="supportPreferredReplyInput" name="preferredReply">
+                    <option value="email">Email</option>
+                    <option value="text">Text Message</option>
+                    <option value="either">Either</option>
+                  </select>
+                </label>
+                <label class="lead-field">
+                  <span class="lead-label">Reply Email</span>
+                  <input class="url-input" type="email" id="supportReplyEmailInput" name="replyEmail" autocomplete="email">
+                </label>
+                <label class="lead-field">
+                  <span class="lead-label">Reply Phone</span>
+                  <input class="url-input" type="tel" id="supportReplyPhoneInput" name="replyPhone" autocomplete="tel">
+                </label>
+              </div>
+              <div class="auth-message support-message" id="supportRequestMessage" role="status" hidden></div>
+              <div class="settings-actions">
+                <button class="analyze-btn" type="submit" id="supportSubmitBtn">Send Support Request</button>
+                <button class="secondary-btn" type="reset">Clear Form</button>
+              </div>
+            </form>
+          </section>
+
+          <aside class="support-side-stack">
+            <section class="workspace-panel support-guidance-card">
+              <div class="section-kicker">Notifications</div>
+              <h2>Email and Text Alerts</h2>
+              <p>Requests are sent to your configured support webhook. Connect that webhook to Zapier, Make, GoHighLevel, Twilio, or another automation tool to receive emails and text messages.</p>
+              <div class="support-status-list">
+                <span>Authenticated submissions</span>
+                <span>Webhook notification payload</span>
+                <span>Ticket reference included</span>
+              </div>
+            </section>
+            <section class="workspace-panel support-guidance-card">
+              <div class="section-kicker">Recommended Setup</div>
+              <h2>Render Environment Variable</h2>
+              <p>Add <strong>SUPPORT_WEBHOOK_URL</strong> in Render and point it at an automation that sends you the notification channels you want.</p>
+            </section>
+          </aside>
         </div>
       </section>
 
@@ -1498,9 +1598,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-23-report-contact-v5"></script>
-<script src="/auth.js?v=2026-07-23-report-contact-v5"></script>
-<script src="/database.js?v=2026-07-23-report-contact-v5"></script>
+<script src="/branding.js?v=2026-07-24-support-portal-v1"></script>
+<script src="/auth.js?v=2026-07-24-support-portal-v1"></script>
+<script src="/database.js?v=2026-07-24-support-portal-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1792,6 +1892,7 @@ const ROUTE_TITLES = {
   '/app': 'Dashboard',
   '/app/scan': 'New Audit',
   '/app/reports': 'Reports',
+  '/app/support': 'Support',
   '/app/branding': 'Branding',
   '/app/billing': 'Billing',
   '/app/settings': 'Settings',
@@ -1893,6 +1994,7 @@ function appRouteKey(path = window.location.pathname) {
   if (savedReportIdFromPath(path)) return 'saved-report';
   if (path.startsWith('/app/reports')) return 'reports';
   if (path.startsWith('/app/history')) return 'reports';
+  if (path.startsWith('/app/support')) return 'support';
   if (path.startsWith('/app/scan')) return 'scan';
   return 'dashboard';
 }
@@ -1907,6 +2009,7 @@ function showAppPanel(panel) {
     branding: 'branding-view',
     billing: 'billing-view',
     reports: 'reports-view',
+    support: 'support-view',
   };
   Object.values(panels).forEach(id => {
     const el = document.getElementById(id);
@@ -2121,6 +2224,7 @@ function updateAuthUserUI() {
     node.hidden = !email;
     node.textContent = email;
   });
+  hydrateSupportDefaults();
 
   document.querySelectorAll('[data-public-cta]').forEach(node => {
     node.textContent = authenticated ? 'Open Dashboard' : (node.dataset.publicCtaLabel || 'Start Trial');
@@ -2155,6 +2259,24 @@ function setReportSaveMessage(message = '', tone = 'default') {
   node.hidden = !message;
   node.textContent = message;
   node.dataset.tone = tone;
+}
+
+function setSupportMessage(message = '', tone = 'default') {
+  const node = document.getElementById('supportRequestMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
+function hydrateSupportDefaults() {
+  const emailInput = document.getElementById('supportReplyEmailInput');
+  const affectedInput = document.getElementById('supportAffectedUrlInput');
+  const email = authProvider?.getUserEmail?.() || '';
+  if (emailInput && !emailInput.value && email) emailInput.value = email;
+  if (affectedInput && !affectedInput.value && window.location.pathname !== '/app/support') {
+    affectedInput.value = `${window.location.pathname}${window.location.search}`;
+  }
 }
 
 function showToast(message = '', tone = 'info') {
@@ -3373,7 +3495,7 @@ function renderRoute() {
     restoreReportShellToApp();
     applyRouteSeo({ noindex: true });
     const key = appRouteKey(path);
-    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : ROUTE_TITLES['/app']);
+    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
     setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : key === 'dashboard' ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
@@ -3383,6 +3505,10 @@ function renderRoute() {
       handleBillingReturnState();
     }
     else if (key === 'reports') showAppPanel('reports');
+    else if (key === 'support') {
+      showAppPanel('support');
+      hydrateSupportDefaults();
+    }
     else if (key === 'saved-report') {
       const reportId = savedReportIdFromPath(path);
       if (pendingSavedReportId === reportId && pendingScanResult) {
@@ -3586,6 +3712,65 @@ function bindPublicMarketingControls() {
   });
 
   runPublicReveals();
+}
+
+function bindSupportForm() {
+  const form = document.getElementById('supportRequestForm');
+  const submitBtn = document.getElementById('supportSubmitBtn');
+  if (!form) return;
+
+  form.addEventListener('reset', () => {
+    setSupportMessage('');
+    setTimeout(hydrateSupportDefaults, 0);
+  });
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    if (!databaseService?.isReady?.()) {
+      const message = 'Support requests require an active logged-in session.';
+      setSupportMessage(message, 'error');
+      showToast(message, 'error');
+      return;
+    }
+
+    const payload = {
+      category: document.getElementById('supportCategoryInput')?.value || 'other',
+      urgency: document.getElementById('supportUrgencyInput')?.value || 'normal',
+      subject: document.getElementById('supportSubjectInput')?.value || '',
+      message: document.getElementById('supportDetailsInput')?.value || '',
+      affectedUrl: document.getElementById('supportAffectedUrlInput')?.value || '',
+      preferredReply: document.getElementById('supportPreferredReplyInput')?.value || 'email',
+      replyEmail: document.getElementById('supportReplyEmailInput')?.value || authProvider?.getUserEmail?.() || '',
+      replyPhone: document.getElementById('supportReplyPhoneInput')?.value || '',
+      agencyName: brandingProvider?.getEffectiveBranding?.()?.agencyName || '',
+      pageUrl: window.location.href,
+      userAgent: navigator.userAgent,
+    };
+
+    withButtonLoading(submitBtn, 'Sending...', async () => {
+      setSupportMessage('Sending support request...', 'default');
+      try {
+        const result = await databaseService.submitSupportRequest(payload);
+        const ticket = result.ticketId ? ` Reference: ${result.ticketId}.` : '';
+        const message = result.notificationSent
+          ? `Support request sent.${ticket}`
+          : result.warning || `Support request received.${ticket}`;
+        const tone = result.notificationSent ? 'success' : 'warning';
+        setSupportMessage(message, tone);
+        showToast(message, tone);
+        form.reset();
+        hydrateSupportDefaults();
+      } catch (error) {
+        const message = error?.message || 'Support request could not be sent. Please try again.';
+        setSupportMessage(message, 'error');
+        showToast(message, 'error');
+      }
+    });
+  });
 }
 
 function filterPublicFaq(value = '') {
@@ -5470,6 +5655,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindRouteLinks();
   bindMobileNavigation();
   bindPublicMarketingControls();
+  bindSupportForm();
   bindAuthForms();
   bindReportControls();
   bindBillingControls();

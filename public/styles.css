@@ -7646,6 +7646,73 @@ button:disabled {
     rgba(9, 25, 46, 0.9);
 }
 
+.support-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.38fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.support-request-panel,
+.support-guidance-card {
+  min-width: 0;
+}
+
+.support-form {
+  display: grid;
+  gap: 18px;
+}
+
+.support-message {
+  margin: 0;
+}
+
+.support-side-stack {
+  display: grid;
+  gap: 20px;
+}
+
+.support-guidance-card {
+  display: grid;
+  gap: 12px;
+}
+
+.support-guidance-card h2,
+.support-guidance-card p {
+  margin: 0;
+}
+
+.support-status-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.support-status-list span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-weight: 720;
+}
+
+.support-status-list span::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--brand-primary-soft, rgba(245, 200, 66, 0.14));
+}
+
+@media (max-width: 920px) {
+  .support-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-height: 860px) and (min-width: 1081px) {
   .marketing-view .public-home .marketing-copy h1 {
     font-size: clamp(2.9rem, 4.8vw, 4.8rem);

@@ -57,6 +57,73 @@ const ALLOWED_CLIENT_ANALYTICS_EVENTS = new Set([
   'upgrade_clicked',
 ]);
 
+const SUPPORT_CATEGORIES = new Set([
+  'bug',
+  'billing',
+  'report',
+  'account',
+  'feature',
+  'other',
+]);
+
+const SUPPORT_URGENCIES = new Set([
+  'low',
+  'normal',
+  'high',
+  'urgent',
+]);
+
+const SUPPORT_REPLY_METHODS = new Set([
+  'email',
+  'text',
+  'either',
+]);
+
+function cleanSupportText(value = '', maxLength = 1000) {
+  return String(value || '').trim().slice(0, maxLength);
+}
+
+function normalizedSupportValue(value, allowed, fallback) {
+  const normalized = cleanSupportText(value, 40).toLowerCase();
+  return allowed.has(normalized) ? normalized : fallback;
+}
+
+function requestOrigin(req) {
+  const protocol = req.get('x-forwarded-proto') || req.protocol || 'https';
+  const host = req.get('x-forwarded-host') || req.get('host') || '';
+  return host ? `${protocol}://${host}` : '';
+}
+
+async function sendSupportNotification(payload) {
+  const webhookUrl = cleanSupportText(process.env.SUPPORT_WEBHOOK_URL, 1000);
+  if (!webhookUrl) {
+    console.warn('[LeadCheck] SUPPORT_WEBHOOK_URL is not configured; support notification skipped.');
+    return { configured: false, sent: false, error: '' };
+  }
+
+  let response;
+  try {
+    response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    return { configured: true, sent: false, error: error?.message || 'Support webhook request failed.' };
+  }
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    return {
+      configured: true,
+      sent: false,
+      error: `Support webhook failed with HTTP ${response.status}${body ? `: ${body.slice(0, 200)}` : ''}`,
+    };
+  }
+
+  return { configured: true, sent: true, error: '' };
+}
+
 app.post('/api/analytics/event', (req, res) => {
   const event = String(req.body?.event || '').trim();
   if (!ALLOWED_CLIENT_ANALYTICS_EVENTS.has(event)) {
@@ -73,6 +140,82 @@ app.post('/api/analytics/event', (req, res) => {
     },
   });
   res.json({ ok: true });
+});
+
+app.post('/api/support/request', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const body = req.body || {};
+    const subject = cleanSupportText(body.subject, 160);
+    const message = cleanSupportText(body.message, 4000);
+
+    if (!subject) {
+      return res.status(400).json({ error: 'Please add a short subject.', code: 'support_subject_required' });
+    }
+    if (!message || message.length < 10) {
+      return res.status(400).json({ error: 'Please describe the issue in a little more detail.', code: 'support_message_required' });
+    }
+
+    const ticketId = `SUP-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+    const payload = {
+      ticket_id: ticketId,
+      source: 'customer_service_portal',
+      category: normalizedSupportValue(body.category, SUPPORT_CATEGORIES, 'other'),
+      urgency: normalizedSupportValue(body.urgency, SUPPORT_URGENCIES, 'normal'),
+      subject,
+      message,
+      affected_url: cleanSupportText(body.affectedUrl || body.affected_url, 1000),
+      preferred_reply_method: normalizedSupportValue(body.preferredReply || body.preferred_reply_method, SUPPORT_REPLY_METHODS, 'email'),
+      reply_email: cleanSupportText(body.replyEmail || body.reply_email || user.email, 320),
+      reply_phone: cleanSupportText(body.replyPhone || body.reply_phone, 80),
+      page_url: cleanSupportText(body.pageUrl || body.page_url, 1000),
+      user_agent: cleanSupportText(body.userAgent || body.user_agent || req.get('user-agent'), 500),
+      app_url: requestOrigin(req),
+      user: {
+        id: user.id,
+        email: user.email || '',
+        name: cleanSupportText(user.user_metadata?.name || user.user_metadata?.full_name, 160),
+      },
+      agency: {
+        name: cleanSupportText(body.agencyName || body.agency_name, 160),
+      },
+      created_at: new Date().toISOString(),
+    };
+
+    const notification = await sendSupportNotification(payload);
+    if (notification.error) {
+      console.warn('[LeadCheck] Support notification failed:', notification.error);
+    }
+
+    posthog.capture({
+      distinctId: user.id,
+      event: 'support_request_submitted',
+      properties: {
+        ticket_id: ticketId,
+        category: payload.category,
+        urgency: payload.urgency,
+        preferred_reply_method: payload.preferred_reply_method,
+        notification_configured: notification.configured,
+        notification_sent: notification.sent,
+      },
+    });
+
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      ok: true,
+      ticketId,
+      notificationConfigured: notification.configured,
+      notificationSent: notification.sent,
+      warning: notification.configured && !notification.sent
+        ? 'Support request received, but the notification webhook did not send.'
+        : !notification.configured
+          ? 'Support request received, but SUPPORT_WEBHOOK_URL is not configured yet.'
+          : '',
+    });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
 });
 
 function normalizeSupabasePublicUrl(rawUrl = '') {
