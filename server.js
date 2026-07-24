@@ -79,6 +79,8 @@ const SUPPORT_REPLY_METHODS = new Set([
   'either',
 ]);
 
+const RESEND_EMAIL_API_URL = 'https://api.resend.com/emails';
+
 function cleanSupportText(value = '', maxLength = 1000) {
   return String(value || '').trim().slice(0, maxLength);
 }
@@ -94,10 +96,156 @@ function requestOrigin(req) {
   return host ? `${protocol}://${host}` : '';
 }
 
-async function sendSupportNotification(payload) {
+function supportEmailRecipients(value = '') {
+  return String(value || '')
+    .split(',')
+    .map((item) => cleanSupportText(item, 320))
+    .filter(Boolean)
+    .slice(0, 20);
+}
+
+function escapeSupportHtml(value = '') {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function supportEmailSubject(payload) {
+  const urgency = String(payload.urgency || 'normal').toUpperCase();
+  return `[Support ${urgency}] ${payload.subject || payload.ticket_id}`;
+}
+
+function supportEmailText(payload) {
+  return [
+    `Ticket: ${payload.ticket_id}`,
+    `Created: ${payload.created_at}`,
+    `Category: ${payload.category}`,
+    `Urgency: ${payload.urgency}`,
+    `Subject: ${payload.subject}`,
+    '',
+    payload.message,
+    '',
+    `Affected URL: ${payload.affected_url || 'Not provided'}`,
+    `Preferred reply: ${payload.preferred_reply_method || 'email'}`,
+    `Reply email: ${payload.reply_email || 'Not provided'}`,
+    `Reply phone: ${payload.reply_phone || 'Not provided'}`,
+    '',
+    `User: ${payload.user?.email || 'Unknown'} (${payload.user?.id || 'No user id'})`,
+    `Agency: ${payload.agency?.name || 'Not provided'}`,
+    `Page URL: ${payload.page_url || 'Not provided'}`,
+    `App URL: ${payload.app_url || 'Not provided'}`,
+    `User agent: ${payload.user_agent || 'Not provided'}`,
+  ].join('\n');
+}
+
+function supportEmailHtml(payload) {
+  const rows = [
+    ['Ticket', payload.ticket_id],
+    ['Created', payload.created_at],
+    ['Category', payload.category],
+    ['Urgency', payload.urgency],
+    ['Affected URL', payload.affected_url || 'Not provided'],
+    ['Preferred reply', payload.preferred_reply_method || 'email'],
+    ['Reply email', payload.reply_email || 'Not provided'],
+    ['Reply phone', payload.reply_phone || 'Not provided'],
+    ['User', `${payload.user?.email || 'Unknown'} (${payload.user?.id || 'No user id'})`],
+    ['Agency', payload.agency?.name || 'Not provided'],
+    ['Page URL', payload.page_url || 'Not provided'],
+    ['App URL', payload.app_url || 'Not provided'],
+    ['User agent', payload.user_agent || 'Not provided'],
+  ];
+
+  const details = rows.map(([label, value]) => (
+    `<tr><th>${escapeSupportHtml(label)}</th><td>${escapeSupportHtml(value)}</td></tr>`
+  )).join('');
+
+  return `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1d1d1f;background:#f5f5f7;padding:28px;">
+      <div style="max-width:680px;margin:0 auto;background:#ffffff;border:1px solid #e5e5ea;border-radius:18px;overflow:hidden;box-shadow:0 18px 48px rgba(0,0,0,0.08);">
+        <div style="padding:24px 28px;border-bottom:1px solid #ececf0;">
+          <p style="margin:0 0 8px;color:#7a6a3a;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;">Customer Support Request</p>
+          <h1 style="margin:0;font-size:24px;line-height:1.25;color:#1d1d1f;">${escapeSupportHtml(payload.subject)}</h1>
+        </div>
+        <div style="padding:24px 28px;">
+          <p style="white-space:pre-wrap;margin:0 0 22px;font-size:15px;line-height:1.6;color:#2f3137;">${escapeSupportHtml(payload.message)}</p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.45;">
+            ${details}
+          </table>
+        </div>
+      </div>
+    </div>
+    <style>
+      th { width: 34%; text-align: left; padding: 10px 12px; color: #6e6e73; border-top: 1px solid #ececf0; vertical-align: top; }
+      td { padding: 10px 12px; color: #1d1d1f; border-top: 1px solid #ececf0; word-break: break-word; }
+    </style>
+  `;
+}
+
+async function sendSupportEmail(payload) {
+  const apiKey = cleanSupportText(process.env.RESEND_API_KEY, 1000);
+  const from = cleanSupportText(process.env.SUPPORT_EMAIL_FROM, 320);
+  const to = supportEmailRecipients(process.env.SUPPORT_EMAIL_TO);
+
+  if (!apiKey && !from && !to.length) {
+    return { configured: false, sent: false, error: '', id: '' };
+  }
+
+  if (!apiKey || !from || !to.length) {
+    return {
+      configured: true,
+      sent: false,
+      error: 'Direct support email is partially configured. Add RESEND_API_KEY, SUPPORT_EMAIL_TO, and SUPPORT_EMAIL_FROM.',
+      id: '',
+    };
+  }
+
+  const body = {
+    from,
+    to,
+    subject: supportEmailSubject(payload),
+    text: supportEmailText(payload),
+    html: supportEmailHtml(payload),
+  };
+
+  if (payload.reply_email) {
+    body.reply_to = payload.reply_email;
+  }
+
+  let response;
+  try {
+    response = await fetch(RESEND_EMAIL_API_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'Idempotency-Key': payload.ticket_id,
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (error) {
+    return { configured: true, sent: false, error: error?.message || 'Support email request failed.', id: '' };
+  }
+
+  if (!response.ok) {
+    const responseBody = await response.text().catch(() => '');
+    return {
+      configured: true,
+      sent: false,
+      error: `Support email failed with HTTP ${response.status}${responseBody ? `: ${responseBody.slice(0, 240)}` : ''}`,
+      id: '',
+    };
+  }
+
+  const data = await response.json().catch(() => ({}));
+  return { configured: true, sent: true, error: '', id: data?.id || '' };
+}
+
+async function sendSupportWebhook(payload) {
   const webhookUrl = cleanSupportText(process.env.SUPPORT_WEBHOOK_URL, 1000);
   if (!webhookUrl) {
-    console.warn('[LeadCheck] SUPPORT_WEBHOOK_URL is not configured; support notification skipped.');
     return { configured: false, sent: false, error: '' };
   }
 
@@ -122,6 +270,21 @@ async function sendSupportNotification(payload) {
   }
 
   return { configured: true, sent: true, error: '' };
+}
+
+async function sendSupportNotification(payload) {
+  const [email, webhook] = await Promise.all([
+    sendSupportEmail(payload),
+    sendSupportWebhook(payload),
+  ]);
+  const errors = [email.error, webhook.error].filter(Boolean);
+  return {
+    configured: email.configured || webhook.configured,
+    sent: email.sent || webhook.sent,
+    error: errors.join(' | '),
+    email,
+    webhook,
+  };
 }
 
 app.post('/api/analytics/event', (req, res) => {
@@ -197,6 +360,10 @@ app.post('/api/support/request', async (req, res) => {
         preferred_reply_method: payload.preferred_reply_method,
         notification_configured: notification.configured,
         notification_sent: notification.sent,
+        email_configured: notification.email.configured,
+        email_sent: notification.email.sent,
+        webhook_configured: notification.webhook.configured,
+        webhook_sent: notification.webhook.sent,
       },
     });
 
@@ -207,9 +374,9 @@ app.post('/api/support/request', async (req, res) => {
       notificationConfigured: notification.configured,
       notificationSent: notification.sent,
       warning: notification.configured && !notification.sent
-        ? 'Support request received, but the notification webhook did not send.'
+        ? 'Support request received, but the configured notification did not send.'
         : !notification.configured
-          ? 'Support request received, but SUPPORT_WEBHOOK_URL is not configured yet.'
+          ? 'Support request received, but support email is not configured yet.'
           : '',
     });
   } catch (error) {

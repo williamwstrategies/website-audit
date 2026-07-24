@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-24-support-portal-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-07-24-support-email-v2">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1119,7 +1119,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <h2>Customer Service Portal</h2>
             <p>Send product issues, report problems, billing questions, or feature requests directly from the workspace.</p>
           </div>
-          <span class="status-chip partial">Webhook Ready</span>
+          <span class="status-chip partial">Email Ready</span>
         </div>
 
         <div class="support-layout">
@@ -1195,17 +1195,18 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <section class="workspace-panel support-guidance-card">
               <div class="section-kicker">Notifications</div>
               <h2>Email and Text Alerts</h2>
-              <p>Requests are sent to your configured support webhook. Connect that webhook to Zapier, Make, GoHighLevel, Twilio, or another automation tool to receive emails and text messages.</p>
+              <p>Requests can be sent directly to your support inbox. You can also keep a webhook connected for GoHighLevel, Zapier, Make, Twilio, or another automation tool.</p>
               <div class="support-status-list">
                 <span>Authenticated submissions</span>
-                <span>Webhook notification payload</span>
+                <span>Direct email notifications</span>
+                <span>Optional webhook payload</span>
                 <span>Ticket reference included</span>
               </div>
             </section>
             <section class="workspace-panel support-guidance-card">
               <div class="section-kicker">Recommended Setup</div>
-              <h2>Render Environment Variable</h2>
-              <p>Add <strong>SUPPORT_WEBHOOK_URL</strong> in Render and point it at an automation that sends you the notification channels you want.</p>
+              <h2>Render Environment Variables</h2>
+              <p>Add <strong>RESEND_API_KEY</strong>, <strong>SUPPORT_EMAIL_TO</strong>, and <strong>SUPPORT_EMAIL_FROM</strong> in Render. Keep <strong>SUPPORT_WEBHOOK_URL</strong> only if you also want automation.</p>
             </section>
           </aside>
         </div>
@@ -1598,9 +1599,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-24-support-portal-v1"></script>
-<script src="/auth.js?v=2026-07-24-support-portal-v1"></script>
-<script src="/database.js?v=2026-07-24-support-portal-v1"></script>
+<script src="/branding.js?v=2026-07-24-support-email-v2"></script>
+<script src="/auth.js?v=2026-07-24-support-email-v2"></script>
+<script src="/database.js?v=2026-07-24-support-email-v2"></script>
 
 <script>
 const CHECK_LABELS = {
