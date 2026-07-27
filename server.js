@@ -607,6 +607,26 @@ app.post('/api/billing/start-paid-now', async (req, res) => {
   }
 });
 
+app.post('/api/billing/change-plan', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const result = await billing.changeSubscriptionPlan(req, user, req.body || {});
+    posthog.capture({
+      distinctId: user.id,
+      event: 'plan_changed',
+      properties: {
+        plan: result.currentPlan || req.body?.plan || billing.PROFESSIONAL_PLAN.key,
+        previous_plan: result.previousPlan || '',
+        plan_change: result.planChange || '',
+      },
+    });
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.post('/api/billing/portal', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);

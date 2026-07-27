@@ -532,6 +532,13 @@
       });
     }
 
+    async changeSubscriptionPlan(options = {}) {
+      return this.serverJson('/api/billing/change-plan', {
+        method: 'POST',
+        body: options,
+      });
+    }
+
     async createBillingPortalSession() {
       return this.serverJson('/api/billing/portal', {
         method: 'POST',

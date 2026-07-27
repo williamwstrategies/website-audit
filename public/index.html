@@ -1291,6 +1291,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div class="auth-message" id="billingMessage" hidden></div>
           <div class="billing-actions">
             <button class="analyze-btn" type="button" id="billingSubscribeBtn">Choose Plan</button>
+            <button class="analyze-btn" type="button" id="billingSwitchPlanBtn" hidden>Switch Plan</button>
             <button class="secondary-btn" type="button" id="billingManageBtn">Manage Subscription</button>
             <a class="secondary-btn" href="/pricing" data-route id="billingPricingBtn" data-public-event="upgrade_clicked">View Pricing</a>
             <button class="secondary-btn" type="button" id="billingRefreshBtn">Refresh Status</button>
@@ -1637,9 +1638,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-27-paid-only-v1"></script>
-<script src="/auth.js?v=2026-07-27-paid-only-v1"></script>
-<script src="/database.js?v=2026-07-27-paid-only-v1"></script>
+<script src="/branding.js?v=2026-07-27-plan-switch-v1"></script>
+<script src="/auth.js?v=2026-07-27-plan-switch-v1"></script>
+<script src="/database.js?v=2026-07-27-plan-switch-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2662,6 +2663,22 @@ function scanAllowanceLabel(plan = selectedPlan()) {
   return `${plan.monthlyAllowance} scans monthly`;
 }
 
+function planRankForUi(planKey) {
+  return { starter: 1, professional: 2, growth: 3, enterprise: 4 }[appPlanForKey(planKey).key] || 0;
+}
+
+function planChangeDirection(fromKey, toKey) {
+  const fromRank = planRankForUi(fromKey);
+  const toRank = planRankForUi(toKey);
+  if (toRank > fromRank) return 'Upgrade';
+  if (toRank < fromRank) return 'Downgrade';
+  return 'Switch';
+}
+
+function planSwitchLabel(subscription = normalizedSubscription(), plan = selectedPlan()) {
+  return `${planChangeDirection(subscription.plan, plan.key)} to ${plan.name}`;
+}
+
 function scanBalanceText(value, fallback = 'Unlimited') {
   if (value === null || value === undefined) return fallback;
   return String(value);
@@ -2928,6 +2945,7 @@ function updateReportMetrics() {
   const billingPlanPrice = document.getElementById('billingPlanPrice');
   const billingPriceLabel = document.getElementById('billingPriceLabel');
   const billingSubscribeBtn = document.getElementById('billingSubscribeBtn');
+  const billingSwitchPlanBtn = document.getElementById('billingSwitchPlanBtn');
   const billingManageBtn = document.getElementById('billingManageBtn');
   const billingNavLink = document.getElementById('billingNavLink');
   const billingHeaderKicker = document.getElementById('billingHeaderKicker');
@@ -2958,7 +2976,11 @@ function updateReportMetrics() {
   const notice = billingNoticeText(subscription);
   const canRunAudit = subscriptionCanRunAudit(subscription);
   const hasCustomer = !!subscription.stripe_customer_id;
+  const hasStripeSubscription = !!subscription.stripe_subscription_id;
   const needsUpgrade = !canRunAudit;
+  const isActivePaid = subscription.status === 'active' && (hasCustomer || hasStripeSubscription);
+  const isDifferentPlan = chosenPlan.key !== subscription.plan;
+  const canSwitchPlan = isActivePaid && isDifferentPlan && chosenPlan.key !== 'enterprise';
   if (canRunAudit) clearRequiredPlanSelection();
 
   if (reportCount) reportCount.textContent = String(count);
@@ -3001,9 +3023,11 @@ function updateReportMetrics() {
     : `${chosenPlan.priceShort.replace('/mo', '')}<span>/mo</span>`;
   if (billingPriceLabel) billingPriceLabel.textContent = chosenPlan.key === 'enterprise'
     ? 'Enterprise includes custom scan limits, priority onboarding, and dedicated support.'
-    : chosenPlan.key === 'starter'
-      ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} with Website Strategy Scan branding on reports and PDFs.`
-      : `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} with full white-label reports and PDFs.`;
+    : canSwitchPlan
+      ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)}. Plan changes apply through Stripe immediately.`
+      : chosenPlan.key === 'starter'
+        ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} with Website Strategy Scan branding on reports and PDFs.`
+        : `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} with full white-label reports and PDFs.`;
   if (billingNavLink) billingNavLink.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (appPageTitle && window.location.pathname.startsWith('/app/billing')) appPageTitle.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (billingHeaderKicker) billingHeaderKicker.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
@@ -3012,10 +3036,12 @@ function updateReportMetrics() {
     ? 'Choose the plan that fits your agency to continue generating professional reports.'
     : 'Manage your subscription, billing details, invoices, and monthly assessment usage.';
   if (billingSubscribeBtn) {
-    billingSubscribeBtn.hidden = chosenPlan.key === 'enterprise' || (subscription.status === 'active' && hasCustomer && chosenPlan.key === subscription.plan);
-    billingSubscribeBtn.textContent = hasCustomer && subscription.status === 'active'
-      ? 'Manage Plan'
-      : (subscription.status === 'incomplete' ? `Start ${chosenPlan.name}` : `Choose ${chosenPlan.name}`);
+    billingSubscribeBtn.hidden = chosenPlan.key === 'enterprise' || isActivePaid;
+    billingSubscribeBtn.textContent = subscription.status === 'incomplete' ? `Start ${chosenPlan.name}` : `Choose ${chosenPlan.name}`;
+  }
+  if (billingSwitchPlanBtn) {
+    billingSwitchPlanBtn.hidden = !canSwitchPlan;
+    billingSwitchPlanBtn.textContent = planSwitchLabel(subscription, chosenPlan);
   }
   if (billingManageBtn) billingManageBtn.hidden = !hasCustomer;
   if (subscriptionBanner) {
@@ -3374,6 +3400,62 @@ async function startCheckout(source = 'billing_checkout') {
   }
 }
 
+async function switchSubscriptionPlan() {
+  if (!databaseService?.isReady?.()) return;
+  const plan = selectedPlan();
+  if (plan.key === 'enterprise') {
+    navigateTo('/contact');
+    return;
+  }
+  const subscription = normalizedSubscription();
+  if (subscription.plan === plan.key) {
+    setBillingMessage(`${plan.name} is already your current plan.`, 'default');
+    return;
+  }
+
+  const button = document.getElementById('billingSwitchPlanBtn');
+  const original = button?.textContent || '';
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Switching Plan...';
+  }
+
+  try {
+    setBillingMessage(`Switching to ${plan.name}...`, 'default');
+    trackPublicEvent('plan_selected', {
+      plan: plan.key,
+      previous_plan: subscription.plan,
+      source: 'billing_switch',
+    });
+    const result = await databaseService.changeSubscriptionPlan({ plan: plan.key });
+    currentSubscription = result?.subscription || await loadSubscription();
+    if (currentSubscription?.plan) {
+      selectedBillingPlan = currentSubscription.plan;
+      try {
+        localStorage.setItem('leadcheck.selectedPlan', currentSubscription.plan);
+      } catch {
+        // Ignore storage failures.
+      }
+    }
+    updateReportMetrics();
+    const action = result?.planChange === 'downgraded'
+      ? 'downgraded'
+      : (result?.planChange === 'upgraded' ? 'upgraded' : 'changed');
+    const planName = currentSubscription?.plan_name || plan.name;
+    setBillingMessage(`Plan ${action} to ${planName}.`, 'success');
+    showToast(`Plan ${action}.`, 'success');
+  } catch (error) {
+    setBillingMessage(error?.message || 'Plan could not be changed.', 'error');
+    showToast(error?.message || 'Plan could not be changed.', 'error');
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = original;
+    }
+    updateReportMetrics();
+  }
+}
+
 async function openBillingPortal() {
   if (!databaseService?.isReady?.()) return;
   const button = document.getElementById('billingManageBtn');
@@ -3399,6 +3481,7 @@ async function openBillingPortal() {
 
 function bindBillingControls() {
   document.getElementById('billingSubscribeBtn')?.addEventListener('click', startCheckout);
+  document.getElementById('billingSwitchPlanBtn')?.addEventListener('click', switchSubscriptionPlan);
   document.getElementById('billingManageBtn')?.addEventListener('click', openBillingPortal);
   document.getElementById('requiredPlanContinueBtn')?.addEventListener('click', () => startCheckout('required_plan_modal'));
   document.querySelectorAll('[data-required-plan]').forEach(control => {
