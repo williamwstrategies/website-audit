@@ -597,7 +597,7 @@ app.post('/api/billing/start-paid-now', async (req, res) => {
     const result = await billing.startPaidSubscriptionNow(req, user, req.body || {});
     posthog.capture({
       distinctId: user.id,
-      event: 'trial_started_paid_now',
+      event: 'paid_billing_started',
       properties: { plan: req.body?.plan || billing.PROFESSIONAL_PLAN.key },
     });
     res.json(result);
