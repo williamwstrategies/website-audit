@@ -7892,6 +7892,164 @@ body.required-plan-open {
   }
 }
 
+/* Pricing page mobile polish */
+@media (max-width: 1180px) {
+  .marketing-view .pricing-page .pricing-tier-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid .pricing-card {
+    padding: 24px;
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid .pricing-card > p,
+  .marketing-view .pricing-page .pricing-tier-grid .check-list {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .marketing-view .pricing-page {
+    width: min(100% - 24px, 1180px);
+    padding-top: 38px;
+    padding-bottom: 58px;
+  }
+
+  .marketing-view .pricing-page .supporting-hero {
+    margin-bottom: 24px;
+  }
+
+  .marketing-view .pricing-page .supporting-hero h1 {
+    font-size: 2.55rem;
+    line-height: 1.02;
+  }
+
+  .marketing-view .pricing-page .supporting-hero p {
+    max-width: 100%;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid .pricing-card,
+  .marketing-view .pricing-page .pricing-tier-grid .pricing-main {
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .marketing-view .pricing-page .pricing-card > strong,
+  .marketing-view .pricing-page .pricing-main strong {
+    margin: 4px 0 8px;
+    font-size: 2.65rem;
+    line-height: 0.98;
+  }
+
+  .marketing-view .pricing-page .pricing-card strong small,
+  .marketing-view .pricing-page .pricing-main strong small {
+    display: inline-block;
+    font-size: 0.92rem;
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid .pricing-card > p {
+    min-height: 0;
+    font-size: 0.95rem;
+    line-height: 1.48;
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid .check-list {
+    min-height: 0;
+    margin: 0;
+    gap: 8px;
+    font-size: 0.91rem;
+    line-height: 1.36;
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid .check-list li {
+    align-items: flex-start;
+  }
+
+  .marketing-view .pricing-page .pricing-tier-grid .pricing-card .analyze-btn,
+  .marketing-view .pricing-page .pricing-tier-grid .pricing-card .secondary-btn {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  .marketing-view .pricing-page .feature-comparison-panel {
+    width: 100%;
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .marketing-view .pricing-page .comparison-table-wrap {
+    margin: 0 -2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .marketing-view .pricing-page .feature-comparison-table {
+    min-width: 650px;
+    font-size: 0.84rem;
+  }
+
+  .marketing-view .pricing-page .feature-comparison-table th,
+  .marketing-view .pricing-page .feature-comparison-table td {
+    padding: 11px 9px;
+    white-space: normal;
+  }
+
+  .marketing-view .pricing-page .feature-comparison-table th:first-child,
+  .marketing-view .pricing-page .feature-comparison-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    min-width: 152px;
+    background: #081a2f;
+    box-shadow: 12px 0 20px rgba(0, 0, 0, 0.22);
+  }
+
+  .marketing-view .pricing-page .feature-comparison-table thead th:first-child {
+    z-index: 3;
+  }
+
+  .marketing-view .pricing-page .pricing-detail-grid {
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .marketing-view .pricing-page .pricing-detail-grid aside {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .marketing-view .pricing-page .pricing-faq-list {
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 430px) {
+  .marketing-view .pricing-page .supporting-hero h1 {
+    font-size: 2.22rem;
+  }
+
+  .marketing-view .pricing-page .pricing-card > strong,
+  .marketing-view .pricing-page .pricing-main strong {
+    font-size: 2.32rem;
+  }
+
+  .marketing-view .pricing-page .feature-comparison-table {
+    min-width: 610px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
