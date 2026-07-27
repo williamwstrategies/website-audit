@@ -895,6 +895,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <strong>Subscription required</strong>
             <p id="scanBillingNoticeText">Choose a plan to run website assessments.</p>
             <div class="hero-actions">
+              <button class="analyze-btn" type="button" id="scanStartPaidBtn" hidden>Start Paid Now</button>
               <a class="analyze-btn" href="/app/billing" data-route data-public-event="upgrade_clicked">Upgrade Plan</a>
               <a class="secondary-btn" href="/pricing" data-route data-public-event="upgrade_clicked">View Pricing</a>
             </div>
@@ -1638,9 +1639,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-27-greeting-profile-v1"></script>
-<script src="/auth.js?v=2026-07-27-greeting-profile-v1"></script>
-<script src="/database.js?v=2026-07-27-greeting-profile-v1"></script>
+<script src="/branding.js?v=2026-07-27-trial-fast-track-v1"></script>
+<script src="/auth.js?v=2026-07-27-trial-fast-track-v1"></script>
+<script src="/database.js?v=2026-07-27-trial-fast-track-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2663,6 +2664,16 @@ function scanAllowanceLabel(plan = selectedPlan()) {
   return `${plan.monthlyAllowance} scans monthly`;
 }
 
+function startPaidNowLabel(plan = selectedPlan()) {
+  if (plan.unlimited) return 'Contact Sales';
+  return `Start ${plan.name} Now`;
+}
+
+function startPaidNowDetail(plan = selectedPlan()) {
+  if (plan.unlimited) return 'custom fair-use access';
+  return `${plan.monthlyAllowance} monthly scans`;
+}
+
 function scanBalanceText(value, fallback = 'Unlimited') {
   if (value === null || value === undefined) return fallback;
   return String(value);
@@ -2959,6 +2970,7 @@ function updateReportMetrics() {
   const subscriptionBannerCta = document.getElementById('subscriptionBannerCta');
   const scanBillingNotice = document.getElementById('scanBillingNotice');
   const scanBillingNoticeText = document.getElementById('scanBillingNoticeText');
+  const scanStartPaidBtn = document.getElementById('scanStartPaidBtn');
   const analyzeBtn = document.getElementById('analyzeBtn');
   const count = savedReports.length;
   const monthly = savedReports.filter(report => isThisMonth(report.created_at)).length;
@@ -2978,7 +2990,8 @@ function updateReportMetrics() {
   const canRunAudit = subscriptionCanRunAudit(subscription);
   const hasCustomer = !!subscription.stripe_customer_id;
   const isTrialing = subscription.status === 'trialing';
-  const canStartPaidNow = subscription.can_start_paid_now === true || (isTrialing && !!subscription.stripe_subscription_id);
+  const canStartPaidNow = subscription.can_start_paid_now === true || isTrialing;
+  const trialCreditsUsed = isTrialing && remaining <= 0;
   const trialText = trialRemainingText(subscription);
   const needsUpgrade = !canRunAudit;
   if (canRunAudit) clearRequiredPlanSelection();
@@ -3039,7 +3052,10 @@ function updateReportMetrics() {
       ? 'Manage Plan'
       : (subscription.status === 'incomplete' ? `Start ${chosenPlan.name}` : `Choose ${chosenPlan.name}`);
   }
-  if (billingStartPaidBtn) billingStartPaidBtn.hidden = !canStartPaidNow;
+  if (billingStartPaidBtn) {
+    billingStartPaidBtn.hidden = !canStartPaidNow || chosenPlan.key === 'enterprise';
+    billingStartPaidBtn.textContent = startPaidNowLabel(chosenPlan);
+  }
   if (billingManageBtn) billingManageBtn.hidden = !hasCustomer;
   if (subscriptionBanner) {
     subscriptionBanner.hidden = canRunAudit && !isTrialing;
@@ -3047,17 +3063,27 @@ function updateReportMetrics() {
   }
   if (subscriptionBannerTitle) {
     subscriptionBannerTitle.textContent = needsUpgrade
-      ? (subscription.status === 'cancelled' ? 'Your trial has ended' : 'Choose a plan to continue')
+      ? (trialCreditsUsed ? 'Trial credits used' : (subscription.status === 'cancelled' ? 'Your trial has ended' : 'Choose a plan to continue'))
       : `Trial active: ${trialText || '7-day trial'}`;
   }
   if (subscriptionBannerText) {
     subscriptionBannerText.textContent = needsUpgrade
-      ? 'Upgrade your plan or wait until your next renewal date to continue generating reports.'
+      ? (trialCreditsUsed
+        ? `Start paid billing now to unlock ${startPaidNowDetail(chosenPlan)} immediately.`
+        : 'Upgrade your plan or wait until your next renewal date to continue generating reports.')
       : `${scanBalanceText(remaining)} trial scans remaining. Start paid billing anytime if you need more scans.`;
   }
-  if (subscriptionBannerCta) subscriptionBannerCta.textContent = needsUpgrade ? 'Upgrade' : 'Manage Trial';
+  if (subscriptionBannerCta) subscriptionBannerCta.textContent = trialCreditsUsed ? 'Choose Plan' : (needsUpgrade ? 'Upgrade' : 'Manage Trial');
   if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
-  if (scanBillingNoticeText) scanBillingNoticeText.textContent = notice;
+  if (scanBillingNoticeText) {
+    scanBillingNoticeText.textContent = trialCreditsUsed
+      ? `Your 10 trial scans are used. Start ${chosenPlan.name} now to unlock ${startPaidNowDetail(chosenPlan)}.`
+      : notice;
+  }
+  if (scanStartPaidBtn) {
+    scanStartPaidBtn.hidden = !trialCreditsUsed || !canStartPaidNow || chosenPlan.key === 'enterprise';
+    scanStartPaidBtn.textContent = startPaidNowLabel(chosenPlan);
+  }
   if (analyzeBtn && !analyzeBtn.dataset.scanning) {
     analyzeBtn.disabled = !canRunAudit;
     analyzeBtn.dataset.billingBlocked = canRunAudit ? 'false' : 'true';
@@ -3397,10 +3423,10 @@ async function startCheckout(source = 'billing_checkout') {
   }
 }
 
-async function startPaidNow() {
+async function startPaidNow(event = null) {
   if (!databaseService?.isReady?.()) return;
   const plan = selectedPlan();
-  const button = document.getElementById('billingStartPaidBtn');
+  const button = event?.currentTarget || document.getElementById('billingStartPaidBtn') || document.getElementById('scanStartPaidBtn');
   const original = button?.textContent || '';
   if (button) {
     button.disabled = true;
@@ -3456,6 +3482,7 @@ async function openBillingPortal() {
 function bindBillingControls() {
   document.getElementById('billingSubscribeBtn')?.addEventListener('click', startCheckout);
   document.getElementById('billingStartPaidBtn')?.addEventListener('click', startPaidNow);
+  document.getElementById('scanStartPaidBtn')?.addEventListener('click', startPaidNow);
   document.getElementById('billingManageBtn')?.addEventListener('click', openBillingPortal);
   document.getElementById('requiredPlanContinueBtn')?.addEventListener('click', () => startCheckout('required_plan_modal'));
   document.querySelectorAll('[data-required-plan]').forEach(control => {
