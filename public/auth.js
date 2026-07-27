@@ -122,7 +122,7 @@
         email,
         password,
         options: {
-          data: { name },
+          data: { name, full_name: name },
           emailRedirectTo: authRedirect(LOGIN_REDIRECT_PATH),
         },
       });

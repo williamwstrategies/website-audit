@@ -242,7 +242,7 @@
       return {
         id: user.id,
         email: cleanText(update.email || user.email),
-        full_name: cleanText(update.fullName || update.full_name || user.user_metadata?.name),
+        full_name: cleanText(update.fullName || update.full_name || user.user_metadata?.name || user.user_metadata?.full_name),
         agency_name: cleanText(update.agencyName || update.agency_name || user.user_metadata?.agency_name),
       };
     }

@@ -1638,9 +1638,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-24-account-setup-retry-v1"></script>
-<script src="/auth.js?v=2026-07-24-account-setup-retry-v1"></script>
-<script src="/database.js?v=2026-07-24-account-setup-retry-v1"></script>
+<script src="/branding.js?v=2026-07-27-greeting-profile-v1"></script>
+<script src="/auth.js?v=2026-07-27-greeting-profile-v1"></script>
+<script src="/database.js?v=2026-07-27-greeting-profile-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1708,6 +1708,7 @@ let reportsSortOrder = 'created_at.desc';
 let reportsFilter = 'all';
 let reportsVisibleCount = 20;
 let currentSubscription = null;
+let currentAccount = null;
 let pendingProtectedPath = '/app';
 let brandingFormDirty = false;
 let brandingPreviewLogoObjectUrl = '';
@@ -2259,6 +2260,42 @@ function renderAuthPanel(panel = 'login') {
   if (urlError) setAuthMessage(urlError, 'error');
 }
 
+function cleanPersonalName(value) {
+  const text = String(value || '').trim();
+  if (!text || /^(website strategy scan|leadcheck|workspace)$/i.test(text)) return '';
+  return text;
+}
+
+function displayNameFromEmail(email) {
+  const localPart = String(email || '').split('@')[0] || '';
+  const cleaned = localPart
+    .replace(/[._+-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return cleanPersonalName(cleaned);
+}
+
+function firstNameFrom(value) {
+  const name = cleanPersonalName(value);
+  return name ? name.split(/\s+/)[0] : '';
+}
+
+function dashboardGreetingName() {
+  const user = authProvider?.getUser?.() || {};
+  const metadata = user.user_metadata || {};
+  const profile = currentAccount?.profile || {};
+  const directName = [
+    profile.full_name,
+    metadata.name,
+    metadata.full_name,
+    metadata.display_name,
+  ].map(firstNameFrom).find(Boolean);
+
+  if (directName) return directName;
+
+  return firstNameFrom(displayNameFromEmail(profile.email || user.email));
+}
+
 function updateAuthUserUI() {
   const email = authProvider?.getUserEmail?.() || '';
   const authenticated = Boolean(authProvider?.isAuthenticated?.());
@@ -2282,8 +2319,8 @@ function updateAuthUserUI() {
   if (greeting) {
     const hour = new Date().getHours();
     const label = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-    const brandName = brandingProvider?.getEffectiveBranding?.().agencyName || brandingProvider?.getBranding?.().agencyName || 'Workspace';
-    greeting.textContent = `${label}, ${brandName}.`;
+    const name = dashboardGreetingName();
+    greeting.textContent = name ? `${label}, ${name}.` : `${label}.`;
   }
 }
 
@@ -3606,6 +3643,7 @@ function handleAuthStateChange(event) {
     loadingSavedReportId = '';
     reportsVisibleCount = 20;
     currentSubscription = null;
+    currentAccount = null;
     if (databaseService) databaseService.profileSyncedFor = '';
     renderSavedReports();
   }
@@ -3613,6 +3651,7 @@ function handleAuthStateChange(event) {
   if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
     savedReportsLoaded = false;
     provisionWorkspace()
+      .then(() => updateAuthUserUI())
       .catch(error => console.warn('[LeadCheck] Workspace provisioning failed:', error))
       .finally(() => {
         syncBrandingFromDatabase();
@@ -3625,7 +3664,9 @@ function handleAuthStateChange(event) {
 
 async function provisionWorkspace() {
   if (!authProvider?.isAuthenticated?.() || !databaseService?.isReady?.()) return null;
-  return databaseService.ensureWorkspace();
+  const account = await databaseService.ensureWorkspace();
+  if (account) currentAccount = account;
+  return account;
 }
 
 function renderRoute() {
