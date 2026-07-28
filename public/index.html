@@ -1638,9 +1638,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-27-plan-switch-v1"></script>
-<script src="/auth.js?v=2026-07-27-plan-switch-v1"></script>
-<script src="/database.js?v=2026-07-27-plan-switch-v1"></script>
+<script src="/branding.js?v=2026-07-28-stripe-switch-v1"></script>
+<script src="/auth.js?v=2026-07-28-stripe-switch-v1"></script>
+<script src="/database.js?v=2026-07-28-stripe-switch-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -3024,7 +3024,7 @@ function updateReportMetrics() {
   if (billingPriceLabel) billingPriceLabel.textContent = chosenPlan.key === 'enterprise'
     ? 'Enterprise includes custom scan limits, priority onboarding, and dedicated support.'
     : canSwitchPlan
-      ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)}. Plan changes apply through Stripe immediately.`
+      ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)}. Confirm and pay for plan changes in Stripe immediately.`
       : chosenPlan.key === 'starter'
         ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} with Website Strategy Scan branding on reports and PDFs.`
         : `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} with full white-label reports and PDFs.`;
@@ -3417,17 +3417,24 @@ async function switchSubscriptionPlan() {
   const original = button?.textContent || '';
   if (button) {
     button.disabled = true;
-    button.textContent = 'Switching Plan...';
+    button.textContent = 'Opening Stripe...';
   }
 
+  let redirectingToStripe = false;
   try {
-    setBillingMessage(`Switching to ${plan.name}...`, 'default');
+    setBillingMessage(`Opening Stripe to confirm ${plan.name}...`, 'default');
     trackPublicEvent('plan_selected', {
       plan: plan.key,
       previous_plan: subscription.plan,
       source: 'billing_switch',
     });
     const result = await databaseService.changeSubscriptionPlan({ plan: plan.key });
+    if (result?.url) {
+      redirectingToStripe = true;
+      setBillingMessage('Continue in Stripe to confirm the plan change and payment.', 'default');
+      window.location.assign(result.url);
+      return;
+    }
     currentSubscription = result?.subscription || await loadSubscription();
     if (currentSubscription?.plan) {
       selectedBillingPlan = currentSubscription.plan;
@@ -3448,11 +3455,11 @@ async function switchSubscriptionPlan() {
     setBillingMessage(error?.message || 'Plan could not be changed.', 'error');
     showToast(error?.message || 'Plan could not be changed.', 'error');
   } finally {
-    if (button) {
+    if (button && !redirectingToStripe) {
       button.disabled = false;
       button.textContent = original;
     }
-    updateReportMetrics();
+    if (!redirectingToStripe) updateReportMetrics();
   }
 }
 

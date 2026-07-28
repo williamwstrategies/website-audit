@@ -613,7 +613,7 @@ app.post('/api/billing/change-plan', async (req, res) => {
     const result = await billing.changeSubscriptionPlan(req, user, req.body || {});
     posthog.capture({
       distinctId: user.id,
-      event: 'plan_changed',
+      event: result.url ? 'plan_switch_started' : 'plan_changed',
       properties: {
         plan: result.currentPlan || req.body?.plan || billing.PROFESSIONAL_PLAN.key,
         previous_plan: result.previousPlan || '',
