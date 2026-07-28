@@ -1549,40 +1549,6 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <div class="report-disclaimer" data-brand-disclaimer></div>
               </section>
 
-              <section class="partial-gate" id="partialGate">
-                <div class="unlock-card">
-                  <div class="unlock-title">Send assessment details</div>
-                  <p class="unlock-copy">Enter contact details to submit this assessment for follow-up and report delivery.</p>
-                  <div class="audit-proof-row">
-                    <span class="audit-proof-pill">Includes assessment score</span>
-                    <span class="audit-proof-pill">Includes scanned website</span>
-                    <span class="audit-proof-pill">Uses configured branding</span>
-                  </div>
-                  <form class="lead-form" id="unlockLeadForm" onsubmit="event.preventDefault(); submitLeadCapture();">
-                    <div class="lead-grid">
-                      <label class="lead-field">
-                        <span class="lead-label">Name *</span>
-                        <input class="url-input" type="text" id="nameInput" name="name" placeholder="Contact name" autocomplete="name" required>
-                      </label>
-                      <label class="lead-field">
-                        <span class="lead-label">Business Name</span>
-                        <input class="url-input" type="text" id="businessNameInput" name="businessName" placeholder="Business name" autocomplete="organization">
-                      </label>
-                      <label class="lead-field">
-                        <span class="lead-label">Email *</span>
-                        <input class="url-input" type="email" id="emailInput" name="email" placeholder="name@company.com" autocomplete="email" required>
-                      </label>
-                      <label class="lead-field">
-                        <span class="lead-label">Phone *</span>
-                        <input class="url-input" type="tel" id="phoneInput" name="phone" placeholder="Phone number" autocomplete="tel" required>
-                      </label>
-                    </div>
-                    <button class="analyze-btn" id="unlockBtn" type="submit">Send Details</button>
-                    <div class="unlock-message" id="unlockMessage" role="status"></div>
-                  </form>
-                </div>
-              </section>
-
               <div class="analyze-another">
                 <button class="retry-btn" onclick="resetApp()">Generate Another Report</button>
               </div>
@@ -1637,9 +1603,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-28-compact-reports-v1"></script>
-<script src="/auth.js?v=2026-07-28-compact-reports-v1"></script>
-<script src="/database.js?v=2026-07-28-compact-reports-v1"></script>
+<script src="/branding.js?v=2026-07-28-no-send-assessment-v1"></script>
+<script src="/auth.js?v=2026-07-28-no-send-assessment-v1"></script>
+<script src="/database.js?v=2026-07-28-no-send-assessment-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -5571,82 +5537,6 @@ function buildReportRequestData(result) {
   };
 }
 
-async function submitLeadCapture() {
-  const message = document.getElementById('unlockMessage');
-  if (message) {
-    message.style.display = 'none';
-    message.textContent = '';
-  }
-
-  if (!pendingScanResult || !pendingWebsiteUrl) {
-    if (message) {
-      message.style.display = 'block';
-      message.style.color = 'var(--red)';
-      message.textContent = 'Please run a scan before requesting the report.';
-    }
-    return;
-  }
-
-  const name = document.getElementById('nameInput').value.trim();
-  const businessName = document.getElementById('businessNameInput').value.trim();
-  const email = document.getElementById('emailInput').value.trim();
-  const phone = document.getElementById('phoneInput').value.trim();
-  const unlockBtn = document.getElementById('unlockBtn');
-
-  if (!name || !email || !phone) return;
-
-  if (unlockBtn) unlockBtn.disabled = true;
-
-  const score = reportScoreFromResult(pendingScanResult);
-
-  try {
-    const res = await fetch(LEAD_CAPTURE_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        reportRequested: true,
-        leadOnly: true,
-        name,
-        businessName,
-        email,
-        phone,
-        website: pendingWebsiteUrl,
-        score,
-        websiteScore: score,
-        reportData: buildReportRequestData(pendingScanResult),
-      }),
-    });
-
-    if (res.ok) {
-      fireMetaOnce('lead', 'Lead', {}, false);
-      if (message) {
-        message.style.display = 'block';
-        message.style.color = 'var(--green)';
-        message.textContent = 'Assessment details were submitted for follow-up.';
-      }
-    } else {
-      const data = await res.json().catch(() => ({}));
-      console.error('[LeadCheck] Lead capture failed:', data.error || res.statusText);
-      if (message) {
-        message.style.display = 'block';
-        message.style.color = 'var(--red)';
-        message.textContent = 'We could not send this yet. Please check the required fields and try again.';
-      }
-      if (unlockBtn) unlockBtn.disabled = false;
-      return;
-    }
-  } catch (err) {
-    console.error('[LeadCheck] Lead capture failed:', err.message);
-    if (message) {
-      message.style.display = 'block';
-      message.style.color = 'var(--red)';
-      message.textContent = 'We could not send this yet. Please check your connection and try again.';
-    }
-    if (unlockBtn) unlockBtn.disabled = false;
-    return;
-  }
-}
-
 function renderResults(data, options = {}) {
   stopLoadingTimers();
   const publicDemo = options.publicDemo === true;
@@ -5691,7 +5581,6 @@ function renderResults(data, options = {}) {
   if (finalAssessment) finalAssessment.textContent = buildFinalAssessment(result, score, context);
 
   fullResultsUnlocked = true;
-  document.getElementById('partialGate').style.display = publicDemo ? 'none' : 'block';
   document.getElementById('fullResults').style.display = 'block';
   const actions = document.querySelector('.report-actions');
   if (actions) actions.style.display = publicDemo ? 'none' : 'flex';
@@ -5699,18 +5588,6 @@ function renderResults(data, options = {}) {
     setReportSaveMessage('This is a fictional demo report. No account is needed to explore the example assessment.', 'default');
   } else {
     setCurrentReportPdfButton(!pendingSavedReportId, pendingSavedReportId ? 'Download PDF' : 'Preparing PDF...');
-  }
-  const unlockForm = document.getElementById('unlockLeadForm');
-  if (unlockForm) unlockForm.reset();
-  const unlockBtn = document.getElementById('unlockBtn');
-  if (unlockBtn) {
-    unlockBtn.disabled = false;
-    unlockBtn.textContent = 'Send Details';
-  }
-  const unlockMessage = document.getElementById('unlockMessage');
-  if (unlockMessage) {
-    unlockMessage.style.display = 'none';
-    unlockMessage.textContent = '';
   }
 
   const topPrioritiesList = document.getElementById('topPrioritiesList');
@@ -6147,19 +6024,12 @@ function resetApp() {
   fullResultsUnlocked = false;
   setReportSaveMessage('');
   showAppPanel('dashboard');
-  document.getElementById('partialGate').style.display = 'none';
   document.getElementById('fullResults').style.display = 'none';
   const analyzeBtn = document.getElementById('analyzeBtn');
   analyzeBtn.dataset.scanning = 'false';
   analyzeBtn.disabled = false;
   updateReportMetrics();
   document.getElementById('auditForm').reset();
-  document.getElementById('unlockLeadForm').reset();
-  const unlockMessage = document.getElementById('unlockMessage');
-  if (unlockMessage) {
-    unlockMessage.style.display = 'none';
-    unlockMessage.textContent = '';
-  }
   document.getElementById('error-box').style.display = 'none';
   navigateTo('/app/scan');
 }

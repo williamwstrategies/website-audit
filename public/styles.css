@@ -2235,10 +2235,6 @@ button:disabled {
   line-height: 1.65;
 }
 
-.partial-gate {
-  margin: 8px auto 0;
-}
-
 .unlock-card {
   padding: 24px;
   border-color: rgba(201, 151, 46, 0.2);
