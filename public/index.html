@@ -1637,9 +1637,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-28-server-reports-v1"></script>
-<script src="/auth.js?v=2026-07-28-server-reports-v1"></script>
-<script src="/database.js?v=2026-07-28-server-reports-v1"></script>
+<script src="/branding.js?v=2026-07-28-compact-reports-v1"></script>
+<script src="/auth.js?v=2026-07-28-compact-reports-v1"></script>
+<script src="/database.js?v=2026-07-28-compact-reports-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -4970,9 +4970,100 @@ function reportScoreFromResult(result) {
   return normalizeScore(firstDefinedValue(result.total, result.score, result.websiteScore, result.rating));
 }
 
+function compactPersistedText(value, maxLength = 1200) {
+  const text = asText(value);
+  if (!text) return '';
+  if (/^data:image\//i.test(text) || /^data:application\//i.test(text)) return '';
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
+
+function compactPersistedValue(value, depth = 0, key = '') {
+  if (value == null || typeof value === 'boolean' || typeof value === 'number') return value;
+  if (typeof value === 'string') return compactPersistedText(value, depth > 1 ? 900 : 1600);
+  if (depth > 5) return null;
+
+  if (Array.isArray(value)) {
+    const lowerKey = key.toLowerCase();
+    const limit = /pageslist|pagesscanned|pagescrawled/.test(lowerKey) ? 60 : (depth <= 1 ? 60 : 24);
+    return value
+      .slice(0, limit)
+      .map(item => compactPersistedValue(item, depth + 1, key))
+      .filter(item => item !== undefined);
+  }
+
+  if (typeof value !== 'object') return value;
+
+  const compact = {};
+  objectEntries(value).forEach(([childKey, childValue]) => {
+    const lowerKey = childKey.toLowerCase();
+    const rawString = typeof childValue === 'string' ? childValue : '';
+    const isHeavyKey = /screenshot|rawhtml|pagehtml|htmlcontent|base64|buffer|trace|har|snapshot|imagebuffer|imagedata|blob/.test(lowerKey);
+    const isHugeString = rawString.length > 8000;
+    if (isHeavyKey || isHugeString || /^data:image\//i.test(rawString)) return;
+
+    const next = compactPersistedValue(childValue, depth + 1, childKey);
+    if (next === undefined || next === '' || next === null) return;
+    if (Array.isArray(next) && !next.length) return;
+    if (typeof next === 'object' && !Array.isArray(next) && !objectEntries(next).length) return;
+    compact[childKey] = next;
+  });
+  return compact;
+}
+
+function compactBrokenLinks(value) {
+  const links = asRecord(value);
+  return {
+    brokenInternal: asArray(links.brokenInternal).slice(0, 40).map(item => compactPersistedValue(item)),
+    brokenExternal: asArray(links.brokenExternal).slice(0, 40).map(item => compactPersistedValue(item)),
+    invalidLinks: asArray(links.invalidLinks).slice(0, 40).map(item => compactPersistedValue(item)),
+    missingExpectedPages: asArray(links.missingExpectedPages).slice(0, 40).map(item => compactPersistedValue(item)),
+    redirectIssues: asArray(links.redirectIssues).slice(0, 40).map(item => compactPersistedValue(item)),
+  };
+}
+
+function compactEvidence(value, root) {
+  const evidence = asRecord(value);
+  const pages = firstArray(evidence.pagesList, evidence.pagesScanned, root.pagesScanned, root.pagesCrawled)
+    .slice(0, 60)
+    .map(page => compactPersistedValue(page));
+
+  return compactPersistedValue({
+    ...evidence,
+    pagesList: pages,
+    pagesScanned: pages,
+  });
+}
+
+function compactReportForPersistence(result) {
+  const root = asRecord(result);
+  const evidenceFound = asRecord(root.evidenceFound);
+  const evidence = objectEntries(evidenceFound).length ? evidenceFound : asRecord(root.evidence);
+  const compact = {
+    url: asText(root.url) || pendingWebsiteUrl,
+    total: firstDefinedValue(root.total, root.score, root.websiteScore, root.rating),
+    score: firstDefinedValue(root.score, root.total, root.websiteScore, root.rating),
+    websiteScore: firstDefinedValue(root.websiteScore, root.total, root.score, root.rating),
+    maxScore: Number(root.maxScore) || 100,
+    categories: compactPersistedValue(root.categories),
+    visualTrust: compactPersistedValue(root.visualTrust),
+    brokenLinks: compactBrokenLinks(firstDefinedValue(root.brokenLinks, evidence.brokenLinks)),
+    issues: asArray(root.issues).slice(0, 30).map(item => compactPersistedValue(item)),
+    recommendations: asArray(root.recommendations).slice(0, 30).map(item => compactPersistedValue(item)),
+    criticalFlags: asArray(root.criticalFlags).slice(0, 20).map(item => compactPersistedValue(item)),
+    positives: asArray(root.positives).slice(0, 20).map(item => compactPersistedValue(item)),
+    checks: compactPersistedValue(root.checks),
+    evidenceFound: compactEvidence(evidence, root),
+    evidence: compactEvidence(evidence, root),
+    detectionSummary: compactPersistedValue(root.detectionSummary),
+    pagesScanned: firstArray(evidence.pagesList, evidence.pagesScanned, root.pagesScanned, root.pagesCrawled).slice(0, 60).map(item => compactPersistedValue(item)),
+    pagesCrawled: firstArray(root.pagesCrawled, root.pagesScanned, evidence.pagesList, evidence.pagesScanned).slice(0, 60).map(item => compactPersistedValue(item)),
+  };
+  return compactPersistedValue(compact);
+}
+
 function buildPersistedReportData(result) {
   return {
-    report: result,
+    report: compactReportForPersistence(result),
       context: {
         prospectName: pendingProspectName || '',
         companyName: pendingCompanyName || '',
