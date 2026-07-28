@@ -291,32 +291,18 @@
     }
 
     async createReport({ websiteUrl, website, websiteScore, reportData, scanStatus = 'completed', websiteName } = {}) {
-      const user = await this.ensureUserProfile();
-      const client = this.requireClient();
-      const root = reportRoot(reportData);
-      const normalizedWebsite = normalizeUrl(websiteUrl || website || root.url || root.websiteUrl);
-
-      if (!normalizedWebsite) throw new Error('Report website is required.');
-
-      const payload = {
-        user_id: user.id,
-        website_url: normalizedWebsite,
-        website: normalizedWebsite,
-        website_domain: domainFromUrl(normalizedWebsite),
-        website_name: cleanText(websiteName) || websiteNameFromUrl(normalizedWebsite),
-        website_score: scoreValue(websiteScore ?? root.total ?? root.score ?? root.websiteScore ?? root.rating),
-        report_data: toJson(reportData),
-        scan_status: cleanText(scanStatus) || 'completed',
-      };
-
-      const { data, error } = await client
-        .from('reports')
-        .insert(payload)
-        .select(REPORT_LIST_FIELDS)
-        .single();
-
-      if (error) throw error;
-      return data;
+      await this.ensureUserProfile();
+      const payload = await this.serverJson('/api/reports', {
+        method: 'POST',
+        body: {
+          websiteUrl: websiteUrl || website,
+          websiteName,
+          websiteScore,
+          reportData,
+          scanStatus,
+        },
+      });
+      return payload.report || null;
     }
 
     async saveReport(input = {}) {
@@ -330,25 +316,13 @@
     }
 
     async getReportsForCurrentUser({ search = '', sort = 'created_at.desc', limit = 25 } = {}) {
-      const user = await this.requireUser();
-      const client = this.requireClient();
-      const { column, ascending } = sortParts(sort);
-      const safeLimit = Math.max(1, Math.min(Number(limit) || 25, 250));
-      const term = cleanText(search);
-
-      let query = client
-        .from('reports')
-        .select(REPORT_LIST_FIELDS)
-        .eq('user_id', user.id);
-
-      if (term) query = query.ilike('website_url', `%${term}%`);
-
-      const { data, error } = await query
-        .order(column, { ascending })
-        .limit(safeLimit);
-
-      if (error) throw error;
-      return data || [];
+      const params = new URLSearchParams({
+        search: cleanText(search),
+        sort: cleanText(sort) || 'created_at.desc',
+        limit: String(Math.max(1, Math.min(Number(limit) || 25, 250))),
+      });
+      const payload = await this.serverJson(`/api/reports?${params.toString()}`);
+      return payload.reports || [];
     }
 
     async listReports(options = {}) {
@@ -356,18 +330,8 @@
     }
 
     async getReportById(reportId) {
-      const user = await this.requireUser();
-      const client = this.requireClient();
-      const { data, error } = await client
-        .from('reports')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('id', reportId)
-        .maybeSingle();
-
-      if (error) throw error;
-      if (!data) throw new Error('Report not found or access denied.');
-      return data;
+      const payload = await this.serverJson(`/api/reports/${encodeURIComponent(reportId)}`);
+      return payload.report || null;
     }
 
     async getReport(reportId) {
@@ -409,27 +373,18 @@
     }
 
     async deleteReport(reportId) {
-      const user = await this.requireUser();
-      const client = this.requireClient();
-      const { error } = await client
-        .from('reports')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('id', reportId);
-
-      if (error) throw error;
+      await this.serverJson(`/api/reports/${encodeURIComponent(reportId)}`, {
+        method: 'DELETE',
+      });
       return true;
     }
 
     async duplicateReport(reportId) {
-      const report = await this.getReportById(reportId);
-      return this.createReport({
-        websiteUrl: report.website_url || report.website,
-        websiteName: report.website_name,
-        websiteScore: report.website_score,
-        reportData: report.report_data,
-        scanStatus: 'completed',
+      const payload = await this.serverJson(`/api/reports/${encodeURIComponent(reportId)}/duplicate`, {
+        method: 'POST',
+        body: {},
       });
+      return payload.report || null;
     }
 
     async getAgencyBranding() {

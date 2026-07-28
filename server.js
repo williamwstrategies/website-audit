@@ -820,6 +820,88 @@ app.post('/api/analyze', async (req, res) => {
   }
 });
 
+app.get('/api/reports', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const reports = await billing.listReportsForUser(user.id, {
+      search: req.query.search,
+      sort: req.query.sort,
+      limit: req.query.limit,
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json({ reports });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/reports', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const report = await billing.createReportForUser(user.id, req.body || {});
+    posthog.capture({
+      distinctId: user.id,
+      event: 'report_saved',
+      properties: {
+        report_id: report?.id || '',
+        website_url: report?.website_url || '',
+      },
+    });
+    res.status(201).json({ report });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.get('/api/reports/:reportId', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const report = await billing.getReportForUser(user.id, String(req.params.reportId || '').trim());
+    res.set('Cache-Control', 'no-store');
+    res.json({ report });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/reports/:reportId/duplicate', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const report = await billing.duplicateReportForUser(user.id, String(req.params.reportId || '').trim());
+    posthog.capture({
+      distinctId: user.id,
+      event: 'report_duplicated',
+      properties: {
+        source_report_id: String(req.params.reportId || '').trim(),
+        report_id: report?.id || '',
+      },
+    });
+    res.status(201).json({ report });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.delete('/api/reports/:reportId', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    await billing.deleteReportForUser(user.id, String(req.params.reportId || '').trim());
+    posthog.capture({
+      distinctId: user.id,
+      event: 'report_deleted',
+      properties: { report_id: String(req.params.reportId || '').trim() },
+    });
+    res.json({ ok: true });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.get('/api/reports/:reportId/pdf', async (req, res) => {
   const reportId = String(req.params.reportId || '').trim();
   if (!reportId) return res.status(400).json({ error: 'Report ID is required.' });
