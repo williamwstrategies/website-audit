@@ -291,7 +291,6 @@
     }
 
     async createReport({ websiteUrl, website, websiteScore, reportData, scanStatus = 'completed', websiteName } = {}) {
-      await this.ensureUserProfile();
       const payload = await this.serverJson('/api/reports', {
         method: 'POST',
         body: {

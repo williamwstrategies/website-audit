@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-07-28-no-send-assessment-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-07-28-report-save-fix-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
@@ -53,6 +53,7 @@ self.addEventListener('fetch', event => {
     '/api/billing/config',
     '/api/billing/subscription',
     '/api/branding',
+    '/api/reports',
     '/styles.css',
     '/branding.js',
     '/auth.js',

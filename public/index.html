@@ -1603,9 +1603,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-28-no-send-assessment-v1"></script>
-<script src="/auth.js?v=2026-07-28-no-send-assessment-v1"></script>
-<script src="/database.js?v=2026-07-28-no-send-assessment-v1"></script>
+<script src="/branding.js?v=2026-07-28-report-save-fix-v1"></script>
+<script src="/auth.js?v=2026-07-28-report-save-fix-v1"></script>
+<script src="/database.js?v=2026-07-28-report-save-fix-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -5077,7 +5077,8 @@ async function persistGeneratedReport(result) {
     return savedReport;
   } catch (error) {
     console.warn('[LeadCheck] Report save skipped:', error?.message || error);
-    setReportSaveMessage('Report generated, but it could not be saved. PDF export requires a saved report.', 'error');
+    const reason = error?.message ? ` ${error.message}` : '';
+    setReportSaveMessage(`Report generated, but it could not be saved.${reason}`, 'error');
     setCurrentReportPdfButton(true, 'PDF Unavailable');
     showToast('Report generated, but it could not be saved.', 'warning');
     return null;
