@@ -6325,64 +6325,6 @@ body.required-plan-open {
   text-transform: uppercase;
 }
 
-.marketing-view .professional-deal-banner {
-  width: min(1180px, calc(100% - 32px));
-  margin: 22px auto 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 4px 18px;
-  padding: 16px 18px;
-  border: 1px solid rgba(245, 200, 66, 0.34);
-  border-radius: 22px;
-  background:
-    linear-gradient(135deg, rgba(245, 200, 66, 0.2), rgba(255, 255, 255, 0.07)),
-    rgba(9, 25, 46, 0.92);
-  color: var(--public-text);
-  text-decoration: none;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.marketing-view .professional-deal-banner:hover {
-  transform: translateY(-1px);
-  border-color: rgba(245, 200, 66, 0.52);
-  box-shadow: 0 22px 58px rgba(0, 0, 0, 0.28);
-}
-
-.marketing-view .professional-deal-banner span {
-  color: #ffe18a;
-  font-size: 0.74rem;
-  font-weight: 850;
-  line-height: 1.2;
-  text-transform: uppercase;
-}
-
-.marketing-view .professional-deal-banner strong {
-  color: var(--public-text);
-  font-size: clamp(1.2rem, 2.4vw, 1.72rem);
-  line-height: 1.1;
-}
-
-.marketing-view .professional-deal-banner small {
-  grid-row: 1 / span 2;
-  grid-column: 2;
-  width: max-content;
-  padding: 9px 12px;
-  border: 1px solid rgba(245, 200, 66, 0.34);
-  border-radius: 999px;
-  background: rgba(245, 200, 66, 0.16);
-  color: #ffe18a;
-  font-size: 0.86rem;
-  font-weight: 800;
-  line-height: 1.2;
-}
-
-.marketing-view .pricing-page .professional-deal-banner {
-  width: 100%;
-  margin: 0 0 24px;
-}
-
 .marketing-view .plan-name {
   color: var(--public-cyan);
 }
@@ -7980,55 +7922,6 @@ body.required-plan-open {
     width: min(100% - 24px, 1180px);
     padding-top: 38px;
     padding-bottom: 58px;
-  }
-
-  .marketing-view .professional-deal-banner,
-  .marketing-view .pricing-page .pricing-mobile-special {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 3px;
-    padding: 15px 16px;
-    border: 1px solid rgba(245, 200, 66, 0.32);
-    border-radius: 20px;
-    background:
-      linear-gradient(135deg, rgba(245, 200, 66, 0.18), rgba(255, 255, 255, 0.07)),
-      rgba(9, 25, 46, 0.9);
-    color: var(--public-text);
-    text-decoration: none;
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
-  }
-
-  .marketing-view .pricing-page .pricing-mobile-special {
-    margin: 0 0 18px;
-  }
-
-  .marketing-view .professional-deal-banner span,
-  .marketing-view .pricing-page .pricing-mobile-special span {
-    color: #ffe18a;
-    font-size: 0.72rem;
-    font-weight: 850;
-    letter-spacing: 0 !important;
-    text-transform: uppercase;
-  }
-
-  .marketing-view .professional-deal-banner strong,
-  .marketing-view .pricing-page .pricing-mobile-special strong {
-    color: var(--public-text);
-    font-size: 1.04rem;
-    line-height: 1.2;
-  }
-
-  .marketing-view .professional-deal-banner small,
-  .marketing-view .pricing-page .pricing-mobile-special small {
-    grid-row: auto;
-    grid-column: auto;
-    width: fit-content;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: var(--public-muted);
-    font-size: 0.85rem;
   }
 
   .marketing-view .pricing-page .supporting-hero {
