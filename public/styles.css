@@ -7998,11 +7998,6 @@ body.required-plan-open {
     box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
   }
 
-  .marketing-view .home-deal-banner {
-    width: min(100% - 24px, 1180px);
-    margin-top: 14px;
-  }
-
   .marketing-view .pricing-page .pricing-mobile-special {
     margin: 0 0 18px;
   }
