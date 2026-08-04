@@ -3846,6 +3846,12 @@ function renderRoute() {
   document.body.classList.toggle('is-public-route', !isLogin && !isApp);
   document.body.classList.toggle('is-auth-route', isLogin);
   document.body.classList.toggle('is-app-route', isApp);
+  if (signupRouteHasPlan(path)) {
+    clearOnboardingIntent();
+  } else if (signupRouteShouldUseOnboarding(path)) {
+    markOnboardingIntent();
+    clearRequiredPlanSelection();
+  }
   if (isLogin && readOnboardingIntentFromUrl()) markOnboardingIntent();
 
   if (authProvider && !authProvider.ready && isApp) {
@@ -3966,6 +3972,16 @@ function readOnboardingIntentFromUrl() {
   return params.get('intent') === 'free-scan' || params.get('returnTo') === '/app/onboarding';
 }
 
+function signupRouteHasPlan(path = window.location.pathname, search = window.location.search) {
+  if (!path.startsWith('/signup')) return false;
+  return new URLSearchParams(search).has('plan');
+}
+
+function signupRouteShouldUseOnboarding(path = window.location.pathname, search = window.location.search) {
+  if (!path.startsWith('/signup')) return false;
+  return !signupRouteHasPlan(path, search);
+}
+
 function markOnboardingIntent() {
   try {
     localStorage.setItem('leadcheck.pendingOnboarding', 'true');
@@ -3986,11 +4002,13 @@ function clearOnboardingIntent() {
 
 function hasOnboardingIntent() {
   try {
+    if (signupRouteHasPlan()) return false;
     return readOnboardingIntentFromUrl()
+      || signupRouteShouldUseOnboarding()
       || localStorage.getItem('leadcheck.pendingOnboarding') === 'true'
       || sessionStorage.getItem('leadcheck.pendingOnboarding') === 'true';
   } catch {
-    return readOnboardingIntentFromUrl();
+    return readOnboardingIntentFromUrl() || signupRouteShouldUseOnboarding();
   }
 }
 
@@ -4049,11 +4067,15 @@ function bindRouteLinks() {
     if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     event.preventDefault();
     if (link.dataset.planKey) {
+      clearOnboardingIntent();
       selectedBillingPlan = link.dataset.planKey;
       localStorage.setItem('leadcheck.selectedPlan', selectedBillingPlan);
       trackPublicEvent('plan_selected', { plan: selectedBillingPlan, source: 'public_pricing' });
     }
-    if (href.includes('intent=free-scan') || href.includes('/app/onboarding')) {
+    const hrefUrl = new URL(href, window.location.origin);
+    const isPlainSignup = hrefUrl.pathname === '/signup' && !hrefUrl.searchParams.has('plan');
+    if (isPlainSignup) clearRequiredPlanSelection();
+    if (isPlainSignup || href.includes('intent=free-scan') || href.includes('/app/onboarding')) {
       markOnboardingIntent();
       if (link.dataset.publicEvent === 'demo_to_signup_clicked') {
         trackProductAnalytics('demo_to_signup_clicked', { source: 'demo_report' });
@@ -4327,10 +4349,13 @@ function bindAuthForms() {
     const button = document.getElementById('signupSubmit');
 
     withButtonLoading(button, 'Creating account...', async () => {
-      const wantsOnboarding = hasOnboardingIntent() || readOnboardingIntentFromUrl();
+      const explicitPlanSignup = signupRouteHasPlan();
+      const wantsOnboarding = !explicitPlanSignup && (hasOnboardingIntent() || readOnboardingIntentFromUrl() || signupRouteShouldUseOnboarding());
       if (wantsOnboarding) {
         markOnboardingIntent();
         clearRequiredPlanSelection();
+      } else {
+        clearOnboardingIntent();
       }
       const { data, error } = await authProvider.signUp({
         name,
