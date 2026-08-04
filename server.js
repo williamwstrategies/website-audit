@@ -56,6 +56,13 @@ const ALLOWED_CLIENT_ANALYTICS_EVENTS = new Set([
   'plan_viewed',
   'plan_selected',
   'upgrade_clicked',
+  'onboarding_choice_viewed',
+  'onboarding_plan_selected',
+  'free_preview_selected',
+  'free_preview_viewed',
+  'unlock_full_report_clicked',
+  'pricing_viewed_from_preview',
+  'subscription_started_from_preview',
 ]);
 
 const SUPPORT_CATEGORIES = new Set([
@@ -645,10 +652,10 @@ app.post('/api/billing/portal', async (req, res) => {
 
 function auditBlockMessage(reason, subscription = {}) {
   if (reason === 'complimentary_scan_used') {
-    return 'Your complimentary assessment has been used. Choose a plan to continue generating reports.';
+    return 'Your complimentary report preview has already been used. Choose a plan to generate additional reports.';
   }
   if (reason === 'complimentary_scan_in_progress') {
-    return 'Your complimentary assessment is already being prepared. Please wait for it to finish before starting another scan.';
+    return 'Your free report preview is already being prepared. Please wait for it to finish before starting another scan.';
   }
   if (reason === 'audit_limit_reached') {
     return 'You have used all of your available scans for this billing period. Upgrade your plan or wait until your next renewal date to continue generating reports.';
@@ -699,6 +706,58 @@ function extractWebsiteScore(result = {}) {
     result.websiteScore ??
     result.rating
   );
+}
+
+function compactServerText(value, maxLength = 1600) {
+  const text = typeof value === 'string' ? value : String(value || '');
+  if (/^data:image\//i.test(text) || /^data:application\//i.test(text)) return '';
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
+
+function compactServerValue(value, depth = 0, key = '') {
+  if (value == null || typeof value === 'boolean' || typeof value === 'number') return value;
+  if (typeof value === 'string') return compactServerText(value, depth > 1 ? 900 : 1600);
+  if (depth > 5) return null;
+
+  if (Array.isArray(value)) {
+    const lowerKey = key.toLowerCase();
+    const limit = /pageslist|pagesscanned|pagescrawled/.test(lowerKey) ? 60 : (depth <= 1 ? 60 : 24);
+    return value
+      .slice(0, limit)
+      .map(item => compactServerValue(item, depth + 1, key))
+      .filter(item => item !== undefined && item !== null && item !== '');
+  }
+
+  if (typeof value !== 'object') return value;
+
+  const compact = {};
+  Object.entries(value).forEach(([childKey, childValue]) => {
+    const lowerKey = childKey.toLowerCase();
+    const rawString = typeof childValue === 'string' ? childValue : '';
+    const isHeavyKey = /screenshot|rawhtml|pagehtml|htmlcontent|base64|buffer|trace|har|snapshot|imagebuffer|imagedata|blob/.test(lowerKey);
+    const isHugeString = rawString.length > 8000;
+    if (isHeavyKey || isHugeString || /^data:image\//i.test(rawString)) return;
+
+    const next = compactServerValue(childValue, depth + 1, childKey);
+    if (next === undefined || next === null || next === '') return;
+    if (Array.isArray(next) && !next.length) return;
+    if (next && typeof next === 'object' && !Array.isArray(next) && !Object.keys(next).length) return;
+    compact[childKey] = next;
+  });
+  return compact;
+}
+
+function reportDataForServerSave(result = {}, context = {}) {
+  return {
+    report: compactServerValue(result),
+    context: {
+      prospectName: String(context.prospectName || '').trim(),
+      companyName: String(context.companyName || '').trim(),
+      notes: String(context.notes || '').trim(),
+      requestedWebsite: String(context.requestedWebsite || result.url || '').trim(),
+      generatedAt: new Date().toISOString(),
+    },
+  };
 }
 
 async function sendLeadToGHL(lead, score = null, extra = {}) {
@@ -791,7 +850,7 @@ app.post('/api/analyze', async (req, res) => {
     if (reservation?.complimentary) {
       posthog.capture({
         distinctId: authContext.user.id,
-        event: 'complimentary_scan_started',
+        event: 'free_preview_started',
         properties: {
           source: 'onboarding',
           ...(sessionId && { $session_id: sessionId }),
@@ -815,10 +874,53 @@ app.post('/api/analyze', async (req, res) => {
       });
     }
     if (auditReservation?.complimentary) {
-      result.billing = {
-        complimentary_scan: true,
-        audit_idempotency_key: auditIdempotencyKey,
-      };
+      const report = await billing.createReportForUser(authContext.user.id, {
+        websiteUrl: url,
+        websiteScore: score,
+        scanStatus: 'completed',
+        auditIdempotencyKey,
+        reportData: reportDataForServerSave(result, {
+          prospectName: req.body.prospectName,
+          companyName: req.body.companyName,
+          notes: req.body.notes,
+          requestedWebsite: url,
+        }),
+      });
+      const previewReport = await billing.getReportForUserForClient(authContext.user.id, report.id);
+      const previewPayload = previewReport.report_data?.report || {};
+      posthog.capture({
+        distinctId: authContext.user.id,
+        event: 'website analyzed',
+        properties: {
+          url,
+          score,
+          complimentary_preview: true,
+          ...(sessionId && { $session_id: sessionId }),
+        },
+      });
+      posthog.capture({
+        distinctId: authContext.user.id,
+        event: 'free_preview_completed',
+        properties: {
+          report_id: report?.id || '',
+          website_url: url,
+          score,
+          ...(sessionId && { $session_id: sessionId }),
+        },
+      });
+      return res.json({
+        ...previewPayload,
+        billing: {
+          complimentary_scan: true,
+          complimentary_preview: true,
+          report_saved: true,
+          audit_idempotency_key: auditIdempotencyKey,
+          report_id: report?.id || '',
+        },
+        saved_report_id: report?.id || '',
+        preview_locked: true,
+        full_report_locked: true,
+      });
     }
     posthog.capture({
       distinctId: authContext.user.id || distinctId,
@@ -866,6 +968,7 @@ app.post('/api/reports', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
     const report = await billing.createReportForUser(user.id, req.body || {});
+    const clientReport = await billing.getReportForUserForClient(user.id, report.id);
     posthog.capture({
       distinctId: user.id,
       event: 'report_saved',
@@ -884,7 +987,7 @@ app.post('/api/reports', async (req, res) => {
         },
       });
     }
-    res.status(201).json({ report });
+    res.status(201).json({ report: clientReport });
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
     res.status(statusCode).json(body);
@@ -894,7 +997,7 @@ app.post('/api/reports', async (req, res) => {
 app.get('/api/reports/:reportId', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
-    const report = await billing.getReportForUser(user.id, String(req.params.reportId || '').trim());
+    const report = await billing.getReportForUserForClient(user.id, String(req.params.reportId || '').trim());
     res.set('Cache-Control', 'no-store');
     res.json({ report });
   } catch (error) {
@@ -909,7 +1012,7 @@ app.post('/api/reports/:reportId/duplicate', async (req, res) => {
     const subscription = await billing.getSubscriptionStatus(user.id);
     if (!subscription.can_duplicate_reports) {
       return res.status(402).json({
-        error: 'Your complimentary assessment has been used. Choose a plan to continue generating reports.',
+        error: 'Choose a plan to duplicate reports and generate additional assessments.',
         code: 'subscription_required',
         subscription,
       });

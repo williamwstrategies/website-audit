@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-04-complimentary-onboarding-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-04-locked-preview-onboarding-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',

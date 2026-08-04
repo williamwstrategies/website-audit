@@ -578,29 +578,11 @@ to authenticated
 with check (id = auth.uid());
 
 drop policy if exists "Reports are viewable by owner" on public.reports;
-create policy "Reports are viewable by owner"
-on public.reports for select
-to authenticated
-using (user_id = auth.uid());
-
 drop policy if exists "Reports are insertable by owner" on public.reports;
-create policy "Reports are insertable by owner"
-on public.reports for insert
-to authenticated
-with check (user_id = auth.uid());
-
 drop policy if exists "Reports are updateable by owner" on public.reports;
-create policy "Reports are updateable by owner"
-on public.reports for update
-to authenticated
-using (user_id = auth.uid())
-with check (user_id = auth.uid());
-
 drop policy if exists "Reports are deleteable by owner" on public.reports;
-create policy "Reports are deleteable by owner"
-on public.reports for delete
-to authenticated
-using (user_id = auth.uid());
+revoke all on public.reports from anon, authenticated;
+grant all on public.reports to service_role;
 
 drop policy if exists "Branding is viewable by owner" on public.agency_branding;
 create policy "Branding is viewable by owner"

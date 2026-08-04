@@ -509,7 +509,7 @@
       });
     }
 
-    async runAudit({ url, idempotencyKey, debug = false } = {}) {
+    async runAudit({ url, idempotencyKey, debug = false, prospectName = '', companyName = '', notes = '' } = {}) {
       return this.serverJson('/api/analyze', {
         method: 'POST',
         headers: {
@@ -517,6 +517,9 @@
         },
         body: {
           url,
+          prospectName,
+          companyName,
+          notes,
           ...(debug && { debug: true }),
         },
       });

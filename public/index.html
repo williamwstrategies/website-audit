@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-04-complimentary-onboarding-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-04-locked-preview-onboarding-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -492,9 +492,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="marketing-cta inline-demo-cta">
         <h2>Ready to generate reports using real websites?</h2>
-        <p>Create your account and run one complimentary real website assessment before choosing a plan.</p>
+        <p>Create your account and generate one complimentary real report preview before choosing a plan.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/app/onboarding" data-route data-public-cta data-public-cta-label="Generate a Real Assessment" data-public-event="demo_to_signup_clicked">Generate a Real Assessment</a>
+          <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding" data-route data-public-cta data-public-cta-label="Generate a Real Assessment" data-public-event="demo_to_signup_clicked">Generate a Real Assessment</a>
           <a class="secondary-btn" href="/pricing" data-route data-public-event="demo_pricing_clicked">See Pricing</a>
         </div>
       </div>
@@ -871,31 +871,42 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <section id="onboarding-view" class="app-panel onboarding-panel" hidden>
         <div class="app-page-hero onboarding-hero">
           <div>
-            <div class="section-kicker">Complimentary Assessment</div>
-            <h2>Generate Your First Real Website Assessment</h2>
-            <p>Your account includes one complimentary real assessment so you can experience the complete platform before choosing a plan.</p>
-            <div class="dashboard-hero-actions">
-              <a class="analyze-btn" href="/app/scan?complimentary=1" data-route id="onboardingRunScanBtn">Run My Complimentary Scan</a>
-              <a class="secondary-btn" href="/app/billing" data-route>View Plans</a>
-            </div>
+            <div class="section-kicker">Onboarding</div>
+            <h2>How Would You Like to Get Started?</h2>
+            <p>Choose a plan now, or generate one complimentary report preview to experience the platform first.</p>
           </div>
           <div class="scan-context-panel">
-            <span>Included</span>
-            <strong>1 real assessment</strong>
-            <p>Uses the normal scanner and saves the completed report to your workspace.</p>
+            <span>Account Setup</span>
+            <strong>Two paths</strong>
+            <p>You can subscribe immediately or preview one real report before choosing a plan.</p>
           </div>
+        </div>
+        <div class="onboarding-choice-grid">
+          <article class="workspace-panel onboarding-choice-card">
+            <div class="section-kicker">Option 1</div>
+            <h3>Choose a Plan</h3>
+            <p>Start generating complete website assessments immediately with saved reports, PDF exports, and the features included in your selected plan.</p>
+            <a class="analyze-btn" href="/app/billing" data-route data-onboarding-plan>View Plans</a>
+          </article>
+          <article class="workspace-panel onboarding-choice-card featured">
+            <div class="section-kicker">Option 2</div>
+            <h3>Generate One Free Report Preview</h3>
+            <p>Scan one real website and preview the most important findings before choosing a plan.</p>
+            <small>You will see the website score categories and top priorities. Subscribe to unlock the complete findings, recommendations, and downloadable report.</small>
+            <a class="analyze-btn" href="/onboarding/free-preview" data-route data-free-preview-selected>Generate Free Preview</a>
+          </article>
         </div>
         <section class="workspace-panel onboarding-state-card" id="onboardingStateCard">
           <div class="panel-heading">
             <div>
               <div class="section-kicker">Next Step</div>
-              <h2 id="onboardingStateTitle">Your First Assessment Is Included</h2>
-              <p id="onboardingStateText">Run one real website assessment before choosing a plan.</p>
+              <h2 id="onboardingStateTitle">Finish Setting Up Your Account</h2>
+              <p id="onboardingStateText">Choose a plan or generate one complimentary preview.</p>
             </div>
           </div>
           <div class="hero-actions">
-            <a class="analyze-btn" href="/app/scan?complimentary=1" data-route id="onboardingPrimaryCta">Run Complimentary Scan</a>
-            <a class="secondary-btn" href="/app/billing" data-route id="onboardingSecondaryCta">View Plans</a>
+            <a class="analyze-btn" href="/app/billing" data-route id="onboardingPrimaryCta">Choose a Plan</a>
+            <a class="secondary-btn" href="/onboarding/free-preview" data-route id="onboardingSecondaryCta">Generate Free Preview</a>
           </div>
         </section>
       </section>
@@ -903,14 +914,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <section id="scan-view" class="app-panel scan-panel" hidden>
         <div class="app-page-hero scan-hero">
           <div>
-            <div class="section-kicker">New Audit</div>
-            <h2>Generate Website Assessment</h2>
-            <p>Enter the prospect details and launch the existing website scan flow.</p>
+            <div class="section-kicker" id="scanHeroKicker">New Audit</div>
+            <h2 id="scanHeroTitle">Generate Website Assessment</h2>
+            <p id="scanHeroCopy">Enter the prospect details and launch the existing website scan flow.</p>
           </div>
           <div class="scan-context-panel">
-            <span>Output</span>
-            <strong>Professional Report</strong>
-            <p>The completed assessment saves automatically to Reports.</p>
+            <span id="scanContextKicker">Output</span>
+            <strong id="scanContextTitle">Professional Report</strong>
+            <p id="scanContextCopy">The completed assessment saves automatically to Reports.</p>
           </div>
         </div>
 
@@ -931,8 +942,8 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             </div>
           </div>
           <div class="billing-access-notice complimentary-access-notice" id="complimentaryScanNotice" hidden>
-            <strong>Complimentary Assessment</strong>
-            <p>1 real assessment included. Additional reports require a paid plan.</p>
+            <strong>One Free Report Preview</strong>
+            <p>One complimentary preview per account. Full report access requires a paid plan.</p>
           </div>
           <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
             <div class="lead-grid">
@@ -955,7 +966,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             </div>
             <div class="audit-form-actions">
               <button class="analyze-btn" id="analyzeBtn" type="submit">Generate Report</button>
-              <a class="secondary-btn" href="/app/reports" data-route>Cancel</a>
+              <a class="secondary-btn" href="/app/reports" data-route id="auditCancelLink">Cancel</a>
             </div>
           </form>
           <div id="error-box" role="alert" aria-live="polite"></div>
@@ -1506,7 +1517,42 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 </div>
               </section>
 
-              <section class="report-section issues-section">
+              <section class="report-section locked-preview-section" id="lockedPreviewSection" hidden>
+                <div class="report-section-heading">
+                  <span>03</span>
+                  <div>
+                    <h2>Unlock the Complete Report</h2>
+                    <p>Choose a plan to see every issue, detailed recommendation, priority fix, and the complete client-ready assessment.</p>
+                  </div>
+                </div>
+                <div class="locked-preview-panel">
+                  <div>
+                    <strong>The complete report includes:</strong>
+                    <ul class="locked-preview-checklist">
+                      <li>Every detected issue</li>
+                      <li>Detailed business impact</li>
+                      <li>Step-by-step recommendations</li>
+                      <li>Complete category breakdown</li>
+                      <li>Saved report access</li>
+                      <li>PDF export</li>
+                      <li>Agency branding on eligible plans</li>
+                    </ul>
+                  </div>
+                  <div class="locked-preview-actions">
+                    <a class="analyze-btn" href="/app/billing" data-route data-preview-unlock>Choose a Plan</a>
+                    <a class="secondary-btn" href="/app" data-route>Return to Dashboard</a>
+                  </div>
+                </div>
+                <div class="locked-content-grid" aria-label="Locked report sections">
+                  <div><span>Locked</span><strong>Detailed Findings</strong></div>
+                  <div><span>Locked</span><strong>How to Fix</strong></div>
+                  <div><span>Locked</span><strong>Technical Issues</strong></div>
+                  <div><span>Locked</span><strong>Conversion Recommendations</strong></div>
+                  <div><span>Locked</span><strong>Complete Assessment</strong></div>
+                </div>
+              </section>
+
+              <section class="report-section issues-section" id="issuesSection">
                 <div class="report-section-heading">
                   <span>03</span>
                   <div>
@@ -1517,7 +1563,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <div id="issuesList"></div>
               </section>
 
-              <section class="report-section recs-section">
+              <section class="report-section recs-section" id="recsSection">
                 <div class="report-section-heading">
                   <span>04</span>
                   <div>
@@ -1540,7 +1586,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <div class="passed-grid" id="passedGrid"></div>
               </section>
 
-              <section class="report-section evidence-section">
+              <section class="report-section evidence-section" id="evidenceSection">
                 <div class="report-section-heading">
                   <span>06</span>
                   <div>
@@ -1552,7 +1598,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <div class="evidence-grid" id="evidenceSignals"></div>
               </section>
 
-              <section class="report-section final-assessment-section">
+              <section class="report-section final-assessment-section" id="finalAssessmentSection">
                 <div class="report-section-heading">
                   <span>07</span>
                   <div>
@@ -1649,9 +1695,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-04-complimentary-onboarding-v1"></script>
-<script src="/auth.js?v=2026-08-04-complimentary-onboarding-v1"></script>
-<script src="/database.js?v=2026-08-04-complimentary-onboarding-v1"></script>
+<script src="/branding.js?v=2026-08-04-locked-preview-onboarding-v1"></script>
+<script src="/auth.js?v=2026-08-04-locked-preview-onboarding-v1"></script>
+<script src="/database.js?v=2026-08-04-locked-preview-onboarding-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1679,11 +1725,12 @@ const CHECK_LABELS = {
 };
  
 const LOADING_STEPS = [
-  'Analyzing your website…',
-  'Checking SEO visibility…',
-  'Checking trust signals…',
-  'Checking mobile experience…',
-  'Checking conversion issues…',
+  'Analyzing website structure...',
+  'Reviewing SEO visibility...',
+  'Evaluating trust signals...',
+  'Checking conversion opportunities...',
+  'Inspecting technical health...',
+  'Preparing your preview...',
 ];
 
 const ANALYZE_API_URL = '/api/analyze';
@@ -1944,6 +1991,8 @@ const DEMO_REPORT_DATA = {
 };
 
 const ROUTE_TITLES = {
+  '/onboarding': 'Onboarding',
+  '/onboarding/free-preview': 'Free Preview',
   '/app': 'Dashboard',
   '/app/onboarding': 'Onboarding',
   '/app/scan': 'New Audit',
@@ -2043,6 +2092,8 @@ function setDisplay(id, value) {
 }
 
 function appRouteKey(path = window.location.pathname) {
+  if (path === '/onboarding') return 'onboarding';
+  if (path.startsWith('/onboarding/free-preview')) return 'scan';
   if (path.startsWith('/app/onboarding')) return 'onboarding';
   if (path.startsWith('/app/settings')) return 'settings';
   if (path.startsWith('/app/branding')) return 'branding';
@@ -2814,7 +2865,7 @@ function billingNoticeText(subscription = normalizedSubscription()) {
   }
   if (subscriptionCanRunAudit(subscription)) {
     if (subscriptionCanRunComplimentaryScan(subscription) && !subscriptionHasPaidAuditAccess(subscription)) {
-      return 'Your account includes one complimentary real website assessment before choosing a plan.';
+      return 'Your account includes one complimentary report preview before choosing a plan.';
     }
     if (subscription.unlimited) {
       return `${planName} is active with custom fair-use scan access.`;
@@ -2828,10 +2879,10 @@ function billingNoticeText(subscription = normalizedSubscription()) {
     return 'You have used all of your available scans for this billing period. Upgrade your plan or wait until your next renewal date to continue generating reports.';
   }
   if (subscriptionComplimentaryUsed(subscription)) {
-    return 'Your complimentary assessment has been used. Choose a plan to continue generating reports.';
+    return 'Your complimentary report preview has already been used. Choose a plan to generate additional reports.';
   }
   if (subscription.complimentary_scan_reserved) {
-    return 'Your complimentary assessment is being prepared. Return to the report when it is ready.';
+    return 'Your free report preview is being prepared. Return to the report when it is ready.';
   }
   if (subscription.status === 'past_due' || subscription.status === 'unpaid') {
     return 'Your payment could not be processed. Update your payment method to continue running new audits.';
@@ -2973,6 +3024,47 @@ function renderRecentActivity() {
   container.innerHTML = savedReports.slice(0, 5).map(activityItemHtml).join('');
 }
 
+function updateScanPageMode() {
+  const isPreview = window.location.pathname.startsWith('/onboarding/free-preview');
+  const values = isPreview
+    ? {
+        kicker: 'Free Report Preview',
+        title: 'Generate Your Free Report Preview',
+        copy: 'Enter a website URL to see its most important opportunities and performance categories.',
+        contextKicker: 'Included',
+        contextTitle: 'One real preview',
+        contextCopy: 'You will see the score categories and top priorities. Full report access requires a paid plan.',
+        button: 'Generate My Preview',
+        cancelHref: '/onboarding',
+      }
+    : {
+        kicker: 'New Audit',
+        title: 'Generate Website Assessment',
+        copy: 'Enter the prospect details and launch the existing website scan flow.',
+        contextKicker: 'Output',
+        contextTitle: 'Professional Report',
+        contextCopy: 'The completed assessment saves automatically to Reports.',
+        button: 'Generate Report',
+        cancelHref: '/app/reports',
+      };
+
+  const textMap = {
+    scanHeroKicker: values.kicker,
+    scanHeroTitle: values.title,
+    scanHeroCopy: values.copy,
+    scanContextKicker: values.contextKicker,
+    scanContextTitle: values.contextTitle,
+    scanContextCopy: values.contextCopy,
+    analyzeBtn: values.button,
+  };
+  Object.entries(textMap).forEach(([id, text]) => {
+    const node = document.getElementById(id);
+    if (node && !node.dataset.scanning) node.textContent = text;
+  });
+  const cancel = document.getElementById('auditCancelLink');
+  if (cancel) cancel.setAttribute('href', values.cancelHref);
+}
+
 function updateReportMetrics() {
   const reportCount = document.getElementById('dashboardReportCount');
   const reportCountLabel = document.getElementById('dashboardReportCountLabel');
@@ -3038,6 +3130,7 @@ function updateReportMetrics() {
   const canRunComplimentary = subscriptionCanRunComplimentaryScan(subscription);
   const complimentaryUsed = subscriptionComplimentaryUsed(subscription);
   const complimentaryReserved = subscription.complimentary_scan_reserved === true;
+  const lockedPreviewOpen = Boolean(pendingScanResult?.previewLocked || pendingScanResult?.preview_locked || pendingScanResult?.full_report_locked);
   const hasCustomer = !!subscription.stripe_customer_id;
   const hasStripeSubscription = !!subscription.stripe_subscription_id;
   const needsUpgrade = !hasPaidAuditAccess && !canRunComplimentary;
@@ -3047,6 +3140,10 @@ function updateReportMetrics() {
   if (hasPaidAuditAccess) {
     clearRequiredPlanSelection();
     clearOnboardingIntent();
+  }
+  if (window.location.pathname.startsWith('/app/scan') && canRunComplimentary && !hasPaidAuditAccess) {
+    window.history.replaceState({}, '', '/onboarding/free-preview');
+    updateScanPageMode();
   }
 
   if (reportCount) reportCount.textContent = String(count);
@@ -3122,60 +3219,60 @@ function updateReportMetrics() {
   }
   if (subscriptionBannerTitle) {
     subscriptionBannerTitle.textContent = canRunComplimentary
-      ? 'Your First Assessment Is Included'
+      ? 'One Free Report Preview Available'
       : complimentaryReserved
-        ? 'Your assessment is being prepared'
+        ? 'Your preview is being prepared'
         : complimentaryUsed
-          ? 'Complimentary assessment complete'
+          ? 'Your Report Preview Is Ready'
           : needsUpgrade
             ? (subscription.status === 'cancelled' ? 'Subscription cancelled' : 'Choose a plan to continue')
             : 'Subscription active';
   }
   if (subscriptionBannerText) {
     subscriptionBannerText.textContent = canRunComplimentary
-      ? 'Run one real website assessment before choosing a plan.'
+      ? 'Scan one real website and preview the most important findings before choosing a plan.'
       : complimentaryReserved
-        ? 'Your complimentary assessment is in progress. Return to the report when it is ready.'
+        ? 'Your free preview is in progress. Return to the report when it is ready.'
         : complimentaryUsed
-          ? 'Choose a plan to generate more reports.'
+          ? 'View your preview or choose a plan to unlock the complete report.'
           : needsUpgrade
             ? 'Choose a paid plan to generate reports and unlock your monthly scan allowance.'
             : `${scanBalanceText(remaining)} scans remaining.`;
   }
   if (subscriptionBannerCta) {
-    subscriptionBannerCta.textContent = canRunComplimentary ? 'Run Complimentary Scan' : complimentaryUsed ? 'Choose Plan' : needsUpgrade ? 'Choose Plan' : 'Billing';
-    subscriptionBannerCta.setAttribute('href', canRunComplimentary ? '/app/onboarding' : complimentaryUsed || needsUpgrade ? '/app/billing' : '/app/billing');
+    subscriptionBannerCta.textContent = canRunComplimentary ? 'Generate Preview' : complimentaryUsed ? 'Unlock Full Report' : needsUpgrade ? 'Choose Plan' : 'Billing';
+    subscriptionBannerCta.setAttribute('href', canRunComplimentary ? '/onboarding/free-preview' : complimentaryUsed || needsUpgrade ? '/app/billing' : '/app/billing');
   }
   if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
   if (scanBillingNoticeText) scanBillingNoticeText.textContent = notice;
   if (complimentaryScanNotice) complimentaryScanNotice.hidden = !(canRunComplimentary && !hasPaidAuditAccess);
-  if (postComplimentaryCta) postComplimentaryCta.hidden = !(complimentaryUsed && !hasPaidAuditAccess);
-  if (generateAnotherReportBtn) generateAnotherReportBtn.hidden = complimentaryUsed && !hasPaidAuditAccess;
+  if (postComplimentaryCta) postComplimentaryCta.hidden = lockedPreviewOpen || !(complimentaryUsed && !hasPaidAuditAccess);
+  if (generateAnotherReportBtn) generateAnotherReportBtn.hidden = lockedPreviewOpen || (complimentaryUsed && !hasPaidAuditAccess);
   if (onboardingStateTitle) {
     onboardingStateTitle.textContent = hasPaidAuditAccess
       ? 'Your subscription is active'
       : complimentaryUsed
-        ? 'You have completed your complimentary assessment.'
+        ? 'Your Report Preview Is Ready'
         : complimentaryReserved
-          ? 'Your assessment is being prepared.'
-          : 'Your First Assessment Is Included';
+          ? 'Your preview is being prepared.'
+          : 'Finish Setting Up Your Account';
   }
   if (onboardingStateText) {
     onboardingStateText.textContent = hasPaidAuditAccess
       ? 'You can continue generating reports from the dashboard.'
       : complimentaryUsed
-        ? 'Choose a plan to generate more reports.'
+        ? 'View your preview or choose a plan to unlock the complete report.'
         : complimentaryReserved
-          ? 'Return to your report when the assessment is ready.'
-          : 'Run one real website assessment before choosing a plan.';
+          ? 'Return to your report when the preview is ready.'
+          : 'Choose a plan or generate one complimentary preview.';
   }
   if (onboardingPrimaryCta) {
-    onboardingPrimaryCta.textContent = hasPaidAuditAccess ? 'Open Dashboard' : complimentaryUsed ? 'Choose a Plan' : complimentaryReserved ? 'View Reports' : 'Run Complimentary Scan';
-    onboardingPrimaryCta.setAttribute('href', hasPaidAuditAccess ? '/app' : complimentaryUsed ? '/app/billing' : complimentaryReserved ? '/app/reports' : '/app/scan?complimentary=1');
+    onboardingPrimaryCta.textContent = hasPaidAuditAccess ? 'Open Dashboard' : complimentaryUsed ? 'Unlock Full Report' : complimentaryReserved ? 'View Reports' : 'Choose a Plan';
+    onboardingPrimaryCta.setAttribute('href', hasPaidAuditAccess ? '/app' : complimentaryUsed ? '/app/billing' : complimentaryReserved ? '/app/reports' : '/app/billing');
   }
   if (onboardingSecondaryCta) {
-    onboardingSecondaryCta.textContent = complimentaryUsed ? 'View First Report' : 'View Plans';
-    onboardingSecondaryCta.setAttribute('href', complimentaryUsed && subscription.complimentary_report_id ? `/app/reports/${encodeURIComponent(subscription.complimentary_report_id)}` : '/app/billing');
+    onboardingSecondaryCta.textContent = complimentaryUsed ? 'View Preview' : 'Generate Free Preview';
+    onboardingSecondaryCta.setAttribute('href', complimentaryUsed && subscription.complimentary_report_id ? `/app/reports/${encodeURIComponent(subscription.complimentary_report_id)}` : '/onboarding/free-preview');
   }
   if (analyzeBtn && !analyzeBtn.dataset.scanning) {
     analyzeBtn.disabled = !canRunAudit;
@@ -3478,7 +3575,15 @@ async function createCheckoutSessionWithAccountRetry(options = {}) {
 
 async function startCheckout(source = 'billing_checkout') {
   if (!databaseService?.isReady?.()) return;
-  const checkoutSource = typeof source === 'string' ? source : 'billing_checkout';
+  let storedCheckoutSource = '';
+  try {
+    storedCheckoutSource = sessionStorage.getItem('leadcheck.checkoutSource') || '';
+  } catch {
+    storedCheckoutSource = '';
+  }
+  const checkoutSource = typeof source === 'string' && source !== 'billing_checkout'
+    ? source
+    : storedCheckoutSource || 'billing_checkout';
   const plan = selectedPlan();
   if (plan.key === 'enterprise') {
     navigateTo('/contact');
@@ -3506,6 +3611,11 @@ async function startCheckout(source = 'billing_checkout') {
     const session = await createCheckoutSessionWithAccountRetry({ plan: plan.key });
     if (!session?.url) throw new Error('Checkout could not be started.');
     rememberPendingCheckoutMeta(session, plan.key, checkoutSource);
+    try {
+      sessionStorage.removeItem('leadcheck.checkoutSource');
+    } catch {
+      // Ignore storage failures.
+    }
     trackCheckoutInitiated(session.plan?.key || plan.key, checkoutSource);
     window.location.assign(session.url);
   } catch (error) {
@@ -3836,7 +3946,8 @@ function renderRoute() {
   }
 
   const isLogin = isAuthRoute(path);
-  const isApp = path.startsWith('/app');
+  const isOnboardingRoute = path === '/onboarding' || path.startsWith('/onboarding/');
+  const isApp = path.startsWith('/app') || isOnboardingRoute;
   const publicKey = publicPageKey(path);
   const marketingView = document.getElementById('marketing-view');
   const marketingNav = document.getElementById('marketingNav');
@@ -3846,6 +3957,7 @@ function renderRoute() {
   document.body.classList.toggle('is-public-route', !isLogin && !isApp);
   document.body.classList.toggle('is-auth-route', isLogin);
   document.body.classList.toggle('is-app-route', isApp);
+  document.body.classList.toggle('is-onboarding-route', isOnboardingRoute);
   if (signupRouteHasPlan(path)) {
     clearOnboardingIntent();
   } else if (signupRouteShouldUseOnboarding(path)) {
@@ -3878,7 +3990,7 @@ function renderRoute() {
   if (authProvider?.ready && isLogin && authProvider.isAuthenticated() && !path.startsWith('/reset-password')) {
     const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
     if (needsPlanSelection) markRequiredPlanSelection();
-    window.history.replaceState({}, '', hasOnboardingIntent() ? '/app/onboarding' : (needsPlanSelection ? '/app/billing' : '/app'));
+    window.history.replaceState({}, '', hasOnboardingIntent() ? '/onboarding' : (needsPlanSelection ? '/app/billing' : '/app'));
     renderRoute();
     return;
   }
@@ -3902,7 +4014,10 @@ function renderRoute() {
     restoreReportShellToApp();
     applyRouteSeo({ noindex: true });
     const key = appRouteKey(path);
-    if (key === 'onboarding') clearRequiredPlanSelection();
+    if (key === 'onboarding') {
+      clearRequiredPlanSelection();
+      trackProductAnalytics('onboarding_choice_viewed', { path });
+    }
     const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
     setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : (key === 'dashboard' || key === 'onboarding') ? 'dashboard' : key);
@@ -3930,7 +4045,10 @@ function renderRoute() {
       }
     }
     else if (key === 'current-report' && pendingScanResult) showAppPanel('report');
-    else if (key === 'scan') showAppPanel('scan');
+    else if (key === 'scan') {
+      showAppPanel('scan');
+      updateScanPageMode();
+    }
     else showAppPanel('dashboard');
 
     if (['dashboard', 'onboarding', 'scan', 'reports', 'saved-report', 'billing'].includes(key)) {
@@ -3969,7 +4087,7 @@ function navigateTo(path) {
 
 function readOnboardingIntentFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('intent') === 'free-scan' || params.get('returnTo') === '/app/onboarding';
+  return params.get('intent') === 'free-scan' || ['/app/onboarding', '/onboarding'].includes(params.get('returnTo'));
 }
 
 function signupRouteHasPlan(path = window.location.pathname, search = window.location.search) {
@@ -4013,7 +4131,7 @@ function hasOnboardingIntent() {
 }
 
 function authDestinationAfterLogin(fallback = '/app') {
-  return hasOnboardingIntent() ? '/app/onboarding' : fallback;
+  return hasOnboardingIntent() ? '/onboarding' : fallback;
 }
 
 function preserveMarketingAttribution(href) {
@@ -4075,10 +4193,25 @@ function bindRouteLinks() {
     const hrefUrl = new URL(href, window.location.origin);
     const isPlainSignup = hrefUrl.pathname === '/signup' && !hrefUrl.searchParams.has('plan');
     if (isPlainSignup) clearRequiredPlanSelection();
-    if (isPlainSignup || href.includes('intent=free-scan') || href.includes('/app/onboarding')) {
+    if (isPlainSignup || href.includes('intent=free-scan') || href.includes('/app/onboarding') || href.includes('/onboarding')) {
       markOnboardingIntent();
       if (link.dataset.publicEvent === 'demo_to_signup_clicked') {
         trackProductAnalytics('demo_to_signup_clicked', { source: 'demo_report' });
+      }
+    }
+    if (link.dataset.onboardingPlan !== undefined) {
+      trackProductAnalytics('onboarding_plan_selected', { source: 'onboarding_choice' });
+    }
+    if (link.dataset.freePreviewSelected !== undefined) {
+      trackProductAnalytics('free_preview_selected', { source: 'onboarding_choice' });
+    }
+    if (link.dataset.previewUnlock !== undefined) {
+      trackProductAnalytics('unlock_full_report_clicked', { source: 'locked_preview' });
+      trackProductAnalytics('pricing_viewed_from_preview', { source: 'locked_preview' });
+      try {
+        sessionStorage.setItem('leadcheck.checkoutSource', 'locked_preview');
+      } catch {
+        // Ignore storage failures.
       }
     }
     if (window.location.pathname.startsWith('/app/branding') && !href.startsWith('/app/branding') && !confirmBrandingNavigation()) return;
@@ -4333,7 +4466,7 @@ function bindAuthForms() {
       }
       const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
       if (needsPlanSelection) markRequiredPlanSelection();
-      navigateTo(hasOnboardingIntent() ? '/app/onboarding' : (needsPlanSelection ? '/app/billing' : (pendingProtectedPath || '/app')));
+      navigateTo(hasOnboardingIntent() ? '/onboarding' : (needsPlanSelection ? '/app/billing' : (pendingProtectedPath || '/app')));
       pendingProtectedPath = '/app';
     });
   });
@@ -4375,13 +4508,13 @@ function bindAuthForms() {
       if (data?.session) {
         authProvider.session = data.session;
         authProvider.user = data.session.user || data.user || null;
-        navigateTo(wantsOnboarding ? '/app/onboarding' : '/app/billing');
+        navigateTo(wantsOnboarding ? '/onboarding' : '/app/billing');
         return;
       }
 
       if (!wantsOnboarding) localStorage.setItem('leadcheck.pendingPlanSelection', 'true');
       setAuthMessage(wantsOnboarding
-        ? 'Account created. Verify your email, then log in to run your complimentary assessment.'
+        ? 'Account created. Verify your email, then log in to choose a plan or generate your free report preview.'
         : 'Account created, but Supabase email confirmation is still enabled. Turn off Confirm email in Supabase so new customers can choose a plan immediately.',
       'warning');
     });
@@ -4727,6 +4860,7 @@ function trackSubscriptionConversion(subscription = {}, source = 'stripe_success
 
 function trackStripeSuccessReturnConversion() {
   if (!window.location.pathname.startsWith('/app/billing/success')) return;
+  const pending = readPendingCheckoutMeta();
   const planKey = checkoutPlanFromUrl() || readPendingCheckoutMeta().plan || selectedBillingPlan;
   if (APP_PLANS[planKey]) {
     selectedBillingPlan = planKey;
@@ -4740,6 +4874,9 @@ function trackStripeSuccessReturnConversion() {
     plan: planKey,
     status: 'checkout_completed',
   }, 'stripe_success_return');
+  if (pending.source === 'locked_preview' || subscriptionComplimentaryUsed(normalizedSubscription())) {
+    trackProductAnalytics('subscription_started_from_preview', { plan: planKey, source: pending.source || 'stripe_success_return' });
+  }
 }
 
 function resetMetaScan(websiteUrl) {
@@ -5285,6 +5422,17 @@ function setCurrentReportPdfButton(disabled, label = 'Download PDF') {
 
 async function persistGeneratedReport(result) {
   if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) return null;
+  if (result?.billing?.report_saved && result?.billing?.report_id) {
+    pendingSavedReportId = result.billing.report_id;
+    savedReportsLoaded = false;
+    setReportSaveMessage('Your free preview is saved. Subscribe to unlock the complete report.', 'default');
+    setCurrentReportPdfButton(true, 'PDF Locked');
+    trackProductAnalytics('free_preview_viewed', { report_id: pendingSavedReportId });
+    loadSavedReports({ force: true });
+    currentSubscription = await loadSubscription();
+    window.history.replaceState({}, '', `/app/reports/${encodeURIComponent(pendingSavedReportId)}`);
+    return { id: pendingSavedReportId, preview_locked: true };
+  }
 
   const website = asText(result.url) || pendingWebsiteUrl;
   const websiteScore = reportScoreFromResult(result);
@@ -5598,6 +5746,62 @@ function buildTopPriorities(result) {
   return priorities.slice(0, 3);
 }
 
+function topPrioritiesForResult(result) {
+  const previewPriorities = asArray(result.previewTopPriorities || result.topPriorities);
+  if (previewPriorities.length) {
+    return previewPriorities.slice(0, 3).map((rawItem, index) => {
+      const item = asRecord(rawItem);
+      return {
+        title: asText(item.title) || `Priority ${index + 1}`,
+        priority: asText(item.priority) || (index === 0 ? 'High' : 'Medium'),
+        impact: asText(item.impact) || 'This area may affect trust, clarity, or conversion performance.',
+      };
+    });
+  }
+  return buildTopPriorities(result);
+}
+
+function setPreviewLockState(locked) {
+  const lockedSection = document.getElementById('lockedPreviewSection');
+  const detailedSections = [
+    'issuesSection',
+    'recsSection',
+    'positivesSection',
+    'evidenceSection',
+    'finalAssessmentSection',
+  ];
+  if (lockedSection) lockedSection.hidden = !locked;
+  detailedSections.forEach(id => {
+    const section = document.getElementById(id);
+    if (section) section.hidden = !!locked;
+  });
+  const actions = document.querySelector('.report-actions');
+  if (actions) actions.style.display = locked ? 'none' : 'flex';
+  const postCta = document.getElementById('postComplimentaryCta');
+  if (postCta && locked) postCta.hidden = true;
+  const another = document.getElementById('generateAnotherReportBtn');
+  if (another && locked) another.hidden = true;
+  setCurrentReportPdfButton(locked, locked ? 'PDF Locked' : 'Download PDF');
+}
+
+function clearLockedReportDetails() {
+  [
+    'issuesList',
+    'recsList',
+    'positivesList',
+    'passedGrid',
+    'evidencePages',
+    'evidenceSignals',
+    'finalAssessment',
+    'visualTrustBreakdown',
+  ].forEach(id => {
+    const node = document.getElementById(id);
+    if (node) node.innerHTML = '';
+  });
+  const visualTrustSection = document.getElementById('visualTrustSection');
+  if (visualTrustSection) visualTrustSection.style.display = 'none';
+}
+
 function renderRatingComparison(result, scoreColor) {
   const cardsEl = document.getElementById('ratingCards');
   if (!cardsEl) return;
@@ -5688,6 +5892,9 @@ async function runAnalysis() {
     const data = await databaseService.runAudit({
       url,
       idempotencyKey: pendingAuditIdempotencyKey,
+      prospectName: pendingProspectName,
+      companyName: pendingCompanyName,
+      notes: pendingAuditNotes,
     });
     finishLoadingProgress();
  
@@ -5717,6 +5924,7 @@ async function runAnalysis() {
 function showError(msg) {
   stopLoadingTimers();
   showAppPanel('scan');
+  updateScanPageMode();
   const analyzeBtn = document.getElementById('analyzeBtn');
   analyzeBtn.dataset.scanning = 'false';
   analyzeBtn.disabled = false;
@@ -5786,6 +5994,7 @@ function buildReportRequestData(result) {
 function renderResults(data, options = {}) {
   stopLoadingTimers();
   const publicDemo = options.publicDemo === true;
+  const previewLocked = !publicDemo && (options.previewLocked === true || data?.previewLocked === true || data?.preview_locked === true || data?.full_report_locked === true);
   if (!publicDemo) updateBrandingAccessState();
   if (!publicDemo) {
     showAppPanel('report');
@@ -5826,18 +6035,21 @@ function renderResults(data, options = {}) {
   if (executiveSummary) executiveSummary.textContent = buildExecutiveSummary(result, score, context);
   if (finalAssessment) finalAssessment.textContent = buildFinalAssessment(result, score, context);
 
-  fullResultsUnlocked = true;
+  fullResultsUnlocked = !previewLocked;
   document.getElementById('fullResults').style.display = 'block';
+  setPreviewLockState(previewLocked);
   const actions = document.querySelector('.report-actions');
-  if (actions) actions.style.display = publicDemo ? 'none' : 'flex';
+  if (actions) actions.style.display = publicDemo || previewLocked ? 'none' : 'flex';
   if (publicDemo) {
     setReportSaveMessage('This is a fictional demo report. No account is needed to explore the example assessment.', 'default');
+  } else if (previewLocked) {
+    setReportSaveMessage('Your preview is ready. Choose a plan to unlock the complete report and PDF export.', 'default');
   } else {
     setCurrentReportPdfButton(!pendingSavedReportId, pendingSavedReportId ? 'Download PDF' : 'Preparing PDF...');
   }
 
   const topPrioritiesList = document.getElementById('topPrioritiesList');
-  const topPriorities = buildTopPriorities(result);
+  const topPriorities = topPrioritiesForResult(result);
   if (topPrioritiesList) {
     topPrioritiesList.innerHTML = topPriorities.map((priority, index) => `
       <div class="priority-card">
@@ -5906,6 +6118,11 @@ function renderResults(data, options = {}) {
         `).join('')}
       </div>
     </div>`;
+
+  if (previewLocked) {
+    clearLockedReportDetails();
+    return;
+  }
  
   renderVisualTrust(result);
  
