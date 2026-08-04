@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-04-locked-preview-onboarding-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-04-free-preview-button-fix-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1695,9 +1695,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-04-locked-preview-onboarding-v1"></script>
-<script src="/auth.js?v=2026-08-04-locked-preview-onboarding-v1"></script>
-<script src="/database.js?v=2026-08-04-locked-preview-onboarding-v1"></script>
+<script src="/branding.js?v=2026-08-04-free-preview-button-fix-v1"></script>
+<script src="/auth.js?v=2026-08-04-free-preview-button-fix-v1"></script>
+<script src="/database.js?v=2026-08-04-free-preview-button-fix-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2818,6 +2818,10 @@ function subscriptionCanRunComplimentaryScan(subscription = normalizedSubscripti
   return subscription.can_run_complimentary_scan === true;
 }
 
+function isFreePreviewRoute(path = window.location.pathname) {
+  return path.startsWith('/onboarding/free-preview');
+}
+
 function subscriptionComplimentaryUsed(subscription = normalizedSubscription()) {
   return Boolean(subscription.complimentary_scan_used_at || subscription.complimentary_report_id);
 }
@@ -3025,7 +3029,7 @@ function renderRecentActivity() {
 }
 
 function updateScanPageMode() {
-  const isPreview = window.location.pathname.startsWith('/onboarding/free-preview');
+  const isPreview = isFreePreviewRoute();
   const values = isPreview
     ? {
         kicker: 'Free Report Preview',
@@ -3131,6 +3135,9 @@ function updateReportMetrics() {
   const complimentaryUsed = subscriptionComplimentaryUsed(subscription);
   const complimentaryReserved = subscription.complimentary_scan_reserved === true;
   const lockedPreviewOpen = Boolean(pendingScanResult?.previewLocked || pendingScanResult?.preview_locked || pendingScanResult?.full_report_locked);
+  const freePreviewRoute = isFreePreviewRoute();
+  const canAttemptFreePreview = freePreviewRoute && !hasPaidAuditAccess && !complimentaryUsed && !complimentaryReserved;
+  const canSubmitAudit = canRunAudit || canAttemptFreePreview;
   const hasCustomer = !!subscription.stripe_customer_id;
   const hasStripeSubscription = !!subscription.stripe_subscription_id;
   const needsUpgrade = !hasPaidAuditAccess && !canRunComplimentary;
@@ -3274,9 +3281,9 @@ function updateReportMetrics() {
     onboardingSecondaryCta.textContent = complimentaryUsed ? 'View Preview' : 'Generate Free Preview';
     onboardingSecondaryCta.setAttribute('href', complimentaryUsed && subscription.complimentary_report_id ? `/app/reports/${encodeURIComponent(subscription.complimentary_report_id)}` : '/onboarding/free-preview');
   }
-  if (analyzeBtn && !analyzeBtn.dataset.scanning) {
-    analyzeBtn.disabled = !canRunAudit;
-    analyzeBtn.dataset.billingBlocked = canRunAudit ? 'false' : 'true';
+  if (analyzeBtn && analyzeBtn.dataset.scanning !== 'true') {
+    analyzeBtn.disabled = !canSubmitAudit;
+    analyzeBtn.dataset.billingBlocked = canSubmitAudit ? 'false' : 'true';
   }
   updateBrandingAccessState(subscription);
   syncRequiredPlanModal();
@@ -5859,8 +5866,13 @@ async function runAnalysis() {
   }
 
   const subscription = await loadSubscription();
-  if (!subscriptionCanRunAudit(subscription || normalizedSubscription())) {
-    const message = billingNoticeText(subscription || normalizedSubscription());
+  const activeSubscription = subscription || normalizedSubscription();
+  const canAttemptFreePreview = isFreePreviewRoute()
+    && !subscriptionHasPaidAuditAccess(activeSubscription)
+    && !subscriptionComplimentaryUsed(activeSubscription)
+    && activeSubscription.complimentary_scan_reserved !== true;
+  if (!subscriptionCanRunAudit(activeSubscription) && !canAttemptFreePreview) {
+    const message = billingNoticeText(activeSubscription);
     setBillingMessage(message, 'warning');
     showToast(message, 'warning');
     navigateTo('/app/billing');
