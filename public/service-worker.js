@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-04-blurred-preview-cta-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-04-billing-card-detail-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',

@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-04-blurred-preview-cta-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-04-billing-card-detail-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1296,42 +1296,60 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <button class="app-plan-card" type="button" data-billing-plan="starter">
               <span>Starter</span>
               <strong>$19.99/mo</strong>
-              <small>50 scans monthly</small>
+              <small>Best for freelancers and agencies getting started.</small>
+              <span class="app-plan-features" aria-label="Starter includes">
+                <span>50 website scans per month</span>
+                <span>Website audit reports</span>
+                <span>PDF exports</span>
+                <span>Saved reports</span>
+                <span>Shareable report links</span>
+                <span>Website Strategy Scan branding</span>
+                <span>Email support</span>
+              </span>
             </button>
             <button class="app-plan-card recommended" type="button" data-billing-plan="professional">
               <em>Most Popular</em>
               <span>Professional</span>
               <strong>$39.99/mo</strong>
-              <small>150 + 50 bonus scans monthly</small>
+              <small>Built for agencies presenting reports to clients.</small>
+              <span class="app-plan-features" aria-label="Professional includes">
+                <span>150 plan scans per month</span>
+                <span>50 bonus scans per month</span>
+                <span>200 total monthly scans</span>
+                <span>Everything in Starter</span>
+                <span>White-label online reports</span>
+                <span>White-label PDF exports</span>
+                <span>Custom logo and brand colours</span>
+                <span>Priority email support</span>
+              </span>
             </button>
             <button class="app-plan-card" type="button" data-billing-plan="growth">
               <span>Growth</span>
               <strong>$79.99/mo</strong>
-              <small>500 scans monthly</small>
+              <small>For agencies generating higher report volume.</small>
+              <span class="app-plan-features" aria-label="Growth includes">
+                <span>500 website scans per month</span>
+                <span>Everything in Professional</span>
+                <span>White-label online reports</span>
+                <span>White-label PDF exports</span>
+                <span>Custom agency branding</span>
+                <span>Unlimited report history</span>
+                <span>Priority support</span>
+                <span>Early access to new features</span>
+              </span>
             </button>
             <a class="app-plan-card contact" href="/contact" data-route data-billing-plan="enterprise">
               <span>Enterprise</span>
               <strong>Contact Sales</strong>
-              <small>Custom fair-use limits</small>
+              <small>Custom support for established teams.</small>
+              <span class="app-plan-features" aria-label="Enterprise includes">
+                <span>Unlimited scans with fair use</span>
+                <span>Custom pricing</span>
+                <span>Dedicated onboarding</span>
+                <span>Priority support</span>
+                <span>Custom scan capacity</span>
+              </span>
             </a>
-          </div>
-          <div class="billing-progress-block">
-            <div class="billing-progress-top">
-              <span id="billingPaymentStatus">Payment status unavailable</span>
-              <span id="billingUsagePercent">0%</span>
-            </div>
-            <div class="billing-progress-track">
-              <div class="billing-progress-fill" id="billingProgressFill"></div>
-            </div>
-          </div>
-          <div class="billing-feature-grid">
-            <span>Monthly scan allowance with rollover</span>
-            <span>PDF exports</span>
-            <span>Saved reports</span>
-            <span>Shareable report links</span>
-            <span>White-label reports on Professional+</span>
-            <span>Custom agency branding on Professional+</span>
-            <span>Priority support on Professional+</span>
           </div>
           <div class="billing-status-notice" id="billingStatusNotice" role="status"></div>
           <div class="auth-message" id="billingMessage" hidden></div>
@@ -1761,9 +1779,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-04-blurred-preview-cta-v1"></script>
-<script src="/auth.js?v=2026-08-04-blurred-preview-cta-v1"></script>
-<script src="/database.js?v=2026-08-04-blurred-preview-cta-v1"></script>
+<script src="/branding.js?v=2026-08-04-billing-card-detail-v1"></script>
+<script src="/auth.js?v=2026-08-04-billing-card-detail-v1"></script>
+<script src="/database.js?v=2026-08-04-billing-card-detail-v1"></script>
 
 <script>
 const CHECK_LABELS = {
