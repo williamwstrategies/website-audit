@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-04-free-preview-button-fix-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-04-blurred-preview-cta-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1474,6 +1474,13 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 </div>
               </div>
             </div>
+            <div class="preview-unlock-top-cta" id="previewUnlockTopCta" hidden>
+              <div>
+                <strong>Unlock the complete website assessment</strong>
+                <p>Choose a plan to reveal every finding, detailed recommendation, PDF export, and client-ready report.</p>
+              </div>
+              <a class="analyze-btn" href="/app/billing" data-route data-preview-unlock>Choose a Plan</a>
+            </div>
             <div class="report-actions">
               <button class="download-pdf-btn" onclick="downloadReportPdf()">Download PDF</button>
             </div>
@@ -1549,6 +1556,65 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                   <div><span>Locked</span><strong>Technical Issues</strong></div>
                   <div><span>Locked</span><strong>Conversion Recommendations</strong></div>
                   <div><span>Locked</span><strong>Complete Assessment</strong></div>
+                </div>
+                <div class="locked-report-stack" aria-label="Locked full report preview">
+                  <article class="locked-report-card">
+                    <div class="locked-report-card-header">
+                      <span>03</span>
+                      <strong>Detailed Findings</strong>
+                    </div>
+                    <div class="locked-blur-content">
+                      <div class="locked-finding-row"><span></span><strong></strong><p></p></div>
+                      <div class="locked-finding-row"><span></span><strong></strong><p></p></div>
+                      <div class="locked-finding-row"><span></span><strong></strong><p></p></div>
+                    </div>
+                    <div class="locked-overlay"><span>Locked</span><strong>Subscribe to reveal every detected issue.</strong></div>
+                  </article>
+                  <article class="locked-report-card">
+                    <div class="locked-report-card-header">
+                      <span>04</span>
+                      <strong>Recommended Actions</strong>
+                    </div>
+                    <div class="locked-blur-content">
+                      <div class="locked-rec-row"><strong></strong><p></p><p></p></div>
+                      <div class="locked-rec-row"><strong></strong><p></p><p></p></div>
+                    </div>
+                    <div class="locked-overlay"><span>Locked</span><strong>Unlock step-by-step recommendations.</strong></div>
+                  </article>
+                  <article class="locked-report-card">
+                    <div class="locked-report-card-header">
+                      <span>05</span>
+                      <strong>Strengths Already Working</strong>
+                    </div>
+                    <div class="locked-blur-content locked-chip-preview">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+                    <div class="locked-overlay"><span>Locked</span><strong>Reveal positive signals and passed checks.</strong></div>
+                  </article>
+                  <article class="locked-report-card">
+                    <div class="locked-report-card-header">
+                      <span>06</span>
+                      <strong>Assessment Evidence</strong>
+                    </div>
+                    <div class="locked-blur-content">
+                      <div class="locked-evidence-row"></div>
+                      <div class="locked-evidence-row"></div>
+                      <div class="locked-evidence-row"></div>
+                    </div>
+                    <div class="locked-overlay"><span>Locked</span><strong>See supporting pages and evidence signals.</strong></div>
+                  </article>
+                  <article class="locked-report-card">
+                    <div class="locked-report-card-header">
+                      <span>07</span>
+                      <strong>Final Assessment</strong>
+                    </div>
+                    <div class="locked-blur-content">
+                      <div class="locked-paragraph-line wide"></div>
+                      <div class="locked-paragraph-line"></div>
+                      <div class="locked-paragraph-line short"></div>
+                    </div>
+                    <div class="locked-overlay"><span>Locked</span><strong>Unlock the complete client-ready summary.</strong></div>
+                  </article>
                 </div>
               </section>
 
@@ -1695,9 +1761,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-04-free-preview-button-fix-v1"></script>
-<script src="/auth.js?v=2026-08-04-free-preview-button-fix-v1"></script>
-<script src="/database.js?v=2026-08-04-free-preview-button-fix-v1"></script>
+<script src="/branding.js?v=2026-08-04-blurred-preview-cta-v1"></script>
+<script src="/auth.js?v=2026-08-04-blurred-preview-cta-v1"></script>
+<script src="/database.js?v=2026-08-04-blurred-preview-cta-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -5770,6 +5836,7 @@ function topPrioritiesForResult(result) {
 
 function setPreviewLockState(locked) {
   const lockedSection = document.getElementById('lockedPreviewSection');
+  const topCta = document.getElementById('previewUnlockTopCta');
   const detailedSections = [
     'issuesSection',
     'recsSection',
@@ -5778,6 +5845,7 @@ function setPreviewLockState(locked) {
     'finalAssessmentSection',
   ];
   if (lockedSection) lockedSection.hidden = !locked;
+  if (topCta) topCta.hidden = !locked;
   detailedSections.forEach(id => {
     const section = document.getElementById(id);
     if (section) section.hidden = !!locked;
