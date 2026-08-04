@@ -203,7 +203,7 @@
         const error = new Error(payload.error || 'Request failed. Please try again.');
         error.status = response.status;
         error.code = payload.code || 'request_failed';
-        error.subscription = payload.subscription || null;
+        error.subscription = payload.subscription || payload.details?.subscription || null;
         throw error;
       }
       return payload;
@@ -221,7 +221,7 @@
         const error = new Error(payload.error || 'Request failed. Please try again.');
         error.status = response.status;
         error.code = payload.code || 'request_failed';
-        error.subscription = payload.subscription || null;
+        error.subscription = payload.subscription || payload.details?.subscription || null;
         throw error;
       }
 
@@ -290,7 +290,7 @@
       return data;
     }
 
-    async createReport({ websiteUrl, website, websiteScore, reportData, scanStatus = 'completed', websiteName } = {}) {
+    async createReport({ websiteUrl, website, websiteScore, reportData, scanStatus = 'completed', websiteName, auditIdempotencyKey } = {}) {
       const payload = await this.serverJson('/api/reports', {
         method: 'POST',
         body: {
@@ -299,6 +299,7 @@
           websiteScore,
           reportData,
           scanStatus,
+          auditIdempotencyKey,
         },
       });
       return payload.report || null;
@@ -311,6 +312,7 @@
         websiteScore: input.websiteScore,
         reportData: input.reportData,
         scanStatus: input.scanStatus || 'completed',
+        auditIdempotencyKey: input.auditIdempotencyKey,
       });
     }
 

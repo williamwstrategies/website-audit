@@ -116,14 +116,14 @@
       return this.client;
     }
 
-    async signUp({ name, email, password }) {
+    async signUp({ name, email, password, redirectTo }) {
       const client = this.requireClient();
       return client.auth.signUp({
         email,
         password,
         options: {
           data: { name, full_name: name },
-          emailRedirectTo: authRedirect(LOGIN_REDIRECT_PATH),
+          emailRedirectTo: authRedirect(redirectTo || LOGIN_REDIRECT_PATH),
         },
       });
     }

@@ -266,6 +266,11 @@ create table if not exists public.subscriptions (
   audit_limit integer not null default 10,
   stripe_customer_id text,
   stripe_subscription_id text,
+  complimentary_scan_available boolean not null default true,
+  complimentary_scan_reserved_key text,
+  complimentary_scan_started_at timestamptz,
+  complimentary_scan_used_at timestamptz,
+  complimentary_report_id uuid,
   current_period_start timestamptz,
   current_period_end timestamptz,
   created_at timestamptz not null default now(),
@@ -279,6 +284,11 @@ alter table public.subscriptions add column if not exists audits_used integer no
 alter table public.subscriptions add column if not exists audit_limit integer not null default 10;
 alter table public.subscriptions add column if not exists stripe_customer_id text;
 alter table public.subscriptions add column if not exists stripe_subscription_id text;
+alter table public.subscriptions add column if not exists complimentary_scan_available boolean not null default false;
+alter table public.subscriptions add column if not exists complimentary_scan_reserved_key text;
+alter table public.subscriptions add column if not exists complimentary_scan_started_at timestamptz;
+alter table public.subscriptions add column if not exists complimentary_scan_used_at timestamptz;
+alter table public.subscriptions add column if not exists complimentary_report_id uuid;
 alter table public.subscriptions add column if not exists current_period_start timestamptz;
 alter table public.subscriptions add column if not exists current_period_end timestamptz;
 alter table public.subscriptions add column if not exists created_at timestamptz not null default now();
@@ -287,6 +297,7 @@ alter table public.subscriptions add column if not exists updated_at timestamptz
 alter table public.subscriptions alter column plan set default 'professional';
 alter table public.subscriptions alter column status set default 'incomplete';
 alter table public.subscriptions alter column audit_limit set default 10;
+alter table public.subscriptions alter column complimentary_scan_available set default true;
 
 create table if not exists public.billing_trial_claims (
   id uuid primary key default gen_random_uuid(),
@@ -386,6 +397,17 @@ begin
     alter table public.subscriptions
       add constraint subscriptions_user_id_fkey
       foreign key (user_id) references auth.users(id) on delete cascade not valid;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'public.subscriptions'::regclass
+      and conname = 'subscriptions_complimentary_report_id_fkey'
+  ) then
+    alter table public.subscriptions
+      add constraint subscriptions_complimentary_report_id_fkey
+      foreign key (complimentary_report_id) references public.reports(id) on delete set null not valid;
   end if;
 end;
 $$;
@@ -520,6 +542,8 @@ create index if not exists reports_user_id_idx on public.reports (user_id);
 create index if not exists reports_created_at_idx on public.reports (created_at desc);
 create index if not exists reports_website_domain_idx on public.reports (website_domain);
 create index if not exists subscriptions_user_id_idx on public.subscriptions (user_id);
+create index if not exists subscriptions_complimentary_reserved_key_idx on public.subscriptions (complimentary_scan_reserved_key) where complimentary_scan_reserved_key is not null;
+create index if not exists subscriptions_complimentary_report_id_idx on public.subscriptions (complimentary_report_id) where complimentary_report_id is not null;
 create index if not exists agency_branding_user_id_idx on public.agency_branding (user_id);
 create unique index if not exists billing_trial_claims_email_key on public.billing_trial_claims (email);
 

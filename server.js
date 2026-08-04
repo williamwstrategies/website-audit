@@ -644,6 +644,12 @@ app.post('/api/billing/portal', async (req, res) => {
 });
 
 function auditBlockMessage(reason, subscription = {}) {
+  if (reason === 'complimentary_scan_used') {
+    return 'Your complimentary assessment has been used. Choose a plan to continue generating reports.';
+  }
+  if (reason === 'complimentary_scan_in_progress') {
+    return 'Your complimentary assessment is already being prepared. Please wait for it to finish before starting another scan.';
+  }
   if (reason === 'audit_limit_reached') {
     return 'You have used all of your available scans for this billing period. Upgrade your plan or wait until your next renewal date to continue generating reports.';
   }
@@ -752,6 +758,7 @@ app.post('/api/analyze', async (req, res) => {
   const debugMode = !!(req.query.debug || req.body.debug);
   let authContext = null;
   let auditIdempotencyKey = '';
+  let auditReservation = null;
   const distinctId = req.headers['x-posthog-distinct-id'] || url;
   const sessionId = req.headers['x-posthog-session-id'];
 
@@ -759,6 +766,7 @@ app.post('/api/analyze', async (req, res) => {
     authContext = await billing.requireAuthenticatedUser(req);
     auditIdempotencyKey = String(req.headers['x-audit-idempotency-key'] || crypto.randomUUID());
     const reservation = await billing.reserveAuditUsage(authContext.user.id, auditIdempotencyKey);
+    auditReservation = reservation;
 
     if (!reservation?.allowed) {
       const subscription = billing.normalizeSubscriptionForClient(reservation?.subscription);
@@ -780,6 +788,16 @@ app.post('/api/analyze', async (req, res) => {
         subscription,
       });
     }
+    if (reservation?.complimentary) {
+      posthog.capture({
+        distinctId: authContext.user.id,
+        event: 'complimentary_scan_started',
+        properties: {
+          source: 'onboarding',
+          ...(sessionId && { $session_id: sessionId }),
+        },
+      });
+    }
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
     return res.status(statusCode).json(body);
@@ -788,12 +806,20 @@ app.post('/api/analyze', async (req, res) => {
   try {
     const result = await analyzeWebsite(url, { debug: debugMode });
     const score = extractWebsiteScore(result);
-    await billing.completeAuditUsage(authContext.user.id, auditIdempotencyKey, {
-      websiteUrl: url,
-      websiteScore: score,
-    }).catch(error => {
-      console.warn('[LeadCheck] Audit usage completion failed:', error?.message || error);
-    });
+    if (!auditReservation?.complimentary) {
+      await billing.completeAuditUsage(authContext.user.id, auditIdempotencyKey, {
+        websiteUrl: url,
+        websiteScore: score,
+      }).catch(error => {
+        console.warn('[LeadCheck] Audit usage completion failed:', error?.message || error);
+      });
+    }
+    if (auditReservation?.complimentary) {
+      result.billing = {
+        complimentary_scan: true,
+        audit_idempotency_key: auditIdempotencyKey,
+      };
+    }
     posthog.capture({
       distinctId: authContext.user.id || distinctId,
       event: 'website analyzed',
@@ -848,6 +874,16 @@ app.post('/api/reports', async (req, res) => {
         website_url: report?.website_url || '',
       },
     });
+    if (report?.complimentary_scan_completed) {
+      posthog.capture({
+        distinctId: user.id,
+        event: 'complimentary_scan_completed',
+        properties: {
+          report_id: report?.id || '',
+          website_url: report?.website_url || '',
+        },
+      });
+    }
     res.status(201).json({ report });
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
@@ -870,6 +906,14 @@ app.get('/api/reports/:reportId', async (req, res) => {
 app.post('/api/reports/:reportId/duplicate', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
+    const subscription = await billing.getSubscriptionStatus(user.id);
+    if (!subscription.can_duplicate_reports) {
+      return res.status(402).json({
+        error: 'Your complimentary assessment has been used. Choose a plan to continue generating reports.',
+        code: 'subscription_required',
+        subscription,
+      });
+    }
     const report = await billing.duplicateReportForUser(user.id, String(req.params.reportId || '').trim());
     posthog.capture({
       distinctId: user.id,

@@ -7776,6 +7776,56 @@ body.required-plan-open {
     rgba(9, 25, 46, 0.9);
 }
 
+.workspace-banner[data-tone="success"] {
+  border-color: rgba(53, 211, 153, 0.26);
+  background:
+    linear-gradient(180deg, rgba(53, 211, 153, 0.12), rgba(255, 255, 255, 0.04)),
+    rgba(9, 25, 46, 0.88);
+}
+
+.onboarding-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.onboarding-state-card .hero-actions {
+  margin-top: 0;
+}
+
+.complimentary-access-notice {
+  border-color: rgba(53, 211, 153, 0.24);
+  background:
+    linear-gradient(180deg, rgba(53, 211, 153, 0.1), rgba(255, 255, 255, 0.04)),
+    rgba(9, 25, 46, 0.88);
+}
+
+.post-complimentary-cta {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  padding: 22px;
+  border: 1px solid rgba(245, 200, 66, 0.24);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(245, 200, 66, 0.12), rgba(255, 255, 255, 0.045)),
+    rgba(9, 25, 46, 0.88);
+  box-shadow: var(--shadow-card);
+}
+
+.post-complimentary-cta[hidden] {
+  display: none;
+}
+
+.post-complimentary-cta strong {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+}
+
+.post-complimentary-cta p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+}
+
 .support-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.38fr);

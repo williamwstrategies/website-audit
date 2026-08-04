@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-07-30-professional-bonus-breakout-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-04-complimentary-onboarding-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -476,8 +476,8 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     </div>
     <div class="public-demo-report-mount" id="publicDemoReportMount" data-reveal tabindex="-1"></div>
     <div class="demo-report-notice" id="demoReportNotice" data-reveal>
-      <strong>This demonstration uses fictional data.</strong>
-      <span>No account is needed for this demo. The website you enter is shown at the top for personalization; the findings below always use one predefined fictional report.</span>
+      <strong>Demo Report. This demonstration uses fictional data.</strong>
+      <span>Create an account to generate a real assessment. The website you enter is shown at the top for personalization; the findings below always use one predefined fictional report.</span>
     </div>
     <section class="public-section-panel" data-reveal>
       <div class="section-kicker">Included</div>
@@ -492,9 +492,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="marketing-cta inline-demo-cta">
         <h2>Ready to generate reports using real websites?</h2>
-        <p>Create your account and start generating professional website assessments under your own brand.</p>
+        <p>Create your account and run one complimentary real website assessment before choosing a plan.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="demo_signup_clicked">Create Your Free Account</a>
+          <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/app/onboarding" data-route data-public-cta data-public-cta-label="Generate a Real Assessment" data-public-event="demo_to_signup_clicked">Generate a Real Assessment</a>
           <a class="secondary-btn" href="/pricing" data-route data-public-event="demo_pricing_clicked">See Pricing</a>
         </div>
       </div>
@@ -868,6 +868,38 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         </div>
       </section>
 
+      <section id="onboarding-view" class="app-panel onboarding-panel" hidden>
+        <div class="app-page-hero onboarding-hero">
+          <div>
+            <div class="section-kicker">Complimentary Assessment</div>
+            <h2>Generate Your First Real Website Assessment</h2>
+            <p>Your account includes one complimentary real assessment so you can experience the complete platform before choosing a plan.</p>
+            <div class="dashboard-hero-actions">
+              <a class="analyze-btn" href="/app/scan?complimentary=1" data-route id="onboardingRunScanBtn">Run My Complimentary Scan</a>
+              <a class="secondary-btn" href="/app/billing" data-route>View Plans</a>
+            </div>
+          </div>
+          <div class="scan-context-panel">
+            <span>Included</span>
+            <strong>1 real assessment</strong>
+            <p>Uses the normal scanner and saves the completed report to your workspace.</p>
+          </div>
+        </div>
+        <section class="workspace-panel onboarding-state-card" id="onboardingStateCard">
+          <div class="panel-heading">
+            <div>
+              <div class="section-kicker">Next Step</div>
+              <h2 id="onboardingStateTitle">Your First Assessment Is Included</h2>
+              <p id="onboardingStateText">Run one real website assessment before choosing a plan.</p>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <a class="analyze-btn" href="/app/scan?complimentary=1" data-route id="onboardingPrimaryCta">Run Complimentary Scan</a>
+            <a class="secondary-btn" href="/app/billing" data-route id="onboardingSecondaryCta">View Plans</a>
+          </div>
+        </section>
+      </section>
+
       <section id="scan-view" class="app-panel scan-panel" hidden>
         <div class="app-page-hero scan-hero">
           <div>
@@ -897,6 +929,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <a class="analyze-btn" href="/app/billing" data-route data-public-event="upgrade_clicked">Upgrade Plan</a>
               <a class="secondary-btn" href="/pricing" data-route data-public-event="upgrade_clicked">View Pricing</a>
             </div>
+          </div>
+          <div class="billing-access-notice complimentary-access-notice" id="complimentaryScanNotice" hidden>
+            <strong>Complimentary Assessment</strong>
+            <p>1 real assessment included. Additional reports require a paid plan.</p>
           </div>
           <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
             <div class="lead-grid">
@@ -1550,7 +1586,17 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               </section>
 
               <div class="analyze-another">
-                <button class="retry-btn" onclick="resetApp()">Generate Another Report</button>
+                <div class="post-complimentary-cta" id="postComplimentaryCta" hidden>
+                  <div>
+                    <strong>Ready to Generate Reports for Your Prospects?</strong>
+                    <p>Choose a plan to continue creating professional website assessments, saving reports, exporting PDFs, and using your agency branding.</p>
+                  </div>
+                  <div class="hero-actions">
+                    <a class="analyze-btn" href="/app/billing" data-route data-public-event="post_report_pricing_clicked">Choose a Plan</a>
+                    <a class="secondary-btn" href="/app" data-route>Return to Dashboard</a>
+                  </div>
+                </div>
+                <button class="retry-btn" id="generateAnotherReportBtn" onclick="resetApp()">Generate Another Report</button>
               </div>
             </div>
           </div>
@@ -1603,9 +1649,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-07-28-report-save-fix-v1"></script>
-<script src="/auth.js?v=2026-07-28-report-save-fix-v1"></script>
-<script src="/database.js?v=2026-07-28-report-save-fix-v1"></script>
+<script src="/branding.js?v=2026-08-04-complimentary-onboarding-v1"></script>
+<script src="/auth.js?v=2026-08-04-complimentary-onboarding-v1"></script>
+<script src="/database.js?v=2026-08-04-complimentary-onboarding-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1659,6 +1705,7 @@ let pendingWebsiteUrl = null;
 let pendingProspectName = '';
 let pendingCompanyName = '';
 let pendingAuditNotes = '';
+let pendingAuditIdempotencyKey = '';
 let fullResultsUnlocked = false;
 let brandingProvider = null;
 let authProvider = null;
@@ -1898,6 +1945,7 @@ const DEMO_REPORT_DATA = {
 
 const ROUTE_TITLES = {
   '/app': 'Dashboard',
+  '/app/onboarding': 'Onboarding',
   '/app/scan': 'New Audit',
   '/app/reports': 'Reports',
   '/app/support': 'Support',
@@ -1995,6 +2043,7 @@ function setDisplay(id, value) {
 }
 
 function appRouteKey(path = window.location.pathname) {
+  if (path.startsWith('/app/onboarding')) return 'onboarding';
   if (path.startsWith('/app/settings')) return 'settings';
   if (path.startsWith('/app/branding')) return 'branding';
   if (path.startsWith('/app/billing')) return 'billing';
@@ -2010,6 +2059,7 @@ function appRouteKey(path = window.location.pathname) {
 function showAppPanel(panel) {
   const panels = {
     dashboard: 'home-view',
+    onboarding: 'onboarding-view',
     scan: 'scan-view',
     loading: 'loading',
     report: 'results',
@@ -2272,7 +2322,11 @@ function updateAuthUserUI() {
 
   document.querySelectorAll('[data-public-cta]').forEach(node => {
     node.textContent = authenticated ? 'Open Dashboard' : (node.dataset.publicCtaLabel || 'Get Started');
-    node.setAttribute('href', authenticated ? '/app' : '/signup');
+    if (authenticated) {
+      node.setAttribute('href', '/app');
+    } else if (!node.getAttribute('href')) {
+      node.setAttribute('href', '/signup');
+    }
   });
 
   document.querySelectorAll('[data-public-login]').forEach(node => {
@@ -2681,6 +2735,12 @@ function defaultSubscriptionState() {
     stripe_customer_id: '',
     stripe_subscription_id: '',
     can_start_paid_now: false,
+    can_run_complimentary_scan: false,
+    complimentary_scan_available: false,
+    complimentary_scan_reserved: false,
+    complimentary_scan_started_at: null,
+    complimentary_scan_used_at: null,
+    complimentary_report_id: null,
     white_label_enabled: false,
     can_white_label: false,
     platform_branding_required: true,
@@ -2696,7 +2756,19 @@ function normalizedSubscription() {
 }
 
 function subscriptionCanRunAudit(subscription = normalizedSubscription()) {
+  return subscription.can_run_audit === true || subscription.can_run_complimentary_scan === true;
+}
+
+function subscriptionHasPaidAuditAccess(subscription = normalizedSubscription()) {
   return subscription.can_run_audit === true;
+}
+
+function subscriptionCanRunComplimentaryScan(subscription = normalizedSubscription()) {
+  return subscription.can_run_complimentary_scan === true;
+}
+
+function subscriptionComplimentaryUsed(subscription = normalizedSubscription()) {
+  return Boolean(subscription.complimentary_scan_used_at || subscription.complimentary_report_id);
 }
 
 function subscriptionCanExportPdf(subscription = normalizedSubscription()) {
@@ -2741,6 +2813,9 @@ function billingNoticeText(subscription = normalizedSubscription()) {
     return 'Choose a paid plan to generate professional website assessments.';
   }
   if (subscriptionCanRunAudit(subscription)) {
+    if (subscriptionCanRunComplimentaryScan(subscription) && !subscriptionHasPaidAuditAccess(subscription)) {
+      return 'Your account includes one complimentary real website assessment before choosing a plan.';
+    }
     if (subscription.unlimited) {
       return `${planName} is active with custom fair-use scan access.`;
     }
@@ -2751,6 +2826,12 @@ function billingNoticeText(subscription = normalizedSubscription()) {
   }
   if ((subscription.audits_remaining || 0) <= 0 && subscription.status === 'active') {
     return 'You have used all of your available scans for this billing period. Upgrade your plan or wait until your next renewal date to continue generating reports.';
+  }
+  if (subscriptionComplimentaryUsed(subscription)) {
+    return 'Your complimentary assessment has been used. Choose a plan to continue generating reports.';
+  }
+  if (subscription.complimentary_scan_reserved) {
+    return 'Your complimentary assessment is being prepared. Return to the report when it is ready.';
   }
   if (subscription.status === 'past_due' || subscription.status === 'unpaid') {
     return 'Your payment could not be processed. Update your payment method to continue running new audits.';
@@ -2929,6 +3010,13 @@ function updateReportMetrics() {
   const subscriptionBannerCta = document.getElementById('subscriptionBannerCta');
   const scanBillingNotice = document.getElementById('scanBillingNotice');
   const scanBillingNoticeText = document.getElementById('scanBillingNoticeText');
+  const complimentaryScanNotice = document.getElementById('complimentaryScanNotice');
+  const postComplimentaryCta = document.getElementById('postComplimentaryCta');
+  const generateAnotherReportBtn = document.getElementById('generateAnotherReportBtn');
+  const onboardingStateTitle = document.getElementById('onboardingStateTitle');
+  const onboardingStateText = document.getElementById('onboardingStateText');
+  const onboardingPrimaryCta = document.getElementById('onboardingPrimaryCta');
+  const onboardingSecondaryCta = document.getElementById('onboardingSecondaryCta');
   const analyzeBtn = document.getElementById('analyzeBtn');
   const count = savedReports.length;
   const monthly = savedReports.filter(report => isThisMonth(report.created_at)).length;
@@ -2946,22 +3034,35 @@ function updateReportMetrics() {
   const usagePercent = subscription.unlimited || !limit ? 0 : Math.min(100, Math.round((used / limit) * 100));
   const notice = billingNoticeText(subscription);
   const canRunAudit = subscriptionCanRunAudit(subscription);
+  const hasPaidAuditAccess = subscriptionHasPaidAuditAccess(subscription);
+  const canRunComplimentary = subscriptionCanRunComplimentaryScan(subscription);
+  const complimentaryUsed = subscriptionComplimentaryUsed(subscription);
+  const complimentaryReserved = subscription.complimentary_scan_reserved === true;
   const hasCustomer = !!subscription.stripe_customer_id;
   const hasStripeSubscription = !!subscription.stripe_subscription_id;
-  const needsUpgrade = !canRunAudit;
+  const needsUpgrade = !hasPaidAuditAccess && !canRunComplimentary;
   const isActivePaid = subscription.status === 'active' && (hasCustomer || hasStripeSubscription);
   const isDifferentPlan = chosenPlan.key !== subscription.plan;
   const canSwitchPlan = isActivePaid && isDifferentPlan && chosenPlan.key !== 'enterprise';
-  if (canRunAudit) clearRequiredPlanSelection();
+  if (hasPaidAuditAccess) {
+    clearRequiredPlanSelection();
+    clearOnboardingIntent();
+  }
 
   if (reportCount) reportCount.textContent = String(count);
   if (reportCountLabel) reportCountLabel.textContent = count === 1 ? 'Saved assessment.' : 'Saved assessments.';
   if (monthlyReports) monthlyReports.textContent = String(monthly);
-  if (reportsUsed) reportsUsed.textContent = subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
-  if (reportsUsedLabel) reportsUsedLabel.textContent = subscription.unlimited ? 'Enterprise fair-use access.' : (remaining > 0 ? `${remaining} scans remaining.` : 'Scan limit reached.');
+  if (reportsUsed) reportsUsed.textContent = canRunComplimentary && !hasPaidAuditAccess ? '1 included' : subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
+  if (reportsUsedLabel) reportsUsedLabel.textContent = canRunComplimentary && !hasPaidAuditAccess
+    ? 'Complimentary assessment available.'
+    : subscription.unlimited ? 'Enterprise fair-use access.' : (remaining > 0 ? `${remaining} scans remaining.` : 'Scan limit reached.');
   if (averageScore) averageScore.textContent = avg == null ? '-' : `${avg}%`;
   if (currentPlan) currentPlan.textContent = plan;
-  if (planStatus) planStatus.textContent = `${status} workspace.`;
+  if (planStatus) planStatus.textContent = canRunComplimentary && !hasPaidAuditAccess
+    ? 'Complimentary assessment available.'
+    : complimentaryUsed && !hasPaidAuditAccess
+      ? 'Plan required for more reports.'
+      : `${status} workspace.`;
   if (billingPlanName) billingPlanName.textContent = plan;
   if (billingPlanStatus) billingPlanStatus.textContent = `${status} workspace.`;
   if (billingUsageCount) billingUsageCount.textContent = subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
@@ -3016,22 +3117,66 @@ function updateReportMetrics() {
   }
   if (billingManageBtn) billingManageBtn.hidden = !hasCustomer;
   if (subscriptionBanner) {
-    subscriptionBanner.hidden = canRunAudit;
-    subscriptionBanner.dataset.tone = 'upgrade';
+    subscriptionBanner.hidden = hasPaidAuditAccess;
+    subscriptionBanner.dataset.tone = canRunComplimentary ? 'success' : 'upgrade';
   }
   if (subscriptionBannerTitle) {
-    subscriptionBannerTitle.textContent = needsUpgrade
-      ? (subscription.status === 'cancelled' ? 'Subscription cancelled' : 'Choose a plan to continue')
-      : 'Subscription active';
+    subscriptionBannerTitle.textContent = canRunComplimentary
+      ? 'Your First Assessment Is Included'
+      : complimentaryReserved
+        ? 'Your assessment is being prepared'
+        : complimentaryUsed
+          ? 'Complimentary assessment complete'
+          : needsUpgrade
+            ? (subscription.status === 'cancelled' ? 'Subscription cancelled' : 'Choose a plan to continue')
+            : 'Subscription active';
   }
   if (subscriptionBannerText) {
-    subscriptionBannerText.textContent = needsUpgrade
-      ? 'Choose a paid plan to generate reports and unlock your monthly scan allowance.'
-      : `${scanBalanceText(remaining)} scans remaining.`;
+    subscriptionBannerText.textContent = canRunComplimentary
+      ? 'Run one real website assessment before choosing a plan.'
+      : complimentaryReserved
+        ? 'Your complimentary assessment is in progress. Return to the report when it is ready.'
+        : complimentaryUsed
+          ? 'Choose a plan to generate more reports.'
+          : needsUpgrade
+            ? 'Choose a paid plan to generate reports and unlock your monthly scan allowance.'
+            : `${scanBalanceText(remaining)} scans remaining.`;
   }
-  if (subscriptionBannerCta) subscriptionBannerCta.textContent = needsUpgrade ? 'Choose Plan' : 'Billing';
+  if (subscriptionBannerCta) {
+    subscriptionBannerCta.textContent = canRunComplimentary ? 'Run Complimentary Scan' : complimentaryUsed ? 'Choose Plan' : needsUpgrade ? 'Choose Plan' : 'Billing';
+    subscriptionBannerCta.setAttribute('href', canRunComplimentary ? '/app/onboarding' : complimentaryUsed || needsUpgrade ? '/app/billing' : '/app/billing');
+  }
   if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
   if (scanBillingNoticeText) scanBillingNoticeText.textContent = notice;
+  if (complimentaryScanNotice) complimentaryScanNotice.hidden = !(canRunComplimentary && !hasPaidAuditAccess);
+  if (postComplimentaryCta) postComplimentaryCta.hidden = !(complimentaryUsed && !hasPaidAuditAccess);
+  if (generateAnotherReportBtn) generateAnotherReportBtn.hidden = complimentaryUsed && !hasPaidAuditAccess;
+  if (onboardingStateTitle) {
+    onboardingStateTitle.textContent = hasPaidAuditAccess
+      ? 'Your subscription is active'
+      : complimentaryUsed
+        ? 'You have completed your complimentary assessment.'
+        : complimentaryReserved
+          ? 'Your assessment is being prepared.'
+          : 'Your First Assessment Is Included';
+  }
+  if (onboardingStateText) {
+    onboardingStateText.textContent = hasPaidAuditAccess
+      ? 'You can continue generating reports from the dashboard.'
+      : complimentaryUsed
+        ? 'Choose a plan to generate more reports.'
+        : complimentaryReserved
+          ? 'Return to your report when the assessment is ready.'
+          : 'Run one real website assessment before choosing a plan.';
+  }
+  if (onboardingPrimaryCta) {
+    onboardingPrimaryCta.textContent = hasPaidAuditAccess ? 'Open Dashboard' : complimentaryUsed ? 'Choose a Plan' : complimentaryReserved ? 'View Reports' : 'Run Complimentary Scan';
+    onboardingPrimaryCta.setAttribute('href', hasPaidAuditAccess ? '/app' : complimentaryUsed ? '/app/billing' : complimentaryReserved ? '/app/reports' : '/app/scan?complimentary=1');
+  }
+  if (onboardingSecondaryCta) {
+    onboardingSecondaryCta.textContent = complimentaryUsed ? 'View First Report' : 'View Plans';
+    onboardingSecondaryCta.setAttribute('href', complimentaryUsed && subscription.complimentary_report_id ? `/app/reports/${encodeURIComponent(subscription.complimentary_report_id)}` : '/app/billing');
+  }
   if (analyzeBtn && !analyzeBtn.dataset.scanning) {
     analyzeBtn.disabled = !canRunAudit;
     analyzeBtn.dataset.billingBlocked = canRunAudit ? 'false' : 'true';
@@ -3355,6 +3500,9 @@ async function startCheckout(source = 'billing_checkout') {
     setBillingMessage('Opening secure checkout...', 'default');
     setRequiredPlanMessage('Opening secure checkout...', 'default');
     trackPublicEvent('plan_selected', { plan: plan.key, source: checkoutSource });
+    if (subscriptionComplimentaryUsed(subscription)) {
+      trackProductAnalytics('checkout_started_after_free_scan', { plan: plan.key, source: checkoutSource });
+    }
     const session = await createCheckoutSessionWithAccountRetry({ plan: plan.key });
     if (!session?.url) throw new Error('Checkout could not be started.');
     rememberPendingCheckoutMeta(session, plan.key, checkoutSource);
@@ -3698,6 +3846,7 @@ function renderRoute() {
   document.body.classList.toggle('is-public-route', !isLogin && !isApp);
   document.body.classList.toggle('is-auth-route', isLogin);
   document.body.classList.toggle('is-app-route', isApp);
+  if (isLogin && readOnboardingIntentFromUrl()) markOnboardingIntent();
 
   if (authProvider && !authProvider.ready && isApp) {
     setHidden(marketingView, true);
@@ -3708,7 +3857,7 @@ function renderRoute() {
   }
 
   if (authProvider?.ready && path === '/' && authProvider.isAuthenticated()) {
-    window.history.replaceState({}, '', '/app');
+    window.history.replaceState({}, '', authDestinationAfterLogin('/app'));
     renderRoute();
     return;
   }
@@ -3723,7 +3872,7 @@ function renderRoute() {
   if (authProvider?.ready && isLogin && authProvider.isAuthenticated() && !path.startsWith('/reset-password')) {
     const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
     if (needsPlanSelection) markRequiredPlanSelection();
-    window.history.replaceState({}, '', needsPlanSelection ? '/app/billing' : '/app');
+    window.history.replaceState({}, '', hasOnboardingIntent() ? '/app/onboarding' : (needsPlanSelection ? '/app/billing' : '/app'));
     renderRoute();
     return;
   }
@@ -3747,10 +3896,12 @@ function renderRoute() {
     restoreReportShellToApp();
     applyRouteSeo({ noindex: true });
     const key = appRouteKey(path);
+    if (key === 'onboarding') clearRequiredPlanSelection();
     const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
-    setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : key === 'dashboard' ? 'dashboard' : key);
+    setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : (key === 'dashboard' || key === 'onboarding') ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
+    else if (key === 'onboarding') showAppPanel('onboarding');
     else if (key === 'branding') showAppPanel('branding');
     else if (key === 'billing') {
       showAppPanel('billing');
@@ -3776,10 +3927,10 @@ function renderRoute() {
     else if (key === 'scan') showAppPanel('scan');
     else showAppPanel('dashboard');
 
-    if (['dashboard', 'scan', 'reports', 'saved-report', 'billing'].includes(key)) {
+    if (['dashboard', 'onboarding', 'scan', 'reports', 'saved-report', 'billing'].includes(key)) {
       loadSavedReports();
     }
-    if (['dashboard', 'billing'].includes(key)) loadSubscription();
+    if (['dashboard', 'onboarding', 'scan', 'billing'].includes(key)) loadSubscription();
   }
 
   if (brandingProvider) {
@@ -3808,6 +3959,43 @@ function navigateTo(path) {
   } else {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+}
+
+function readOnboardingIntentFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('intent') === 'free-scan' || params.get('returnTo') === '/app/onboarding';
+}
+
+function markOnboardingIntent() {
+  try {
+    localStorage.setItem('leadcheck.pendingOnboarding', 'true');
+    sessionStorage.setItem('leadcheck.pendingOnboarding', 'true');
+  } catch {
+    // Storage privacy settings should not interrupt signup.
+  }
+}
+
+function clearOnboardingIntent() {
+  try {
+    localStorage.removeItem('leadcheck.pendingOnboarding');
+    sessionStorage.removeItem('leadcheck.pendingOnboarding');
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
+function hasOnboardingIntent() {
+  try {
+    return readOnboardingIntentFromUrl()
+      || localStorage.getItem('leadcheck.pendingOnboarding') === 'true'
+      || sessionStorage.getItem('leadcheck.pendingOnboarding') === 'true';
+  } catch {
+    return readOnboardingIntentFromUrl();
+  }
+}
+
+function authDestinationAfterLogin(fallback = '/app') {
+  return hasOnboardingIntent() ? '/app/onboarding' : fallback;
 }
 
 function preserveMarketingAttribution(href) {
@@ -3864,6 +4052,12 @@ function bindRouteLinks() {
       selectedBillingPlan = link.dataset.planKey;
       localStorage.setItem('leadcheck.selectedPlan', selectedBillingPlan);
       trackPublicEvent('plan_selected', { plan: selectedBillingPlan, source: 'public_pricing' });
+    }
+    if (href.includes('intent=free-scan') || href.includes('/app/onboarding')) {
+      markOnboardingIntent();
+      if (link.dataset.publicEvent === 'demo_to_signup_clicked') {
+        trackProductAnalytics('demo_to_signup_clicked', { source: 'demo_report' });
+      }
     }
     if (window.location.pathname.startsWith('/app/branding') && !href.startsWith('/app/branding') && !confirmBrandingNavigation()) return;
     document.body.classList.remove('app-nav-open');
@@ -4117,7 +4311,7 @@ function bindAuthForms() {
       }
       const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
       if (needsPlanSelection) markRequiredPlanSelection();
-      navigateTo(needsPlanSelection ? '/app/billing' : (pendingProtectedPath || '/app'));
+      navigateTo(hasOnboardingIntent() ? '/app/onboarding' : (needsPlanSelection ? '/app/billing' : (pendingProtectedPath || '/app')));
       pendingProtectedPath = '/app';
     });
   });
@@ -4133,24 +4327,38 @@ function bindAuthForms() {
     const button = document.getElementById('signupSubmit');
 
     withButtonLoading(button, 'Creating account...', async () => {
-      const { data, error } = await authProvider.signUp({ name, email, password });
+      const wantsOnboarding = hasOnboardingIntent() || readOnboardingIntentFromUrl();
+      if (wantsOnboarding) {
+        markOnboardingIntent();
+        clearRequiredPlanSelection();
+      }
+      const { data, error } = await authProvider.signUp({
+        name,
+        email,
+        password,
+        redirectTo: wantsOnboarding ? '/login?intent=free-scan' : '/login',
+      });
       if (error) {
         setAuthMessage(readableErrorMessage(error, 'Sign up failed. Please try again.'), 'error');
         return;
       }
 
       trackSignupConversion(data);
-      markRequiredPlanSelection();
+      trackProductAnalytics('signup_completed', { source: wantsOnboarding ? 'demo_free_scan' : 'signup' });
+      if (!wantsOnboarding) markRequiredPlanSelection();
 
       if (data?.session) {
         authProvider.session = data.session;
         authProvider.user = data.session.user || data.user || null;
-        navigateTo('/app/billing');
+        navigateTo(wantsOnboarding ? '/app/onboarding' : '/app/billing');
         return;
       }
 
-      localStorage.setItem('leadcheck.pendingPlanSelection', 'true');
-      setAuthMessage('Account created, but Supabase email confirmation is still enabled. Turn off Confirm email in Supabase so new customers can choose a plan immediately.', 'warning');
+      if (!wantsOnboarding) localStorage.setItem('leadcheck.pendingPlanSelection', 'true');
+      setAuthMessage(wantsOnboarding
+        ? 'Account created. Verify your email, then log in to run your complimentary assessment.'
+        : 'Account created, but Supabase email confirmation is still enabled. Turn off Confirm email in Supabase so new customers can choose a plan immediately.',
+      'warning');
     });
   });
 
@@ -4663,7 +4871,7 @@ function publicDemoReportIsMounted() {
 function revealPublicDemoReport({ scrollToReport = false } = {}) {
   const mount = document.getElementById('publicDemoReportMount');
   const notice = document.getElementById('demoReportNotice');
-  if (notice) notice.hidden = true;
+  if (notice) notice.hidden = false;
   if (!mount) return;
   mount.hidden = false;
   mount.classList.add('is-visible');
@@ -4728,7 +4936,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
   }
   if (sampleInput) sampleInput.value = normalizedWebsite;
   if (loading) loading.hidden = true;
-  if (notice) notice.hidden = true;
+  if (notice) notice.hidden = false;
   if (mount) mount.hidden = false;
 
   try {
@@ -4743,6 +4951,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
     activeDemoRequestKey = normalizedWebsite;
     demoLoadingActive = false;
     trackPublicEvent('demo_completed', { requested_website: normalizedWebsite });
+    trackProductAnalytics('demo_report_viewed', { requested_website: normalizedWebsite });
     verifyPublicDemoReportRender(normalizedWebsite, { scrollToReport, retry });
     schedulePublicDemoFallback(normalizedWebsite);
     return true;
@@ -4756,6 +4965,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
         activeDemoRequestKey = normalizedWebsite;
         demoLoadingActive = false;
         trackPublicEvent('demo_completed', { requested_website: normalizedWebsite, retry: true });
+        trackProductAnalytics('demo_report_viewed', { requested_website: normalizedWebsite, retry: true });
         verifyPublicDemoReportRender(normalizedWebsite, { scrollToReport, retry: true });
       } catch (retryError) {
         demoLoadingActive = false;
@@ -5062,8 +5272,14 @@ async function persistGeneratedReport(result) {
       websiteScore,
       reportData: buildPersistedReportData(result),
       scanStatus: 'completed',
+      auditIdempotencyKey: pendingAuditIdempotencyKey || result?.billing?.audit_idempotency_key || '',
     });
     pendingSavedReportId = savedReport?.id || null;
+    if (savedReport?.complimentary_scan_completed) {
+      trackProductAnalytics('complimentary_report_viewed', { report_id: pendingSavedReportId || '' });
+      clearOnboardingIntent();
+      currentSubscription = await loadSubscription();
+    }
     if (pendingSavedReportId) {
       window.history.replaceState({}, '', `/app/reports/${encodeURIComponent(pendingSavedReportId)}`);
       renderRoute();
@@ -5077,6 +5293,9 @@ async function persistGeneratedReport(result) {
     return savedReport;
   } catch (error) {
     console.warn('[LeadCheck] Report save skipped:', error?.message || error);
+    if (result?.billing?.complimentary_scan) {
+      loadSubscription();
+    }
     const reason = error?.message ? ` ${error.message}` : '';
     setReportSaveMessage(`Report generated, but it could not be saved.${reason}`, 'error');
     setCurrentReportPdfButton(true, 'PDF Unavailable');
@@ -5425,6 +5644,7 @@ async function runAnalysis() {
   pendingSavedReportId = null;
   loadingSavedReportId = '';
   pendingWebsiteUrl = url;
+  pendingAuditIdempotencyKey = newAuditIdempotencyKey();
   fullResultsUnlocked = false;
   setReportSaveMessage('');
  
@@ -5442,7 +5662,7 @@ async function runAnalysis() {
   try {
     const data = await databaseService.runAudit({
       url,
-      idempotencyKey: newAuditIdempotencyKey(),
+      idempotencyKey: pendingAuditIdempotencyKey,
     });
     finishLoadingProgress();
  
@@ -6022,6 +6242,7 @@ function resetApp() {
   pendingProspectName = '';
   pendingCompanyName = '';
   pendingAuditNotes = '';
+  pendingAuditIdempotencyKey = '';
   fullResultsUnlocked = false;
   setReportSaveMessage('');
   showAppPanel('dashboard');
