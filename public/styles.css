@@ -4743,6 +4743,23 @@ body.required-plan-open {
 }
 
 @media (max-width: 700px) {
+  .billing-view:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .billing-view > .settings-header {
+    order: 1;
+  }
+
+  .billing-view > .billing-plan-panel {
+    order: 2;
+  }
+
+  .billing-view > .dashboard-grid {
+    order: 3;
+  }
+
   body.app-nav-open .app-menu,
   .dashboard-grid,
   .dashboard-side-stack,
