@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-05-demo-offer-copy-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-05-try-free-cta-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -65,11 +65,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/pricing" data-route>Pricing</a>
       <a href="/faq" data-route>FAQ</a>
       <a class="mobile-nav-only" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
-      <a class="mobile-nav-only mobile-nav-cta" href="/signup" data-route data-public-cta data-public-event="signup_started">Get Started</a>
+      <a class="mobile-nav-only mobile-nav-cta" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a>
     </nav>
     <div class="nav-actions">
       <a class="nav-link" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
-      <a class="analyze-btn nav-cta" href="/signup" data-route data-public-cta data-public-event="signup_started">Get Started</a>
+      <a class="analyze-btn nav-cta" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a>
     </div>
   </div>
 </header>
@@ -80,12 +80,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="marketing-copy">
         <div class="badge">White-label website audits for agencies</div>
         <h1 id="homeHeroTitle">Don't Just Tell Prospects Their Website Needs Work. <span>Show Them.</span></h1>
-        <p class="hero-sub">Generate a professional white-label website assessment in under a minute. Try a fictional demo first, then create real reports under your agency brand.</p>
-        <form class="hero-demo-scanner demo-launch-form" id="heroDemoForm" action="/sample-report" method="get" novalidate>
-          <input type="hidden" name="scan" value="1">
-          <button class="analyze-btn" type="submit">Generate Fake Report</button>
-          <small>No signup required. This opens a fixed fictional sample report.</small>
-        </form>
+        <p class="hero-sub">Generate a professional white-label website assessment in under a minute. Create an account and run one real scan free before choosing a plan.</p>
+        <div class="hero-actions hero-primary-actions">
+          <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a>
+          <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
+        </div>
+        <small class="hero-free-note">No credit card required for the one free scan preview.</small>
         <div class="hero-proof-row" aria-label="Product facts">
           <span>White Label</span>
           <span>PDF Reports</span>
@@ -324,7 +324,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <h2 id="finalCtaTitle">Start Delivering Better Website Audits Today.</h2>
       <p>Create professional website assessments under your own brand and bring clearer evidence to every sales conversation.</p>
       <div class="hero-actions">
-        <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-cta-label="Create Your Account" data-public-event="final_signup_clicked">Create Your Account</a>
+        <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a>
         <a class="secondary-btn" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
       </div>
     </section>
@@ -337,7 +337,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <h1>A complete audit workspace for agency sales teams.</h1>
         <p>Scan prospect websites, review scores, save reports, export PDFs, and present everything under your agency brand from one polished platform.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="product_signup_clicked">Get Started</a>
+          <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a>
           <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
         </div>
       </div>
@@ -409,7 +409,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <section class="marketing-cta final-dark-cta" data-reveal>
       <h2>Build a stronger website assessment workflow.</h2>
       <p>Start with a prospect URL and turn it into a professional report your agency can present with confidence.</p>
-      <div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta data-public-event="product_final_signup_clicked">Get Started</a><a class="secondary-btn" href="/pricing" data-route>View Pricing</a></div>
+      <div class="hero-actions"><a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a><a class="secondary-btn" href="/pricing" data-route>View Pricing</a></div>
     </section>
   </article>
 
@@ -440,7 +440,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <section class="marketing-cta final-dark-cta" data-reveal>
       <h2>See the output before you start.</h2>
       <p>Explore the fictional demo report to understand how the final assessment is structured.</p>
-      <div class="hero-actions"><a class="analyze-btn" href="/sample-report" data-route>View Example Report</a><a class="secondary-btn" href="/signup" data-route data-public-cta>Get Started</a></div>
+      <div class="hero-actions"><a class="analyze-btn" href="/sample-report" data-route>View Example Report</a><a class="secondary-btn" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a></div>
     </section>
   </article>
 
@@ -486,7 +486,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <h2>Ready to generate reports using real websites?</h2>
         <p>Create your account and generate one complimentary real report preview before choosing a plan.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding" data-route data-public-cta data-public-cta-label="Generate a Real Assessment" data-public-event="demo_to_signup_clicked">Generate a Real Assessment</a>
+          <a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Generate a Real Assessment" data-public-event="demo_to_signup_clicked">Generate a Real Assessment</a>
           <a class="secondary-btn" href="/pricing" data-route data-public-event="demo_pricing_clicked">See Pricing</a>
         </div>
       </div>
@@ -550,7 +550,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
       <details data-faq-item><summary>Does it guarantee closed clients?</summary><p>No. The platform does not guarantee sales results. It helps agencies present clearer evidence and recommendations.</p></details>
     </section>
-    <section class="marketing-cta final-dark-cta" data-reveal><h2>Ready to create your first assessment?</h2><p>Start with a prospect website and see how the report frames the conversation.</p><div class="hero-actions"><a class="analyze-btn" href="/signup" data-route data-public-cta>Get Started</a><a class="secondary-btn" href="/sample-report" data-route>View Example Report</a></div></section>
+    <section class="marketing-cta final-dark-cta" data-reveal><h2>Ready to create your first assessment?</h2><p>Start with a prospect website and see how the report frames the conversation.</p><div class="hero-actions"><a class="analyze-btn" href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a><a class="secondary-btn" href="/sample-report" data-route>View Example Report</a></div></section>
   </article>
 
   <article class="public-page supporting-page contact-page" data-public-page="contact" hidden>
@@ -612,7 +612,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <nav class="footer-grid" aria-label="Footer navigation">
       <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Demo Report</a><a href="/pricing" data-route>Pricing</a></div>
       <div><h2>Company</h2><a href="/about" data-route>About</a><a href="/contact" data-route>Contact</a><a href="/faq" data-route>FAQ</a></div>
-      <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/signup" data-route data-public-cta>Get Started</a></div>
+      <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/signup?intent=free-scan&returnTo=/onboarding/free-preview" data-route data-public-cta data-public-cta-label="Try It For Free" data-public-event="free_scan_signup_clicked">Try It For Free</a></div>
       <div><h2>Legal</h2><a href="/privacy" data-route>Privacy Policy</a><a href="/terms" data-route>Terms of Service</a></div>
     </nav>
   </footer>
@@ -1795,9 +1795,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-05-demo-offer-copy-v1"></script>
-<script src="/auth.js?v=2026-08-05-demo-offer-copy-v1"></script>
-<script src="/database.js?v=2026-08-05-demo-offer-copy-v1"></script>
+<script src="/branding.js?v=2026-08-05-try-free-cta-v1"></script>
+<script src="/auth.js?v=2026-08-05-try-free-cta-v1"></script>
+<script src="/database.js?v=2026-08-05-try-free-cta-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2477,7 +2477,7 @@ function updateAuthUserUI() {
   hydrateSupportDefaults();
 
   document.querySelectorAll('[data-public-cta]').forEach(node => {
-    node.textContent = authenticated ? 'Open Dashboard' : (node.dataset.publicCtaLabel || 'Get Started');
+    node.textContent = authenticated ? 'Open Dashboard' : (node.dataset.publicCtaLabel || node.textContent.trim() || 'Get Started');
     if (authenticated) {
       node.setAttribute('href', '/app');
     } else if (!node.getAttribute('href')) {
@@ -4073,10 +4073,15 @@ function renderRoute() {
   if (signupRouteHasPlan(path)) {
     clearOnboardingIntent();
   } else if (signupRouteShouldUseOnboarding(path)) {
-    markOnboardingIntent();
+    if (readFreePreviewIntentFromUrl()) {
+      markFreePreviewIntent();
+    } else {
+      markOnboardingIntent();
+    }
     clearRequiredPlanSelection();
   }
-  if (isLogin && readOnboardingIntentFromUrl()) markOnboardingIntent();
+  if (isLogin && readFreePreviewIntentFromUrl()) markFreePreviewIntent();
+  else if (isLogin && readOnboardingIntentFromUrl()) markOnboardingIntent();
 
   if (authProvider && !authProvider.ready && isApp) {
     setHidden(marketingView, true);
@@ -4102,7 +4107,7 @@ function renderRoute() {
   if (authProvider?.ready && isLogin && authProvider.isAuthenticated() && !path.startsWith('/reset-password')) {
     const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
     if (needsPlanSelection) markRequiredPlanSelection();
-    window.history.replaceState({}, '', hasOnboardingIntent() ? '/onboarding' : (needsPlanSelection ? '/app/billing' : '/app'));
+    window.history.replaceState({}, '', authDestinationAfterLogin(needsPlanSelection ? '/app/billing' : '/app'));
     renderRoute();
     return;
   }
@@ -4199,7 +4204,12 @@ function navigateTo(path) {
 
 function readOnboardingIntentFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('intent') === 'free-scan' || ['/app/onboarding', '/onboarding'].includes(params.get('returnTo'));
+  return readFreePreviewIntentFromUrl() || ['/app/onboarding', '/onboarding'].includes(params.get('returnTo'));
+}
+
+function readFreePreviewIntentFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('intent') === 'free-scan' || ['/onboarding/free-preview', '/app/onboarding/free-preview'].includes(params.get('returnTo'));
 }
 
 function signupRouteHasPlan(path = window.location.pathname, search = window.location.search) {
@@ -4221,12 +4231,35 @@ function markOnboardingIntent() {
   }
 }
 
+function markFreePreviewIntent() {
+  markOnboardingIntent();
+  try {
+    localStorage.setItem('leadcheck.pendingFreePreview', 'true');
+    sessionStorage.setItem('leadcheck.pendingFreePreview', 'true');
+  } catch {
+    // Storage privacy settings should not interrupt signup.
+  }
+}
+
 function clearOnboardingIntent() {
   try {
     localStorage.removeItem('leadcheck.pendingOnboarding');
     sessionStorage.removeItem('leadcheck.pendingOnboarding');
+    localStorage.removeItem('leadcheck.pendingFreePreview');
+    sessionStorage.removeItem('leadcheck.pendingFreePreview');
   } catch {
     // Ignore storage failures.
+  }
+}
+
+function hasFreePreviewIntent() {
+  try {
+    if (signupRouteHasPlan()) return false;
+    return readFreePreviewIntentFromUrl()
+      || localStorage.getItem('leadcheck.pendingFreePreview') === 'true'
+      || sessionStorage.getItem('leadcheck.pendingFreePreview') === 'true';
+  } catch {
+    return readFreePreviewIntentFromUrl();
   }
 }
 
@@ -4243,6 +4276,7 @@ function hasOnboardingIntent() {
 }
 
 function authDestinationAfterLogin(fallback = '/app') {
+  if (hasFreePreviewIntent()) return '/onboarding/free-preview';
   return hasOnboardingIntent() ? '/onboarding' : fallback;
 }
 
@@ -4304,8 +4338,15 @@ function bindRouteLinks() {
     }
     const hrefUrl = new URL(href, window.location.origin);
     const isPlainSignup = hrefUrl.pathname === '/signup' && !hrefUrl.searchParams.has('plan');
+    const isFreeScanIntent = hrefUrl.searchParams.get('intent') === 'free-scan' || hrefUrl.searchParams.get('returnTo') === '/onboarding/free-preview' || href.includes('/onboarding/free-preview');
     if (isPlainSignup) clearRequiredPlanSelection();
-    if (isPlainSignup || href.includes('intent=free-scan') || href.includes('/app/onboarding') || href.includes('/onboarding')) {
+    if (isFreeScanIntent) {
+      markFreePreviewIntent();
+      clearRequiredPlanSelection();
+      if (link.dataset.publicEvent === 'demo_to_signup_clicked') {
+        trackProductAnalytics('demo_to_signup_clicked', { source: 'demo_report' });
+      }
+    } else if (isPlainSignup || href.includes('/app/onboarding') || href.includes('/onboarding')) {
       markOnboardingIntent();
       if (link.dataset.publicEvent === 'demo_to_signup_clicked') {
         trackProductAnalytics('demo_to_signup_clicked', { source: 'demo_report' });
@@ -4609,7 +4650,7 @@ function bindAuthForms() {
       }
       const needsPlanSelection = localStorage.getItem('leadcheck.pendingPlanSelection') === 'true';
       if (needsPlanSelection) markRequiredPlanSelection();
-      navigateTo(hasOnboardingIntent() ? '/onboarding' : (needsPlanSelection ? '/app/billing' : (pendingProtectedPath || '/app')));
+      navigateTo(authDestinationAfterLogin(needsPlanSelection ? '/app/billing' : (pendingProtectedPath || '/app')));
       pendingProtectedPath = '/app';
     });
   });
@@ -4626,8 +4667,12 @@ function bindAuthForms() {
 
     withButtonLoading(button, 'Creating account...', async () => {
       const explicitPlanSignup = signupRouteHasPlan();
-      const wantsOnboarding = !explicitPlanSignup && (hasOnboardingIntent() || readOnboardingIntentFromUrl() || signupRouteShouldUseOnboarding());
-      if (wantsOnboarding) {
+      const wantsFreePreview = !explicitPlanSignup && (hasFreePreviewIntent() || readFreePreviewIntentFromUrl());
+      const wantsOnboarding = !explicitPlanSignup && (wantsFreePreview || hasOnboardingIntent() || readOnboardingIntentFromUrl() || signupRouteShouldUseOnboarding());
+      if (wantsFreePreview) {
+        markFreePreviewIntent();
+        clearRequiredPlanSelection();
+      } else if (wantsOnboarding) {
         markOnboardingIntent();
         clearRequiredPlanSelection();
       } else {
@@ -4637,7 +4682,7 @@ function bindAuthForms() {
         name,
         email,
         password,
-        redirectTo: wantsOnboarding ? '/login?intent=free-scan' : '/login',
+        redirectTo: wantsFreePreview ? '/login?intent=free-scan&returnTo=/onboarding/free-preview' : (wantsOnboarding ? '/login?intent=free-scan' : '/login'),
       });
       if (error) {
         setAuthMessage(readableErrorMessage(error, 'Sign up failed. Please try again.'), 'error');
@@ -4645,19 +4690,19 @@ function bindAuthForms() {
       }
 
       trackSignupConversion(data);
-      trackProductAnalytics('signup_completed', { source: wantsOnboarding ? 'demo_free_scan' : 'signup' });
+      trackProductAnalytics('signup_completed', { source: wantsFreePreview ? 'free_scan_signup' : (wantsOnboarding ? 'demo_free_scan' : 'signup') });
       if (!wantsOnboarding) markRequiredPlanSelection();
 
       if (data?.session) {
         authProvider.session = data.session;
         authProvider.user = data.session.user || data.user || null;
-        navigateTo(wantsOnboarding ? '/onboarding' : '/app/billing');
+        navigateTo(wantsFreePreview ? '/onboarding/free-preview' : (wantsOnboarding ? '/onboarding' : '/app/billing'));
         return;
       }
 
       if (!wantsOnboarding) localStorage.setItem('leadcheck.pendingPlanSelection', 'true');
       setAuthMessage(wantsOnboarding
-        ? 'Account created. Verify your email, then log in to choose a plan or generate your free report preview.'
+        ? 'Account created. Verify your email, then log in to generate your free report preview.'
         : 'Account created, but Supabase email confirmation is still enabled. Turn off Confirm email in Supabase so new customers can choose a plan immediately.',
       'warning');
     });

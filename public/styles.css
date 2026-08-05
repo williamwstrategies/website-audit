@@ -7607,6 +7607,18 @@ body.required-plan-open {
   min-width: 220px;
 }
 
+.hero-primary-actions {
+  margin-bottom: 10px;
+}
+
+.hero-free-note {
+  display: block;
+  margin: 0 0 18px;
+  color: rgba(247, 251, 255, 0.72);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .hero-demo-scanner .lead-field {
   gap: 6px;
 }

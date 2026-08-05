@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-05-demo-offer-copy-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-05-try-free-cta-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
