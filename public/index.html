@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-05-try-free-cta-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-05-free-preview-offer-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1795,9 +1795,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-05-try-free-cta-v1"></script>
-<script src="/auth.js?v=2026-08-05-try-free-cta-v1"></script>
-<script src="/database.js?v=2026-08-05-try-free-cta-v1"></script>
+<script src="/branding.js?v=2026-08-05-free-preview-offer-v1"></script>
+<script src="/auth.js?v=2026-08-05-free-preview-offer-v1"></script>
+<script src="/database.js?v=2026-08-05-free-preview-offer-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1882,8 +1882,11 @@ let demoFallbackTimer = null;
 let demoOfferTimer = null;
 let demoLoadingActive = false;
 let activeDemoRequestKey = '';
-let demoOfferShown = false;
-let demoOfferDismissed = false;
+const DEMO_OFFER_CONTEXT_DEMO = 'demo';
+const DEMO_OFFER_CONTEXT_FREE_PREVIEW = 'free_preview';
+let activeDemoOfferContext = DEMO_OFFER_CONTEXT_DEMO;
+const demoOfferShownContexts = new Set();
+const demoOfferDismissedContexts = new Set();
 let reportOriginalParent = null;
 let reportOriginalNextSibling = null;
 const viewedPublicPages = new Set();
@@ -3879,14 +3882,19 @@ async function openSavedReport(reportId, options = {}) {
   try {
     const report = await databaseService.getReportById(reportId);
     const context = savedReportContext(report);
-    const payload = savedReportPayload(report);
+    const payload = {
+      ...savedReportPayload(report),
+      preview_locked: report.preview_locked === true || report.full_report_locked === true,
+      full_report_locked: report.full_report_locked === true,
+      saved_report_id: report.id,
+    };
     pendingSavedReportId = report.id;
-      pendingScanResult = payload;
-      pendingWebsiteUrl = asText(payload.url) || reportWebsiteUrl(report);
-      pendingProspectName = asText(context.prospectName);
-      pendingCompanyName = asText(context.companyName);
-      pendingAuditNotes = asText(context.notes);
-      renderResults(payload);
+    pendingScanResult = payload;
+    pendingWebsiteUrl = asText(payload.url) || reportWebsiteUrl(report);
+    pendingProspectName = asText(context.prospectName);
+    pendingCompanyName = asText(context.companyName);
+    pendingAuditNotes = asText(context.notes);
+    renderResults(payload);
     if (options.updateRoute !== false) {
       window.history.replaceState({}, '', `/app/reports/${encodeURIComponent(report.id)}`);
     }
@@ -4415,14 +4423,15 @@ function bindPublicMarketingControls() {
   });
 
   document.querySelector('[data-demo-offer-cta]')?.addEventListener('click', () => {
+    const context = normalizeDemoOfferContext(activeDemoOfferContext);
     selectedBillingPlan = 'professional';
     try {
       localStorage.setItem('leadcheck.selectedPlan', 'professional');
-      sessionStorage.setItem('leadcheck.checkoutSource', 'demo_offer_modal');
+      sessionStorage.setItem('leadcheck.checkoutSource', context === DEMO_OFFER_CONTEXT_FREE_PREVIEW ? 'free_preview_offer_modal' : 'demo_offer_modal');
     } catch {
       // Ignore storage failures.
     }
-    trackProductAnalytics('demo_offer_cta_clicked', {
+    trackProductAnalytics(context === DEMO_OFFER_CONTEXT_FREE_PREVIEW ? 'free_preview_offer_cta_clicked' : 'demo_offer_cta_clicked', {
       plan: 'professional',
       offer: '50_bonus_scans_monthly',
     });
@@ -5146,32 +5155,90 @@ function clearDemoOfferTimer() {
   demoOfferTimer = null;
 }
 
+function normalizeDemoOfferContext(context = DEMO_OFFER_CONTEXT_DEMO) {
+  return context === DEMO_OFFER_CONTEXT_FREE_PREVIEW ? DEMO_OFFER_CONTEXT_FREE_PREVIEW : DEMO_OFFER_CONTEXT_DEMO;
+}
+
+function lockedFreePreviewReportActive(path = window.location.pathname) {
+  const lockedPreviewOpen = Boolean(
+    pendingScanResult?.previewLocked ||
+    pendingScanResult?.preview_locked ||
+    pendingScanResult?.full_report_locked
+  );
+  const previewReportRoute = path.startsWith('/app/reports/') || path.startsWith('/onboarding/free-preview');
+  return Boolean(authProvider?.isAuthenticated?.() && lockedPreviewOpen && previewReportRoute);
+}
+
+function demoOfferContextAllowed(context = DEMO_OFFER_CONTEXT_DEMO) {
+  const normalizedContext = normalizeDemoOfferContext(context);
+  if (normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW) return lockedFreePreviewReportActive();
+  return window.location.pathname === '/sample-report';
+}
+
+function configureDemoOfferModal(context = DEMO_OFFER_CONTEXT_DEMO) {
+  const normalizedContext = normalizeDemoOfferContext(context);
+  const copy = document.getElementById('demoOfferCopy');
+  const cta = document.querySelector('[data-demo-offer-cta]');
+  const secondary = document.querySelector('.demo-offer-actions [data-demo-offer-close]');
+  if (copy) {
+    copy.textContent = normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW
+      ? 'Unlock the complete report with the Professional plan and generate real website reports with the bonus included.'
+      : 'Subscribe to our Professional plan and generate real website reports with the bonus included.';
+  }
+  if (cta) {
+    cta.textContent = 'Generate Real Reports Now';
+    cta.dataset.planKey = 'professional';
+    if (normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW) {
+      cta.setAttribute('href', '/app/billing');
+      cta.removeAttribute('data-public-cta');
+      cta.removeAttribute('data-public-event');
+    } else {
+      cta.setAttribute('href', '/signup?plan=professional');
+      cta.setAttribute('data-public-cta', '');
+      cta.dataset.publicEvent = 'demo_offer_signup_clicked';
+    }
+  }
+  if (secondary) {
+    secondary.textContent = normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW ? 'Keep Viewing Report' : 'Keep Viewing Demo';
+  }
+}
+
 function closeDemoOfferModal({ dismissed = true } = {}) {
   clearDemoOfferTimer();
+  const context = normalizeDemoOfferContext(activeDemoOfferContext);
   const modal = document.getElementById('demoOfferModal');
   if (modal) modal.hidden = true;
   document.body.classList.remove('demo-offer-open');
   if (dismissed) {
-    demoOfferDismissed = true;
+    demoOfferDismissedContexts.add(context);
   } else {
-    demoOfferShown = false;
+    demoOfferShownContexts.delete(context);
   }
+  activeDemoOfferContext = DEMO_OFFER_CONTEXT_DEMO;
 }
 
-function showDemoOfferModal() {
-  if (window.location.pathname !== '/sample-report' || demoOfferDismissed || demoOfferShown) return;
+function showDemoOfferModal(context = DEMO_OFFER_CONTEXT_DEMO) {
+  const normalizedContext = normalizeDemoOfferContext(context);
+  if (
+    !demoOfferContextAllowed(normalizedContext) ||
+    demoOfferDismissedContexts.has(normalizedContext) ||
+    demoOfferShownContexts.has(normalizedContext)
+  ) return;
   const modal = document.getElementById('demoOfferModal');
   if (!modal) return;
-  demoOfferShown = true;
+  configureDemoOfferModal(normalizedContext);
+  activeDemoOfferContext = normalizedContext;
+  demoOfferShownContexts.add(normalizedContext);
   modal.hidden = false;
   document.body.classList.add('demo-offer-open');
   selectedBillingPlan = 'professional';
   try {
     localStorage.setItem('leadcheck.selectedPlan', 'professional');
+    sessionStorage.setItem('leadcheck.checkoutSource', normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW ? 'free_preview_offer_modal' : 'demo_offer_modal');
   } catch {
     // Ignore storage failures.
   }
-  trackPublicEvent('demo_offer_modal_viewed', {
+  trackPublicEvent(normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW ? 'free_preview_offer_modal_viewed' : 'demo_offer_modal_viewed', {
     plan: 'professional',
     offer: '50_bonus_scans_monthly',
   });
@@ -5180,10 +5247,15 @@ function showDemoOfferModal() {
   });
 }
 
-function scheduleDemoOfferModal() {
+function scheduleDemoOfferModal(context = DEMO_OFFER_CONTEXT_DEMO) {
+  const normalizedContext = normalizeDemoOfferContext(context);
   clearDemoOfferTimer();
-  if (window.location.pathname !== '/sample-report' || demoOfferDismissed || demoOfferShown) return;
-  demoOfferTimer = setTimeout(showDemoOfferModal, DEMO_OFFER_DELAY_MS);
+  if (
+    !demoOfferContextAllowed(normalizedContext) ||
+    demoOfferDismissedContexts.has(normalizedContext) ||
+    demoOfferShownContexts.has(normalizedContext)
+  ) return;
+  demoOfferTimer = setTimeout(() => showDemoOfferModal(normalizedContext), DEMO_OFFER_DELAY_MS);
 }
 
 function setDemoLoadingProgress(percent, stepText = '') {
@@ -6267,7 +6339,9 @@ function renderResults(data, options = {}) {
     setReportSaveMessage('This is a fictional demo report. No account is needed to explore the example assessment.', 'default');
   } else if (previewLocked) {
     setReportSaveMessage('Your preview is ready. Choose a plan to unlock the complete report and PDF export.', 'default');
+    scheduleDemoOfferModal(DEMO_OFFER_CONTEXT_FREE_PREVIEW);
   } else {
+    closeDemoOfferModal({ dismissed: false });
     setCurrentReportPdfButton(!pendingSavedReportId, pendingSavedReportId ? 'Download PDF' : 'Preparing PDF...');
   }
 
