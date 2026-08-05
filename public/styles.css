@@ -7760,6 +7760,15 @@ body.demo-offer-open {
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.46);
 }
 
+.demo-offer-panel,
+.demo-offer-panel * {
+  color: #f7fbff;
+}
+
+.demo-offer-panel .section-kicker {
+  color: #ffdc73;
+}
+
 .demo-offer-close {
   justify-self: end;
   min-height: 36px;
@@ -7855,6 +7864,10 @@ body.demo-offer-open {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.demo-offer-actions .analyze-btn {
+  color: #06111f;
 }
 
 .demo-offer-actions .secondary-btn {
