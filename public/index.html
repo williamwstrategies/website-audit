@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-05-demo-offer-modal-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-05-demo-offer-modal-10s-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1795,9 +1795,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-05-demo-offer-modal-v1"></script>
-<script src="/auth.js?v=2026-08-05-demo-offer-modal-v1"></script>
-<script src="/database.js?v=2026-08-05-demo-offer-modal-v1"></script>
+<script src="/branding.js?v=2026-08-05-demo-offer-modal-10s-v1"></script>
+<script src="/auth.js?v=2026-08-05-demo-offer-modal-10s-v1"></script>
+<script src="/database.js?v=2026-08-05-demo-offer-modal-10s-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1837,7 +1837,7 @@ const ANALYZE_API_URL = '/api/analyze';
 const LEAD_CAPTURE_API_URL = '/api/lead-capture';
 const SCAN_ESTIMATE_MS = 90000;
 const DEMO_SCAN_DURATION_MS = 6200;
-const DEMO_OFFER_DELAY_MS = 15000;
+const DEMO_OFFER_DELAY_MS = 10000;
 const LOGO_MAX_BYTES = 2 * 1024 * 1024;
 const FAVICON_MAX_BYTES = 512 * 1024;
 const LOGO_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
@@ -5106,7 +5106,11 @@ function closeDemoOfferModal({ dismissed = true } = {}) {
   const modal = document.getElementById('demoOfferModal');
   if (modal) modal.hidden = true;
   document.body.classList.remove('demo-offer-open');
-  if (dismissed) demoOfferDismissed = true;
+  if (dismissed) {
+    demoOfferDismissed = true;
+  } else {
+    demoOfferShown = false;
+  }
 }
 
 function showDemoOfferModal() {
