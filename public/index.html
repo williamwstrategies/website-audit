@@ -38,7 +38,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <!-- End Meta Pixel Code -->
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="/styles.css?v=2026-08-05-static-demo-button-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-05-demo-offer-modal-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -1766,14 +1766,38 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <p class="required-plan-note">Your account has been created. Plan selection is required before using the workspace.</p>
     </section>
   </div>
+
+</div>
+
+<div class="demo-offer-modal" id="demoOfferModal" role="dialog" aria-modal="true" aria-labelledby="demoOfferTitle" aria-describedby="demoOfferCopy" hidden>
+  <section class="demo-offer-panel" tabindex="-1">
+    <button class="demo-offer-close" type="button" data-demo-offer-close aria-label="Close offer">Close</button>
+    <div class="section-kicker">New User Offer</div>
+    <h2 id="demoOfferTitle">Generate real reports now</h2>
+    <p id="demoOfferCopy">Start the $40/month Professional plan with the new user coupon: 50 extra scans/month.</p>
+    <div class="demo-offer-card">
+      <span>Professional</span>
+      <strong>$40<span>/month</span></strong>
+      <ul>
+        <li>150 plan scans per month</li>
+        <li>Coupon: 50 extra scans/month for new users</li>
+        <li>White-label reports and PDFs</li>
+        <li>Custom agency branding</li>
+      </ul>
+    </div>
+    <div class="demo-offer-actions">
+      <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-demo-offer-cta data-public-event="demo_offer_signup_clicked">Generate Real Reports Now</a>
+      <button class="secondary-btn" type="button" data-demo-offer-close>Keep Viewing Demo</button>
+    </div>
+  </section>
 </div>
 
 <div class="toast-viewport" id="toastViewport" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/branding.js?v=2026-08-05-static-demo-button-v1"></script>
-<script src="/auth.js?v=2026-08-05-static-demo-button-v1"></script>
-<script src="/database.js?v=2026-08-05-static-demo-button-v1"></script>
+<script src="/branding.js?v=2026-08-05-demo-offer-modal-v1"></script>
+<script src="/auth.js?v=2026-08-05-demo-offer-modal-v1"></script>
+<script src="/database.js?v=2026-08-05-demo-offer-modal-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -1813,6 +1837,7 @@ const ANALYZE_API_URL = '/api/analyze';
 const LEAD_CAPTURE_API_URL = '/api/lead-capture';
 const SCAN_ESTIMATE_MS = 90000;
 const DEMO_SCAN_DURATION_MS = 6200;
+const DEMO_OFFER_DELAY_MS = 15000;
 const LOGO_MAX_BYTES = 2 * 1024 * 1024;
 const FAVICON_MAX_BYTES = 512 * 1024;
 const LOGO_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
@@ -1854,8 +1879,11 @@ let pdfExportingReportId = '';
 let demoScanTimer = null;
 let demoProgressTimer = null;
 let demoFallbackTimer = null;
+let demoOfferTimer = null;
 let demoLoadingActive = false;
 let activeDemoRequestKey = '';
+let demoOfferShown = false;
+let demoOfferDismissed = false;
 let reportOriginalParent = null;
 let reportOriginalNextSibling = null;
 const viewedPublicPages = new Set();
@@ -2247,6 +2275,7 @@ function renderPublicPage(key = 'home') {
   const pageKey = PUBLIC_PAGE_META[key] ? key : 'home';
   if (pageKey !== 'sample-report') {
     stopDemoScanTimers();
+    closeDemoOfferModal({ dismissed: false });
     restoreReportShellToApp();
   }
   document.querySelectorAll('[data-public-page]').forEach(page => {
@@ -4340,6 +4369,37 @@ function bindPublicMarketingControls() {
     startStaticDemoReport();
   });
 
+  document.querySelectorAll('[data-demo-offer-close]').forEach(control => {
+    control.addEventListener('click', () => closeDemoOfferModal({ dismissed: true }));
+  });
+
+  document.querySelector('[data-demo-offer-cta]')?.addEventListener('click', () => {
+    selectedBillingPlan = 'professional';
+    try {
+      localStorage.setItem('leadcheck.selectedPlan', 'professional');
+      sessionStorage.setItem('leadcheck.checkoutSource', 'demo_offer_modal');
+    } catch {
+      // Ignore storage failures.
+    }
+    trackProductAnalytics('demo_offer_cta_clicked', {
+      plan: 'professional',
+      offer: '50_bonus_scans_monthly',
+    });
+    closeDemoOfferModal({ dismissed: true });
+  });
+
+  document.getElementById('demoOfferModal')?.addEventListener('click', event => {
+    if (event.target === event.currentTarget) closeDemoOfferModal({ dismissed: true });
+  });
+
+  document.addEventListener('keydown', event => {
+    const modal = document.getElementById('demoOfferModal');
+    if (event.key === 'Escape' && modal && !modal.hidden) {
+      event.preventDefault();
+      closeDemoOfferModal({ dismissed: true });
+    }
+  });
+
   document.querySelectorAll('.faq-section details').forEach(item => {
     item.addEventListener('toggle', () => {
       if (!item.open) return;
@@ -5036,6 +5096,47 @@ function stopDemoScanTimers() {
   demoLoadingActive = false;
 }
 
+function clearDemoOfferTimer() {
+  clearTimeout(demoOfferTimer);
+  demoOfferTimer = null;
+}
+
+function closeDemoOfferModal({ dismissed = true } = {}) {
+  clearDemoOfferTimer();
+  const modal = document.getElementById('demoOfferModal');
+  if (modal) modal.hidden = true;
+  document.body.classList.remove('demo-offer-open');
+  if (dismissed) demoOfferDismissed = true;
+}
+
+function showDemoOfferModal() {
+  if (window.location.pathname !== '/sample-report' || demoOfferDismissed || demoOfferShown) return;
+  const modal = document.getElementById('demoOfferModal');
+  if (!modal) return;
+  demoOfferShown = true;
+  modal.hidden = false;
+  document.body.classList.add('demo-offer-open');
+  selectedBillingPlan = 'professional';
+  try {
+    localStorage.setItem('leadcheck.selectedPlan', 'professional');
+  } catch {
+    // Ignore storage failures.
+  }
+  trackPublicEvent('demo_offer_modal_viewed', {
+    plan: 'professional',
+    offer: '50_bonus_scans_monthly',
+  });
+  requestAnimationFrame(() => {
+    modal.querySelector('.demo-offer-panel')?.focus();
+  });
+}
+
+function scheduleDemoOfferModal() {
+  clearDemoOfferTimer();
+  if (window.location.pathname !== '/sample-report' || demoOfferDismissed || demoOfferShown) return;
+  demoOfferTimer = setTimeout(showDemoOfferModal, DEMO_OFFER_DELAY_MS);
+}
+
 function setDemoLoadingProgress(percent, stepText = '') {
   const bounded = Math.max(0, Math.min(100, Math.round(percent)));
   const fill = document.getElementById('demoLoadingFill');
@@ -5183,6 +5284,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
     trackProductAnalytics('demo_report_viewed', { demo_type: 'static_fictional' });
     verifyPublicDemoReportRender(normalizedWebsite, { scrollToReport, retry });
     schedulePublicDemoFallback(normalizedWebsite);
+    scheduleDemoOfferModal();
     return true;
   } catch (error) {
     console.warn('[LeadCheck] Demo report render failed; retrying static demo report.', error);
@@ -5196,6 +5298,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
         trackPublicEvent('demo_completed', { demo_type: 'static_fictional', retry: true });
         trackProductAnalytics('demo_report_viewed', { demo_type: 'static_fictional', retry: true });
         verifyPublicDemoReportRender(normalizedWebsite, { scrollToReport, retry: true });
+        scheduleDemoOfferModal();
       } catch (retryError) {
         demoLoadingActive = false;
         if (notice) notice.hidden = false;
