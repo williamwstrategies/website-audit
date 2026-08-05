@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-05-mobile-billing-order-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-05-static-demo-button-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',

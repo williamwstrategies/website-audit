@@ -7597,6 +7597,16 @@ body.required-plan-open {
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
 }
 
+.demo-launch-form {
+  grid-template-columns: auto;
+  justify-items: start;
+  max-width: 520px;
+}
+
+.demo-launch-form .analyze-btn {
+  min-width: 220px;
+}
+
 .hero-demo-scanner .lead-field {
   gap: 6px;
 }
