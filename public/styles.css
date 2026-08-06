@@ -6410,6 +6410,153 @@ body.required-plan-open {
   font-size: 0.92rem;
 }
 
+.marketing-view .plan-detail-link {
+  width: fit-content;
+  color: var(--public-cyan);
+  font-size: 0.86rem;
+  font-weight: 820;
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.marketing-view .plan-detail-link:hover {
+  color: #ffffff;
+}
+
+.marketing-view .plan-detail-page .plan-hero {
+  width: min(var(--container), calc(100% - 32px));
+  max-width: var(--container);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+  gap: 24px;
+  align-items: stretch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.marketing-view .plan-back-link {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 18px;
+  color: var(--public-muted);
+  font-size: 0.86rem;
+  font-weight: 820;
+  text-decoration: none;
+}
+
+.marketing-view .plan-back-link:hover {
+  color: #ffffff;
+}
+
+.marketing-view .plan-price-card,
+.marketing-view .plan-feature-panel,
+.marketing-view .plan-testimonial {
+  border: 1px solid var(--public-line);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.045)),
+    rgba(9, 25, 46, 0.84);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+}
+
+.marketing-view .plan-price-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  min-height: 100%;
+  padding: 30px;
+}
+
+.marketing-view .plan-price-card.featured {
+  border-color: rgba(245, 200, 66, 0.34);
+  background:
+    radial-gradient(circle at 85% 12%, rgba(245, 200, 66, 0.2), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05)),
+    rgba(9, 25, 46, 0.88);
+}
+
+.marketing-view .plan-price-card strong {
+  margin: 4px 0 0;
+  font-size: clamp(2.65rem, 4vw, 4rem);
+  line-height: 1;
+}
+
+.marketing-view .plan-price-card strong small {
+  color: var(--public-muted);
+  font-size: 0.34em;
+}
+
+.marketing-view .plan-price-card p {
+  margin: 0;
+  color: var(--public-muted);
+  line-height: 1.6;
+}
+
+.marketing-view .plan-detail-grid {
+  width: min(var(--container), calc(100% - 32px));
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 18px;
+  margin: 28px auto 0;
+}
+
+.marketing-view .plan-feature-panel {
+  padding: 28px;
+}
+
+.marketing-view .plan-feature-panel h2 {
+  color: #ffffff;
+}
+
+.marketing-view .plan-feature-panel p {
+  margin-bottom: 0;
+  color: var(--public-muted);
+  line-height: 1.65;
+}
+
+.marketing-view .plan-feature-panel .check-list {
+  margin-bottom: 0;
+}
+
+.marketing-view .plan-testimonial {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 28px;
+}
+
+.marketing-view .plan-testimonial p {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.45rem, 2.2vw, 2.2rem);
+  font-weight: 780;
+  line-height: 1.18;
+}
+
+.marketing-view .plan-testimonial cite {
+  color: var(--public-cyan);
+  font-style: normal;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.marketing-view .plan-detail-page .feature-comparison-table th:nth-child(3),
+.marketing-view .plan-detail-page .feature-comparison-table td:nth-child(3) {
+  color: inherit;
+}
+
+.marketing-view .plan-detail-page .feature-comparison-table.plan-focus-starter th:nth-child(2),
+.marketing-view .plan-detail-page .feature-comparison-table.plan-focus-starter td:nth-child(2),
+.marketing-view .plan-detail-page .feature-comparison-table.plan-focus-professional th:nth-child(3),
+.marketing-view .plan-detail-page .feature-comparison-table.plan-focus-professional td:nth-child(3),
+.marketing-view .plan-detail-page .feature-comparison-table.plan-focus-growth th:nth-child(4),
+.marketing-view .plan-detail-page .feature-comparison-table.plan-focus-growth td:nth-child(4) {
+  color: var(--public-cyan);
+}
+
 .marketing-view .feature-grid,
 .marketing-view .use-case-grid {
   display: grid;
@@ -8506,6 +8653,87 @@ body.is-onboarding-route .app-content {
 }
 
 @media (max-width: 720px) {
+  .marketing-view .plan-detail-page {
+    width: 100%;
+    padding-top: 38px;
+    padding-bottom: 58px;
+  }
+
+  .marketing-view .plan-detail-page .plan-hero,
+  .marketing-view .plan-detail-grid {
+    width: min(100% - 24px, 1180px);
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .marketing-view .plan-detail-page .plan-hero {
+    margin-bottom: 18px;
+  }
+
+  .marketing-view .plan-detail-page .supporting-hero h1 {
+    font-size: 2.5rem;
+    line-height: 1.02;
+  }
+
+  .marketing-view .plan-price-card,
+  .marketing-view .plan-feature-panel,
+  .marketing-view .plan-testimonial {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .marketing-view .plan-testimonial {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .marketing-view .plan-testimonial p {
+    font-size: 1.35rem;
+    line-height: 1.22;
+  }
+
+  .marketing-view .plan-testimonial cite {
+    white-space: normal;
+  }
+
+  .marketing-view .plan-comparison-panel {
+    width: min(100% - 24px, 1180px);
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .marketing-view .plan-detail-page .comparison-table-wrap {
+    margin: 0 -2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .marketing-view .plan-detail-page .feature-comparison-table {
+    min-width: 650px;
+    font-size: 0.84rem;
+  }
+
+  .marketing-view .plan-detail-page .feature-comparison-table th,
+  .marketing-view .plan-detail-page .feature-comparison-table td {
+    padding: 11px 9px;
+    white-space: normal;
+  }
+
+  .marketing-view .plan-detail-page .feature-comparison-table th:first-child,
+  .marketing-view .plan-detail-page .feature-comparison-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    min-width: 152px;
+    background: #081a2f;
+    box-shadow: 12px 0 20px rgba(0, 0, 0, 0.22);
+  }
+
+  .marketing-view .plan-detail-page .feature-comparison-table thead th:first-child {
+    z-index: 3;
+  }
+
   .marketing-view .pricing-page {
     width: min(100% - 24px, 1180px);
     padding-top: 38px;
@@ -8633,6 +8861,18 @@ body.is-onboarding-route .app-content {
 }
 
 @media (max-width: 430px) {
+  .marketing-view .plan-detail-page .supporting-hero h1 {
+    font-size: 2.18rem;
+  }
+
+  .marketing-view .plan-price-card strong {
+    font-size: 2.32rem;
+  }
+
+  .marketing-view .plan-detail-page .feature-comparison-table {
+    min-width: 610px;
+  }
+
   .marketing-view .pricing-page .supporting-hero h1 {
     font-size: 2.22rem;
   }
