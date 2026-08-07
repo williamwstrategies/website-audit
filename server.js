@@ -7,6 +7,7 @@ const { PostHog } = require('posthog-node');
 const billing = require('./lib/billing');
 const lifecycleEmails = require('./lib/lifecycle-emails');
 const { generateReportPdf } = require('./lib/pdf');
+const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
 
 const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
   host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
@@ -230,6 +231,7 @@ async function sendSupportEmail(payload) {
 
   let response;
   try {
+    await ensureResendTrackingEnabled(apiKey);
     response = await fetch(RESEND_EMAIL_API_URL, {
       method: 'POST',
       headers: {

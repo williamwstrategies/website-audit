@@ -17,6 +17,12 @@ services:
         sync: false
       - key: RESEND_API_KEY
         sync: false
+      - key: RESEND_DOMAIN_ID
+        sync: false
+      - key: RESEND_TRACKING_SUBDOMAIN
+        sync: false
+      - key: RESEND_TRACKING_AUTO_CONFIGURE
+        sync: false
       - key: SUPPORT_EMAIL_TO
         sync: false
       - key: SUPPORT_EMAIL_FROM
