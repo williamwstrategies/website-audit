@@ -33,6 +33,10 @@ services:
         sync: false
       - key: LIFECYCLE_EMAIL_INTERVAL_MINUTES
         sync: false
+      - key: LIFECYCLE_EMAIL_TEST_RECIPIENTS
+        sync: false
+      - key: LIFECYCLE_EMAIL_TEST_DELAYS_MINUTES
+        sync: false
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_ANON_KEY

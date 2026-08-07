@@ -1243,8 +1243,8 @@ app.get('*', (req, res) => {
 let lifecycleEmailRunInProgress = false;
 
 function lifecycleEmailIntervalMs() {
-  const minutes = Number(process.env.LIFECYCLE_EMAIL_INTERVAL_MINUTES || 60);
-  const safeMinutes = Number.isFinite(minutes) && minutes >= 15 ? minutes : 60;
+  const minutes = Number(process.env.LIFECYCLE_EMAIL_INTERVAL_MINUTES || 15);
+  const safeMinutes = Number.isFinite(minutes) && minutes >= 15 ? minutes : 15;
   return safeMinutes * 60 * 1000;
 }
 
