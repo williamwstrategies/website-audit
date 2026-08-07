@@ -93,22 +93,46 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         </div>
       </div>
 
-      <div class="product-showcase hero-demo-preview screenshot-float" aria-label="Interactive demo preview">
-        <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Demo Assessment</strong></div>
-        <div class="demo-preview-score">
-          <span>Northstar Roofing</span>
-          <strong>38</strong>
-          <small>Static fictional demo data</small>
+      <div class="product-showcase hero-report-preview screenshot-float" aria-label="Website assessment report preview">
+        <div class="mock-browser-bar hero-report-window-bar"><span></span><span></span><span></span><strong>Website Assessment</strong><em>Complete</em></div>
+        <div class="hero-report-topline">
+          <div class="hero-report-brand"><span>WS</span><strong>Website Strategy Scan</strong></div>
+          <small>Prepared for North Star Roofing</small>
         </div>
-        <div class="demo-preview-grid">
-          <span>SEO <b>24</b></span>
-          <span>Trust <b>31</b></span>
-          <span>Conversion <b>18</b></span>
-          <span>Technical <b>57</b></span>
-          <span>Performance <b>42</b></span>
-          <span>Design <b>78</b></span>
+        <div class="hero-report-grid">
+          <section class="hero-report-score-card" aria-label="Overall website health score">
+            <span>Overall Website Health</span>
+            <div><strong>58</strong><small>/100</small></div>
+            <i aria-hidden="true"><b style="width:58%"></b></i>
+            <p>Needs improvement in areas that may be costing calls and enquiries.</p>
+          </section>
+          <section class="hero-report-summary-card">
+            <span>Executive Summary</span>
+            <h2>Clear opportunities to improve trust and conversion.</h2>
+            <p>The website has a usable foundation, but several sales-critical signals are either weak, unclear, or missing.</p>
+          </section>
         </div>
-        <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
+        <div class="hero-report-section-heading">
+          <span>02</span>
+          <div>
+            <strong>Category Breakdown</strong>
+            <small>Each category is scored out of 100.</small>
+          </div>
+        </div>
+        <div class="hero-report-categories">
+          <div class="hero-report-category risk"><span>Performance</span><strong>42<small>/100</small></strong><i><b style="width:42%"></b></i></div>
+          <div class="hero-report-category risk"><span>SEO</span><strong>56<small>/100</small></strong><i><b style="width:56%"></b></i></div>
+          <div class="hero-report-category warn"><span>Trust &amp; Credibility</span><strong>64<small>/100</small></strong><i><b style="width:64%"></b></i></div>
+          <div class="hero-report-category risk"><span>Conversion</span><strong>39<small>/100</small></strong><i><b style="width:39%"></b></i></div>
+        </div>
+        <div class="hero-report-priority">
+          <span>03</span>
+          <div>
+            <strong>Calls-to-action are unclear across key service pages.</strong>
+            <small>Visitors may not know the best next step after reading.</small>
+          </div>
+          <em>High</em>
+        </div>
       </div>
     </section>
 
