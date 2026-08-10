@@ -16,8 +16,8 @@ The broadcast can bypass that pause only when the protected send command include
 - Step: `seven_day_trial_offer_2026_08`
 - Subject: `7 Days to Close Your Next Website Project`
 - CTA URL: `/app/billing?trial=7-day`
-- Recipient source: Supabase Auth users with valid email addresses
-- Skips: deleted users, duplicate emails, unsubscribed emails, and users already sent this campaign
+- Recipient source: Supabase Auth users with valid email addresses who are not subscribed
+- Skips: subscribed/trialing users, deleted users, duplicate emails, unsubscribed emails, and users already sent this campaign
 
 ## Copy
 
@@ -50,7 +50,7 @@ curl -X POST "https://scanner.wstrategiescanada.ca/api/email/broadcast/seven-day
   --data '{"dryRun":true,"limit":500}'
 ```
 
-Check `eligible`, `would_send`, `skipped`, and `sample_recipients`.
+Check `eligible`, `would_send`, `skipped.already_subscribed`, `skipped`, and `sample_recipients`.
 
 ## Send
 
