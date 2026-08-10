@@ -436,6 +436,13 @@ function lifecycleDryRun(req) {
   return /^(1|true|yes)$/i.test(cleanSupportText(req.query.dryRun || req.query.dry_run || req.body?.dryRun || req.body?.dry_run, 20));
 }
 
+function broadcastDryRun(req) {
+  const explicitDryRun = cleanSupportText(req.query.dryRun || req.query.dry_run || req.body?.dryRun || req.body?.dry_run, 20);
+  if (explicitDryRun) return !/^(0|false|no)$/i.test(explicitDryRun);
+  const sendRequested = cleanSupportText(req.query.send || req.body?.send, 20);
+  return !/^(1|true|yes)$/i.test(sendRequested);
+}
+
 app.all('/api/lifecycle/abandoned-signups/run', async (req, res) => {
   try {
     requireLifecycleSecret(req);
@@ -483,6 +490,34 @@ app.post('/api/email/test', async (req, res) => {
       pausedBypassedForTest: outboundEmailsPaused(),
       ...delivery,
     });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.all('/api/email/broadcast/seven-day-trial/run', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const result = await lifecycleEmails.runSevenDayTrialBroadcast({
+      dryRun: broadcastDryRun(req),
+      limit: req.query.limit || req.body?.limit,
+      confirm: req.query.confirm || req.body?.confirm,
+    });
+    posthog.capture({
+      distinctId: 'seven-day-trial-broadcast-runner',
+      event: 'seven_day_trial_broadcast_run',
+      properties: {
+        dry_run: result.dryRun,
+        eligible: result.eligible,
+        selected: result.selected,
+        sent: result.sent,
+        failed: result.failed,
+        remaining_after_run: result.remaining_after_run,
+      },
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
     res.status(statusCode).json(body);

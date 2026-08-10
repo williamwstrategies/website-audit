@@ -25,6 +25,10 @@ services:
         sync: false
       - key: OUTBOUND_EMAILS_PAUSED
         value: "true"
+      - key: EMAIL_TEST_SECRET
+        sync: false
+      - key: BROADCAST_EMAIL_MAX_PER_RUN
+        value: "500"
       - key: SUPPORT_EMAIL_TO
         sync: false
       - key: SUPPORT_EMAIL_FROM
