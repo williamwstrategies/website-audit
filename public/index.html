@@ -8,18 +8,18 @@
 <meta name="apple-mobile-web-app-title" content="PitchProof">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>PitchProof | Website Sales Intelligence for Agencies</title>
-<meta id="metaDescription" name="description" content="Start with 7 days free. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals. Scan websites, save reports, and export branded PDFs.">
+<meta id="metaDescription" name="description" content="Start with a free assessment preview. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals. Scan websites, save reports, and export branded PDFs.">
 <meta id="robotsMeta" name="robots" content="index,follow">
 <link id="canonicalUrl" rel="canonical" href="https://scanner.wstrategiescanada.ca/">
 <meta id="ogTitle" property="og:title" content="PitchProof | Website Sales Intelligence for Agencies">
-<meta id="ogDescription" property="og:description" content="Start with 7 days free. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals.">
+<meta id="ogDescription" property="og:description" content="Start with a free assessment preview. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals.">
 <meta id="ogUrl" property="og:url" content="https://scanner.wstrategiescanada.ca/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PitchProof">
 <meta property="og:image" content="https://scanner.wstrategiescanada.ca/assets/before-after-proof.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta id="twitterTitle" name="twitter:title" content="PitchProof | Website Sales Intelligence for Agencies">
-<meta id="twitterDescription" name="twitter:description" content="Start with 7 days free. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals.">
+<meta id="twitterDescription" name="twitter:description" content="Start with a free assessment preview. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals.">
 <meta name="twitter:image" content="https://scanner.wstrategiescanada.ca/assets/before-after-proof.png">
 <!-- Meta Pixel Code -->
 <script>
@@ -65,11 +65,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/pricing" data-route>Pricing</a>
       <a href="/faq" data-route>FAQ</a>
       <a class="mobile-nav-only" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
-      <a class="mobile-nav-only mobile-nav-cta" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a>
+      <a class="mobile-nav-only mobile-nav-cta" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
     </nav>
     <div class="nav-actions">
       <a class="nav-link" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
-      <a class="analyze-btn nav-cta" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a>
+      <a class="analyze-btn nav-cta" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
     </div>
   </div>
 </header>
@@ -80,12 +80,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="marketing-copy">
         <div class="badge">Website sales intelligence for agencies</div>
         <h1 id="homeHeroTitle">Turn Any Prospect's Website Into the Business Case for Hiring You.</h1>
-        <p class="hero-sub">PitchProof creates client-ready opportunity reports that show where a prospect's website may be losing trust, leads, and revenue. Start with 7 days free.</p>
+        <p class="hero-sub">PitchProof creates client-ready opportunity reports that show where a prospect's website may be losing trust, leads, and revenue. Start with one free assessment preview before choosing a plan.</p>
         <div class="hero-actions hero-primary-actions">
-          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a>
+          <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
           <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
         </div>
-        <small class="hero-free-note">No charge today. Your first payment is collected after the 7-day trial.</small>
+        <small class="hero-free-note">Start with one free assessment preview. Upgrade after the preview to begin the 7-day trial.</small>
         <div class="hero-proof-row" aria-label="Product facts">
           <span>Sales-Ready Reports</span>
           <span>PDF Reports</span>
@@ -355,11 +355,39 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <h2 id="finalCtaTitle">Start Delivering Better Website Audits Today.</h2>
       <p>Create professional website assessments under your own brand and bring clearer evidence to every sales conversation.</p>
       <div class="hero-actions">
-        <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a>
+        <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
         <a class="secondary-btn" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
       </div>
     </section>
   </div>
+
+  <article class="public-page supporting-page free-assessment-page" data-public-page="free-assessment" hidden>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div>
+        <div class="section-kicker">Free Assessment</div>
+        <h1>Start with a real prospect website.</h1>
+        <p>Enter a website you could contact this week. PitchProof will prepare a real report preview, then ask you to create an account so the assessment can be saved to your workspace.</p>
+        <form class="free-assessment-form" id="freeAssessmentForm" novalidate>
+          <label class="lead-field">
+            <span class="lead-label">Prospect Website URL</span>
+            <input class="url-input" type="url" id="freeAssessmentUrl" name="website" placeholder="https://prospectwebsite.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+            <small class="field-help">Use a prospect site, not your own. The goal is to see how the report can support a sales conversation.</small>
+          </label>
+          <button class="analyze-btn" type="submit">Generate Free Assessment</button>
+          <div class="public-status-message" id="freeAssessmentMessage" role="status" hidden></div>
+        </form>
+      </div>
+      <div class="product-showcase free-assessment-flow-card" aria-label="Free assessment flow">
+        <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Free Assessment Flow</strong></div>
+        <div class="free-flow-steps">
+          <div><span>01</span><strong>Enter prospect URL</strong><p>Pick a real sales opportunity.</p></div>
+          <div><span>02</span><strong>Create account while it prepares</strong><p>Your report is attached to your workspace.</p></div>
+          <div><span>03</span><strong>Preview the findings</strong><p>See the score, priorities, and one full recommendation.</p></div>
+          <div><span>04</span><strong>Start the 7-day trial</strong><p>Unlock the complete report and PDF export.</p></div>
+        </div>
+      </div>
+    </div>
+  </article>
 
   <article class="public-page supporting-page product-page" data-public-page="product" hidden>
     <div class="supporting-hero page-hero-grid" data-reveal>
@@ -368,7 +396,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <h1>A complete audit workspace for agency sales teams.</h1>
         <p>Scan prospect websites, review scores, save reports, export PDFs, and present everything under your agency brand from one polished platform.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a>
+          <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
           <a class="secondary-btn" href="/sample-report" data-route data-public-event="demo_report_clicked">View Example Report</a>
         </div>
       </div>
@@ -440,7 +468,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <section class="marketing-cta final-dark-cta" data-reveal>
       <h2>Build a stronger website assessment workflow.</h2>
       <p>Start with a prospect URL and turn it into a professional report your agency can present with confidence.</p>
-      <div class="hero-actions"><a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a><a class="secondary-btn" href="/pricing" data-route>View Pricing</a></div>
+      <div class="hero-actions"><a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a><a class="secondary-btn" href="/pricing" data-route>View Pricing</a></div>
     </section>
   </article>
 
@@ -471,7 +499,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <section class="marketing-cta final-dark-cta" data-reveal>
       <h2>See the output before you start.</h2>
       <p>Explore the fictional demo report to understand how the final assessment is structured.</p>
-      <div class="hero-actions"><a class="analyze-btn" href="/sample-report" data-route>View Example Report</a><a class="secondary-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a></div>
+      <div class="hero-actions"><a class="analyze-btn" href="/sample-report" data-route>View Example Report</a><a class="secondary-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a></div>
     </section>
   </article>
 
@@ -515,9 +543,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="marketing-cta inline-demo-cta">
         <h2>Ready to generate reports using real websites?</h2>
-        <p>Start a 7-day free trial, generate real reports immediately, and let Stripe begin billing only after the trial ends.</p>
+        <p>Start with a free assessment preview, then unlock the full report with a 7-day trial when you are ready.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a>
+          <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
           <a class="secondary-btn" href="/pricing" data-route data-public-event="demo_pricing_clicked">See Pricing</a>
         </div>
       </div>
@@ -819,7 +847,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
       <details data-faq-item><summary>Does it guarantee closed clients?</summary><p>No. The platform does not guarantee sales results. It helps agencies present clearer evidence and recommendations.</p></details>
     </section>
-    <section class="marketing-cta final-dark-cta" data-reveal><h2>Ready to create your first assessment?</h2><p>Start with a prospect website and see how the report frames the conversation. Your first 7 days are free.</p><div class="hero-actions"><a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a><a class="secondary-btn" href="/sample-report" data-route>View Example Report</a></div></section>
+    <section class="marketing-cta final-dark-cta" data-reveal><h2>Ready to create your first assessment?</h2><p>Start with a prospect website and see how the report frames the conversation before choosing a plan.</p><div class="hero-actions"><a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a><a class="secondary-btn" href="/sample-report" data-route>View Example Report</a></div></section>
   </article>
 
   <article class="public-page supporting-page contact-page" data-public-page="contact" hidden>
@@ -881,7 +909,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <nav class="footer-grid" aria-label="Footer navigation">
       <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Demo Report</a><a href="/pricing" data-route>Pricing</a></div>
       <div><h2>Company</h2><a href="/about" data-route>About</a><a href="/contact" data-route>Contact</a><a href="/faq" data-route>FAQ</a></div>
-      <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-cta-label="Start 7-Day Free Trial" data-public-event="pricing_signup_clicked">Start 7-Day Free Trial</a></div>
+      <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a></div>
       <div><h2>Legal</h2><a href="/privacy" data-route>Privacy Policy</a><a href="/terms" data-route>Terms of Service</a></div>
     </nav>
   </footer>
@@ -900,6 +928,15 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="section-kicker" id="authKicker">Secure Access</div>
       <h1 id="authTitle">Sign in to PitchProof</h1>
       <p id="authIntro">Access your agency workspace and continue generating professional website assessments.</p>
+    </div>
+
+    <div class="auth-prep-panel" id="authFreeAssessmentPanel" hidden>
+      <div class="auth-prep-header">
+        <span>Report preparing</span>
+        <strong id="authFreeAssessmentWebsite">Prospect website</strong>
+      </div>
+      <div class="auth-prep-progress" aria-hidden="true"><i></i></div>
+      <p>Create your account now so the assessment can finish, save to your workspace, and open as your free preview.</p>
     </div>
 
     <div class="auth-tabs" aria-label="Authentication options">
@@ -2170,6 +2207,8 @@ let scanUrlFocusTracked = false;
 let scanUrlEnteredTracked = false;
 let lockedPreviewViewedTracked = false;
 let upgradePromptViewedTracked = false;
+let autoFreePreviewStartedFor = '';
+let freeAssessmentSignupPromptTracked = false;
 let activeMetaScan = null;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
@@ -2440,7 +2479,7 @@ const PUBLIC_PAGE_META = {
   home: {
     path: '/',
     title: 'PitchProof | Website Sales Intelligence for Agencies',
-    description: 'Start with 7 days free. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals.',
+    description: 'Start with a free assessment preview. Turn prospect websites into client-ready business cases for sales calls, outreach, and proposals.',
   },
   product: {
     path: '/product',
@@ -2456,6 +2495,11 @@ const PUBLIC_PAGE_META = {
     path: '/sample-report',
     title: 'Demo Website Opportunity Report | PitchProof',
     description: 'Explore a safe fictional demo opportunity report showing scores, categories, priorities, and recommendations.',
+  },
+  'free-assessment': {
+    path: '/free-assessment',
+    title: 'Free Website Assessment | PitchProof',
+    description: 'Enter a prospect website, create an account while the report prepares, and preview the assessment before starting a 7-day trial.',
   },
   pricing: {
     path: '/pricing',
@@ -2752,9 +2796,33 @@ function renderAuthPanel(panel = 'login') {
   };
 
   const activeCopy = copy[panel] || copy.login;
+  const freePreviewWebsite = readPendingFreePreviewWebsite();
+  const freePreviewIntent = hasFreePreviewIntent() || readFreePreviewIntentFromUrl();
+  const showFreeAssessmentPrep = Boolean(freePreviewIntent && freePreviewWebsite && (panel === 'signup' || panel === 'login'));
+  if (showFreeAssessmentPrep && panel === 'signup') {
+    activeCopy.kicker = 'Free Assessment';
+    activeCopy.title = 'Create your account while we prepare the report.';
+    activeCopy.intro = 'Your free assessment preview will start automatically after account creation.';
+  } else if (showFreeAssessmentPrep && panel === 'login') {
+    activeCopy.kicker = 'Free Assessment';
+    activeCopy.title = 'Sign in to finish your free assessment.';
+    activeCopy.intro = 'Your saved website will open in the free preview flow after login.';
+  }
   document.getElementById('authKicker').textContent = activeCopy.kicker;
   document.getElementById('authTitle').textContent = activeCopy.title;
   document.getElementById('authIntro').textContent = activeCopy.intro;
+
+  const prepPanel = document.getElementById('authFreeAssessmentPanel');
+  const prepWebsite = document.getElementById('authFreeAssessmentWebsite');
+  if (prepPanel) prepPanel.hidden = !showFreeAssessmentPrep;
+  if (prepWebsite && freePreviewWebsite) prepWebsite.textContent = freePreviewWebsite.replace(/^https?:\/\//i, '');
+  if (showFreeAssessmentPrep && !freeAssessmentSignupPromptTracked) {
+    freeAssessmentSignupPromptTracked = true;
+    trackProductAnalytics('free_assessment_signup_prompt_viewed', {
+      panel,
+      source: 'free_assessment',
+    });
+  }
 
   document.querySelectorAll('[data-auth-panel]').forEach(node => {
     node.hidden = node.dataset.authPanel !== panel;
@@ -3521,6 +3589,29 @@ function updateScanPageMode() {
   });
   const cancel = document.getElementById('auditCancelLink');
   if (cancel) cancel.setAttribute('href', values.cancelHref);
+}
+
+function schedulePendingFreePreviewAutostart() {
+  if (!isFreePreviewRoute() || !authProvider?.isAuthenticated?.()) return;
+  const website = readPendingFreePreviewWebsite();
+  const input = document.getElementById('urlInput');
+  if (!website || !input) return;
+  input.value = website;
+  if (autoFreePreviewStartedFor === website) return;
+  autoFreePreviewStartedFor = website;
+  trackProductAnalytics('free_assessment_autostarted', {
+    source: 'signup_free_assessment',
+  });
+  window.setTimeout(() => {
+    if (!isFreePreviewRoute()) return;
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    if (analyzeBtn?.dataset.scanning === 'true' || pendingScanResult) return;
+    clearPendingFreePreviewWebsite();
+    if (window.location.search) {
+      window.history.replaceState({}, '', '/onboarding/free-preview');
+    }
+    runAnalysis();
+  }, 700);
 }
 
 function updateReportMetrics() {
@@ -4428,6 +4519,10 @@ function renderRoute() {
   const isLogin = isAuthRoute(path);
   const isOnboardingRoute = path === '/onboarding' || path.startsWith('/onboarding/');
   const isApp = path.startsWith('/app') || isOnboardingRoute;
+  if (isFreePreviewRoute(path)) {
+    markFreePreviewIntent();
+    readPendingFreePreviewWebsite();
+  }
   const publicKey = publicPageKey(path);
   const marketingView = document.getElementById('marketing-view');
   const marketingNav = document.getElementById('marketingNav');
@@ -4466,8 +4561,8 @@ function renderRoute() {
   }
 
   if (authProvider?.ready && isApp && !authProvider.isAuthenticated()) {
-    pendingProtectedPath = path;
-    window.history.replaceState({}, '', '/login');
+    pendingProtectedPath = isFreePreviewRoute(path) ? freePreviewPathWithPendingWebsite() : `${path}${window.location.search}`;
+    window.history.replaceState({}, '', isFreePreviewRoute(path) ? freePreviewLoginPath() : '/login');
     renderRoute();
     return;
   }
@@ -4533,6 +4628,7 @@ function renderRoute() {
     else if (key === 'scan') {
       showAppPanel('scan');
       updateScanPageMode();
+      schedulePendingFreePreviewAutostart();
     }
     else showAppPanel('dashboard');
 
@@ -4580,6 +4676,11 @@ function readFreePreviewIntentFromUrl() {
   return params.get('intent') === 'free-scan' || ['/onboarding/free-preview', '/app/onboarding/free-preview'].includes(params.get('returnTo'));
 }
 
+function pendingFreePreviewWebsiteFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return normalizeUrl(params.get('website') || params.get('url') || '');
+}
+
 function signupRouteHasPlan(path = window.location.pathname, search = window.location.search) {
   if (!path.startsWith('/signup')) return false;
   return new URLSearchParams(search).has('plan');
@@ -4607,6 +4708,55 @@ function markFreePreviewIntent() {
   } catch {
     // Storage privacy settings should not interrupt signup.
   }
+}
+
+function storePendingFreePreviewWebsite(value) {
+  const url = normalizeUrl(value);
+  if (!url) return '';
+  try {
+    localStorage.setItem('leadcheck.pendingFreePreviewWebsite', url);
+    sessionStorage.setItem('leadcheck.pendingFreePreviewWebsite', url);
+  } catch {
+    // Storage privacy settings should not interrupt the free assessment flow.
+  }
+  return url;
+}
+
+function readPendingFreePreviewWebsite() {
+  const urlValue = pendingFreePreviewWebsiteFromUrl();
+  if (urlValue) {
+    storePendingFreePreviewWebsite(urlValue);
+    return urlValue;
+  }
+  try {
+    return normalizeUrl(sessionStorage.getItem('leadcheck.pendingFreePreviewWebsite') || localStorage.getItem('leadcheck.pendingFreePreviewWebsite') || '');
+  } catch {
+    return '';
+  }
+}
+
+function clearPendingFreePreviewWebsite() {
+  try {
+    localStorage.removeItem('leadcheck.pendingFreePreviewWebsite');
+    sessionStorage.removeItem('leadcheck.pendingFreePreviewWebsite');
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
+function freePreviewPathWithPendingWebsite(base = '/onboarding/free-preview') {
+  const website = readPendingFreePreviewWebsite();
+  return website ? `${base}?website=${encodeURIComponent(website)}&autorun=1` : base;
+}
+
+function freePreviewLoginPath() {
+  const website = readPendingFreePreviewWebsite();
+  const params = new URLSearchParams({
+    intent: 'free-scan',
+    returnTo: '/onboarding/free-preview',
+  });
+  if (website) params.set('website', website);
+  return `/login?${params.toString()}`;
 }
 
 function clearOnboardingIntent() {
@@ -4644,7 +4794,7 @@ function hasOnboardingIntent() {
 }
 
 function authDestinationAfterLogin(fallback = '/app') {
-  if (hasFreePreviewIntent()) return '/onboarding/free-preview';
+  if (hasFreePreviewIntent()) return freePreviewPathWithPendingWebsite();
   return hasOnboardingIntent() ? '/onboarding' : fallback;
 }
 
@@ -4675,6 +4825,10 @@ function trackProductAnalytics(eventName, params = {}) {
     'onboarding_choice_viewed',
     'onboarding_plan_selected',
     'free_preview_selected',
+    'free_assessment_cta_clicked',
+    'free_assessment_url_submitted',
+    'free_assessment_signup_prompt_viewed',
+    'free_assessment_autostarted',
     'free_preview_viewed',
     'scan_url_focused',
     'scan_url_entered',
@@ -4798,6 +4952,35 @@ function bindPublicMarketingControls() {
   sampleDemoForm?.addEventListener('submit', event => {
     event.preventDefault();
     startStaticDemoReport();
+  });
+
+  const freeAssessmentForm = document.getElementById('freeAssessmentForm');
+  freeAssessmentForm?.addEventListener('submit', event => {
+    event.preventDefault();
+    const input = document.getElementById('freeAssessmentUrl');
+    const message = document.getElementById('freeAssessmentMessage');
+    const url = normalizeUrl(input?.value || '');
+    if (!url) {
+      if (message) {
+        message.hidden = false;
+        message.dataset.tone = 'error';
+        message.textContent = 'Enter a valid website URL to generate your free assessment.';
+      }
+      return;
+    }
+    const storedUrl = storePendingFreePreviewWebsite(url);
+    markFreePreviewIntent();
+    clearRequiredPlanSelection();
+    trackProductAnalytics('free_assessment_url_submitted', {
+      source: 'public_free_assessment',
+      has_protocol: /^https?:\/\//i.test(input?.value || ''),
+    });
+    const params = new URLSearchParams({
+      intent: 'free-scan',
+      returnTo: '/onboarding/free-preview',
+      website: storedUrl,
+    });
+    navigateTo(`/signup?${params.toString()}`);
   });
 
   document.querySelectorAll('[data-demo-offer-close]').forEach(control => {
@@ -5073,7 +5256,7 @@ function bindAuthForms() {
         name,
         email,
         password,
-        redirectTo: wantsFreePreview ? '/login?intent=free-scan&returnTo=/onboarding/free-preview' : (wantsOnboarding ? '/login?intent=free-scan' : '/login'),
+        redirectTo: wantsFreePreview ? freePreviewLoginPath() : (wantsOnboarding ? '/login?intent=free-scan' : '/login'),
       });
       if (error) {
         setAuthMessage(readableErrorMessage(error, 'Sign up failed. Please try again.'), 'error');
@@ -5087,7 +5270,7 @@ function bindAuthForms() {
       if (data?.session) {
         authProvider.session = data.session;
         authProvider.user = data.session.user || data.user || null;
-        navigateTo(wantsFreePreview ? '/onboarding/free-preview' : (wantsOnboarding ? '/onboarding' : '/app/billing'));
+        navigateTo(wantsFreePreview ? freePreviewPathWithPendingWebsite() : (wantsOnboarding ? '/onboarding' : '/app/billing'));
         return;
       }
 

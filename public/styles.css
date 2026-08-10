@@ -443,6 +443,68 @@ a {
   width: 100%;
 }
 
+.auth-prep-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(245, 200, 66, 0.26);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(245, 200, 66, 0.12), rgba(255, 255, 255, 0.74)),
+    var(--surface);
+}
+
+.auth-prep-panel[hidden] {
+  display: none;
+}
+
+.auth-prep-header {
+  display: grid;
+  gap: 4px;
+}
+
+.auth-prep-header span {
+  color: #8a6312;
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-prep-header strong {
+  color: var(--text);
+  font-size: 1.04rem;
+  overflow-wrap: anywhere;
+}
+
+.auth-prep-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.auth-prep-progress {
+  overflow: hidden;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(29, 29, 31, 0.08);
+}
+
+.auth-prep-progress i {
+  display: block;
+  width: 58%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  animation: authPrepProgress 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes authPrepProgress {
+  from { width: 34%; }
+  to { width: 82%; }
+}
+
 .auth-alt-link {
   justify-self: center;
   color: var(--muted);
@@ -4941,6 +5003,54 @@ body.required-plan-open {
 .product-showcase {
   min-width: 0;
   padding: 18px;
+}
+
+.free-assessment-form {
+  display: grid;
+  gap: 14px;
+  max-width: 620px;
+  margin-top: 28px;
+}
+
+.free-assessment-form .analyze-btn {
+  width: fit-content;
+}
+
+.free-assessment-flow-card {
+  display: grid;
+  gap: 14px;
+}
+
+.free-flow-steps {
+  display: grid;
+  gap: 12px;
+}
+
+.free-flow-steps div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.free-flow-steps span {
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.free-flow-steps strong {
+  color: var(--text-primary);
+}
+
+.free-flow-steps p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.55;
 }
 
 .mock-browser-bar {
