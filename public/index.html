@@ -67,6 +67,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/how-it-works" data-route>How It Works</a>
       <a href="/sample-report" data-route>Demo Report</a>
       <a href="/pricing" data-route>Pricing</a>
+      <a href="/resources" data-route>Resources</a>
       <a href="/faq" data-route>FAQ</a>
       <a class="mobile-nav-only" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
       <a class="mobile-nav-only mobile-nav-cta" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
@@ -908,13 +909,82 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     </div>
   </article>
 
+  <article class="public-page supporting-page seo-dynamic-page" data-public-page="seo-dynamic" hidden>
+    <div class="supporting-hero page-hero-grid" data-reveal>
+      <div>
+        <div class="section-kicker" id="seoPageKicker">Resources</div>
+        <h1 id="seoPageTitle">Website audit resources for agencies.</h1>
+        <p id="seoPageIntro">Focused pages for agencies that use website assessments to support sales conversations.</p>
+        <div class="hero-actions">
+          <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked" id="seoPagePrimaryCta">Get Free Assessment</a>
+          <a class="secondary-btn" href="/sample-report" data-route id="seoPageSecondaryCta">View Example Report</a>
+        </div>
+      </div>
+      <div class="product-showcase seo-hero-card" aria-label="PitchProof scan preview">
+        <div class="mock-browser-bar"><span></span><span></span><span></span><strong id="seoCardTitle">PitchProof</strong></div>
+        <div class="mock-score-card glow-card">
+          <span id="seoCardKicker">Website assessment</span>
+          <strong id="seoCardScore">39</strong>
+          <small>Opportunity score</small>
+        </div>
+        <div class="mock-category"><span>Trust</span><strong>34/100</strong></div>
+        <div class="mock-category"><span>Conversion</span><strong>32/100</strong></div>
+        <div class="mock-category"><span>Search visibility</span><strong>47/100</strong></div>
+      </div>
+    </div>
+
+    <section class="marketing-section seo-overview-section" data-reveal>
+      <div class="seo-copy-grid">
+        <article>
+          <span class="section-kicker" id="seoPainKicker">The Problem</span>
+          <h2 id="seoPainTitle">Most audits do not help agencies sell.</h2>
+          <p id="seoPainCopy">Traditional audit tools surface technical issues, but they rarely explain why a prospect should take action now.</p>
+        </article>
+        <article>
+          <span class="section-kicker" id="seoSolutionKicker">How PitchProof Helps</span>
+          <h2 id="seoSolutionTitle">Turn website issues into a clear business case.</h2>
+          <p id="seoSolutionCopy">PitchProof creates professional reports that connect website health, trust, search visibility, and conversion signals to a sales conversation.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="marketing-section" data-reveal>
+      <div class="section-kicker" id="seoHighlightsKicker">What You Can Show</div>
+      <h2 id="seoHighlightsTitle">A report prospects can actually understand.</h2>
+      <div class="seo-highlight-grid" id="seoHighlightsGrid"></div>
+    </section>
+
+    <section class="marketing-section seo-linked-section" data-reveal>
+      <div>
+        <div class="section-kicker">Related Pages</div>
+        <h2>Keep exploring the website assessment system.</h2>
+      </div>
+      <div class="seo-related-grid" id="seoRelatedLinks"></div>
+    </section>
+
+    <section class="marketing-section seo-faq-section" data-reveal>
+      <div class="section-kicker">FAQ</div>
+      <h2 id="seoFaqTitle">Common questions.</h2>
+      <div class="faq-section" id="seoFaqList"></div>
+    </section>
+
+    <section class="marketing-cta final-dark-cta" data-reveal>
+      <h2 id="seoCtaTitle">Create your first website assessment preview.</h2>
+      <p id="seoCtaCopy">Enter a prospect website and see how PitchProof frames website issues as business opportunities.</p>
+      <div class="hero-actions">
+        <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
+        <a class="secondary-btn" href="/pricing" data-route>View Pricing</a>
+      </div>
+    </section>
+  </article>
+
   <footer class="marketing-footer">
     <div class="footer-brand-block"><strong>PitchProof</strong><span>Website sales intelligence for agencies.</span></div>
     <nav class="footer-grid" aria-label="Footer navigation">
-      <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Demo Report</a><a href="/pricing" data-route>Pricing</a></div>
-      <div><h2>Company</h2><a href="/about" data-route>About</a><a href="/contact" data-route>Contact</a><a href="/faq" data-route>FAQ</a></div>
+      <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/website-audit-software" data-route>Website Audit Software</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Demo Report</a><a href="/pricing" data-route>Pricing</a></div>
+      <div><h2>Resources</h2><a href="/resources" data-route>Resource Hub</a><a href="/industries/web-design-agencies" data-route>Industry Pages</a><a href="/features/white-label-website-audit-reports" data-route>Feature Pages</a><a href="/templates/website-audit-template" data-route>Templates</a></div>
+      <div><h2>Company</h2><a href="/about" data-route>About</a><a href="/contact" data-route>Contact</a><a href="/faq" data-route>FAQ</a><a href="/privacy" data-route>Privacy</a><a href="/terms" data-route>Terms</a></div>
       <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a></div>
-      <div><h2>Legal</h2><a href="/privacy" data-route>Privacy Policy</a><a href="/terms" data-route>Terms of Service</a></div>
     </nav>
   </footer>
 </main>
@@ -2587,6 +2657,439 @@ const PUBLIC_PAGE_META = {
   },
 };
 
+const SEO_DYNAMIC_PAGE_KEY = 'seo-dynamic';
+
+const SEO_INDUSTRIES = [
+  ['web-design-agencies', 'Web Design Agencies', 'web design teams need a clearer way to prove why a redesign is worth doing now.', 'show prospects where trust, conversion, and content gaps are holding the website back.'],
+  ['marketing-agencies', 'Marketing Agencies', 'marketing teams need to connect website quality to campaign performance and lead conversion.', 'turn weak website signals into practical recommendations before more ad spend is wasted.'],
+  ['seo-agencies', 'SEO Agencies', 'SEO teams often need a report that executives and business owners can understand quickly.', 'translate search visibility, content structure, and technical findings into business impact.'],
+  ['freelance-web-designers', 'Freelance Web Designers', 'freelancers need a professional sales asset that makes them look established on discovery calls.', 'create polished assessments that explain the opportunity without building a custom deck from scratch.'],
+  ['digital-consultants', 'Digital Consultants', 'consultants need neutral evidence before recommending strategy, redesign, or conversion work.', 'frame the website as a measurable growth asset instead of a subjective design opinion.'],
+  ['wordpress-agencies', 'WordPress Agencies', 'WordPress teams often inherit slow, outdated, plugin-heavy sites with unclear conversion paths.', 'surface performance, trust, page structure, and content issues that justify a stronger rebuild plan.'],
+  ['webflow-agencies', 'Webflow Agencies', 'Webflow teams need to show why a cleaner, faster build can improve credibility and conversion.', 'connect visual polish, UX clarity, and sales-readiness in one client-ready assessment.'],
+  ['shopify-agencies', 'Shopify Agencies', 'Shopify teams need to prove where store experience, trust, and product-page clarity are costing revenue.', 'identify conversion and trust gaps that help position ecommerce optimization or rebuild work.'],
+];
+
+const SEO_FEATURES = [
+  ['white-label-website-audit-reports', 'White Label Website Audit Reports', 'Remove platform branding on eligible plans and present reports under your agency name, logo, colours, and contact details.', 'white-label reports'],
+  ['website-audit-pdf-generator', 'Website Audit PDF Generator', 'Export professional PDF reports that can be sent after sales calls, attached to proposals, or used as client follow-up.', 'PDF exports'],
+  ['ai-website-audit-reports', 'AI Website Audit Reports', 'Use AI-assisted summaries to explain website issues in plain language without losing the structure of a professional assessment.', 'AI summaries'],
+  ['website-audit-executive-summary', 'Website Audit Executive Summary', 'Give decision-makers a clear overview of what matters, why it matters, and what should happen next.', 'executive summaries'],
+  ['website-conversion-analysis', 'Website Conversion Analysis', 'Show where messaging, calls-to-action, page flow, and trust proof may be costing enquiries or sales conversations.', 'conversion analysis'],
+  ['website-trust-analysis', 'Website Trust Analysis', 'Evaluate whether the website gives visitors enough credibility, proof, and reassurance to take the next step.', 'trust analysis'],
+  ['website-technical-health-reports', 'Website Technical Health Reports', 'Summarize performance, broken links, metadata, structure, and technical issues in a client-friendly report.', 'technical health'],
+  ['website-visual-design-analysis', 'Website Visual Design Analysis', 'Connect visual design quality to trust, clarity, and the prospect’s ability to understand the business quickly.', 'visual design'],
+  ['website-opportunity-cost-calculator', 'Website Opportunity Cost Calculator', 'Frame website weaknesses as missed business opportunities so prospects can understand the cost of staying the same.', 'opportunity cost'],
+  ['website-lead-loss-estimator', 'Website Lead Loss Estimator', 'Explain how unclear conversion paths, weak trust proof, and poor UX can reduce the number of visitors who become leads.', 'lead loss'],
+];
+
+const SEO_USE_CASES = [
+  ['how-to-sell-more-website-projects', 'How to Sell More Website Projects', 'Use a structured website assessment to make the need for redesign, SEO, conversion, or trust work easier to understand.'],
+  ['website-audit-before-a-redesign', 'Website Audit Before a Redesign', 'Start redesign conversations with evidence instead of subjective opinions about layout, visuals, or technology.'],
+  ['website-audit-discovery-calls', 'Website Audit During Discovery Calls', 'Bring a clear assessment into discovery calls so prospects can see what is working, what is missing, and what to fix first.'],
+  ['website-audit-cold-email', 'Website Audit for Cold Email', 'Use a prospect-specific report preview to make cold outreach more relevant and less generic.'],
+  ['website-audit-website-proposals', 'Website Audit for Website Proposals', 'Attach a clear website assessment to proposals so recommendations feel grounded in evidence.'],
+  ['website-audit-sales-presentations', 'Website Audit for Sales Presentations', 'Turn website issues into a presentation that helps prospects understand the business case for action.'],
+  ['website-audit-lead-generation', 'Website Audit for Lead Generation', 'Use website assessments to start conversations with prospects who already have visible gaps to fix.'],
+  ['website-audit-client-onboarding', 'Website Audit for Client Onboarding', 'Use an assessment at kickoff to document baseline issues, priorities, and early opportunities.'],
+];
+
+const SEO_COMPARISONS = [
+  ['semrush-alternative-for-agencies', 'PitchProof vs SEMrush for Agency Sales', 'SEMrush is powerful for SEO research. PitchProof is built for agencies that need a client-ready website opportunity report for sales conversations.', 'SEMrush'],
+  ['ahrefs-alternative-for-agencies', 'PitchProof vs Ahrefs for Agency Sales', 'Ahrefs is excellent for backlink and keyword research. PitchProof focuses on turning website problems into a report prospects can understand.', 'Ahrefs'],
+  ['screaming-frog-alternative', 'PitchProof vs Screaming Frog', 'Screaming Frog is a technical crawler. PitchProof is designed to help agencies present website issues as business opportunities.', 'Screaming Frog'],
+  ['gtmetrix-alternative', 'PitchProof vs GTmetrix', 'GTmetrix focuses on performance diagnostics. PitchProof combines performance with trust, conversion, SEO, and sales-ready recommendations.', 'GTmetrix'],
+  ['agencyanalytics-alternative', 'PitchProof vs AgencyAnalytics', 'AgencyAnalytics is useful for dashboards and reporting. PitchProof is focused on prospect assessments and website sales enablement.', 'AgencyAnalytics'],
+];
+
+const SEO_TEMPLATES = [
+  ['website-audit-template', 'Website Audit Template', 'A practical structure for turning website findings into a clear, client-ready assessment.'],
+  ['website-audit-checklist', 'Website Audit Checklist', 'A checklist agencies can use to review trust, SEO, conversion, technical health, content, and design signals.'],
+  ['website-proposal-template', 'Website Proposal Template', 'A proposal framework that connects website problems to recommended project scope.'],
+  ['website-discovery-questionnaire', 'Website Discovery Questionnaire', 'Questions that help agencies uncover goals, friction, objections, and website performance concerns.'],
+  ['website-redesign-proposal-template', 'Website Redesign Proposal Template', 'A redesign proposal structure built around evidence, priorities, and expected business impact.'],
+  ['website-consultation-checklist', 'Website Consultation Checklist', 'A sales-call checklist for reviewing a prospect website live and keeping the conversation focused.'],
+  ['website-sales-presentation-template', 'Website Sales Presentation Template', 'A presentation outline for turning website assessment findings into a persuasive sales narrative.'],
+  ['website-launch-checklist', 'Website Launch Checklist', 'A launch checklist for making sure the new website has trust, conversion, SEO, and technical foundations in place.'],
+];
+
+const SEO_TOOLS = [
+  ['website-roi-calculator', 'Website ROI Calculator', 'Estimate how website improvements could affect leads, sales conversations, and project justification.'],
+  ['website-redesign-calculator', 'Website Redesign Calculator', 'Help prospects understand when a redesign is likely more valuable than small fixes.'],
+  ['lead-loss-calculator', 'Lead Loss Calculator', 'Estimate how unclear messaging, weak CTAs, and trust gaps can reduce lead flow.'],
+  ['website-pricing-calculator', 'Website Pricing Calculator', 'Help agencies frame website pricing around scope, value, and business outcomes.'],
+  ['homepage-checklist-generator', 'Homepage Checklist Generator', 'Create a practical homepage review checklist for prospecting and discovery calls.'],
+];
+
+function seoTitleWithBrand(title) {
+  return `${title} | PitchProof`;
+}
+
+function makeSeoMeta(path, title, description) {
+  return { path, title: seoTitleWithBrand(title), description };
+}
+
+function seoRelatedLinks(currentPath, limit = 6) {
+  return SEO_PAGES
+    .filter(page => page.path !== currentPath && page.includeInRelated !== false)
+    .slice(0, limit)
+    .map(page => ({ title: page.navTitle || page.h1, path: page.path, description: page.shortDescription || page.description }));
+}
+
+function seoPageBase({ path, title, h1, kicker, description, painTitle, painCopy, solutionTitle, solutionCopy, highlights, faq, related, cardKicker = 'Website assessment', cardScore = '39', includeInRelated = true }) {
+  return {
+    path,
+    title,
+    h1,
+    kicker,
+    description,
+    shortDescription: description,
+    painTitle,
+    painCopy,
+    solutionTitle,
+    solutionCopy,
+    highlights,
+    faq,
+    related,
+    cardKicker,
+    cardScore,
+    includeInRelated,
+    meta: makeSeoMeta(path, title, description),
+  };
+}
+
+const SEO_PAGES = [
+  seoPageBase({
+    path: '/website-audit-software',
+    title: 'Website Audit Software for Agencies',
+    h1: 'Website audit software built for agency sales conversations.',
+    kicker: 'Website Audit Software',
+    description: 'PitchProof helps agencies scan prospect websites, create professional opportunity reports, save assessments, export PDFs, and present findings with sales-ready clarity.',
+    painTitle: 'Most website audit software is built for technicians, not sales calls.',
+    painCopy: 'Traditional tools are useful internally, but prospects need a clear explanation of what is wrong, why it matters, and what should happen next.',
+    solutionTitle: 'PitchProof turns the scan into a client-ready business case.',
+    solutionCopy: 'Enter a prospect URL, generate a structured assessment, review trust, conversion, SEO, technical, and design signals, then use the report in outreach, discovery, and proposals.',
+    highlights: [
+      ['Prospect-ready reports', 'Show scores, priorities, and recommendations in language business owners can understand.'],
+      ['Agency workflow', 'Move from free assessment preview to saved report, PDF export, and plan-based white-label presentation.'],
+      ['Sales enablement focus', 'Use website issues to support a practical conversation about redesign, SEO, conversion, or trust improvements.'],
+    ],
+    related: [
+      { title: 'Website Audit Software for Web Design Agencies', path: '/industries/web-design-agencies', description: 'See the web design agency workflow.' },
+      { title: 'White Label Website Audit Reports', path: '/features/white-label-website-audit-reports', description: 'Present reports under your agency brand.' },
+      { title: 'Website Audit PDF Generator', path: '/features/website-audit-pdf-generator', description: 'Export client-ready PDF reports.' },
+      { title: 'Website Audit Template', path: '/templates/website-audit-template', description: 'Use a repeatable audit structure.' },
+    ],
+    faq: [
+      ['What is website audit software?', 'Website audit software reviews a website and turns findings into a structured report covering areas such as trust, conversion, SEO, technical health, performance, and presentation.'],
+      ['How is PitchProof different from technical SEO tools?', 'PitchProof is focused on creating client-ready website opportunity reports for agencies, not just internal technical diagnostics.'],
+      ['Can agencies white-label the reports?', 'Yes. White-label reporting is available on eligible plans.'],
+    ],
+  }),
+  seoPageBase({
+    path: '/resources',
+    title: 'Website Audit Resources for Agencies',
+    h1: 'Website audit resources for agencies that sell websites.',
+    kicker: 'Resource Hub',
+    description: 'Explore focused resources for agency sales, website audits, proposal support, templates, comparisons, and client-ready website assessments.',
+    painTitle: 'Generic content does not build search authority.',
+    painCopy: 'Agency owners search for very specific sales, audit, proposal, and client acquisition problems. A useful SEO system needs pages for each intent.',
+    solutionTitle: 'PitchProof connects the content ecosystem to the product.',
+    solutionCopy: 'Each resource points back to a concrete workflow: scan a prospect website, create a professional assessment, and use it to support the next sales conversation.',
+    highlights: [
+      ['Industry pages', 'Pages for web design, marketing, SEO, freelance, WordPress, Webflow, Shopify, and consulting audiences.'],
+      ['Feature pages', 'Dedicated pages for white-label reports, PDFs, AI summaries, conversion analysis, trust analysis, and technical health.'],
+      ['Templates and use cases', 'Practical pages for proposals, discovery calls, sales presentations, checklists, and lead generation.'],
+    ],
+    related: [
+      { title: 'Industry Pages', path: '/industries', description: 'Explore agency-specific website audit software pages.' },
+      { title: 'Feature Pages', path: '/features', description: 'See dedicated feature pages for the report workflow.' },
+      { title: 'Templates', path: '/templates', description: 'Find website audit, proposal, discovery, and launch templates.' },
+      { title: 'Comparisons', path: '/comparisons', description: 'Compare PitchProof with traditional SEO and reporting tools.' },
+      { title: 'Free Tools', path: '/tools', description: 'Explore upcoming calculators and lightweight tools.' },
+      { title: 'Use Cases', path: '/use-cases', description: 'See how agencies use assessments in real sales workflows.' },
+    ],
+    faq: [
+      ['Why build resource pages instead of only a blog?', 'Focused pages target high-intent searches that agency owners already make, while still supporting future educational content.'],
+      ['Do these pages replace the product pages?', 'No. They expand the public site so each search intent has a clear, relevant entry point into the product.'],
+    ],
+    includeInRelated: false,
+  }),
+  seoPageBase({
+    path: '/industries',
+    title: 'Website Audit Software by Agency Type',
+    h1: 'Website audit software for every kind of agency.',
+    kicker: 'Industry Pages',
+    description: 'Find focused PitchProof pages for web design agencies, marketing agencies, SEO agencies, freelancers, consultants, WordPress teams, Webflow teams, and Shopify agencies.',
+    painTitle: 'Every agency sells website work a little differently.',
+    painCopy: 'A generic homepage cannot speak to the way each agency type handles discovery, proposals, objections, and client presentation.',
+    solutionTitle: 'Each industry page connects PitchProof to a specific sales motion.',
+    solutionCopy: 'The pages explain how agencies can use website assessments to make prospects understand what needs to change and why it matters.',
+    highlights: SEO_INDUSTRIES.slice(0, 6).map(([slug, name, pain]) => [name, pain]),
+    related: SEO_INDUSTRIES.map(([slug, name, pain]) => ({ title: `Website Audit Software for ${name}`, path: `/industries/${slug}`, description: pain })),
+    faq: [
+      ['Which agency type should I start with?', 'Start with the page closest to how you sell today. Most users begin with web design, marketing, SEO, or freelance web design.'],
+      ['Can the reports be white-labeled?', 'Yes. Professional, Growth, and Enterprise plans support agency branding on reports and PDFs.'],
+    ],
+    includeInRelated: false,
+  }),
+  ...SEO_INDUSTRIES.map(([slug, name, pain, outcome]) => seoPageBase({
+    path: `/industries/${slug}`,
+    title: `Website Audit Software for ${name}`,
+    h1: `Website audit software for ${name.toLowerCase()}.`,
+    kicker: name,
+    description: `PitchProof helps ${name.toLowerCase()} create client-ready website assessments that explain trust, conversion, SEO, and website health issues in a sales-friendly way.`,
+    painTitle: `${name} need more than a technical audit.`,
+    painCopy: `For ${name.toLowerCase()}, the hardest part is often helping prospects understand why the website needs work before a proposal is sent. ${pain}`,
+    solutionTitle: 'PitchProof turns website problems into proposal-ready evidence.',
+    solutionCopy: `Run a scan, review the opportunity score, and use the report to ${outcome}`,
+    highlights: [
+      ['Sales-ready report structure', 'Show the score, category breakdown, top priorities, and recommendations in language a business owner can understand.'],
+      ['White-label presentation', 'Eligible plans let the agency present reports with its own logo, colours, contact details, and booking link.'],
+      ['Faster prospecting workflow', 'Use one prospect URL to create a report preview that can support outreach, discovery, or proposal follow-up.'],
+    ],
+    related: [
+      { title: 'White Label Website Audit Reports', path: '/features/white-label-website-audit-reports', description: 'Present reports under your agency brand.' },
+      { title: 'Website Audit PDF Generator', path: '/features/website-audit-pdf-generator', description: 'Export client-ready PDFs.' },
+      { title: 'Website Audit for Website Proposals', path: '/use-cases/website-audit-website-proposals', description: 'Use assessments to strengthen proposals.' },
+      { title: 'Website Audit Template', path: '/templates/website-audit-template', description: 'Use a structured report framework.' },
+    ],
+    faq: [
+      [`How can ${name.toLowerCase()} use PitchProof?`, 'Use it before or during a sales conversation to show where the prospect website is weak and what should be fixed first.'],
+      ['Is this a technical SEO audit tool?', 'It includes SEO and technical health signals, but the report is built for sales enablement and client presentation rather than deep technical crawling.'],
+      ['Can I use my own branding?', 'White-label branding is available on Professional, Growth, and Enterprise plans.'],
+    ],
+  })),
+  seoPageBase({
+    path: '/features',
+    title: 'Website Audit Software Features',
+    h1: 'Feature pages for the website assessment workflow.',
+    kicker: 'Features',
+    description: 'Explore PitchProof features for white-label reports, PDF exports, AI summaries, executive summaries, conversion analysis, trust analysis, and technical health reporting.',
+    painTitle: 'Feature lists are easy to skim past.',
+    painCopy: 'Each core feature deserves a focused page that explains the sales problem it solves and how agencies can use it.',
+    solutionTitle: 'PitchProof features are designed around client presentation.',
+    solutionCopy: 'The platform helps agencies move from scan input to professional assessment, saved report, PDF export, and upgrade-ready white-label presentation.',
+    highlights: SEO_FEATURES.slice(0, 6).map(([, title, description]) => [title, description]),
+    related: SEO_FEATURES.map(([slug, title, description]) => ({ title, path: `/features/${slug}`, description })),
+    faq: [
+      ['Do all plans include saved reports?', 'Yes. Saved reports are available across plans, with white-label presentation enabled on Professional and above.'],
+      ['Can reports be exported as PDFs?', 'Yes. PDF exports are part of the reporting workflow.'],
+    ],
+    includeInRelated: false,
+  }),
+  ...SEO_FEATURES.map(([slug, title, description, signal]) => seoPageBase({
+    path: `/features/${slug}`,
+    title,
+    h1: `${title}.`,
+    kicker: 'Feature',
+    description: `${description} Learn how PitchProof helps agencies turn ${signal} into a clearer sales conversation.`,
+    painTitle: `Agencies need ${signal} that prospects can understand.`,
+    painCopy: 'Traditional website audit outputs often feel too technical, too generic, or too detached from the business reason to take action.',
+    solutionTitle: `PitchProof makes ${signal} part of a client-ready report.`,
+    solutionCopy: description,
+    highlights: [
+      ['Clear scoring', 'Use category scores and plain-language explanations to show what is healthy, weak, or urgent.'],
+      ['Business impact', 'Connect the finding to trust, conversion, visibility, or lead generation instead of stopping at technical detail.'],
+      ['Presentation workflow', 'Save the report, share it, export it, or use it live during a sales conversation.'],
+    ],
+    related: [
+      { title: 'Website Audit Executive Summary', path: '/features/website-audit-executive-summary', description: 'Summarize the report for decision-makers.' },
+      { title: 'Website Audit PDF Generator', path: '/features/website-audit-pdf-generator', description: 'Export professional PDFs.' },
+      { title: 'White Label Website Audit Reports', path: '/features/white-label-website-audit-reports', description: 'Present under your agency brand.' },
+      { title: 'Website Audit Template', path: '/templates/website-audit-template', description: 'Use a structured audit format.' },
+    ],
+    faq: [
+      [`What is ${title.toLowerCase()}?`, description],
+      ['Who is this feature built for?', 'It is built for agencies, consultants, freelancers, and teams that need to explain website issues to prospects or clients.'],
+    ],
+  })),
+  seoPageBase({
+    path: '/use-cases',
+    title: 'Website Audit Use Cases for Agencies',
+    h1: 'Use website assessments throughout the agency sales process.',
+    kicker: 'Use Cases',
+    description: 'See how agencies use PitchProof for cold email, discovery calls, website proposals, redesign conversations, sales presentations, lead generation, and onboarding.',
+    painTitle: 'Website audits are most useful when tied to a moment in the sales process.',
+    painCopy: 'A report can support outreach, discovery, proposal follow-up, onboarding, or strategic planning when the page explains that exact use case.',
+    solutionTitle: 'PitchProof gives agencies a repeatable report workflow.',
+    solutionCopy: 'The same assessment can help start the conversation, explain the need, and give prospects a professional next step.',
+    highlights: SEO_USE_CASES.slice(0, 6).map(([, title, description]) => [title, description]),
+    related: SEO_USE_CASES.map(([slug, title, description]) => ({ title, path: `/use-cases/${slug}`, description })),
+    faq: [
+      ['Can PitchProof be used before a sales call?', 'Yes. Many agencies scan a prospect website before outreach or discovery so the call has a concrete starting point.'],
+      ['Can the report be used after a call?', 'Yes. Reports can be saved and exported, making them useful for follow-up and proposals.'],
+    ],
+    includeInRelated: false,
+  }),
+  ...SEO_USE_CASES.map(([slug, title, description]) => seoPageBase({
+    path: `/use-cases/${slug}`,
+    title,
+    h1: `${title}.`,
+    kicker: 'Use Case',
+    description: `${description} PitchProof helps agencies create the report structure behind that conversation.`,
+    painTitle: 'A sales conversation is harder without evidence.',
+    painCopy: 'Prospects may like the idea of improving their website, but they often need to see the concrete gaps before they understand the urgency.',
+    solutionTitle: 'Use a website assessment to make the next step obvious.',
+    solutionCopy: description,
+    highlights: [
+      ['Start with a prospect URL', 'Scan a real website and use the findings as the starting point for the conversation.'],
+      ['Show priorities', 'Give the prospect a ranked view of what matters most instead of overwhelming them with every possible issue.'],
+      ['Move toward a proposal', 'Use the report to explain why the recommended work is worth discussing now.'],
+    ],
+    related: [
+      { title: 'Website Proposal Template', path: '/templates/website-proposal-template', description: 'Turn findings into proposal structure.' },
+      { title: 'Website Audit During Discovery Calls', path: '/use-cases/website-audit-discovery-calls', description: 'Use the report live in discovery.' },
+      { title: 'How to Sell More Website Projects', path: '/use-cases/how-to-sell-more-website-projects', description: 'Use assessments to support website sales.' },
+      { title: 'Website Audit Software for Web Design Agencies', path: '/industries/web-design-agencies', description: 'See the web design agency workflow.' },
+    ],
+    faq: [
+      ['Does this replace a proposal?', 'No. It supports the proposal by making the problems and priorities easier to understand.'],
+      ['Can I use it for cold outreach?', 'Yes. A specific assessment can make outreach feel more relevant than a generic pitch.'],
+    ],
+  })),
+  seoPageBase({
+    path: '/comparisons',
+    title: 'Website Audit Software Comparisons',
+    h1: 'Compare PitchProof with traditional SEO and audit tools.',
+    kicker: 'Comparisons',
+    description: 'Compare PitchProof with SEMrush, Ahrefs, Screaming Frog, GTmetrix, and AgencyAnalytics for agencies focused on website sales conversations.',
+    painTitle: 'Most tools were not designed for sales enablement.',
+    painCopy: 'SEO crawlers, analytics dashboards, and performance tools are powerful, but they often leave agencies translating findings into client-friendly language manually.',
+    solutionTitle: 'PitchProof is built for prospect presentation.',
+    solutionCopy: 'Use it when the goal is to create a clear website opportunity report that helps a prospect understand why the website needs work.',
+    highlights: SEO_COMPARISONS.map(([, title, description]) => [title, description]),
+    related: SEO_COMPARISONS.map(([slug, title, description]) => ({ title, path: `/comparisons/${slug}`, description })),
+    faq: [
+      ['Is PitchProof a replacement for technical SEO tools?', 'Not always. It is best used as a sales and presentation layer for website assessments.'],
+      ['Can agencies still use SEO tools with PitchProof?', 'Yes. Many teams can use specialist tools internally and PitchProof externally for prospect-ready reports.'],
+    ],
+    includeInRelated: false,
+  }),
+  ...SEO_COMPARISONS.map(([slug, title, description, competitor]) => seoPageBase({
+    path: `/comparisons/${slug}`,
+    title,
+    h1: `${title}.`,
+    kicker: 'Comparison',
+    description,
+    painTitle: `${competitor} is not primarily a website sales report tool.`,
+    painCopy: `${competitor} can be useful for specialist workflows, but agency prospects often need a clear explanation of business impact, not another technical dashboard.`,
+    solutionTitle: 'Use PitchProof when presentation and action are the goal.',
+    solutionCopy: description,
+    highlights: [
+      ['Sales-first framing', 'Reports focus on business-facing priorities such as trust, conversion, website health, and visible opportunities.'],
+      ['Client-ready output', 'The report is structured for a prospect or client to read without needing technical translation.'],
+      ['White-label workflow', 'Eligible plans let agencies present the assessment under their own brand.'],
+    ],
+    related: [
+      { title: 'Best Website Audit Software Features', path: '/features', description: 'Explore the PitchProof report workflow.' },
+      { title: 'Website Audit for Sales Presentations', path: '/use-cases/website-audit-sales-presentations', description: 'Use reports in sales conversations.' },
+      { title: 'White Label Website Audit Reports', path: '/features/white-label-website-audit-reports', description: 'Present assessments under your agency brand.' },
+    ],
+    faq: [
+      [`Is PitchProof better than ${competitor}?`, `It depends on the job. ${competitor} may be stronger for its specialist use case, while PitchProof is built for client-ready website assessments and agency sales conversations.`],
+      ['Can I use both tools?', 'Yes. Use specialist tools for deeper internal research and PitchProof when you need a polished prospect-facing report.'],
+    ],
+  })),
+  seoPageBase({
+    path: '/templates',
+    title: 'Website Audit Templates for Agencies',
+    h1: 'Website audit templates and sales resources for agencies.',
+    kicker: 'Templates',
+    description: 'Explore website audit templates, proposal templates, discovery questionnaires, redesign proposal templates, consultation checklists, and sales presentation templates.',
+    painTitle: 'Agencies need repeatable sales assets.',
+    painCopy: 'Without a structure, every audit, proposal, and discovery call becomes custom work that slows the team down.',
+    solutionTitle: 'Templates turn the assessment into a repeatable process.',
+    solutionCopy: 'PitchProof reports give agencies a built-in structure, and these template pages support the surrounding sales workflow.',
+    highlights: SEO_TEMPLATES.slice(0, 6).map(([, title, description]) => [title, description]),
+    related: SEO_TEMPLATES.map(([slug, title, description]) => ({ title, path: `/templates/${slug}`, description })),
+    faq: [
+      ['Are these templates downloadable?', 'The first version is presented as SEO landing pages. Downloadable lead magnets can be added next.'],
+      ['How do templates connect to PitchProof?', 'PitchProof produces the assessment data and report structure that can feed proposals, presentations, and discovery workflows.'],
+    ],
+    includeInRelated: false,
+  }),
+  ...SEO_TEMPLATES.map(([slug, title, description]) => seoPageBase({
+    path: `/templates/${slug}`,
+    title,
+    h1: `${title}.`,
+    kicker: 'Template',
+    description: `${description} Use PitchProof to generate the website assessment behind the template.`,
+    painTitle: 'Templates work better with real website evidence.',
+    painCopy: 'A blank template can guide the conversation, but a prospect-specific assessment makes the recommendations feel concrete.',
+    solutionTitle: 'Use PitchProof as the evidence layer.',
+    solutionCopy: description,
+    highlights: [
+      ['Start with assessment data', 'Use score, category, priority, and recommendation sections as the foundation.'],
+      ['Explain the business case', 'Tie issues back to trust, conversion, search visibility, and lead generation.'],
+      ['Move into next steps', 'Use the template to guide proposal, follow-up, onboarding, or launch planning.'],
+    ],
+    related: [
+      { title: 'Website Audit Checklist', path: '/templates/website-audit-checklist', description: 'Review the key signals in a website assessment.' },
+      { title: 'Website Proposal Template', path: '/templates/website-proposal-template', description: 'Turn audit findings into scope.' },
+      { title: 'Website Audit Software for Marketing Agencies', path: '/industries/marketing-agencies', description: 'See a sales workflow for marketing teams.' },
+    ],
+    faq: [
+      ['Can I use this template with clients?', 'Yes. The page outlines a practical structure, and PitchProof can generate the report evidence behind it.'],
+      ['Does this require a paid plan?', 'You can start with a free assessment preview, then choose a plan to unlock full reporting workflows.'],
+    ],
+  })),
+  seoPageBase({
+    path: '/tools',
+    title: 'Free Website Tools for Agencies',
+    h1: 'Free website tools and calculators for agency sales.',
+    kicker: 'Free Tools',
+    description: 'Explore upcoming tools for website ROI, redesign timing, lead loss, pricing, and homepage checklist generation.',
+    painTitle: 'Calculators make website problems easier to understand.',
+    painCopy: 'Prospects often need a simple way to connect website gaps to lost leads, missed opportunities, or project value.',
+    solutionTitle: 'PitchProof starts with the assessment report.',
+    solutionCopy: 'The current product generates website assessment previews. These calculator and checklist pages create a roadmap for additional lightweight tools.',
+    highlights: SEO_TOOLS.map(([, title, description]) => [title, description]),
+    related: SEO_TOOLS.map(([slug, title, description]) => ({ title, path: `/tools/${slug}`, description })),
+    faq: [
+      ['Are these tools live now?', 'These pages establish the tool roadmap. The live product currently starts with a website assessment preview.'],
+      ['Which tool should be built first?', 'The lead loss calculator and website ROI calculator are strong first candidates because they connect directly to sales conversations.'],
+    ],
+    includeInRelated: false,
+  }),
+  ...SEO_TOOLS.map(([slug, title, description]) => seoPageBase({
+    path: `/tools/${slug}`,
+    title,
+    h1: `${title}.`,
+    kicker: 'Free Tool',
+    description: `${description} Start with a PitchProof assessment preview while this tool is being developed.`,
+    painTitle: 'Prospects respond to concrete numbers and priorities.',
+    painCopy: 'A simple calculator or checklist can make the cost of website inaction easier to discuss.',
+    solutionTitle: 'Use a website assessment as the starting point.',
+    solutionCopy: `${description} The current PitchProof workflow helps agencies create the website report that can feed this kind of tool.`,
+    highlights: [
+      ['Assessment-first workflow', 'Start with a real website scan and identify the most important trust, conversion, SEO, and health gaps.'],
+      ['Sales conversation support', 'Use the output to make a business case instead of relying only on opinion.'],
+      ['Roadmap-ready page', 'This page creates a clear future home for the interactive tool when it is built.'],
+    ],
+    related: [
+      { title: 'Free Website Assessment', path: '/free-assessment', description: 'Start with one report preview.' },
+      { title: 'Website Lead Loss Estimator', path: '/features/website-lead-loss-estimator', description: 'Explain lead loss in the report workflow.' },
+      { title: 'Website Opportunity Cost Calculator', path: '/features/website-opportunity-cost-calculator', description: 'Frame missed opportunity.' },
+    ],
+    faq: [
+      ['Is this calculator available now?', 'The page is prepared for the SEO and product roadmap. The current live action is generating a website assessment preview.'],
+      ['Can I still use PitchProof today?', 'Yes. Start with the free assessment preview and unlock complete reports through a plan.'],
+    ],
+  })),
+];
+
+const SEO_PAGE_INDEX = Object.fromEntries(SEO_PAGES.map(page => [page.path, page]));
+
+function seoPageForPath(path = window.location.pathname) {
+  return SEO_PAGE_INDEX[String(path || '').replace(/\/$/, '') || '/'] || null;
+}
+
+function publicMetaForKey(key) {
+  if (key === SEO_DYNAMIC_PAGE_KEY) return seoPageForPath()?.meta || PUBLIC_PAGE_META.home;
+  return PUBLIC_PAGE_META[key] || PUBLIC_PAGE_META.home;
+}
+
 const LEGACY_APP_ROUTE_ALIASES = {
   '/dashboard': '/app',
   '/reports': '/app/reports',
@@ -2599,7 +3102,7 @@ const LEGACY_APP_ROUTE_ALIASES = {
 };
 
 function publicPageKey(path = window.location.pathname) {
-  return Object.entries(PUBLIC_PAGE_META).find(([, meta]) => meta.path === path)?.[0] || '';
+  return Object.entries(PUBLIC_PAGE_META).find(([, meta]) => meta.path === path)?.[0] || (seoPageForPath(path) ? SEO_DYNAMIC_PAGE_KEY : '');
 }
 
 function savedReportIdFromPath(path = window.location.pathname) {
@@ -2682,7 +3185,7 @@ function setMetaContent(selector, value, attr = 'content') {
 }
 
 function applyRouteSeo({ key = 'home', noindex = false, canonicalPath = '' } = {}) {
-  const meta = PUBLIC_PAGE_META[key] || PUBLIC_PAGE_META.home;
+  const meta = publicMetaForKey(key);
   const canonical = `${window.location.origin}${canonicalPath || meta.path}`;
   document.title = noindex ? 'PitchProof Account Access' : meta.title;
   setMetaContent('#metaDescription', noindex ? 'PitchProof account access.' : meta.description);
@@ -2696,12 +3199,81 @@ function applyRouteSeo({ key = 'home', noindex = false, canonicalPath = '' } = {
   setMetaContent('#twitterDescription', meta.description);
 }
 
+function setTextContent(id, value = '') {
+  const node = document.getElementById(id);
+  if (node) node.textContent = value;
+}
+
+function seoHighlightHtml(item) {
+  const [title, description] = Array.isArray(item) ? item : [item?.title, item?.description];
+  return `
+    <article class="feature-card seo-highlight-card">
+      <span class="feature-icon">Insight</span>
+      <h3>${escHtml(title || 'Website assessment insight')}</h3>
+      <p>${escHtml(description || 'Use a clearer report structure to explain what should happen next.')}</p>
+    </article>
+  `;
+}
+
+function seoRelatedHtml(item) {
+  return `
+    <a class="seo-related-card" href="${escHtml(item.path || '/resources')}" data-route>
+      <strong>${escHtml(item.title || 'Related resource')}</strong>
+      <span>${escHtml(item.description || 'Explore another focused PitchProof resource page.')}</span>
+    </a>
+  `;
+}
+
+function seoFaqHtml(item) {
+  const [question, answer] = Array.isArray(item) ? item : [item?.question, item?.answer];
+  return `<details><summary>${escHtml(question || 'How does this work?')}</summary><p>${escHtml(answer || 'PitchProof turns a prospect website into a structured assessment that supports sales conversations.')}</p></details>`;
+}
+
+function renderPublicSeoPage(page = seoPageForPath()) {
+  if (!page) return;
+  setTextContent('seoPageKicker', page.kicker || 'Resources');
+  setTextContent('seoPageTitle', page.h1 || page.title);
+  setTextContent('seoPageIntro', page.description);
+  setTextContent('seoCardTitle', 'PitchProof');
+  setTextContent('seoCardKicker', page.cardKicker || 'Website assessment');
+  setTextContent('seoCardScore', page.cardScore || '39');
+  setTextContent('seoPainKicker', page.kicker === 'Comparison' ? 'Positioning' : 'The Problem');
+  setTextContent('seoPainTitle', page.painTitle);
+  setTextContent('seoPainCopy', page.painCopy);
+  setTextContent('seoSolutionKicker', 'How PitchProof Helps');
+  setTextContent('seoSolutionTitle', page.solutionTitle);
+  setTextContent('seoSolutionCopy', page.solutionCopy);
+  setTextContent('seoHighlightsKicker', page.kicker || 'Highlights');
+  setTextContent('seoHighlightsTitle', page.kicker === 'Template' ? 'Use the template with real website evidence.' : 'What the report helps you show.');
+  setTextContent('seoFaqTitle', `${page.title} FAQ`);
+  setTextContent('seoCtaTitle', page.kicker === 'Free Tool' ? 'Start with a website assessment preview.' : 'Create your first website assessment preview.');
+  setTextContent('seoCtaCopy', 'Enter a prospect website and see how PitchProof frames website issues as business opportunities.');
+
+  const highlights = document.getElementById('seoHighlightsGrid');
+  if (highlights) {
+    highlights.innerHTML = (page.highlights || []).slice(0, 6).map(seoHighlightHtml).join('');
+  }
+
+  const related = document.getElementById('seoRelatedLinks');
+  if (related) {
+    related.innerHTML = (page.related?.length ? page.related : seoRelatedLinks(page.path)).slice(0, 8).map(seoRelatedHtml).join('');
+  }
+
+  const faq = document.getElementById('seoFaqList');
+  if (faq) {
+    faq.innerHTML = (page.faq || []).slice(0, 4).map(seoFaqHtml).join('');
+  }
+}
+
 function renderPublicPage(key = 'home') {
-  const pageKey = PUBLIC_PAGE_META[key] ? key : 'home';
+  const pageKey = PUBLIC_PAGE_META[key] || key === SEO_DYNAMIC_PAGE_KEY ? key : 'home';
   if (pageKey !== 'sample-report') {
     stopDemoScanTimers();
     closeDemoOfferModal({ dismissed: false });
     restoreReportShellToApp();
+  }
+  if (pageKey === SEO_DYNAMIC_PAGE_KEY) {
+    renderPublicSeoPage(seoPageForPath());
   }
   document.querySelectorAll('[data-public-page]').forEach(page => {
     page.hidden = page.dataset.publicPage !== pageKey;
@@ -2710,7 +3282,8 @@ function renderPublicPage(key = 'home') {
     const href = link.getAttribute('href') || '';
     const targetPath = href.split('#')[0] || '/';
     const isPricingFamily = pageKey.startsWith('pricing') && targetPath === '/pricing';
-    link.classList.toggle('active', PUBLIC_PAGE_META[pageKey]?.path === targetPath || isPricingFamily);
+    const isResourcesFamily = pageKey === SEO_DYNAMIC_PAGE_KEY && targetPath === '/resources';
+    link.classList.toggle('active', publicMetaForKey(pageKey)?.path === targetPath || isPricingFamily || isResourcesFamily);
   });
   applyRouteSeo({ key: pageKey });
   if (!viewedPublicPages.has(pageKey)) {

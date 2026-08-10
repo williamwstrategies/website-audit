@@ -5234,7 +5234,8 @@ body.required-plan-open {
 .brand-comparison,
 .report-preview-layout,
 .feature-group-grid,
-.supporting-grid {
+.supporting-grid,
+.seo-copy-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
@@ -5243,7 +5244,8 @@ body.required-plan-open {
 .comparison-panel article,
 .brand-comparison article,
 .feature-group-grid article,
-.supporting-grid section {
+.supporting-grid section,
+.seo-copy-grid article {
   padding: 24px;
 }
 
@@ -5258,6 +5260,7 @@ body.required-plan-open {
 .comparison-panel p,
 .brand-comparison p,
 .supporting-grid p,
+.seo-copy-grid p,
 .feature-group-grid li,
 .comparison-panel li {
   color: var(--muted);
@@ -5325,6 +5328,68 @@ body.required-plan-open {
   color: var(--accent-strong);
   font-weight: 760;
   text-decoration: none;
+}
+
+.seo-hero-card {
+  display: grid;
+  gap: 14px;
+}
+
+.seo-copy-grid article,
+.seo-related-card,
+.seo-highlight-card {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow: var(--shadow-soft);
+}
+
+.seo-copy-grid h2 {
+  margin: 8px 0 10px;
+  color: var(--text-primary);
+  font-size: clamp(1.5rem, 2.4vw, 2.15rem);
+  line-height: 1.08;
+}
+
+.seo-copy-grid p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.seo-highlight-grid,
+.seo-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.seo-highlight-card p {
+  color: var(--text-secondary);
+}
+
+.seo-related-card {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.seo-related-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(95, 181, 255, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.seo-related-card span {
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.seo-faq-section .faq-section {
+  margin-top: 22px;
 }
 
 .sample-report-shell {
@@ -5567,6 +5632,8 @@ body.required-plan-open {
   }
 
   .feature-group-grid,
+  .seo-highlight-grid,
+  .seo-related-grid,
   .screen-gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -5620,6 +5687,9 @@ body.required-plan-open {
   .comparison-panel,
   .brand-comparison,
   .report-preview-layout,
+  .seo-copy-grid,
+  .seo-highlight-grid,
+  .seo-related-grid,
   .supporting-grid,
   .flow-grid,
   .use-case-grid {

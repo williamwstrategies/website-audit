@@ -1433,6 +1433,113 @@ app.post('/api/lead-capture', async (req, res) => {
   }
 });
 
+const SITEMAP_PATHS = [
+  '/',
+  '/product',
+  '/how-it-works',
+  '/sample-report',
+  '/free-assessment',
+  '/pricing',
+  '/pricing/starter',
+  '/pricing/professional',
+  '/pricing/growth',
+  '/faq',
+  '/contact',
+  '/about',
+  '/privacy',
+  '/terms',
+  '/website-audit-software',
+  '/resources',
+  '/industries',
+  '/industries/web-design-agencies',
+  '/industries/marketing-agencies',
+  '/industries/seo-agencies',
+  '/industries/freelance-web-designers',
+  '/industries/digital-consultants',
+  '/industries/wordpress-agencies',
+  '/industries/webflow-agencies',
+  '/industries/shopify-agencies',
+  '/features',
+  '/features/white-label-website-audit-reports',
+  '/features/website-audit-pdf-generator',
+  '/features/ai-website-audit-reports',
+  '/features/website-audit-executive-summary',
+  '/features/website-conversion-analysis',
+  '/features/website-trust-analysis',
+  '/features/website-technical-health-reports',
+  '/features/website-visual-design-analysis',
+  '/features/website-opportunity-cost-calculator',
+  '/features/website-lead-loss-estimator',
+  '/use-cases',
+  '/use-cases/how-to-sell-more-website-projects',
+  '/use-cases/website-audit-before-a-redesign',
+  '/use-cases/website-audit-discovery-calls',
+  '/use-cases/website-audit-cold-email',
+  '/use-cases/website-audit-website-proposals',
+  '/use-cases/website-audit-sales-presentations',
+  '/use-cases/website-audit-lead-generation',
+  '/use-cases/website-audit-client-onboarding',
+  '/comparisons',
+  '/comparisons/semrush-alternative-for-agencies',
+  '/comparisons/ahrefs-alternative-for-agencies',
+  '/comparisons/screaming-frog-alternative',
+  '/comparisons/gtmetrix-alternative',
+  '/comparisons/agencyanalytics-alternative',
+  '/templates',
+  '/templates/website-audit-template',
+  '/templates/website-audit-checklist',
+  '/templates/website-proposal-template',
+  '/templates/website-discovery-questionnaire',
+  '/templates/website-redesign-proposal-template',
+  '/templates/website-consultation-checklist',
+  '/templates/website-sales-presentation-template',
+  '/templates/website-launch-checklist',
+  '/tools',
+  '/tools/website-roi-calculator',
+  '/tools/website-redesign-calculator',
+  '/tools/lead-loss-calculator',
+  '/tools/website-pricing-calculator',
+  '/tools/homepage-checklist-generator',
+];
+
+function publicSiteOrigin(req) {
+  return cleanSupportText(process.env.PUBLIC_SITE_URL, 2000).replace(/\/+$/, '') || requestOrigin(req) || 'https://scanner.wstrategiescanada.ca';
+}
+
+function escapeXml(value = '') {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+app.get('/sitemap.xml', (req, res) => {
+  const origin = publicSiteOrigin(req);
+  const lastmod = '2026-08-10';
+  const urls = SITEMAP_PATHS.map((pathName) => `
+  <url>
+    <loc>${escapeXml(`${origin}${pathName}`)}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${pathName === '/' ? 'weekly' : 'monthly'}</changefreq>
+    <priority>${pathName === '/' ? '1.0' : pathName.split('/').length <= 2 ? '0.8' : '0.7'}</priority>
+  </url>`).join('');
+  res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}
+</urlset>
+`);
+});
+
+app.get('/robots.txt', (req, res) => {
+  const origin = publicSiteOrigin(req);
+  res.type('text/plain').send(`User-agent: *
+Allow: /
+
+Sitemap: ${origin}/sitemap.xml
+`);
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
