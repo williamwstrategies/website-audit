@@ -1581,6 +1581,29 @@ button:disabled {
   font-size: 0.95rem;
 }
 
+.loading-education {
+  display: grid;
+  gap: 6px;
+  max-width: 520px;
+  margin: 18px auto 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 200, 66, 0.2);
+  border-radius: 16px;
+  background: rgba(245, 200, 66, 0.08);
+  text-align: left;
+}
+
+.loading-education strong {
+  color: var(--text);
+  font-size: 0.94rem;
+}
+
+.loading-education span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
 .loading-progress {
   max-width: 430px;
   margin: 28px auto 0;
@@ -8479,6 +8502,41 @@ body.demo-offer-open {
   gap: 18px;
 }
 
+.onboarding-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.onboarding-proof-grid article {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.055);
+  box-shadow: var(--shadow-subtle);
+}
+
+.onboarding-proof-grid span {
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+}
+
+.onboarding-proof-grid strong {
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.onboarding-proof-grid p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
 .onboarding-choice-card {
   display: grid;
   gap: 14px;
@@ -8628,6 +8686,70 @@ body.is-onboarding-route .app-content {
   flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-end;
+}
+
+.preview-recommendation-card {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 22px;
+  border: 1px solid rgba(53, 211, 153, 0.24);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(53, 211, 153, 0.11), rgba(255, 255, 255, 0.04)),
+    rgba(9, 25, 46, 0.9);
+  box-shadow: var(--shadow-card);
+}
+
+.preview-recommendation-card h3,
+.preview-recommendation-card p {
+  margin: 0;
+}
+
+.preview-recommendation-card h3 {
+  color: var(--text-primary);
+  font-size: clamp(1.25rem, 2vw, 1.7rem);
+}
+
+.preview-recommendation-card > p {
+  max-width: 860px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.preview-recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.preview-recommendation-grid div {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.preview-recommendation-grid span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.preview-recommendation-grid strong {
+  display: block;
+  color: var(--text-primary);
+}
+
+.preview-recommendation-grid p {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  line-height: 1.55;
 }
 
 .locked-content-grid {
@@ -8818,10 +8940,12 @@ body.is-onboarding-route .app-content {
 }
 
 @media (max-width: 760px) {
+  .onboarding-proof-grid,
   .onboarding-choice-grid,
   .preview-unlock-top-cta,
   .locked-preview-panel,
   .locked-preview-checklist,
+  .preview-recommendation-grid,
   .locked-content-grid {
     grid-template-columns: 1fr;
   }

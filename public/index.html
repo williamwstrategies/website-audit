@@ -1133,27 +1133,44 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="app-page-hero onboarding-hero">
           <div>
             <div class="section-kicker">Onboarding</div>
-            <h2>How Would You Like to Get Started?</h2>
-            <p>Start a 7-day free trial for complete access, or generate one complimentary report preview first.</p>
+            <h2>Create your first sales-ready proof point.</h2>
+            <p>The fastest way to understand PitchProof is to scan a real prospect you could contact this week, then review how the report frames the sales conversation.</p>
           </div>
           <div class="scan-context-panel">
-            <span>Account Setup</span>
-            <strong>Two paths</strong>
-            <p>You can start a no-charge 7-day Stripe trial or preview one real report before choosing a plan.</p>
+            <span>Recommended path</span>
+            <strong>Scan a prospect first</strong>
+            <p>Use a website from your pipeline, not your own site. The value is clearer when the report gives you a reason to start a real conversation.</p>
           </div>
+        </div>
+        <div class="onboarding-proof-grid" aria-label="How onboarding creates value">
+          <article>
+            <span>01</span>
+            <strong>Pick a prospect</strong>
+            <p>Choose a business you could realistically email, call, or pitch this week.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <strong>Run the preview</strong>
+            <p>See the score, category breakdown, top priorities, and one full recommendation.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <strong>Decide with context</strong>
+            <p>Upgrade when you can picture using the complete report in a sales conversation.</p>
+          </article>
         </div>
         <div class="onboarding-choice-grid">
           <article class="workspace-panel onboarding-choice-card">
             <div class="section-kicker">Option 1</div>
             <h3>Start a 7-Day Trial</h3>
-            <p>Choose a plan, generate complete website assessments immediately, and let Stripe start billing only after the trial ends.</p>
+            <p>Choose a plan and generate complete opportunity reports immediately. Stripe collects your payment method now and starts billing only after the trial ends.</p>
             <a class="analyze-btn" href="/app/billing" data-route data-onboarding-plan>View Trial Plans</a>
           </article>
           <article class="workspace-panel onboarding-choice-card featured">
             <div class="section-kicker">Option 2</div>
             <h3>Generate One Free Report Preview</h3>
-            <p>Scan one real website and preview the most important findings before choosing a plan.</p>
-            <small>You will see the website score categories and top priorities. Subscribe to unlock the complete findings, recommendations, and downloadable report.</small>
+            <p>Scan one real prospect website and preview the most important findings before choosing a plan.</p>
+            <small>You will see the website score, category breakdown, top priorities, and one complete recommendation. Subscribe to unlock every finding, business impact, PDF export, and white-label presentation.</small>
             <a class="analyze-btn" href="/onboarding/free-preview" data-route data-free-preview-selected>Generate Free Preview</a>
           </article>
         </div>
@@ -1176,13 +1193,13 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="app-page-hero scan-hero">
           <div>
             <div class="section-kicker" id="scanHeroKicker">New Audit</div>
-            <h2 id="scanHeroTitle">Generate Website Assessment</h2>
-            <p id="scanHeroCopy">Enter the prospect details and launch the existing website scan flow.</p>
+            <h2 id="scanHeroTitle">Scan a prospect website.</h2>
+            <p id="scanHeroCopy">Use a website from your actual pipeline so the report immediately shows how PitchProof can support outreach, discovery, or follow-up.</p>
           </div>
           <div class="scan-context-panel">
-            <span id="scanContextKicker">Output</span>
-            <strong id="scanContextTitle">Professional Report</strong>
-            <p id="scanContextCopy">The completed assessment saves automatically to Reports.</p>
+            <span id="scanContextKicker">Best first scan</span>
+            <strong id="scanContextTitle">A real prospect</strong>
+            <p id="scanContextCopy">A prospect site makes the value easier to judge than testing your own agency website.</p>
           </div>
         </div>
 
@@ -1191,7 +1208,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <div>
               <div class="section-kicker">Audit Details</div>
               <h2>Assessment Setup</h2>
-              <p>Only the website URL is required. The extra fields are saved with the report context.</p>
+              <p>Only the website URL is required. Add prospect context if you want the report to feel more client-ready.</p>
             </div>
           </div>
           <div class="billing-access-notice" id="scanBillingNotice" hidden>
@@ -1211,6 +1228,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <label class="lead-field">
                 <span class="lead-label">Website URL</span>
                 <input class="url-input" type="url" id="urlInput" name="website" placeholder="https://example.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+                <small class="field-help">Tip: scan a prospect you could contact this week. PitchProof is built to help you sell with evidence, not audit your own site.</small>
               </label>
               <label class="lead-field">
                 <span class="lead-label">Prepared For</span>
@@ -1678,8 +1696,12 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             </span>
           </div>
           <div class="spinner"></div>
-          <p class="loading-text">Analyzing website...</p>
-          <p class="loading-steps" id="loadingStep">Checking SEO visibility...</p>
+          <p class="loading-text">Building your sales-ready report...</p>
+          <p class="loading-steps" id="loadingStep">Finding the signals that affect trust...</p>
+          <div class="loading-education" aria-label="What PitchProof is preparing">
+            <strong>While we scan, think about the conversation this could start.</strong>
+            <span>We are turning website signals into business-language findings your prospect can understand.</span>
+          </div>
           <div class="loading-progress" aria-label="Analysis progress">
             <div class="loading-progress-top">
               <span>Report progress</span>
@@ -1838,6 +1860,23 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                     <a class="secondary-btn" href="/app" data-route>Return to Dashboard</a>
                   </div>
                 </div>
+                <article class="preview-recommendation-card" aria-label="Unlocked sample recommendation">
+                  <div class="section-kicker">Sample Recommendation Unlocked</div>
+                  <h3>Make the primary call-to-action impossible to miss.</h3>
+                  <p>The fastest sales opportunity is often clarity. If visitors understand the service but cannot quickly find the next step, qualified leads may leave without calling, booking, or requesting a quote.</p>
+                  <div class="preview-recommendation-grid">
+                    <div>
+                      <span>Business impact</span>
+                      <strong>More visitors reach the enquiry path.</strong>
+                      <p>Clear calls-to-action reduce hesitation and make the website feel easier to buy from.</p>
+                    </div>
+                    <div>
+                      <span>How to use this in a sales call</span>
+                      <strong>Frame it as missed demand, not a design opinion.</strong>
+                      <p>"The site has interest, but the next step is not obvious enough for visitors who are ready to act."</p>
+                    </div>
+                  </div>
+                </article>
                 <div class="locked-content-grid" aria-label="Locked report sections">
                   <div><span>Locked</span><strong>Detailed Findings</strong></div>
                   <div><span>Locked</span><strong>How to Fix</strong></div>
@@ -2104,12 +2143,12 @@ const CHECK_LABELS = {
 };
  
 const LOADING_STEPS = [
-  'Analyzing website structure...',
-  'Reviewing SEO visibility...',
-  'Evaluating trust signals...',
-  'Checking conversion opportunities...',
-  'Inspecting technical health...',
-  'Preparing your preview...',
+  'Finding the signals that affect trust...',
+  'Reviewing how clearly the site creates demand...',
+  'Checking SEO and technical visibility...',
+  'Looking for conversion friction...',
+  'Translating findings into business language...',
+  'Preparing the report you could use in a sales call...',
 ];
 
 const ANALYZE_API_URL = '/api/analyze';
@@ -2127,6 +2166,10 @@ let stepIdx = 0;
 let stepTimer = null;
 let progressTimer = null;
 let progressStartedAt = 0;
+let scanUrlFocusTracked = false;
+let scanUrlEnteredTracked = false;
+let lockedPreviewViewedTracked = false;
+let upgradePromptViewedTracked = false;
 let activeMetaScan = null;
 let pendingScanResult = null;
 let pendingWebsiteUrl = null;
@@ -3444,20 +3487,20 @@ function updateScanPageMode() {
   const values = isPreview
     ? {
         kicker: 'Free Report Preview',
-        title: 'Generate Your Free Report Preview',
-        copy: 'Enter a website URL to see its most important opportunities and performance categories.',
-        contextKicker: 'Included',
-        contextTitle: 'One real preview',
-        contextCopy: 'You will see the score categories and top priorities. Full report access requires a paid plan.',
+        title: 'Scan a real prospect website.',
+        copy: 'Use a website from your actual pipeline so the preview shows how PitchProof can support outreach, discovery, or follow-up.',
+        contextKicker: 'Best first scan',
+        contextTitle: 'A real prospect',
+        contextCopy: 'You will see the score, category breakdown, top priorities, and one full recommendation before choosing a plan.',
         button: 'Generate My Preview',
         cancelHref: '/onboarding',
       }
     : {
         kicker: 'New Audit',
-        title: 'Generate Website Assessment',
-        copy: 'Enter the prospect details and launch the existing website scan flow.',
+        title: 'Scan a prospect website.',
+        copy: 'Use a website from your actual pipeline so the report immediately shows how PitchProof can support a sales conversation.',
         contextKicker: 'Output',
-        contextTitle: 'Professional Report',
+        contextTitle: 'Opportunity Report',
         contextCopy: 'The completed assessment saves automatically to Reports.',
         button: 'Generate Report',
         cancelHref: '/app/reports',
@@ -4625,7 +4668,29 @@ function preserveMarketingAttribution(href) {
 }
 
 function trackProductAnalytics(eventName, params = {}) {
-  const allowed = new Set(['plan_viewed', 'plan_selected', 'upgrade_clicked']);
+  const allowed = new Set([
+    'plan_viewed',
+    'plan_selected',
+    'upgrade_clicked',
+    'onboarding_choice_viewed',
+    'onboarding_plan_selected',
+    'free_preview_selected',
+    'free_preview_viewed',
+    'scan_url_focused',
+    'scan_url_entered',
+    'scan_started',
+    'scan_processing_started',
+    'scan_completed',
+    'scan_failed',
+    'report_preview_revealed',
+    'locked_section_viewed',
+    'locked_section_clicked',
+    'upgrade_prompt_viewed',
+    'unlock_full_report_clicked',
+    'pricing_viewed_from_preview',
+    'checkout_started_after_free_scan',
+    'subscription_started_from_preview',
+  ]);
   if (!allowed.has(eventName)) return;
   fetch('/api/analytics/event', {
     method: 'POST',
@@ -6389,6 +6454,24 @@ function setPreviewLockState(locked) {
   const another = document.getElementById('generateAnotherReportBtn');
   if (another && locked) another.hidden = true;
   setCurrentReportPdfButton(locked, locked ? 'PDF Locked' : 'Download PDF');
+  if (locked && !lockedPreviewViewedTracked) {
+    lockedPreviewViewedTracked = true;
+    trackProductAnalytics('locked_section_viewed', {
+      source: 'free_preview_report',
+      sections_locked: detailedSections.length,
+    });
+    trackProductAnalytics('report_preview_revealed', {
+      source: 'free_preview_report',
+      preview_model: 'score_categories_priorities_one_recommendation',
+    });
+  }
+  if (locked && !upgradePromptViewedTracked) {
+    upgradePromptViewedTracked = true;
+    trackProductAnalytics('upgrade_prompt_viewed', {
+      source: 'free_preview_report',
+      prompt: 'locked_report',
+    });
+  }
 }
 
 function clearLockedReportDetails() {
@@ -6481,12 +6564,21 @@ async function runAnalysis() {
 
   resetMetaScan(url);
   fireMetaOnce('auditStarted', 'AuditStarted');
+  const scanSource = isFreePreviewRoute() ? 'free_preview' : 'new_audit';
+  trackProductAnalytics('scan_started', {
+    source: scanSource,
+    has_prospect_name: Boolean(pendingProspectName),
+    has_company_name: Boolean(pendingCompanyName),
+    has_notes: Boolean(pendingAuditNotes),
+  });
   pendingScanResult = null;
   pendingSavedReportId = null;
   loadingSavedReportId = '';
   pendingWebsiteUrl = url;
   pendingAuditIdempotencyKey = newAuditIdempotencyKey();
   fullResultsUnlocked = false;
+  lockedPreviewViewedTracked = false;
+  upgradePromptViewedTracked = false;
   setReportSaveMessage('');
  
   showAppPanel('loading');
@@ -6495,10 +6587,13 @@ async function runAnalysis() {
   analyzeBtn.disabled = true;
  
   stepIdx = 0;
-  document.querySelector('.loading-text').textContent = 'Analyzing website...';
+  document.querySelector('.loading-text').textContent = 'Building your sales-ready report...';
   document.getElementById('loadingStep').textContent = LOADING_STEPS[0];
   startLoadingProgress();
   stepTimer = setInterval(cycleStep, 1800);
+  trackProductAnalytics('scan_processing_started', {
+    source: scanSource,
+  });
  
   try {
     const data = await databaseService.runAudit({
@@ -6514,6 +6609,11 @@ async function runAnalysis() {
     pendingWebsiteUrl = asText(data.url) || url;
     renderResults(data);
     await persistGeneratedReport(data);
+    trackProductAnalytics('scan_completed', {
+      source: scanSource,
+      score: reportScoreFromResult(data),
+      preview_locked: Boolean(data?.previewLocked || data?.preview_locked || data?.full_report_locked),
+    });
     fireMetaOnce('auditCompleted', 'AuditCompleted', {
       websiteScore: reportScoreFromResult(data),
     });
@@ -6527,6 +6627,10 @@ async function runAnalysis() {
       updateReportMetrics();
     }
     fireMetaOnce('auditFailed', 'AuditFailed', {
+      error: errorMessage,
+    });
+    trackProductAnalytics('scan_failed', {
+      source: scanSource,
       error: errorMessage,
     });
     showError(errorMessage || 'We could not complete the scan right now. Please check the website URL and try again.');
@@ -7112,6 +7216,36 @@ function resetApp() {
   navigateTo('/app/scan');
 }
 
+function bindOnboardingTracking() {
+  const urlInput = document.getElementById('urlInput');
+  urlInput?.addEventListener('focus', () => {
+    if (scanUrlFocusTracked) return;
+    scanUrlFocusTracked = true;
+    trackProductAnalytics('scan_url_focused', {
+      source: isFreePreviewRoute() ? 'free_preview' : 'new_audit',
+    });
+  });
+  urlInput?.addEventListener('input', () => {
+    const value = normalizeUrlInput(urlInput.value);
+    if (scanUrlEnteredTracked || value.length < 8 || !value.includes('.')) return;
+    scanUrlEnteredTracked = true;
+    trackProductAnalytics('scan_url_entered', {
+      source: isFreePreviewRoute() ? 'free_preview' : 'new_audit',
+      has_protocol: /^https?:\/\//i.test(value),
+    });
+  });
+
+  document.getElementById('lockedPreviewSection')?.addEventListener('click', event => {
+    const lockedCard = event.target.closest('.locked-content-grid div, .locked-report-card');
+    if (!lockedCard) return;
+    const title = lockedCard.querySelector('strong')?.textContent?.trim() || 'locked_section';
+    trackProductAnalytics('locked_section_clicked', {
+      section: title,
+      source: 'free_preview_report',
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const initialPlan = String(new URLSearchParams(window.location.search).get('plan') || localStorage.getItem('leadcheck.selectedPlan') || '').toLowerCase();
   if (initialPlan && APP_PLANS[initialPlan]) selectedBillingPlan = initialPlan;
@@ -7127,6 +7261,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindReportControls();
   bindBillingControls();
   bindBrandingForm();
+  bindOnboardingTracking();
   renderRoute();
   await authProvider.init();
   if (authProvider.client) {
