@@ -6335,6 +6335,19 @@ body.required-plan-open {
   text-transform: uppercase;
 }
 
+.marketing-view .plan-trial-badge {
+  width: fit-content;
+  padding: 7px 10px;
+  border: 1px solid rgba(91, 198, 255, 0.34);
+  border-radius: 999px;
+  background: rgba(91, 198, 255, 0.12);
+  color: #8ed7ff;
+  font-size: 0.74rem;
+  font-weight: 850;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
 .marketing-view .plan-name {
   color: var(--public-cyan);
 }

@@ -67,5 +67,7 @@ services:
         sync: false
       - key: STRIPE_PRICE_ID
         sync: false
+      - key: STRIPE_SUBSCRIPTION_TRIAL_DAYS
+        value: "7"
       - key: APP_URL
         sync: false

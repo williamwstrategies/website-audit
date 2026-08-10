@@ -67,4 +67,4 @@ Successful sends are recorded in `lifecycle_email_events`, so rerunning the comm
 
 ## Before Sending
 
-Confirm the product and billing flow actually enables the promised 7-day full-access trial before sending this campaign.
+Confirm the latest Render deploy includes the Stripe checkout trial changes. The checkout flow is configured to create a 7-day trial before Stripe starts monthly billing.
