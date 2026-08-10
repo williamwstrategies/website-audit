@@ -8,6 +8,7 @@ const billing = require('./lib/billing');
 const lifecycleEmails = require('./lib/lifecycle-emails');
 const { generateReportPdf } = require('./lib/pdf');
 const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
+const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-controls');
 
 const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
   host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
@@ -119,6 +120,11 @@ function supportEmailRecipients(value = '') {
     .slice(0, 20);
 }
 
+function singleEmailRecipient(value = '') {
+  const email = cleanSupportText(value, 320);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : '';
+}
+
 function escapeSupportHtml(value = '') {
   return String(value || '')
     .replace(/&/g, '&amp;')
@@ -200,6 +206,10 @@ function supportEmailHtml(payload) {
 }
 
 async function sendSupportEmail(payload) {
+  if (outboundEmailsPaused()) {
+    return pausedEmailResult();
+  }
+
   const apiKey = cleanSupportText(process.env.RESEND_API_KEY, 1000);
   const from = cleanSupportText(process.env.SUPPORT_EMAIL_FROM, 320);
   const to = supportEmailRecipients(process.env.SUPPORT_EMAIL_TO);
@@ -297,10 +307,113 @@ async function sendSupportNotification(payload) {
   return {
     configured: email.configured || webhook.configured,
     sent: email.sent || webhook.sent,
+    paused: email.paused === true,
     error: errors.join(' | '),
     email,
     webhook,
   };
+}
+
+function emailTestRequestSecret(req) {
+  const authorization = cleanSupportText(req.get('authorization'), 2000);
+  const bearer = authorization.match(/^Bearer\s+(.+)$/i)?.[1] || '';
+  return cleanSupportText(req.get('x-email-test-secret') || req.get('x-lifecycle-secret') || bearer || req.query.secret || req.body?.secret, 2000);
+}
+
+function requireEmailTestSecret(req) {
+  const configured = cleanSupportText(process.env.EMAIL_TEST_SECRET || process.env.LIFECYCLE_EMAIL_SECRET, 2000);
+  if (!configured) {
+    throw billing.httpError(503, 'EMAIL_TEST_SECRET or LIFECYCLE_EMAIL_SECRET is not configured.', 'email_test_secret_missing');
+  }
+  if (!safeCompare(emailTestRequestSecret(req), configured)) {
+    throw billing.httpError(401, 'Email test access is not authorized.', 'email_test_unauthorized');
+  }
+}
+
+function testEmailFrom(channel = '') {
+  const normalized = cleanSupportText(channel, 40).toLowerCase();
+  if (normalized === 'lifecycle') {
+    return cleanSupportText(process.env.LIFECYCLE_EMAIL_FROM || process.env.SUPPORT_EMAIL_FROM, 320);
+  }
+  return cleanSupportText(process.env.SUPPORT_EMAIL_FROM || process.env.LIFECYCLE_EMAIL_FROM, 320);
+}
+
+function testEmailHtml({ from, to, origin, channel }) {
+  return `
+    <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1d1d1f;background:#f5f5f7;padding:28px;">
+      <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e5ea;border-radius:18px;overflow:hidden;box-shadow:0 18px 48px rgba(0,0,0,0.08);">
+        <div style="padding:24px 28px;border-bottom:1px solid #ececf0;">
+          <p style="margin:0 0 8px;color:#7a6a3a;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;">Website Strategy Scan</p>
+          <h1 style="margin:0;font-size:24px;line-height:1.25;color:#1d1d1f;">Test email delivered.</h1>
+        </div>
+        <div style="padding:24px 28px;">
+          <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#2f3137;">This confirms Resend can send from the currently configured address.</p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.45;">
+            <tr><th style="text-align:left;padding:10px 12px;color:#6e6e73;border-top:1px solid #ececf0;">From</th><td style="padding:10px 12px;color:#1d1d1f;border-top:1px solid #ececf0;word-break:break-word;">${escapeSupportHtml(from)}</td></tr>
+            <tr><th style="text-align:left;padding:10px 12px;color:#6e6e73;border-top:1px solid #ececf0;">To</th><td style="padding:10px 12px;color:#1d1d1f;border-top:1px solid #ececf0;word-break:break-word;">${escapeSupportHtml(to)}</td></tr>
+            <tr><th style="text-align:left;padding:10px 12px;color:#6e6e73;border-top:1px solid #ececf0;">Channel</th><td style="padding:10px 12px;color:#1d1d1f;border-top:1px solid #ececf0;">${escapeSupportHtml(channel || 'support')}</td></tr>
+            <tr><th style="text-align:left;padding:10px 12px;color:#6e6e73;border-top:1px solid #ececf0;">Site</th><td style="padding:10px 12px;color:#1d1d1f;border-top:1px solid #ececf0;word-break:break-word;">${escapeSupportHtml(origin || 'Not provided')}</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function sendResendTestEmail({ to, channel, origin }) {
+  const apiKey = cleanSupportText(process.env.RESEND_API_KEY, 1000);
+  const from = testEmailFrom(channel);
+  if (!apiKey || !from) {
+    throw billing.httpError(503, 'Test email is not configured. Add RESEND_API_KEY and SUPPORT_EMAIL_FROM or LIFECYCLE_EMAIL_FROM in Render.', 'email_test_not_configured');
+  }
+
+  await ensureResendTrackingEnabled(apiKey);
+
+  const body = {
+    from,
+    to: [to],
+    subject: 'Website Strategy Scan test email',
+    text: [
+      'Test email delivered.',
+      '',
+      'This confirms Resend can send from the currently configured address.',
+      '',
+      `From: ${from}`,
+      `To: ${to}`,
+      `Channel: ${channel || 'support'}`,
+      `Site: ${origin || 'Not provided'}`,
+    ].join('\n'),
+    html: testEmailHtml({ from, to, origin, channel }),
+  };
+
+  const replyTo = cleanSupportText(process.env.LIFECYCLE_EMAIL_REPLY_TO || process.env.SUPPORT_EMAIL_TO, 320);
+  if (replyTo) body.reply_to = supportEmailRecipients(replyTo)[0] || replyTo;
+
+  const response = await fetch(RESEND_EMAIL_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'Idempotency-Key': `email-test:${to}:${Date.now()}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const responseBody = await response.text().catch(() => '');
+  const data = (() => {
+    if (!responseBody) return {};
+    try {
+      return JSON.parse(responseBody);
+    } catch {
+      return { raw: responseBody };
+    }
+  })();
+
+  if (!response.ok) {
+    throw billing.httpError(response.status, data?.message || data?.error || 'Test email could not be sent.', 'resend_test_email_failed', data);
+  }
+
+  return { id: data?.id || '', from, to };
 }
 
 function lifecycleRequestSecret(req) {
@@ -342,6 +455,34 @@ app.all('/api/lifecycle/abandoned-signups/run', async (req, res) => {
     });
     res.set('Cache-Control', 'no-store');
     res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/email/test', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const to = singleEmailRecipient(req.body?.to || req.query.to || 'hallpwj@gmail.com');
+    if (!to) {
+      return res.status(400).json({ error: 'A valid test recipient email is required.', code: 'email_test_recipient_required' });
+    }
+
+    const channel = normalizedSupportValue(req.body?.channel || req.query.channel, new Set(['support', 'lifecycle']), 'support');
+    const delivery = await sendResendTestEmail({
+      to,
+      channel,
+      origin: requestOrigin(req),
+    });
+
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      ok: true,
+      sent: true,
+      pausedBypassedForTest: outboundEmailsPaused(),
+      ...delivery,
+    });
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
     res.status(statusCode).json(body);
@@ -455,6 +596,7 @@ app.post('/api/support/request', async (req, res) => {
         notification_sent: notification.sent,
         email_configured: notification.email.configured,
         email_sent: notification.email.sent,
+        email_paused: notification.email.paused === true,
         webhook_configured: notification.webhook.configured,
         webhook_sent: notification.webhook.sent,
       },
@@ -466,7 +608,10 @@ app.post('/api/support/request', async (req, res) => {
       ticketId,
       notificationConfigured: notification.configured,
       notificationSent: notification.sent,
-      warning: notification.configured && !notification.sent
+      notificationPaused: notification.paused === true,
+      warning: notification.paused
+        ? ''
+        : notification.configured && !notification.sent
         ? 'Support request received, but the configured notification did not send.'
         : !notification.configured
           ? 'Support request received, but support email is not configured yet.'

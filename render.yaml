@@ -23,6 +23,8 @@ services:
         sync: false
       - key: RESEND_TRACKING_AUTO_CONFIGURE
         sync: false
+      - key: OUTBOUND_EMAILS_PAUSED
+        value: "true"
       - key: SUPPORT_EMAIL_TO
         sync: false
       - key: SUPPORT_EMAIL_FROM
