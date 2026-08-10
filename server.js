@@ -343,7 +343,7 @@ function testEmailHtml({ from, to, origin, channel }) {
     <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1d1d1f;background:#f5f5f7;padding:28px;">
       <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e5e5ea;border-radius:18px;overflow:hidden;box-shadow:0 18px 48px rgba(0,0,0,0.08);">
         <div style="padding:24px 28px;border-bottom:1px solid #ececf0;">
-          <p style="margin:0 0 8px;color:#7a6a3a;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;">Website Strategy Scan</p>
+          <p style="margin:0 0 8px;color:#7a6a3a;text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;">PitchProof</p>
           <h1 style="margin:0;font-size:24px;line-height:1.25;color:#1d1d1f;">Test email delivered.</h1>
         </div>
         <div style="padding:24px 28px;">
@@ -372,7 +372,7 @@ async function sendResendTestEmail({ to, channel, origin }) {
   const body = {
     from,
     to: [to],
-    subject: 'Website Strategy Scan test email',
+    subject: 'PitchProof test email',
     text: [
       'Test email delivered.',
       '',
@@ -548,7 +548,7 @@ app.get('/api/email/unsubscribe', async (req, res) => {
             p{margin:0;color:#6e6e73;line-height:1.6}
           </style>
         </head>
-        <body><main><h1>You are unsubscribed.</h1><p>You will no longer receive account setup reminders from Website Strategy Scan.</p></main></body>
+        <body><main><h1>You are unsubscribed.</h1><p>You will no longer receive account setup reminders from PitchProof.</p></main></body>
       </html>`);
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
@@ -720,7 +720,7 @@ app.put('/api/branding', async (req, res) => {
     const subscription = await billing.getSubscriptionStatus(user.id);
     if (!subscription.can_white_label) {
       return res.status(403).json({
-        error: 'Upgrade to Professional to remove Website Strategy Scan branding and present reports under your own agency.',
+        error: 'Upgrade to Professional to remove PitchProof branding and present reports under your own agency.',
         code: 'white_label_upgrade_required',
         subscription,
       });

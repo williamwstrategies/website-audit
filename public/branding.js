@@ -15,13 +15,13 @@
     phone: '',
     email: '',
     bookingLink: '',
-    tagline: 'Website audit platform',
+    tagline: 'Website sales intelligence',
     reportDisclaimer: 'This assessment is based on observable website signals at the time of review.',
   };
   const PLATFORM_BRANDING = {
     ...DEFAULT_BRANDING,
     whiteLabelEnabled: false,
-    agencyName: 'Website Strategy Scan',
+    agencyName: 'PitchProof',
     platformLabel: 'Website Assessment',
     logoUrl: '',
     logoStoragePath: '',
@@ -31,7 +31,7 @@
     secondaryAccent: '#1d1d1f',
     tagline: 'Website Assessment',
     reportDisclaimer: 'This assessment is based on observable website signals at the time of review.',
-    poweredBy: 'Powered by Website Strategy Scan',
+    poweredBy: 'Powered by PitchProof',
   };
 
   function safeJsonParse(raw) {
@@ -337,7 +337,7 @@
       setOptionalHref('[data-brand-website]', brand.website, brand.website);
       setOptionalHref('[data-brand-booking]', brand.bookingLink, brand.bookingLink ? 'Book a consultation' : '');
       collapseEmptyBrandContactGroups();
-      setText('[data-platform-powered]', brand.poweredBy || 'Powered by Website Strategy Scan');
+      setText('[data-platform-powered]', brand.poweredBy || 'Powered by PitchProof');
       document.querySelectorAll('[data-platform-powered]').forEach(node => {
         node.hidden = !(isApp && !this.whiteLabelAllowed);
       });
@@ -366,9 +366,9 @@
       if (isApp) {
         document.title = `${agencyName} | ${routeTitle(route)}`;
       } else if (isLogin) {
-        document.title = 'W Strategies Account Access';
+        document.title = 'PitchProof Account Access';
       } else {
-        document.title = 'W Strategies - White-Label Website Audit Software';
+        document.title = 'PitchProof | Website Sales Intelligence for Agencies';
       }
 
       const whiteLabelStatus = document.getElementById('whiteLabelStatus');

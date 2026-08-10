@@ -5657,6 +5657,13 @@ body.required-plan-open {
   object-fit: contain;
 }
 
+.marketing-logo-text {
+  color: #f7d56a;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
 .marketing-menu-toggle {
   border-color: rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.08);

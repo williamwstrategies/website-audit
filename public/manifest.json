@@ -1,6 +1,6 @@
 {
-  "name": "LeadCheck Website Scanner",
-  "short_name": "LeadCheck",
+  "name": "PitchProof",
+  "short_name": "PitchProof",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
