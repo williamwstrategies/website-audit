@@ -9133,8 +9133,53 @@ body.is-onboarding-route .app-content {
   box-shadow: 0 0 0 4px var(--brand-primary-soft, rgba(245, 200, 66, 0.14));
 }
 
+.coming-soon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.coming-soon-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.coming-soon-number {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--brand-primary-soft, rgba(245, 200, 66, 0.14));
+  color: var(--accent);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.coming-soon-card h3,
+.coming-soon-card p {
+  margin: 0;
+}
+
+.coming-soon-card h3 {
+  color: var(--text-primary);
+  font-size: 1.08rem;
+}
+
+.coming-soon-card p {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
 @media (max-width: 920px) {
   .support-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .coming-soon-grid {
     grid-template-columns: 1fr;
   }
 }

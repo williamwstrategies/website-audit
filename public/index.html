@@ -1033,6 +1033,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/app/scan" data-route data-app-nav="scan">New Audit</a>
       <a href="/app/reports" data-route data-app-nav="reports">Reports</a>
       <a href="/app/support" data-route data-app-nav="support">Support</a>
+      <a href="/app/coming-soon" data-route data-app-nav="coming-soon">Coming Soon</a>
       <a href="/app/branding" data-route data-app-nav="branding">Branding</a>
       <a href="/app/billing" data-route data-app-nav="billing" id="billingNavLink">Billing</a>
       <a href="/app/settings" data-route data-app-nav="settings">Settings</a>
@@ -1570,6 +1571,34 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <p>Add <strong>RESEND_API_KEY</strong>, <strong>SUPPORT_EMAIL_TO</strong>, and <strong>SUPPORT_EMAIL_FROM</strong> in Render. Keep <strong>SUPPORT_WEBHOOK_URL</strong> only if you also want automation.</p>
             </section>
           </aside>
+        </div>
+      </section>
+
+      <section id="coming-soon-view" class="app-panel coming-soon-view" hidden>
+        <div class="settings-header">
+          <div>
+            <div class="section-kicker">Coming Soon</div>
+            <h2>New assessment intelligence</h2>
+            <p>A focused look at the next research signals being added to the platform.</p>
+          </div>
+          <span class="status-chip partial">Planned</span>
+        </div>
+
+        <div class="coming-soon-grid">
+          <article class="workspace-panel coming-soon-card">
+            <span class="coming-soon-number">01</span>
+            <div>
+              <h3>Keyword ranking scans</h3>
+              <p>Scan to see what keywords your prospects are ranking for, so you can spot stronger outreach angles and website opportunities.</p>
+            </div>
+          </article>
+          <article class="workspace-panel coming-soon-card">
+            <span class="coming-soon-number">02</span>
+            <div>
+              <h3>AI recommendation visibility</h3>
+              <p>See how likely a business is to get recommended through AI search and answer engines.</p>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -2470,6 +2499,7 @@ const ROUTE_TITLES = {
   '/app/scan': 'New Audit',
   '/app/reports': 'Reports',
   '/app/support': 'Support',
+  '/app/coming-soon': 'Coming Soon',
   '/app/branding': 'Branding',
   '/app/billing': 'Billing',
   '/app/settings': 'Settings',
@@ -2557,6 +2587,7 @@ const LEGACY_APP_ROUTE_ALIASES = {
   '/dashboard': '/app',
   '/reports': '/app/reports',
   '/new-audit': '/app/scan',
+  '/coming-soon': '/app/coming-soon',
   '/branding': '/app/branding',
   '/billing': '/app/billing',
   '/upgrade': '/app/billing',
@@ -2595,6 +2626,7 @@ function appRouteKey(path = window.location.pathname) {
   if (path.startsWith('/app/reports')) return 'reports';
   if (path.startsWith('/app/history')) return 'reports';
   if (path.startsWith('/app/support')) return 'support';
+  if (path.startsWith('/app/coming-soon')) return 'coming-soon';
   if (path.startsWith('/app/scan')) return 'scan';
   return 'dashboard';
 }
@@ -2611,6 +2643,7 @@ function showAppPanel(panel) {
     billing: 'billing-view',
     reports: 'reports-view',
     support: 'support-view',
+    'coming-soon': 'coming-soon-view',
   };
   Object.values(panels).forEach(id => {
     const el = document.getElementById(id);
@@ -4598,7 +4631,7 @@ function renderRoute() {
       clearRequiredPlanSelection();
       trackProductAnalytics('onboarding_choice_viewed', { path });
     }
-    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : ROUTE_TITLES['/app']);
+    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : key === 'coming-soon' ? 'Coming Soon' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
     setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : (key === 'dashboard' || key === 'onboarding') ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
@@ -4613,6 +4646,7 @@ function renderRoute() {
       showAppPanel('support');
       hydrateSupportDefaults();
     }
+    else if (key === 'coming-soon') showAppPanel('coming-soon');
     else if (key === 'saved-report') {
       const reportId = savedReportIdFromPath(path);
       if (pendingSavedReportId === reportId && pendingScanResult) {
