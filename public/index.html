@@ -40,6 +40,15 @@ fbq('track', 'PageView');
 console.log('[Meta Pixel] Event fired:', 'PageView', {});
 </script>
 <!-- End Meta Pixel Code -->
+<script type="text/javascript">
+  window._mfq = window._mfq || [];
+  (function() {
+    var mf = document.createElement("script");
+    mf.type = "text/javascript"; mf.defer = true;
+    mf.src = "//cdn.mouseflow.com/projects/887ed7bb-aeab-4f75-abb8-cc4a658e412f.js";
+    document.getElementsByTagName("head")[0].appendChild(mf);
+  })();
+</script>
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles.css?v=2026-08-10-trial-v1">
