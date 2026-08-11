@@ -1336,6 +1336,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <strong>One Free Report Preview</strong>
             <p>One complimentary preview per account. Full report access requires a paid plan.</p>
           </div>
+          <div class="scan-stability-notice" id="scanStabilityNotice">
+            <strong>Keep this tab open during the audit.</strong>
+            <p>After you click Generate Report, do not refresh, close, use the back button, or navigate away until the report appears. On mobile, keep this browser tab open and visible.</p>
+          </div>
           <form class="audit-form" id="auditForm" onsubmit="event.preventDefault(); runAnalysis();">
             <div class="lead-grid">
               <label class="lead-field">
@@ -1843,6 +1847,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <strong>While we scan, think about the conversation this could start.</strong>
             <span>We are turning website signals into business-language findings your prospect can understand.</span>
           </div>
+          <div class="loading-tab-notice" role="status">
+            <strong>Keep this tab open and visible.</strong>
+            <span>Do not close, refresh, use the back button, or leave this page until your report opens. If you leave early, the scan may still finish in the background and count toward your usage.</span>
+          </div>
           <div class="loading-progress" aria-label="Analysis progress">
             <div class="loading-progress-top">
               <span>Report progress</span>
@@ -2307,6 +2315,8 @@ let stepIdx = 0;
 let stepTimer = null;
 let progressTimer = null;
 let progressStartedAt = 0;
+let activeScanInProgress = false;
+let activeScanRoutePath = '';
 let scanUrlFocusTracked = false;
 let scanUrlEnteredTracked = false;
 let lockedPreviewViewedTracked = false;
@@ -5486,6 +5496,7 @@ function bindRouteLinks() {
     let href = link.getAttribute('href');
     if (!href || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     event.preventDefault();
+    if (blockActiveScanNavigation()) return;
     if (link.dataset.planKey) {
       clearOnboardingIntent();
       selectedBillingPlan = link.dataset.planKey;
@@ -5532,7 +5543,13 @@ function bindRouteLinks() {
     href = preserveMarketingAttribution(href);
     navigateTo(href);
   });
-  window.addEventListener('popstate', renderRoute);
+  window.addEventListener('popstate', () => {
+    if (blockActiveScanNavigation()) {
+      window.history.pushState({}, '', activeScanRoutePath || '/app/scan');
+      return;
+    }
+    renderRoute();
+  });
 }
 
 function bindMobileNavigation() {
@@ -6042,7 +6059,7 @@ function bindBrandingForm() {
   form.addEventListener('change', previewBrandingForm);
 
   window.addEventListener('beforeunload', event => {
-    if (!brandingFormDirty) return;
+    if (!activeScanInProgress && !brandingFormDirty) return;
     event.preventDefault();
     event.returnValue = '';
   });
@@ -6268,6 +6285,24 @@ function fireMetaOnce(key, eventName, params = {}, isCustom = true) {
   activeMetaScan[key] = true;
   if (isCustom) trackMetaCustomEvent(eventName, params);
   else trackMetaEvent(eventName, params);
+}
+
+function activeScanWarningMessage() {
+  return 'Your website assessment is still running. Keep this tab open until the report appears so the scan is not interrupted.';
+}
+
+function setActiveScanInProgress(active) {
+  activeScanInProgress = Boolean(active);
+  activeScanRoutePath = activeScanInProgress
+    ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+    : '';
+  document.body.classList.toggle('scan-in-progress', activeScanInProgress);
+}
+
+function blockActiveScanNavigation() {
+  if (!activeScanInProgress) return false;
+  showToast(activeScanWarningMessage(), 'warning');
+  return true;
 }
  
 function cycleStep() {
@@ -7377,6 +7412,7 @@ async function runAnalysis() {
   setReportSaveMessage('');
  
   showAppPanel('loading');
+  setActiveScanInProgress(true);
   const analyzeBtn = document.getElementById('analyzeBtn');
   analyzeBtn.dataset.scanning = 'true';
   analyzeBtn.disabled = true;
@@ -7429,6 +7465,8 @@ async function runAnalysis() {
       error: errorMessage,
     });
     showError(errorMessage || 'We could not complete the scan right now. Please check the website URL and try again.');
+  } finally {
+    setActiveScanInProgress(false);
   }
 }
  
@@ -7989,6 +8027,7 @@ function downloadReportPdf() {
  
 function resetApp() {
   stopLoadingTimers();
+  setActiveScanInProgress(false);
   setLoadingProgress(0, 'Estimated time: about 90 seconds');
   pendingScanResult = null;
   pendingWebsiteUrl = null;

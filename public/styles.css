@@ -4032,6 +4032,44 @@ button:disabled {
   display: none;
 }
 
+.scan-stability-notice,
+.loading-tab-notice {
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(245, 200, 66, 0.26);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(245, 200, 66, 0.12), rgba(245, 200, 66, 0.06)),
+    var(--surface-soft);
+  color: var(--muted);
+}
+
+.scan-stability-notice {
+  margin-bottom: 16px;
+  padding: 15px 16px;
+}
+
+.loading-tab-notice {
+  max-width: 520px;
+  margin: 12px auto 0;
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.scan-stability-notice strong,
+.loading-tab-notice strong {
+  color: var(--text);
+  font-size: 0.94rem;
+}
+
+.scan-stability-notice p,
+.loading-tab-notice span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
 .billing-status-notice[data-tone="success"] {
   border-color: rgba(31, 143, 95, 0.22);
   background: rgba(31, 143, 95, 0.08);
@@ -7878,6 +7916,25 @@ body.required-plan-open {
 .app-shell .billing-access-notice strong,
 .app-shell .billing-status-notice strong {
   color: var(--text-primary);
+}
+
+.app-shell .scan-stability-notice,
+.app-shell .loading-tab-notice {
+  border-color: rgba(255, 214, 102, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 214, 102, 0.13), rgba(255, 214, 102, 0.06)),
+    rgba(255, 255, 255, 0.075);
+  color: var(--text-secondary);
+}
+
+.app-shell .scan-stability-notice strong,
+.app-shell .loading-tab-notice strong {
+  color: var(--text-primary);
+}
+
+.app-shell .scan-stability-notice p,
+.app-shell .loading-tab-notice span {
+  color: var(--text-secondary);
 }
 
 .app-shell .mobile-nav-toggle {
