@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-12-blog-support-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-12-pitchproof-favicon-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
@@ -9,6 +9,8 @@ const APP_SHELL = [
   '/manifest.json',
   '/assets/pitchproof-mark-cropped.png',
   '/assets/pitchproof-wordmark-cropped.png',
+  '/icons/favicon-16.png',
+  '/icons/favicon-32.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/apple-touch-icon.png',
