@@ -1,10 +1,12 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-06-plan-pages-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-12-brand-assets-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
   '/auth.js',
   '/database.js',
   '/manifest.json',
+  '/assets/pitchproof-mark-cropped.png',
+  '/assets/pitchproof-wordmark-cropped.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/apple-touch-icon.png',

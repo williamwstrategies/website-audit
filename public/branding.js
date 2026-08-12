@@ -1,6 +1,7 @@
 (function () {
   const STORAGE_KEY = 'leadcheck.agencyBranding.v2';
-  const SYSTEM_FAVICON = '/icons/icon-192.png';
+  const PLATFORM_LOGO = '/assets/pitchproof-mark-cropped.png';
+  const SYSTEM_FAVICON = PLATFORM_LOGO;
   const DEFAULT_BRANDING = {
     whiteLabelEnabled: true,
     agencyName: 'W Strategies',
@@ -20,12 +21,13 @@
   };
   const PLATFORM_BRANDING = {
     ...DEFAULT_BRANDING,
+    isPlatformBranding: true,
     whiteLabelEnabled: false,
     agencyName: 'PitchProof',
     platformLabel: 'Website Assessment',
-    logoUrl: '',
+    logoUrl: PLATFORM_LOGO,
     logoStoragePath: '',
-    faviconUrl: '',
+    faviconUrl: PLATFORM_LOGO,
     faviconStoragePath: '',
     primaryAccent: '#f5c842',
     secondaryAccent: '#1d1d1f',
@@ -149,7 +151,7 @@
   }
 
   function hasUsableLogo(brand) {
-    return !!(brand.whiteLabelEnabled && brand.logoUrl);
+    return !!(brand.logoUrl && (brand.whiteLabelEnabled || brand.isPlatformBranding));
   }
 
   function normalizeBranding(update = {}) {
@@ -344,6 +346,7 @@
 
       document.querySelectorAll('[data-brand-logo-img]').forEach(img => {
         img.alt = `${agencyName} logo`;
+        img.classList.toggle('platform-brand-logo', !!brand.isPlatformBranding);
         img.onerror = () => {
           img.hidden = true;
           img.closest('.brand-lockup')?.querySelector('.brand-logo-fallback')?.removeAttribute('hidden');
