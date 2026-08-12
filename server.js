@@ -508,6 +508,31 @@ app.all('/api/lifecycle/abandoned-carts/run', async (req, res) => {
   }
 });
 
+app.all('/api/lifecycle/incomplete-accounts/run', async (req, res) => {
+  try {
+    requireLifecycleSecret(req);
+    const result = await lifecycleEmails.runIncompleteAccountOfferCampaign({
+      dryRun: lifecycleDryRun(req),
+      limit: req.query.limit || req.body?.limit,
+    });
+    posthog.capture({
+      distinctId: 'lifecycle-email-runner',
+      event: 'lifecycle_incomplete_account_offer_run',
+      properties: {
+        dry_run: result.dryRun,
+        eligible: result.eligible,
+        sent: result.sent,
+        failed: result.failed,
+      },
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.post('/api/email/test', async (req, res) => {
   try {
     requireEmailTestSecret(req);
@@ -1591,6 +1616,7 @@ async function runScheduledLifecycleEmails() {
   try {
     const signupResult = await lifecycleEmails.runAbandonedSignupCampaign({ dryRun: false });
     const cartResult = await lifecycleEmails.runAbandonedCartCampaign({ dryRun: false });
+    const incompleteAccountResult = await lifecycleEmails.runIncompleteAccountOfferCampaign({ dryRun: false });
     console.log('[LeadCheck] Lifecycle email run complete:', {
       abandoned_signup: {
         eligible: signupResult.eligible,
@@ -1601,6 +1627,11 @@ async function runScheduledLifecycleEmails() {
         eligible: cartResult.eligible,
         sent: cartResult.sent,
         failed: cartResult.failed,
+      },
+      incomplete_account_offer: {
+        eligible: incompleteAccountResult.eligible,
+        sent: incompleteAccountResult.sent,
+        failed: incompleteAccountResult.failed,
       },
     });
   } catch (error) {
