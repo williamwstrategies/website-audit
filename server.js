@@ -806,12 +806,20 @@ app.post('/api/billing/checkout', async (req, res) => {
     posthog.capture({
       distinctId: user.id,
       event: 'plan_selected',
-      properties: { plan: session.plan?.key || req.body?.plan || billing.PROFESSIONAL_PLAN.key },
+      properties: {
+        plan: session.plan?.key || req.body?.plan || billing.PROFESSIONAL_PLAN.key,
+        checkout_offer: session.checkout_offer || '',
+        checkout_offer_label: session.checkout_offer_label || '',
+      },
     });
     posthog.capture({
       distinctId: user.id,
       event: 'checkout_started',
-      properties: { plan: session.plan?.key || req.body?.plan || billing.PROFESSIONAL_PLAN.key },
+      properties: {
+        plan: session.plan?.key || req.body?.plan || billing.PROFESSIONAL_PLAN.key,
+        checkout_offer: session.checkout_offer || '',
+        checkout_offer_label: session.checkout_offer_label || '',
+      },
     });
     res.json(session);
   } catch (error) {
