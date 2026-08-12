@@ -1513,6 +1513,29 @@ app.post('/api/lead-capture', async (req, res) => {
   }
 });
 
+const BLOG_SUPPORT_PATHS = [
+  '/blog/how-web-design-agencies-get-clients',
+  '/blog/find-web-design-clients-consistently',
+  '/blog/best-way-to-get-web-design-clients',
+  '/blog/get-high-paying-web-design-clients',
+  '/blog/get-local-businesses-web-design-clients',
+  '/blog/get-website-clients-without-referrals',
+  '/blog/small-web-design-agency-generate-more-leads',
+  '/blog/build-predictable-pipeline-web-design-agency',
+  '/blog/get-first-10-web-design-clients',
+  '/blog/grow-a-web-design-agency',
+  '/blog/sell-websites-to-small-businesses',
+  '/blog/sell-websites-to-local-businesses',
+  '/blog/convince-businesses-they-need-new-website',
+  '/blog/prospect-for-web-design-clients',
+  '/blog/identify-businesses-with-bad-websites',
+  '/blog/find-outdated-business-websites',
+  '/blog/find-companies-that-need-website-redesigns',
+  '/blog/qualify-web-design-prospect',
+  '/blog/what-to-look-for-on-prospect-website',
+  '/blog/research-prospect-before-web-design-sales-call',
+];
+
 const SITEMAP_PATHS = [
   '/',
   '/product',
@@ -1532,6 +1555,7 @@ const SITEMAP_PATHS = [
   '/blog/web-design-discovery-call',
   '/blog/web-design-proposal-that-closes',
   '/blog/best-website-audit-sales-tools-agencies',
+  ...BLOG_SUPPORT_PATHS,
   '/faq',
   '/contact',
   '/about',

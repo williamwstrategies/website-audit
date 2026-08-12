@@ -1,10 +1,11 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-12-blog-seo-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-12-blog-support-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
   '/auth.js',
   '/database.js',
   '/blog-posts.js',
+  '/blog-support-posts.js',
   '/manifest.json',
   '/assets/pitchproof-mark-cropped.png',
   '/assets/pitchproof-wordmark-cropped.png',
@@ -62,6 +63,7 @@ self.addEventListener('fetch', event => {
     '/auth.js',
     '/database.js',
     '/blog-posts.js',
+    '/blog-support-posts.js',
   ]);
 
   if (networkOnlyPaths.has(url.pathname) || url.pathname.startsWith('/api/reports/')) {
