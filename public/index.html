@@ -71,6 +71,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <a href="/how-it-works" data-route>How It Works</a>
       <a href="/sample-report" data-route>Demo Report</a>
       <a href="/pricing" data-route>Pricing</a>
+      <a href="/blog" data-route>Blog</a>
       <a href="/resources" data-route>Resources</a>
       <a href="/faq" data-route>FAQ</a>
       <a class="mobile-nav-only" href="/login" data-route data-public-login data-public-event="login_clicked">Log In</a>
@@ -986,6 +987,47 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     </section>
   </article>
 
+  <article class="public-page supporting-page blog-index-page" data-public-page="blog" hidden>
+    <div class="supporting-hero blog-index-hero" data-reveal>
+      <div class="section-kicker">PitchProof Blog</div>
+      <h1>Agency sales guides for turning website problems into projects.</h1>
+      <p>Practical articles for web design agencies, freelancers, and website sales teams using prospect research, website assessments, outreach, discovery calls, and proposals to create better sales conversations.</p>
+      <div class="hero-actions">
+        <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
+        <a class="secondary-btn" href="/resources" data-route>Explore Resources</a>
+      </div>
+    </div>
+    <section class="blog-index-grid" id="blogIndexGrid" aria-label="PitchProof blog posts" data-reveal></section>
+  </article>
+
+  <article class="public-page supporting-page blog-post-page" data-public-page="blog-post" hidden>
+    <div class="blog-post-layout" data-reveal>
+      <article class="blog-article-card">
+        <a class="plan-back-link" href="/blog" data-route>Blog</a>
+        <div class="section-kicker" id="blogPostKicker">PitchProof Blog</div>
+        <h1 id="blogPostTitle">Article title</h1>
+        <p class="blog-post-excerpt" id="blogPostExcerpt"></p>
+        <div class="blog-post-meta">
+          <span id="blogPostPrimaryKeyword"></span>
+          <span id="blogPostReadTime"></span>
+        </div>
+        <div class="blog-post-content" id="blogPostContent"></div>
+      </article>
+      <aside class="blog-sidebar-card">
+        <div class="blog-sidebar-logo">
+          <img src="/assets/pitchproof-wordmark-cropped.png" alt="PitchProof">
+        </div>
+        <h2>Turn the advice into a real report.</h2>
+        <p>Run one prospect website through PitchProof and use the report to support outreach, discovery, or proposal follow-up.</p>
+        <a class="analyze-btn" href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a>
+        <div class="blog-related-panel">
+          <strong>Related articles</strong>
+          <div id="blogPostRelated"></div>
+        </div>
+      </aside>
+    </div>
+  </article>
+
   <footer class="marketing-footer">
     <div class="footer-brand-block">
       <span class="footer-logo-card"><img src="/assets/pitchproof-wordmark-cropped.png" alt="PitchProof"></span>
@@ -993,7 +1035,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     </div>
     <nav class="footer-grid" aria-label="Footer navigation">
       <div><h2>Product</h2><a href="/product" data-route>Product</a><a href="/website-audit-software" data-route>Website Audit Software</a><a href="/how-it-works" data-route>How It Works</a><a href="/sample-report" data-route>Demo Report</a><a href="/pricing" data-route>Pricing</a></div>
-      <div><h2>Resources</h2><a href="/resources" data-route>Resource Hub</a><a href="/industries/web-design-agencies" data-route>Industry Pages</a><a href="/features/white-label-website-audit-reports" data-route>Feature Pages</a><a href="/templates/website-audit-template" data-route>Templates</a></div>
+      <div><h2>Resources</h2><a href="/blog" data-route>Blog</a><a href="/resources" data-route>Resource Hub</a><a href="/industries/web-design-agencies" data-route>Industry Pages</a><a href="/features/white-label-website-audit-reports" data-route>Feature Pages</a><a href="/templates/website-audit-template" data-route>Templates</a></div>
       <div><h2>Company</h2><a href="/about" data-route>About</a><a href="/contact" data-route>Contact</a><a href="/faq" data-route>FAQ</a><a href="/privacy" data-route>Privacy</a><a href="/terms" data-route>Terms</a></div>
       <div><h2>Account</h2><a href="/login" data-route data-public-login>Log In</a><a href="/free-assessment" data-route data-public-cta data-public-cta-label="Get Free Assessment" data-public-event="free_assessment_cta_clicked">Get Free Assessment</a></div>
     </nav>
@@ -2256,6 +2298,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <script src="/branding.js?v=2026-08-06-plan-pages-v1"></script>
 <script src="/auth.js?v=2026-08-06-plan-pages-v1"></script>
 <script src="/database.js?v=2026-08-06-plan-pages-v1"></script>
+<script src="/blog-posts.js?v=2026-08-12-seo-bundle-v1"></script>
 
 <script>
 const CHECK_LABELS = {
@@ -2658,9 +2701,17 @@ const PUBLIC_PAGE_META = {
     title: 'Page Not Found | PitchProof',
     description: 'The public page could not be found. Return to PitchProof, sign in, or open the dashboard.',
   },
+  blog: {
+    path: '/blog',
+    title: 'PitchProof Blog | Website Sales Guides for Agencies',
+    description: 'Read practical PitchProof guides about getting more web design clients, prospecting, outreach, discovery calls, website audits, proposals, and sales tools.',
+  },
 };
 
 const SEO_DYNAMIC_PAGE_KEY = 'seo-dynamic';
+const BLOG_POST_PAGE_KEY = 'blog-post';
+const BLOG_POSTS = Array.isArray(window.PITCHPROOF_BLOG_POSTS) ? window.PITCHPROOF_BLOG_POSTS : [];
+const BLOG_POST_INDEX = Object.fromEntries(BLOG_POSTS.map(post => [post.path, post]));
 
 const SEO_INDUSTRIES = [
   ['web-design-agencies', 'Web Design Agencies', 'web design teams need a clearer way to prove why a redesign is worth doing now.', 'show prospects where trust, conversion, and content gaps are holding the website back.'],
@@ -3088,7 +3139,19 @@ function seoPageForPath(path = window.location.pathname) {
   return SEO_PAGE_INDEX[String(path || '').replace(/\/$/, '') || '/'] || null;
 }
 
+function blogPostForPath(path = window.location.pathname) {
+  return BLOG_POST_INDEX[String(path || '').replace(/\/$/, '') || '/'] || null;
+}
+
 function publicMetaForKey(key) {
+  if (key === BLOG_POST_PAGE_KEY) {
+    const post = blogPostForPath();
+    return post ? {
+      path: post.path,
+      title: `${post.metaTitle || post.title} | PitchProof`,
+      description: post.metaDescription || post.excerpt || 'Read the PitchProof blog for agency website sales guidance.',
+    } : PUBLIC_PAGE_META.blog;
+  }
   if (key === SEO_DYNAMIC_PAGE_KEY) return seoPageForPath()?.meta || PUBLIC_PAGE_META.home;
   return PUBLIC_PAGE_META[key] || PUBLIC_PAGE_META.home;
 }
@@ -3105,7 +3168,9 @@ const LEGACY_APP_ROUTE_ALIASES = {
 };
 
 function publicPageKey(path = window.location.pathname) {
-  return Object.entries(PUBLIC_PAGE_META).find(([, meta]) => meta.path === path)?.[0] || (seoPageForPath(path) ? SEO_DYNAMIC_PAGE_KEY : '');
+  return Object.entries(PUBLIC_PAGE_META).find(([, meta]) => meta.path === path)?.[0] ||
+    (blogPostForPath(path) ? BLOG_POST_PAGE_KEY : '') ||
+    (seoPageForPath(path) ? SEO_DYNAMIC_PAGE_KEY : '');
 }
 
 function savedReportIdFromPath(path = window.location.pathname) {
@@ -3268,8 +3333,145 @@ function renderPublicSeoPage(page = seoPageForPath()) {
   }
 }
 
+function blogReadingMinutes(post = {}) {
+  const words = String(post.body || '').split(/\s+/).filter(Boolean).length;
+  return Math.max(4, Math.ceil(words / 220));
+}
+
+function blogInlineHtml(value = '') {
+  return escHtml(value)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\[([^\]]+)\]\((\/[^)]+)\)/g, '<a href="$2" data-route>$1</a>');
+}
+
+function renderBlogMarkdown(markdown = '') {
+  const lines = String(markdown || '').split('\n');
+  const html = [];
+  let paragraph = [];
+  let listType = '';
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    html.push(`<p>${blogInlineHtml(paragraph.join(' '))}</p>`);
+    paragraph = [];
+  };
+
+  const closeList = () => {
+    if (!listType) return;
+    html.push(`</${listType}>`);
+    listType = '';
+  };
+
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      flushParagraph();
+      closeList();
+      return;
+    }
+    if (trimmed.startsWith('## ')) {
+      flushParagraph();
+      closeList();
+      html.push(`<h2>${blogInlineHtml(trimmed.slice(3))}</h2>`);
+      return;
+    }
+    if (trimmed.startsWith('### ')) {
+      flushParagraph();
+      closeList();
+      html.push(`<h3>${blogInlineHtml(trimmed.slice(4))}</h3>`);
+      return;
+    }
+    const bullet = trimmed.match(/^[-*]\s+(.+)/);
+    if (bullet) {
+      flushParagraph();
+      if (listType !== 'ul') {
+        closeList();
+        listType = 'ul';
+        html.push('<ul>');
+      }
+      html.push(`<li>${blogInlineHtml(bullet[1])}</li>`);
+      return;
+    }
+    const numbered = trimmed.match(/^\d+\.\s+(.+)/);
+    if (numbered) {
+      flushParagraph();
+      if (listType !== 'ol') {
+        closeList();
+        listType = 'ol';
+        html.push('<ol>');
+      }
+      html.push(`<li>${blogInlineHtml(numbered[1])}</li>`);
+      return;
+    }
+    paragraph.push(trimmed);
+  });
+
+  flushParagraph();
+  closeList();
+  return html.join('');
+}
+
+function blogPostCardHtml(post = {}, index = 0) {
+  return `
+    <article class="blog-card">
+      <span class="blog-card-number">${String(index + 1).padStart(2, '0')}</span>
+      <div>
+        <span class="section-kicker">${escHtml(post.primaryKeyword || 'Agency sales')}</span>
+        <h2><a href="${escHtml(post.path)}" data-route>${escHtml(post.title)}</a></h2>
+        <p>${escHtml(post.excerpt || post.metaDescription || '')}</p>
+      </div>
+      <div class="blog-card-footer">
+        <span>${blogReadingMinutes(post)} min read</span>
+        <a href="${escHtml(post.path)}" data-route>Read guide</a>
+      </div>
+    </article>
+  `;
+}
+
+function renderBlogIndex() {
+  const grid = document.getElementById('blogIndexGrid');
+  if (!grid) return;
+  grid.innerHTML = BLOG_POSTS.map(blogPostCardHtml).join('');
+}
+
+function blogRelatedHtml(link = {}) {
+  return `
+    <a href="${escHtml(link.path || '/blog')}" data-route>
+      <strong>${escHtml(link.title || link.anchor || 'Related guide')}</strong>
+      <span>${escHtml(link.anchor || 'Read next')}</span>
+    </a>
+  `;
+}
+
+function renderBlogPost(post = blogPostForPath()) {
+  if (!post) return;
+  setTextContent('blogPostKicker', post.primaryKeyword || 'PitchProof Blog');
+  setTextContent('blogPostTitle', post.title);
+  setTextContent('blogPostExcerpt', post.excerpt || post.metaDescription || '');
+  setTextContent('blogPostPrimaryKeyword', post.primaryKeyword ? `Primary keyword: ${post.primaryKeyword}` : 'Agency sales guide');
+  setTextContent('blogPostReadTime', `${blogReadingMinutes(post)} min read`);
+
+  const content = document.getElementById('blogPostContent');
+  if (content) {
+    content.innerHTML = renderBlogMarkdown(post.body || '');
+  }
+
+  const related = document.getElementById('blogPostRelated');
+  if (related) {
+    const fallbackLinks = BLOG_POSTS
+      .filter(item => item.path !== post.path)
+      .slice(0, 4)
+      .map(item => ({ title: item.title, path: item.path, anchor: item.primaryKeyword }));
+    related.innerHTML = (post.internalLinks?.length ? post.internalLinks : fallbackLinks)
+      .slice(0, 5)
+      .map(blogRelatedHtml)
+      .join('');
+  }
+}
+
 function renderPublicPage(key = 'home') {
-  const pageKey = PUBLIC_PAGE_META[key] || key === SEO_DYNAMIC_PAGE_KEY ? key : 'home';
+  const pageKey = (PUBLIC_PAGE_META[key] || key === SEO_DYNAMIC_PAGE_KEY || key === BLOG_POST_PAGE_KEY) ? key : 'home';
   if (pageKey !== 'sample-report') {
     stopDemoScanTimers();
     closeDemoOfferModal({ dismissed: false });
@@ -3277,6 +3479,12 @@ function renderPublicPage(key = 'home') {
   }
   if (pageKey === SEO_DYNAMIC_PAGE_KEY) {
     renderPublicSeoPage(seoPageForPath());
+  }
+  if (pageKey === 'blog') {
+    renderBlogIndex();
+  }
+  if (pageKey === BLOG_POST_PAGE_KEY) {
+    renderBlogPost(blogPostForPath());
   }
   document.querySelectorAll('[data-public-page]').forEach(page => {
     page.hidden = page.dataset.publicPage !== pageKey;
@@ -3286,7 +3494,8 @@ function renderPublicPage(key = 'home') {
     const targetPath = href.split('#')[0] || '/';
     const isPricingFamily = pageKey.startsWith('pricing') && targetPath === '/pricing';
     const isResourcesFamily = pageKey === SEO_DYNAMIC_PAGE_KEY && targetPath === '/resources';
-    link.classList.toggle('active', publicMetaForKey(pageKey)?.path === targetPath || isPricingFamily || isResourcesFamily);
+    const isBlogFamily = (pageKey === 'blog' || pageKey === BLOG_POST_PAGE_KEY) && targetPath === '/blog';
+    link.classList.toggle('active', publicMetaForKey(pageKey)?.path === targetPath || isPricingFamily || isResourcesFamily || isBlogFamily);
   });
   applyRouteSeo({ key: pageKey });
   if (!viewedPublicPages.has(pageKey)) {
