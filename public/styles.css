@@ -8730,55 +8730,43 @@ body.demo-offer-open {
 
 .onboarding-panel {
   display: grid;
-  gap: 20px;
+  gap: 22px;
+}
+
+.onboarding-simple-header {
+  width: min(780px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.onboarding-simple-header h2 {
+  margin: 8px 0 10px;
+  color: var(--text-primary);
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  line-height: 1;
+}
+
+.onboarding-simple-header p {
+  max-width: 620px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.55;
 }
 
 .onboarding-choice-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.onboarding-proof-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.onboarding-proof-grid article {
-  display: grid;
-  gap: 8px;
-  min-width: 0;
-  padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.11);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.055);
-  box-shadow: var(--shadow-subtle);
-}
-
-.onboarding-proof-grid span {
-  color: var(--accent);
-  font-size: 0.76rem;
-  font-weight: 850;
-  letter-spacing: 0.08em;
-}
-
-.onboarding-proof-grid strong {
-  color: var(--text-primary);
-  font-size: 1rem;
-}
-
-.onboarding-proof-grid p {
-  margin: 0;
-  color: var(--text-secondary);
-  line-height: 1.55;
+  gap: 20px;
 }
 
 .onboarding-choice-card {
   display: grid;
-  gap: 14px;
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 16px;
   align-content: start;
-  min-height: 280px;
+  min-height: 320px;
+  padding: 28px;
 }
 
 .onboarding-choice-card.featured {
@@ -8790,12 +8778,25 @@ body.demo-offer-open {
 
 .onboarding-choice-card h3 {
   margin: 0;
-  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  font-size: clamp(1.55rem, 2.4vw, 2.25rem);
+  line-height: 1.08;
 }
 
 .onboarding-choice-card p,
 .onboarding-choice-card small {
   color: var(--text-secondary);
+}
+
+.onboarding-choice-card p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.onboarding-choice-card small {
+  display: block;
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .onboarding-choice-card .analyze-btn {
@@ -9177,7 +9178,6 @@ body.is-onboarding-route .app-content {
 }
 
 @media (max-width: 760px) {
-  .onboarding-proof-grid,
   .onboarding-choice-grid,
   .preview-unlock-top-cta,
   .locked-preview-panel,

@@ -1243,51 +1243,30 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </section>
 
       <section id="onboarding-view" class="app-panel onboarding-panel" hidden>
-        <div class="app-page-hero onboarding-hero">
+        <div class="onboarding-simple-header">
           <div>
             <div class="section-kicker">Onboarding</div>
-            <h2>Create your first sales-ready proof point.</h2>
-            <p>The fastest way to understand PitchProof is to scan a real prospect you could contact this week, then review how the report frames the sales conversation.</p>
+            <h2>Choose how you want to start.</h2>
+            <p>Pick one path below. You can either unlock the full platform with a 7-day trial, or generate one free preview report first.</p>
           </div>
-          <div class="scan-context-panel">
-            <span>Recommended path</span>
-            <strong>Scan a prospect first</strong>
-            <p>Use a website from your pipeline, not your own site. The value is clearer when the report gives you a reason to start a real conversation.</p>
-          </div>
-        </div>
-        <div class="onboarding-proof-grid" aria-label="How onboarding creates value">
-          <article>
-            <span>01</span>
-            <strong>Pick a prospect</strong>
-            <p>Choose a business you could realistically email, call, or pitch this week.</p>
-          </article>
-          <article>
-            <span>02</span>
-            <strong>Run the preview</strong>
-            <p>See the score, category breakdown, top priorities, and one full recommendation.</p>
-          </article>
-          <article>
-            <span>03</span>
-            <strong>Decide with context</strong>
-            <p>Upgrade when you can picture using the complete report in a sales conversation.</p>
-          </article>
         </div>
         <div class="onboarding-choice-grid">
           <article class="workspace-panel onboarding-choice-card">
             <div class="section-kicker">Option 1</div>
             <h3>Start a 7-Day Trial</h3>
-            <p>Choose a plan and generate complete opportunity reports immediately. Stripe collects your payment method now and starts billing only after the trial ends.</p>
-            <a class="analyze-btn" href="/app/billing" data-route data-onboarding-plan>View Trial Plans</a>
+            <p>Best if you are ready to generate complete reports, export PDFs, save assessments, and use your monthly scan allowance.</p>
+            <small>No charge today. Stripe collects your payment method and billing starts after the trial ends.</small>
+            <a class="analyze-btn" href="/app/billing" data-route data-onboarding-plan>Start Trial</a>
           </article>
           <article class="workspace-panel onboarding-choice-card featured">
             <div class="section-kicker">Option 2</div>
             <h3>Generate One Free Report Preview</h3>
-            <p>Scan one real prospect website and preview the most important findings before choosing a plan.</p>
-            <small>You will see the website score, category breakdown, top priorities, and one complete recommendation. Subscribe to unlock every finding, business impact, PDF export, and white-label presentation.</small>
+            <p>Best if you want to test PitchProof first with one real prospect website before choosing a plan.</p>
+            <small>You will see the score, category breakdown, top priorities, and one recommendation. Upgrade to unlock the complete report and PDF export.</small>
             <a class="analyze-btn" href="/onboarding/free-preview" data-route data-free-preview-selected>Generate Free Preview</a>
           </article>
         </div>
-        <section class="workspace-panel onboarding-state-card" id="onboardingStateCard">
+        <section class="workspace-panel onboarding-state-card" id="onboardingStateCard" hidden>
           <div class="panel-heading">
             <div>
               <div class="section-kicker">Next Step</div>
