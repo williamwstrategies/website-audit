@@ -18,6 +18,28 @@ const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
 const app = express();
 app.use(cors());
 
+const LEGACY_PRODUCTION_HOST = 'scanner.wstrategiescanada.ca';
+const PRIMARY_PRODUCTION_ORIGIN = 'https://pitchproof.ca';
+
+function requestHost(req) {
+  const forwardedHost = String(req.get('x-forwarded-host') || '').split(',')[0].trim();
+  const host = forwardedHost || String(req.get('host') || '').trim();
+  return host.toLowerCase().replace(/:\d+$/, '');
+}
+
+app.use((req, res, next) => {
+  const isLegacyHost = requestHost(req) === LEGACY_PRODUCTION_HOST;
+  const isPageRequest = req.method === 'GET' || req.method === 'HEAD';
+  const isApiRequest = req.path === '/api' || req.path.startsWith('/api/');
+
+  if (!isLegacyHost || !isPageRequest || isApiRequest) {
+    return next();
+  }
+
+  const redirectUrl = new URL(req.originalUrl || '/', PRIMARY_PRODUCTION_ORIGIN);
+  return res.redirect(308, redirectUrl.toString());
+});
+
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   try {
     const result = await billing.handleStripeWebhook(req.body, req.get('stripe-signature'));
