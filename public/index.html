@@ -45,7 +45,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png?v=2026-08-12-pitchproof-favicon">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=2026-08-12-pitchproof-favicon">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2026-08-12-pitchproof-favicon">
-<link rel="stylesheet" href="/styles.css?v=2026-08-12-brand-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-13-ai-visibility-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -2017,6 +2017,17 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 </div>
               </section>
 
+              <section class="report-section ai-visibility-section" id="aiVisibilitySection" hidden>
+                <div class="report-section-heading">
+                  <span>AI</span>
+                  <div>
+                    <h2>AI Visibility <em>Beta</em></h2>
+                    <p>How visible this business appears across a sample of representative AI recommendation searches.</p>
+                  </div>
+                </div>
+                <div class="ai-visibility-panel" id="aiVisibilityPanel"></div>
+              </section>
+
               <section class="report-section locked-preview-section" id="lockedPreviewSection" hidden>
                 <div class="report-section-heading">
                   <span>03</span>
@@ -2480,6 +2491,32 @@ const DEMO_REPORT_DATA = {
     technical: { label: 'Technical', score: 57, max: 100 },
     performance: { label: 'Performance', score: 42, max: 100 },
     design: { label: 'Design', score: 78, max: 100 },
+  },
+  aiVisibility: {
+    status: 'complete',
+    beta: true,
+    score: 2.2,
+    maxScore: 10,
+    label: 'Very Low',
+    mentionRate: 13.3,
+    recommendationRate: 6.7,
+    citationRate: 6.7,
+    promptsTested: 15,
+    mentions: 2,
+    recommendations: 1,
+    citations: 1,
+    strongestTopic: 'General roofing company searches',
+    biggestGap: 'Emergency repair and service-area recommendation prompts',
+    summary: 'This business has limited visibility across representative AI recommendation searches. Several competitors appear more frequently for high-intent local queries.',
+    provider: 'static-demo',
+    testedAt: '2026-08-13T00:00:00.000Z',
+    disclaimer: 'Based on a sample of representative AI recommendation searches. Results may vary by platform, prompt, location, and time.',
+    opportunities: [
+      'Strengthen clear service and location content.',
+      'Add more detailed service pages for high-intent searches.',
+      'Improve consistent business information across trusted sources.',
+      'Earn reputable third-party mentions that reinforce local authority.',
+    ],
   },
   visualTrust: {
     result: true,
@@ -7137,6 +7174,7 @@ function compactReportForPersistence(result) {
     websiteScore: firstDefinedValue(root.websiteScore, root.total, root.score, root.rating),
     maxScore: Number(root.maxScore) || 100,
     categories: compactPersistedValue(root.categories),
+    aiVisibility: compactPersistedValue(root.aiVisibility || root.ai_visibility),
     visualTrust: compactPersistedValue(root.visualTrust),
     brokenLinks: compactBrokenLinks(firstDefinedValue(root.brokenLinks, evidence.brokenLinks)),
     issues: asArray(root.issues).slice(0, 30).map(item => compactPersistedValue(item)),
@@ -7397,6 +7435,199 @@ function getBusinessImpact(label, priority) {
   return priority === 'High'
     ? 'Likely affects how many qualified visitors become leads.'
     : 'Supports the overall customer journey and decision-making process.';
+}
+
+function normalizeAiVisibility(rawValue) {
+  const raw = asRecord(rawValue);
+  if (!objectEntries(raw).length) return null;
+  const score = Number(raw.score);
+  const maxScore = Number(raw.maxScore || raw.max || 10) || 10;
+  const normalizedScore = Number.isFinite(score)
+    ? Math.max(0, Math.min(maxScore, Math.round(score * 10) / 10))
+    : null;
+  const promptsTested = Math.max(0, Number(raw.promptsTested || raw.prompts_tested) || 0);
+  const mentions = Math.max(0, Number(raw.mentions) || 0);
+  const recommendations = Math.max(0, Number(raw.recommendations) || 0);
+  const citations = Math.max(0, Number(raw.citations) || 0);
+  const status = asText(raw.status).toLowerCase() || (normalizedScore === null ? 'unavailable' : 'complete');
+  return {
+    status,
+    beta: raw.beta !== false,
+    score: normalizedScore,
+    maxScore,
+    label: asText(raw.label) || aiVisibilityLabel(normalizedScore, maxScore),
+    mentionRate: firstDefinedValue(raw.mentionRate, raw.mention_rate),
+    recommendationRate: firstDefinedValue(raw.recommendationRate, raw.recommendation_rate),
+    citationRate: firstDefinedValue(raw.citationRate, raw.citation_rate),
+    promptsTested,
+    mentions,
+    recommendations,
+    citations,
+    strongestTopic: asText(raw.strongestTopic || raw.strongest_topic),
+    biggestGap: asText(raw.biggestGap || raw.biggest_gap),
+    summary: asText(raw.summary) || 'AI visibility data unavailable for this scan.',
+    provider: asText(raw.provider),
+    testedAt: asText(raw.testedAt || raw.tested_at),
+    disclaimer: asText(raw.disclaimer) || 'Based on a sample of representative AI recommendation searches. Results may vary by platform, prompt, location, and time.',
+    opportunities: asArray(raw.opportunities).map(asText).filter(Boolean).slice(0, 4),
+  };
+}
+
+function aiVisibilityForResult(result = {}) {
+  return normalizeAiVisibility(firstDefinedValue(result.aiVisibility, result.ai_visibility));
+}
+
+function aiVisibilityPercent(ai) {
+  if (!ai || ai.score === null || !Number.isFinite(Number(ai.score))) return 0;
+  return Math.max(0, Math.min(100, (Number(ai.score) / (Number(ai.maxScore) || 10)) * 100));
+}
+
+function aiVisibilityLabel(score, maxScore = 10) {
+  if (score === null || !Number.isFinite(Number(score))) return 'Unavailable';
+  const pct = (Number(score) / (Number(maxScore) || 10)) * 100;
+  if (pct < 25) return 'Very Low';
+  if (pct < 50) return 'Low';
+  if (pct < 70) return 'Moderate';
+  if (pct < 85) return 'Strong';
+  return 'Very Strong';
+}
+
+function aiVisibilityTone(ai) {
+  if (!ai || ai.status !== 'complete' || ai.score === null) return 'unavailable';
+  const pct = aiVisibilityPercent(ai);
+  if (pct < 25) return 'very-low';
+  if (pct < 50) return 'low';
+  if (pct < 70) return 'moderate';
+  if (pct < 85) return 'strong';
+  return 'very-strong';
+}
+
+function aiVisibilityColor(ai) {
+  const tone = aiVisibilityTone(ai);
+  if (tone === 'very-strong' || tone === 'strong') return 'var(--report-good)';
+  if (tone === 'moderate') return 'var(--report-warn)';
+  if (tone === 'low' || tone === 'very-low') return 'var(--report-risk)';
+  return 'var(--report-muted)';
+}
+
+function aiVisibilityScoreText(ai) {
+  if (!ai || ai.score === null || ai.status !== 'complete') return 'Unavailable';
+  return `${Number(ai.score).toFixed(1)} / ${Number(ai.maxScore) || 10}`;
+}
+
+function aiVisibilityMetricLine(value, total, noun) {
+  const count = Math.max(0, Number(value) || 0);
+  const tested = Math.max(0, Number(total) || 0);
+  if (!tested) return `No ${noun} data`;
+  return `${count} of ${tested}`;
+}
+
+function aiVisibilityMetricCard(label, value, total, detail) {
+  return `
+    <div class="ai-visibility-metric">
+      <span>${escHtml(label)}</span>
+      <strong>${escHtml(aiVisibilityMetricLine(value, total, label.toLowerCase()))}</strong>
+      <small>${escHtml(detail)}</small>
+    </div>
+  `;
+}
+
+function renderAiVisibilityCategoryCard(container, ai) {
+  if (!container || !ai) return;
+  const color = aiVisibilityColor(ai);
+  const tone = aiVisibilityTone(ai);
+  const percent = aiVisibilityPercent(ai);
+  container.innerHTML += `
+    <div class="cat-card ai-visibility-cat-card">
+      <div class="cat-name">AI Visibility <span class="ai-beta-chip">Beta</span></div>
+      <div class="cat-score-row">
+        <span class="cat-score-text" style="color:${color}">${escHtml(ai.status === 'complete' && ai.score !== null ? Number(ai.score).toFixed(1) : '—')}</span>
+        <span style="color:var(--report-muted);font-size:0.85rem">/ ${escHtml(ai.maxScore || 10)}</span>
+      </div>
+      <div class="cat-bar-wrap" role="meter" aria-label="AI visibility score" aria-valuemin="0" aria-valuemax="${escHtml(ai.maxScore || 10)}" aria-valuenow="${escHtml(ai.score === null ? 0 : ai.score)}" aria-valuetext="${escHtml(progressPercent(percent))} filled">
+        <div class="cat-bar-fill ai-visibility-fill ${escHtml(tone)}" style="width:${progressPercent(percent)};background:${color}"></div>
+      </div>
+      <div class="category-meta">
+        <span class="ai-visibility-status ${escHtml(tone)}">${escHtml(ai.label)}</span>
+      </div>
+      <div class="cat-summary">${escHtml(ai.summary)}</div>
+      <div class="cat-business-impact"><span class="consulting-chip-label">Business Impact</span><br>Shows whether potential customers using AI recommendation searches are likely to encounter this business or its competitors.</div>
+    </div>`;
+}
+
+function renderAiVisibilitySection(result = {}) {
+  const section = document.getElementById('aiVisibilitySection');
+  const panel = document.getElementById('aiVisibilityPanel');
+  const ai = aiVisibilityForResult(result);
+  if (!section || !panel) return ai;
+  if (!ai) {
+    section.hidden = true;
+    panel.innerHTML = '';
+    return null;
+  }
+
+  section.hidden = false;
+  const color = aiVisibilityColor(ai);
+  const tone = aiVisibilityTone(ai);
+  const promptsTested = ai.promptsTested;
+  const opportunities = ai.opportunities.length
+    ? ai.opportunities
+    : [
+        'Strengthen clear service and location content.',
+        'Improve authority signals from reputable third-party sources.',
+        'Keep business information consistent across trusted platforms.',
+      ];
+
+  if (ai.status !== 'complete') {
+    panel.innerHTML = `
+      <div class="ai-visibility-card ai-visibility-unavailable">
+        <div>
+          <span class="ai-beta-chip">Beta</span>
+          <h3>AI visibility data unavailable</h3>
+          <p>${escHtml(ai.summary || 'AI visibility data unavailable for this scan.')}</p>
+        </div>
+        <small>${escHtml(ai.disclaimer)}</small>
+      </div>
+    `;
+    return ai;
+  }
+
+  panel.innerHTML = `
+    <div class="ai-visibility-card">
+      <div class="ai-visibility-score-block">
+        <span class="ai-beta-chip">Beta</span>
+        <div class="ai-visibility-score" style="color:${color}">${escHtml(aiVisibilityScoreText(ai))}</div>
+        <div class="ai-visibility-label ${escHtml(tone)}">${escHtml(ai.label)}</div>
+        <div class="ai-visibility-bar" aria-label="AI visibility score out of 10">
+          <div style="width:${progressPercent(aiVisibilityPercent(ai))};background:${color}"></div>
+        </div>
+      </div>
+      <div class="ai-visibility-summary">
+        <h3>What This Means</h3>
+        <p>${escHtml(ai.summary)}</p>
+        <div class="ai-visibility-context-grid">
+          ${ai.strongestTopic ? `<div><span>Strongest topic</span><strong>${escHtml(ai.strongestTopic)}</strong></div>` : ''}
+          ${ai.biggestGap ? `<div><span>Biggest gap</span><strong>${escHtml(ai.biggestGap)}</strong></div>` : ''}
+        </div>
+      </div>
+    </div>
+    <div class="ai-visibility-metrics-grid">
+      ${aiVisibilityMetricCard('Mentions', ai.mentions, promptsTested, 'Representative searches where the business was mentioned.')}
+      ${aiVisibilityMetricCard('Recommendations', ai.recommendations, promptsTested, 'Searches where the business appeared as a recommendation.')}
+      ${aiVisibilityMetricCard('Citations', ai.citations, promptsTested, 'Searches where a source or citation supported the business.')}
+      <div class="ai-visibility-metric">
+        <span>Prompts Tested</span>
+        <strong>${escHtml(promptsTested)}</strong>
+        <small>Standardized buyer-intent prompts.</small>
+      </div>
+    </div>
+    <div class="ai-visibility-actions">
+      <h3>How to Improve AI Visibility</h3>
+      <ul>${opportunities.map(item => `<li>${escHtml(item)}</li>`).join('')}</ul>
+    </div>
+    <p class="ai-visibility-disclaimer">${escHtml(ai.disclaimer)}</p>
+  `;
+  return ai;
 }
 
 function issuePriority(rawIssue, index = 0) {
@@ -7786,6 +8017,7 @@ function buildReportRequestData(result) {
     score: normalizeScore(firstDefinedValue(root.total, root.score, root.websiteScore, root.rating)),
     maxScore: Number(root.maxScore) || 100,
     categories: categorySummary,
+    aiVisibility: compactPersistedValue(root.aiVisibility || root.ai_visibility),
     issues: asArray(root.issues).slice(0, 10),
     recommendations: asArray(root.recommendations).slice(0, 10),
     criticalFlags: asArray(root.criticalFlags).slice(0, 10),
@@ -7874,6 +8106,7 @@ function renderResults(data, options = {}) {
   const catsGrid = document.getElementById('catsGrid');
   catsGrid.innerHTML = '';
   const categories = normalizedReportCategories(result);
+  const aiVisibility = renderAiVisibilitySection(result);
   categories.forEach(cat => {
     const catScore = cat.score;
     const catMax = cat.max;
@@ -7899,6 +8132,7 @@ function renderResults(data, options = {}) {
         <div class="cat-business-impact"><span class="consulting-chip-label">Business Impact</span><br>${escHtml(getBusinessImpact(label, catContext.priority))}</div>
       </div>`;
   });
+  renderAiVisibilityCategoryCard(catsGrid, aiVisibility);
   const brokenSummary = getBrokenLinksSummary(result);
   const brokenColor = brokenSummary.totalIssues > 0 ? 'var(--report-risk)' : 'var(--report-good)';
   const brokenPriority = brokenSummary.totalIssues > 0 ? 'High' : 'Low';

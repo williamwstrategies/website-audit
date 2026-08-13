@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-12-pitchproof-favicon-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-13-ai-visibility-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',

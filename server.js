@@ -7,6 +7,7 @@ const { PostHog } = require('posthog-node');
 const billing = require('./lib/billing');
 const lifecycleEmails = require('./lib/lifecycle-emails');
 const { generateReportPdf } = require('./lib/pdf');
+const { enrichReportWithAiVisibility } = require('./lib/ai-visibility');
 const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
 const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-controls');
 
@@ -1037,6 +1038,15 @@ function reportDataForServerSave(result = {}, context = {}) {
   };
 }
 
+async function optionalAiVisibility(result = {}, context = {}) {
+  try {
+    return await enrichReportWithAiVisibility(result, context);
+  } catch (error) {
+    console.warn('[PitchProof] AI visibility enrichment skipped:', error?.message || error);
+    return result;
+  }
+}
+
 async function sendLeadToGHL(lead, score = null, extra = {}) {
   const webhookUrl = process.env.GHL_WEBHOOK_URL;
   if (!webhookUrl) {
@@ -1140,7 +1150,13 @@ app.post('/api/analyze', async (req, res) => {
   }
 
   try {
-    const result = await analyzeWebsite(url, { debug: debugMode });
+    let result = await analyzeWebsite(url, { debug: debugMode });
+    result = await optionalAiVisibility(result, {
+      prospectName: req.body.prospectName,
+      companyName: req.body.companyName,
+      notes: req.body.notes,
+      requestedWebsite: url,
+    });
     const score = extractWebsiteScore(result);
     if (!auditReservation?.complimentary) {
       await billing.completeAuditUsage(authContext.user.id, auditIdempotencyKey, {
@@ -1480,7 +1496,12 @@ app.post('/api/lead-capture', async (req, res) => {
   }
 
   try {
-    const result = await analyzeWebsite(lead.website, { debug: debugMode });
+    let result = await analyzeWebsite(lead.website, { debug: debugMode });
+    result = await optionalAiVisibility(result, {
+      prospectName: lead.name,
+      companyName: lead.businessName,
+      requestedWebsite: lead.website,
+    });
     const score = extractWebsiteScore(result);
     try {
       await sendLeadToGHL(lead, score);
