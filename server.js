@@ -8,6 +8,7 @@ const billing = require('./lib/billing');
 const lifecycleEmails = require('./lib/lifecycle-emails');
 const { generateReportPdf } = require('./lib/pdf');
 const { enrichReportWithAiVisibility } = require('./lib/ai-visibility');
+const { runAiVisibilityPrompt } = require('./lib/dataforseo-ai-visibility');
 const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
 const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-controls');
 
@@ -470,6 +471,17 @@ function requireLifecycleSecret(req) {
   }
 }
 
+function requireAiVisibilityTestSecret(req) {
+  const configured = cleanSupportText(process.env.AI_VISIBILITY_TEST_SECRET, 2000);
+  const provided = cleanSupportText(req.get('x-ai-visibility-secret'), 2000);
+  if (!configured) {
+    throw billing.httpError(503, 'AI_VISIBILITY_TEST_SECRET is not configured.', 'ai_visibility_test_secret_missing');
+  }
+  if (!safeCompare(provided, configured)) {
+    throw billing.httpError(401, 'AI visibility test access is not authorized.', 'ai_visibility_test_unauthorized');
+  }
+}
+
 function lifecycleDryRun(req) {
   return /^(1|true|yes)$/i.test(cleanSupportText(req.query.dryRun || req.query.dry_run || req.body?.dryRun || req.body?.dry_run, 20));
 }
@@ -773,6 +785,18 @@ app.get('/api/auth-config', (req, res) => {
 app.get('/api/billing/config', (req, res) => {
   res.set('Cache-Control', 'no-store');
   res.json(billing.billingConfigStatus());
+});
+
+app.post('/api/internal/ai-visibility/test', async (req, res) => {
+  try {
+    requireAiVisibilityTestSecret(req);
+    const result = await runAiVisibilityPrompt(req.body || {});
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
 });
 
 app.get('/api/billing/subscription', async (req, res) => {
