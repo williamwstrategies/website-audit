@@ -9,6 +9,7 @@ const lifecycleEmails = require('./lib/lifecycle-emails');
 const { generateReportPdf } = require('./lib/pdf');
 const { enrichReportWithAiVisibility } = require('./lib/ai-visibility');
 const { runAiVisibilityPrompt } = require('./lib/dataforseo-ai-visibility');
+const { runAiVisibilityAssessment } = require('./lib/ai-visibility-assessment');
 const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
 const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-controls');
 
@@ -791,6 +792,18 @@ app.post('/api/internal/ai-visibility/test', async (req, res) => {
   try {
     requireAiVisibilityTestSecret(req);
     const result = await runAiVisibilityPrompt(req.body || {});
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/internal/ai-visibility/assessment-test', async (req, res) => {
+  try {
+    requireAiVisibilityTestSecret(req);
+    const result = await runAiVisibilityAssessment(req.body || {});
     res.set('Cache-Control', 'no-store');
     res.json(result);
   } catch (error) {

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test:ai-visibility": "node --test tests/ai-visibility-assessment.test.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
