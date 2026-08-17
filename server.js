@@ -1183,6 +1183,20 @@ app.post('/api/ai-visibility/scans', async (req, res) => {
     }
 
     const report = await billing.getAiVisibilityReportForUserForClient(authContext.user.id, savedReport.id);
+    console.log('[AI Visibility] report saved', {
+      reportId: report.id,
+      userId: authContext.user.id,
+      status: report.status,
+      score: report.score,
+      label: report.label,
+      promptsTested: report.prompts_tested,
+      successfulRequests: report.successful_requests,
+      failedRequests: report.failed_requests,
+      mentions: report.mention_count,
+      recommendations: report.recommendation_count,
+      citations: report.citation_count,
+      providerCost: assessment.totalCost,
+    });
     const subscription = billing.normalizeSubscriptionForClient(usage.subscription);
     posthog.capture({
       distinctId: authContext.user.id,

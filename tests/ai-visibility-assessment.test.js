@@ -3,6 +3,8 @@ const assert = require('node:assert/strict');
 
 const {
   aggregateCompetitors,
+  aggregateAssessmentResults,
+  analyzePromptResponse,
   calculateScore,
   detectBusinessMention,
   detectCitation,
@@ -132,6 +134,44 @@ test('requires at least three successful prompts to score', () => {
   ]);
   assert.equal(score.status, 'insufficient_data');
   assert.equal(score.score, null);
+});
+
+test('successful provider responses without usable text do not produce completed zero reports', () => {
+  const analyzed = analyzePromptResponse({
+    intent: 'category_discovery',
+    prompt: 'What are the best roofing companies in Ottawa, Ontario?',
+    business: roofingInput,
+    response: {
+      success: true,
+      responseText: '',
+      citedUrls: [],
+      fanOutQueries: ['roofing companies ottawa'],
+      cost: 0.026,
+      durationMs: 400,
+      provider: 'dataforseo',
+      model: 'gpt-4o-mini-2024-07-18',
+      statusCode: 20000,
+      statusMessage: 'Ok.',
+    },
+  });
+
+  assert.equal(analyzed.success, false);
+  assert.equal(analyzed.code, 'empty_provider_response');
+  assert.equal(analyzed.cost, 0.026);
+  assert.equal(analyzed.responseTextLength, 0);
+
+  const assessment = aggregateAssessmentResults(roofingInput, generateAiVisibilityPrompts(roofingInput), [
+    analyzed,
+    { ...analyzed, prompt: 'Who would you recommend for roofing in Ottawa, Ontario?' },
+    { ...analyzed, prompt: 'What are the best roof repair companies in Ottawa, Ontario?' },
+    { ...analyzed, prompt: 'What are the most reputable roofing contractors in Ottawa, Ontario?' },
+    { ...analyzed, prompt: 'Who should I hire for roofing in Ottawa, Ontario?' },
+  ]);
+
+  assert.equal(assessment.status, 'insufficient_data');
+  assert.equal(assessment.score, null);
+  assert.equal(assessment.successfulRequests, 0);
+  assert.equal(assessment.failedRequests, 5);
 });
 
 test('mock assessment scenarios produce expected recommendation counts', async () => {
