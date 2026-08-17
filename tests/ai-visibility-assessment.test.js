@@ -57,6 +57,19 @@ test('detects business mentions without broad fuzzy matching', () => {
   assert.equal(detectBusinessMention('3. Intrigue Roof Group - a local contractor.', roofingInput), false);
 });
 
+test('detects business mentions beyond the first few recommendation lines', () => {
+  const text = [
+    '1. Stewart Roofing - Established local roofing contractor.',
+    '2. Sanderson Roofing - Established local roofing contractor.',
+    '3. Taylor Roofing - Established local roofing contractor.',
+    '4. Capital Roof Pros - Established local roofing contractor.',
+    '5. Intricate Roofing & Contracting - Local roofing contractor.',
+    '6. Ottawa Exterior Group - Established local roofing contractor.',
+  ].join('\n');
+  assert.equal(detectBusinessMention(text, roofingInput), true);
+  assert.equal(recommendationPosition(text, roofingInput), 5);
+});
+
 test('extracts recommendation position from ordered lists', () => {
   const text = [
     '1. Stewart Roofing - local contractor.',
