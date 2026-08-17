@@ -631,6 +631,34 @@ app.all('/api/email/broadcast/seven-day-trial/run', async (req, res) => {
   }
 });
 
+app.all('/api/email/broadcast/ai-visibility-coming-soon/run', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const result = await lifecycleEmails.runAiVisibilityComingSoonBroadcast({
+      dryRun: broadcastDryRun(req),
+      limit: req.query.limit || req.body?.limit,
+      confirm: req.query.confirm || req.body?.confirm,
+    });
+    posthog.capture({
+      distinctId: 'ai-visibility-coming-soon-broadcast-runner',
+      event: 'ai_visibility_coming_soon_broadcast_run',
+      properties: {
+        dry_run: result.dryRun,
+        eligible: result.eligible,
+        selected: result.selected,
+        sent: result.sent,
+        failed: result.failed,
+        remaining_after_run: result.remaining_after_run,
+      },
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.get('/api/email/unsubscribe', async (req, res) => {
   const email = cleanSupportText(req.query.email, 320);
   const campaign = cleanSupportText(req.query.campaign || lifecycleEmails.CAMPAIGN_KEY, 80);
