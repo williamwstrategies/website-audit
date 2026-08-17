@@ -525,6 +525,27 @@
       });
     }
 
+    async runAiVisibilityScan(input = {}) {
+      return this.serverJson('/api/ai-visibility/scans', {
+        method: 'POST',
+        body: input,
+      });
+    }
+
+    async listAiVisibilityReports({ search = '', limit = 100 } = {}) {
+      const params = new URLSearchParams({
+        search: cleanText(search),
+        limit: String(Math.max(1, Math.min(Number(limit) || 100, 250))),
+      });
+      const payload = await this.serverJson(`/api/ai-visibility/reports?${params.toString()}`);
+      return payload.reports || [];
+    }
+
+    async getAiVisibilityReport(reportId) {
+      const payload = await this.serverJson(`/api/ai-visibility/reports/${encodeURIComponent(reportId)}`);
+      return payload.report || null;
+    }
+
     async downloadReportPdf(reportId) {
       return this.serverBlob(`/api/reports/${encodeURIComponent(reportId)}/pdf`, {
         fileName: 'website-assessment.pdf',

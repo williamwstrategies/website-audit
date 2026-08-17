@@ -8477,6 +8477,220 @@ body.required-plan-open {
   color: #ffd0d0;
 }
 
+.scan-choice-grid,
+.ai-report-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.scan-choice-card {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-height: 340px;
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.scan-choice-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.scan-choice-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 6px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.scan-choice-card.featured {
+  border-color: color-mix(in srgb, var(--brand-primary) 44%, transparent);
+  background:
+    radial-gradient(circle at 82% 8%, var(--brand-glow), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.045)),
+    rgba(9, 25, 46, 0.86);
+}
+
+.scan-choice-card.featured .scan-choice-pill {
+  border-color: color-mix(in srgb, var(--brand-primary) 42%, transparent);
+  background: var(--brand-primary-soft);
+  color: #fff7db;
+}
+
+.scan-choice-card h3 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.45rem);
+  line-height: 1.02;
+}
+
+.scan-choice-card .analyze-btn {
+  align-self: end;
+  width: 100%;
+  justify-content: center;
+}
+
+.ai-visibility-simple-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-muted);
+}
+
+.ai-visibility-simple-list li {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.ai-visibility-simple-list li::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--brand-primary-hover);
+  content: "";
+  flex: 0 0 auto;
+}
+
+.report-type-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 16px;
+}
+
+.report-type-tab {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.report-type-tab:hover,
+.report-type-tab.active {
+  border-color: color-mix(in srgb, var(--brand-primary) 42%, transparent);
+  background: var(--brand-primary-soft);
+  color: var(--text-primary);
+}
+
+.ai-visibility-report-shell {
+  display: grid;
+  gap: 18px;
+}
+
+.ai-report-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.ai-report-hero h2 {
+  margin: 10px 0 8px;
+  font-size: clamp(2rem, 4vw, 3.6rem);
+  line-height: 1;
+}
+
+.ai-score-block {
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+  min-width: 190px;
+}
+
+.ai-score-block strong {
+  font-size: clamp(2.2rem, 4.2vw, 4.8rem);
+  line-height: 0.94;
+}
+
+.ai-report-section {
+  padding: clamp(22px, 3vw, 30px);
+}
+
+.ai-query-grid,
+.ai-missed-list {
+  display: grid;
+  gap: 12px;
+}
+
+.ai-query-card,
+.ai-missed-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.ai-query-card h3 {
+  margin: 5px 0 0;
+  font-size: clamp(1rem, 2vw, 1.16rem);
+  line-height: 1.35;
+}
+
+.ai-query-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ai-missed-card strong {
+  color: var(--text-primary);
+}
+
+.ai-missed-card p {
+  margin: 0;
+}
+
+.disabled-link {
+  cursor: not-allowed;
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .scan-choice-grid,
+  .ai-report-two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .scan-choice-card {
+    min-height: 0;
+  }
+
+  .ai-report-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .ai-score-block {
+    justify-items: start;
+    width: 100%;
+  }
+
+  .report-type-tabs {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
 .app-shell .billing-progress-track,
 .app-shell .loading-progress-track,
 .app-shell .score-bar-wrap,

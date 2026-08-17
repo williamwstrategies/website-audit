@@ -45,7 +45,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png?v=2026-08-12-pitchproof-favicon">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=2026-08-12-pitchproof-favicon">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2026-08-12-pitchproof-favicon">
-<link rel="stylesheet" href="/styles.css?v=2026-08-13-ai-visibility-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-17-ai-visibility-selector-v2">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -318,7 +318,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <span class="plan-name">Starter</span>
           <strong>$19.99 <small>/ month</small></strong>
           <p>Perfect for freelancers and agencies getting started. Trial first, then $19.99/month.</p>
-          <ul class="check-list"><li>50 scans per month</li><li>Website Opportunity Reports</li><li>Top priorities and scores</li><li>PDF exports</li><li>Saved and shared reports</li><li>PitchProof branding</li></ul>
+          <ul class="check-list"><li>50 scans per month</li><li>10 AI Visibility scans per month</li><li>Website Opportunity Reports</li><li>Top priorities and scores</li><li>PDF exports</li><li>Saved and shared reports</li><li>PitchProof branding</li></ul>
           <a class="plan-detail-link" href="/pricing/starter" data-route>View Starter details</a>
           <a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
         </article>
@@ -328,7 +328,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <span class="plan-name">Professional</span>
           <strong>$39.99 <small>/ month</small></strong>
           <p>Perfect for agencies presenting opportunity reports directly to prospects. Trial first, then $39.99/month.</p>
-          <ul class="check-list"><li>150 plan scans per month</li><li>50 bonus scans per month</li><li>200 total scans per month</li><li>Everything in Starter</li><li>White-label reports and PDFs</li><li>Client-ready sales presentation</li><li>Custom agency branding</li></ul>
+          <ul class="check-list"><li>150 plan scans per month</li><li>50 bonus scans per month</li><li>200 total scans per month</li><li>30 AI Visibility scans per month</li><li>Everything in Starter</li><li>White-label reports and PDFs</li><li>Client-ready sales presentation</li><li>Custom agency branding</li></ul>
           <a class="plan-detail-link" href="/pricing/professional" data-route>View Professional details</a>
           <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
         </article>
@@ -337,7 +337,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <span class="plan-name">Growth</span>
           <strong>$79.99 <small>/ month</small></strong>
           <p>Built for agencies generating higher report volume. Trial first, then $79.99/month.</p>
-          <ul class="check-list"><li>500 scans per month</li><li>Everything in Professional</li><li>Higher-volume prospecting</li><li>Saved report history</li><li>Priority support</li><li>Early access to report features</li></ul>
+          <ul class="check-list"><li>500 scans per month</li><li>100 AI Visibility scans per month</li><li>Everything in Professional</li><li>Higher-volume prospecting</li><li>Saved report history</li><li>Priority support</li><li>Early access to report features</li></ul>
           <a class="plan-detail-link" href="/pricing/growth" data-route>View Growth details</a>
           <a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
         </article>
@@ -361,7 +361,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details><summary>What does the platform scan?</summary><p>It reviews website health, SEO visibility, trust, conversion, technical health, broken pages, performance, and visual trust signals.</p></details>
       <details><summary>Can I use my own branding?</summary><p>Yes on Professional, Growth, and Enterprise. Starter reports include PitchProof branding while keeping the full reporting workflow usable.</p></details>
       <details><summary>Can I download PDFs?</summary><p>Yes. Saved reports can be exported as branded PDFs from the authenticated application.</p></details>
-      <details><summary>How many assessments are included?</summary><p>Starter includes 50 scans per month, Professional includes 150 plan scans plus 50 bonus scans for 200 total, Growth includes 500, and Enterprise supports custom high-volume usage.</p></details>
+      <details><summary>How many assessments are included?</summary><p>Starter includes 50 website scans and 10 AI Visibility scans per month. Professional includes 150 plan scans plus 50 bonus website scans and 30 AI Visibility scans. Growth includes 500 website scans and 100 AI Visibility scans. Enterprise supports custom high-volume usage.</p></details>
       <details><summary>Will I be charged today?</summary><p>No. Starter, Professional, and Growth begin with a 7-day free trial. Stripe collects your payment method at checkout and starts billing after the trial ends.</p></details>
       <details><summary>Will prospects see platform branding?</summary><p>Starter reports include a small PitchProof branding footer. Professional, Growth, and Enterprise reports can be fully white-labeled.</p></details>
     </section>
@@ -570,10 +570,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   <article class="public-page supporting-page pricing-page" data-public-page="pricing" hidden>
     <div class="supporting-hero" data-reveal><div class="section-kicker">Pricing</div><h1>Start with 7 days free.</h1><p>Choose a monthly plan, add your payment method in Stripe, and use the platform immediately. Stripe will not charge until the 7-day trial ends.</p></div>
     <div class="pricing-tier-grid full-pricing-grid" data-reveal>
-      <article class="pricing-card featured pricing-main"><span class="plan-badge">Most Popular</span><span class="plan-trial-badge">7 days free</span><span class="plan-special-badge">50 extra scans/month for first time users!</span><span class="plan-name">Professional</span><strong>$39.99 <small>/ month</small></strong><p>Perfect for agencies presenting opportunity reports directly to prospects. No charge today; billing starts after the trial.</p><ul class="check-list"><li>7-day free trial</li><li>150 plan scans per month</li><li>50 bonus scans per month</li><li>200 total scans per month</li><li>Everything in Starter</li><li>Remove PitchProof branding</li><li>White-label online reports</li><li>White-label PDF exports</li><li>Custom agency logo and colors</li><li>Agency contact details and booking link</li><li>Client-ready sales presentation</li><li>Saved report history</li><li>Priority email support</li></ul><a class="plan-detail-link" href="/pricing/professional" data-route>View Professional details</a><a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
-      <article class="pricing-card"><span class="plan-trial-badge">7 days free</span><span class="plan-name">Starter</span><strong>$19.99 <small>/ month</small></strong><p>Perfect for freelancers and agencies getting started. No charge today; billing starts after the trial.</p><ul class="check-list"><li>7-day free trial</li><li>50 scans per month</li><li>Website Opportunity Reports</li><li>Overall and category scores</li><li>Executive summary and top priorities</li><li>Business-focused recommendations</li><li>PDF exports</li><li>Dashboard access</li><li>Saved and shareable reports</li><li>Email support</li><li>Includes PitchProof branding</li></ul><a class="plan-detail-link" href="/pricing/starter" data-route>View Starter details</a><a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
-      <article class="pricing-card"><span class="plan-trial-badge">7 days free</span><span class="plan-name">Growth</span><strong>$79.99 <small>/ month</small></strong><p>Built for agencies generating higher report volume. No charge today; billing starts after the trial.</p><ul class="check-list"><li>7-day free trial</li><li>500 scans per month</li><li>Everything in Professional</li><li>Higher-volume prospecting workflow</li><li>White-label reports and PDFs</li><li>Custom agency branding</li><li>Saved report history</li><li>Priority support</li><li>Early access to report features</li><li>Higher scan capacity</li></ul><a class="plan-detail-link" href="/pricing/growth" data-route>View Growth details</a><a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
-      <article class="pricing-card"><span class="plan-name">Enterprise</span><strong>Contact <small>Sales</small></strong><p>For teams that need custom pricing, onboarding, and priority support.</p><ul class="check-list"><li>Unlimited scans subject to fair use</li><li>Custom pricing</li><li>Dedicated onboarding</li><li>Priority support</li><li>Custom scan capacity</li><li>Workflow guidance for established teams</li></ul><a class="secondary-btn" href="/contact" data-route data-plan-key="enterprise" data-public-event="enterprise_contact_clicked">Contact Sales</a></article>
+      <article class="pricing-card featured pricing-main"><span class="plan-badge">Most Popular</span><span class="plan-trial-badge">7 days free</span><span class="plan-special-badge">50 extra scans/month for first time users!</span><span class="plan-name">Professional</span><strong>$39.99 <small>/ month</small></strong><p>Perfect for agencies presenting opportunity reports directly to prospects. No charge today; billing starts after the trial.</p><ul class="check-list"><li>7-day free trial</li><li>150 plan scans per month</li><li>50 bonus scans per month</li><li>200 total scans per month</li><li>30 AI Visibility scans per month</li><li>Everything in Starter</li><li>Remove PitchProof branding</li><li>White-label online reports</li><li>White-label PDF exports</li><li>Custom agency logo and colors</li><li>Agency contact details and booking link</li><li>Client-ready sales presentation</li><li>Saved report history</li><li>Priority email support</li></ul><a class="plan-detail-link" href="/pricing/professional" data-route>View Professional details</a><a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
+      <article class="pricing-card"><span class="plan-trial-badge">7 days free</span><span class="plan-name">Starter</span><strong>$19.99 <small>/ month</small></strong><p>Perfect for freelancers and agencies getting started. No charge today; billing starts after the trial.</p><ul class="check-list"><li>7-day free trial</li><li>50 scans per month</li><li>10 AI Visibility scans per month</li><li>Website Opportunity Reports</li><li>Overall and category scores</li><li>Executive summary and top priorities</li><li>Business-focused recommendations</li><li>PDF exports</li><li>Dashboard access</li><li>Saved and shareable reports</li><li>Email support</li><li>Includes PitchProof branding</li></ul><a class="plan-detail-link" href="/pricing/starter" data-route>View Starter details</a><a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
+      <article class="pricing-card"><span class="plan-trial-badge">7 days free</span><span class="plan-name">Growth</span><strong>$79.99 <small>/ month</small></strong><p>Built for agencies generating higher report volume. No charge today; billing starts after the trial.</p><ul class="check-list"><li>7-day free trial</li><li>500 scans per month</li><li>100 AI Visibility scans per month</li><li>Everything in Professional</li><li>Higher-volume prospecting workflow</li><li>White-label reports and PDFs</li><li>Custom agency branding</li><li>Saved report history</li><li>Priority support</li><li>Early access to report features</li><li>Higher scan capacity</li></ul><a class="plan-detail-link" href="/pricing/growth" data-route>View Growth details</a><a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
+      <article class="pricing-card"><span class="plan-name">Enterprise</span><strong>Contact <small>Sales</small></strong><p>For teams that need custom pricing, onboarding, and priority support.</p><ul class="check-list"><li>Unlimited scans subject to fair use</li><li>Unlimited AI Visibility scans with fair use</li><li>Custom pricing</li><li>Dedicated onboarding</li><li>Priority support</li><li>Custom scan capacity</li><li>Workflow guidance for established teams</li></ul><a class="secondary-btn" href="/contact" data-route data-plan-key="enterprise" data-public-event="enterprise_contact_clicked">Contact Sales</a></article>
     </div>
     <section class="feature-comparison-panel" data-reveal>
       <div class="panel-heading"><div><div class="section-kicker">Comparison</div><h2>Plan comparison</h2></div></div>
@@ -638,6 +638,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <ul class="check-list">
           <li>7-day free trial before billing starts</li>
           <li>50 scans per month</li>
+          <li>10 AI Visibility scans per month</li>
           <li>Website Opportunity Reports</li>
           <li>Overall score and category scores</li>
           <li>Executive summary and top priorities</li>
@@ -705,7 +706,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <span class="plan-special-badge">50 extra scans/month for first time users!</span>
         <span class="plan-name">Professional</span>
         <strong>$39.99 <small>/ month</small></strong>
-        <p>No charge today. After the trial, Professional includes 150 plan scans plus 50 bonus scans monthly.</p>
+        <p>No charge today. After the trial, Professional includes 150 plan scans plus 50 bonus website scans monthly, plus 30 AI Visibility scans.</p>
       </aside>
     </div>
 
@@ -717,6 +718,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <li>7-day free trial before billing starts</li>
           <li>150 plan scans per month</li>
           <li>50 bonus scans per month</li>
+          <li>30 AI Visibility scans per month</li>
           <li>200 total scans per month</li>
           <li>Everything in Starter</li>
           <li>Remove PitchProof branding</li>
@@ -794,6 +796,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <ul class="check-list">
           <li>7-day free trial before billing starts</li>
           <li>500 scans per month</li>
+          <li>100 AI Visibility scans per month</li>
           <li>Everything in Professional</li>
           <li>Higher-volume prospecting workflow</li>
           <li>White-label reports and PDFs</li>
@@ -856,7 +859,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details data-faq-item><summary>Can I white-label the app?</summary><p>Yes on Professional, Growth, and Enterprise. Starter keeps the workflow intact but includes PitchProof branding on reports and PDFs.</p></details>
       <details data-faq-item><summary>Can I download reports as PDFs?</summary><p>Yes. Saved reports can be downloaded as branded PDF reports from inside the authenticated app.</p></details>
       <details data-faq-item><summary>Are reports saved?</summary><p>Yes. Reports are saved to the authenticated user's workspace and can be reopened later.</p></details>
-      <details data-faq-item><summary>How many assessments are included?</summary><p>Starter includes 50 scans per month, Professional includes 150 plan scans plus 50 bonus scans for 200 total, Growth includes 500, and Enterprise supports custom fair-use usage.</p></details>
+      <details data-faq-item><summary>How many assessments are included?</summary><p>Starter includes 50 website scans and 10 AI Visibility scans per month. Professional includes 150 plan scans plus 50 bonus website scans and 30 AI Visibility scans. Growth includes 500 website scans and 100 AI Visibility scans. Enterprise supports custom fair-use usage.</p></details>
       <details data-faq-item><summary>Will I be charged today?</summary><p>No. Monthly Stripe plans include a 7-day free trial, so the first charge happens after the trial ends.</p></details>
       <details data-faq-item><summary>Can prospects see platform branding?</summary><p>Starter reports include PitchProof branding. Professional, Growth, and Enterprise can remove it and use agency branding.</p></details>
       <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
@@ -1161,6 +1164,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <nav class="app-menu" id="appMenu">
       <a href="/app" data-route data-app-nav="dashboard">Dashboard</a>
       <a href="/app/scan" data-route data-app-nav="scan">New Audit</a>
+      <a href="/app/ai-visibility/new" data-route data-app-nav="ai-visibility">AI Visibility</a>
       <a href="/app/reports" data-route data-app-nav="reports">Reports</a>
       <a href="/app/support" data-route data-app-nav="support">Support</a>
       <a href="/app/coming-soon" data-route data-app-nav="coming-soon">Coming Soon</a>
@@ -1182,7 +1186,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="enterprise-header-actions">
         <span class="auth-user-chip" data-auth-email hidden></span>
         <a class="secondary-btn" href="/app/branding" data-route>Branding</a>
-        <a class="analyze-btn" href="/app/scan" data-route>New Audit</a>
+        <a class="analyze-btn" href="/app/scan" data-route>Choose Scan Type</a>
         <button class="secondary-btn logout-btn" id="logoutBtn" type="button">Logout</button>
       </div>
     </header>
@@ -1200,9 +1204,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div>
             <div class="section-kicker" data-brand-name>W Strategies</div>
             <h2 id="dashboardGreeting">Good day.</h2>
-            <p>Review recent website assessments, track report usage, and start the next audit from one focused workspace.</p>
+            <p>Review recent reports, track website and AI scan usage separately, and choose the right scan for the next prospect.</p>
             <div class="dashboard-hero-actions">
-              <a class="analyze-btn" href="/app/scan" data-route>Run New Audit</a>
+              <a class="analyze-btn" href="/app/scan" data-route>Choose Scan Type</a>
+              <a class="secondary-btn" href="/app/ai-visibility/new" data-route>AI Visibility Scan</a>
               <a class="secondary-btn" href="/app/reports" data-route>View Reports</a>
             </div>
           </div>
@@ -1221,9 +1226,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <p id="dashboardReportCountLabel">Saved assessments.</p>
           </article>
           <article class="metric-card">
-            <span>Usage</span>
+            <span>Website Scan Usage</span>
             <strong id="dashboardReportsUsed">0 / 10</strong>
             <p id="dashboardReportsUsedLabel">Remaining scans.</p>
+          </article>
+          <article class="metric-card">
+            <span>AI Visibility Usage</span>
+            <strong id="dashboardAiReportsUsed">0 / 0</strong>
+            <p id="dashboardAiReportsUsedLabel">AI scans remaining.</p>
           </article>
           <article class="metric-card">
             <span>Current Plan</span>
@@ -1270,8 +1280,16 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               </div>
               <div class="quick-action-list">
                 <a href="/app/scan" data-route>
-                  <strong>Run New Audit</strong>
-                  <span>Create a website assessment.</span>
+                  <strong>Choose Scan Type</strong>
+                  <span>Pick Website Scan or AI Visibility Scan.</span>
+                </a>
+                <a href="/app/scan/website" data-route>
+                  <strong>Website Scan</strong>
+                  <span>Audit website health, conversion, trust, and technical issues.</span>
+                </a>
+                <a href="/app/ai-visibility/new" data-route>
+                  <strong>AI Visibility Scan</strong>
+                  <span>Check whether AI answer engines recommend a prospect.</span>
                 </a>
                 <a href="/app/reports" data-route>
                   <strong>Manage Reports</strong>
@@ -1337,6 +1355,51 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </section>
 
       <section id="scan-view" class="app-panel scan-panel" hidden>
+        <div id="scanChoicePanel">
+          <div class="app-page-hero scan-hero">
+            <div>
+              <div class="section-kicker">New Audit</div>
+              <h2>What would you like to scan?</h2>
+              <p>Choose between the standard Website Scan and the new AI Visibility Scan. They are separate products with separate report histories and usage balances.</p>
+            </div>
+            <div class="scan-context-panel">
+              <span>Two scan types</span>
+              <strong>Website first. AI visibility next.</strong>
+              <p>Use Website Scan for site problems. Use AI Visibility Scan to see whether AI tools recommend the business.</p>
+            </div>
+          </div>
+          <div class="scan-choice-grid">
+            <article class="workspace-panel scan-choice-card">
+              <div class="scan-choice-label-row">
+                <div class="section-kicker">Option 1</div>
+                <span class="scan-choice-pill">Website credits</span>
+              </div>
+              <h3>Website Scan</h3>
+              <p>Analyze the prospect's website health, conversion clarity, trust signals, technical issues, and client-ready recommendations.</p>
+              <ul class="ai-visibility-simple-list">
+                <li>Uses Website Scan credits</li>
+                <li>Runs the existing website scanner</li>
+                <li>Saves to Website Reports</li>
+              </ul>
+              <a class="analyze-btn" href="/app/scan/website" data-route>Start Website Scan</a>
+            </article>
+            <article class="workspace-panel scan-choice-card featured">
+              <div class="scan-choice-label-row">
+                <div class="section-kicker">Option 2</div>
+                <span class="scan-choice-pill">AI credits</span>
+              </div>
+              <h3>AI Visibility Scan</h3>
+              <p>See whether AI answer engines mention, recommend, or cite a business for high-intent local buyer searches.</p>
+              <ul class="ai-visibility-simple-list">
+                <li>Uses AI Visibility Scan credits</li>
+                <li>Runs five standardized searches</li>
+                <li>Saves to AI Visibility Reports</li>
+              </ul>
+              <a class="analyze-btn" href="/app/ai-visibility/new" data-route id="aiVisibilityChoiceCta">Start AI Visibility Scan</a>
+            </article>
+          </div>
+        </div>
+        <div id="websiteScanPanel">
         <div class="app-page-hero scan-hero">
           <div>
             <div class="section-kicker" id="scanHeroKicker">New Audit</div>
@@ -1400,6 +1463,84 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             </div>
           </form>
           <div id="error-box" role="alert" aria-live="polite"></div>
+        </section>
+        </div>
+      </section>
+
+      <section id="ai-visibility-new-view" class="app-panel scan-panel" hidden>
+        <div class="app-page-hero scan-hero">
+          <div>
+            <div class="section-kicker">AI Visibility</div>
+            <h2>Scan AI recommendation visibility.</h2>
+            <p>Run five standardized buyer-intent searches to see if a business is mentioned, recommended, or cited by AI answer engines.</p>
+          </div>
+          <div class="scan-context-panel">
+            <span>Beta</span>
+            <strong>Separate allowance</strong>
+            <p>AI Visibility scans use a separate monthly balance and do not affect Website Scan credits.</p>
+          </div>
+        </div>
+        <section class="assessment-card audit-workspace-card" aria-label="Generate AI Visibility assessment">
+          <div class="assessment-card-header">
+            <div>
+              <div class="section-kicker">Business Details</div>
+              <h2>AI Visibility Setup</h2>
+              <p>Use a real prospect and the service they want to be recommended for.</p>
+            </div>
+          </div>
+          <div class="billing-access-notice" id="aiVisibilityBillingNotice" hidden>
+            <strong>AI Visibility scans unavailable</strong>
+            <p id="aiVisibilityBillingNoticeText">Choose an active plan with AI Visibility scans to continue.</p>
+            <div class="hero-actions">
+              <a class="analyze-btn" href="/app/billing" data-route>Upgrade Plan</a>
+              <a class="secondary-btn" href="/pricing" data-route>View Pricing</a>
+            </div>
+          </div>
+          <div class="scan-stability-notice">
+            <strong>Keep this tab open during the AI Visibility scan.</strong>
+            <p>The scan runs live AI recommendation searches. Do not refresh, close, or navigate away until the report appears.</p>
+          </div>
+          <form class="audit-form" id="aiVisibilityForm" onsubmit="event.preventDefault(); runAiVisibilityScan();">
+            <div class="lead-grid">
+              <label class="lead-field">
+                <span class="lead-label">Business Name</span>
+                <input class="url-input" type="text" id="aiBusinessNameInput" placeholder="Intricate Roofing & Contracting" autocomplete="organization" required>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Website URL / Domain</span>
+                <input class="url-input" type="text" id="aiDomainInput" placeholder="intricateroofing.com" autocomplete="url" autocorrect="off" spellcheck="false" required>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Business Category</span>
+                <input class="url-input" type="text" id="aiBusinessCategoryInput" placeholder="Roofing Contractor" required>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Primary Service</span>
+                <input class="url-input" type="text" id="aiPrimaryServiceInput" placeholder="Roofing" required>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">City</span>
+                <input class="url-input" type="text" id="aiCityInput" placeholder="Ottawa" autocomplete="address-level2" required>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Region</span>
+                <input class="url-input" type="text" id="aiRegionInput" placeholder="Ontario" autocomplete="address-level1" required>
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Country</span>
+                <select class="url-input" id="aiCountryInput" required>
+                  <option value="CA">Canada</option>
+                  <option value="US">United States</option>
+                  <option value="GB">United Kingdom</option>
+                </select>
+              </label>
+            </div>
+            <div class="audit-form-actions">
+              <button class="analyze-btn" id="aiVisibilitySubmitBtn" type="submit">Generate AI Visibility Report</button>
+              <a class="secondary-btn" href="/app/scan" data-route>Cancel</a>
+            </div>
+          </form>
+          <div class="auth-message" id="aiVisibilityMessage" role="alert" aria-live="polite" hidden></div>
         </section>
       </section>
 
@@ -1547,9 +1688,13 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div>
             <div class="section-kicker">Reports</div>
             <h2>Report Workspace</h2>
-            <p>Search, open, duplicate, delete, and export saved website assessments.</p>
+            <p>Open website assessments and AI Visibility reports from one organized workspace.</p>
           </div>
           <a class="analyze-btn" href="/app/scan" data-route>Generate Report</a>
+        </div>
+        <div class="report-type-tabs" role="tablist" aria-label="Report type">
+          <button class="report-type-tab active" type="button" data-report-type="website">Website Reports</button>
+          <button class="report-type-tab" type="button" data-report-type="ai">AI Visibility Reports</button>
         </div>
         <div class="reports-toolbar">
           <label class="lead-field">
@@ -1585,6 +1730,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="reports-pagination" id="reportsPagination" hidden>
           <button class="secondary-btn" type="button" id="loadMoreReportsBtn">Show More</button>
         </div>
+      </section>
+
+      <section id="ai-visibility-report-view" class="app-panel ai-visibility-report-view" hidden>
+        <div id="aiVisibilityReportContent" class="ai-visibility-report-shell"></div>
       </section>
 
       <section id="support-view" class="app-panel support-view" hidden>
@@ -1731,9 +1880,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <p id="billingPlanStatus">Subscription status unavailable.</p>
           </article>
           <article class="metric-card">
-            <span>Usage</span>
+            <span>Website Scans</span>
             <strong id="billingUsageCount">0 / 100</strong>
             <p id="billingUsageRemaining">Audits remaining this period.</p>
+          </article>
+          <article class="metric-card">
+            <span>AI Visibility Scans</span>
+            <strong id="billingAiUsageCount">0 / 0</strong>
+            <p id="billingAiUsageRemaining">AI scans remaining this period.</p>
           </article>
           <article class="metric-card">
             <span>Trial / Period End</span>
@@ -1758,6 +1912,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <span class="app-plan-features" aria-label="Starter includes">
                 <span>7-day free trial</span>
                 <span>50 scans per month</span>
+                <span>10 AI Visibility scans per month</span>
                 <span>Website Opportunity Reports</span>
                 <span>Overall and category scores</span>
                 <span>Executive summary and top priorities</span>
@@ -1778,6 +1933,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <span>150 plan scans per month</span>
                 <span>50 bonus scans per month</span>
                 <span>200 total monthly scans</span>
+                <span>30 AI Visibility scans per month</span>
                 <span>Everything in Starter</span>
                 <span>White-label online reports</span>
                 <span>White-label PDF exports</span>
@@ -1794,6 +1950,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <span class="app-plan-features" aria-label="Growth includes">
                 <span>7-day free trial</span>
                 <span>500 scans per month</span>
+                <span>100 AI Visibility scans per month</span>
                 <span>Everything in Professional</span>
                 <span>Higher-volume prospecting workflow</span>
                 <span>White-label online reports</span>
@@ -1810,6 +1967,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <small>Custom support for established teams.</small>
               <span class="app-plan-features" aria-label="Enterprise includes">
                 <span>Unlimited scans with fair use</span>
+                <span>Unlimited AI Visibility scans with fair use</span>
                 <span>Custom pricing</span>
                 <span>Dedicated onboarding</span>
                 <span>Priority support</span>
@@ -2268,7 +2426,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="required-plan-summary">
         <strong id="requiredPlanSummaryTitle">Professional plan</strong>
-        <span id="requiredPlanSummaryCopy">Start with 7 days free. Full white-label reports, custom logo, brand colors, PDF exports, client-ready presentation, and 150 plan scans plus 50 bonus scans per month.</span>
+      <span id="requiredPlanSummaryCopy">Start with 7 days free. Full white-label reports, custom logo, brand colors, PDF exports, client-ready presentation, 150 plan scans plus 50 bonus scans, and 30 AI Visibility scans per month.</span>
       </div>
       <div class="auth-message" id="requiredPlanMessage" hidden></div>
       <div class="required-plan-actions">
@@ -2309,7 +2467,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/branding.js?v=2026-08-06-plan-pages-v1"></script>
 <script src="/auth.js?v=2026-08-06-plan-pages-v1"></script>
-<script src="/database.js?v=2026-08-06-plan-pages-v1"></script>
+<script src="/database.js?v=2026-08-17-ai-visibility-customer-v1"></script>
 <script src="/blog-posts.js?v=2026-08-12-seo-bundle-v1"></script>
 <script src="/blog-support-posts.js?v=2026-08-12-support-guides-v1"></script>
 
@@ -2386,12 +2544,19 @@ let loadingSavedReportId = '';
 let savedReports = [];
 let savedReportsLoaded = false;
 let savedReportsLoading = false;
+let aiVisibilityReports = [];
+let aiVisibilityReportsLoaded = false;
+let aiVisibilityReportsLoading = false;
+let activeReportType = 'website';
+let pendingAiVisibilityReport = null;
+let loadingAiVisibilityReportId = '';
 let reportsSearchTerm = '';
 let reportsSortOrder = 'created_at.desc';
 let reportsFilter = 'all';
 let reportsVisibleCount = 20;
 let currentSubscription = null;
 let currentAccount = null;
+let aiVisibilityCustomerEnabled = true;
 let pendingProtectedPath = '/app';
 let brandingFormDirty = false;
 let brandingPreviewLogoObjectUrl = '';
@@ -2422,6 +2587,7 @@ const APP_PLANS = {
     priceLabel: '$19.99 / month',
     priceShort: '$19.99/mo',
     monthlyAllowance: 50,
+    aiScanAllowance: 10,
     maxBalance: 100,
     trialDays: SUBSCRIPTION_TRIAL_DAYS,
     description: 'Perfect for freelancers and agencies creating their first opportunity reports.',
@@ -2433,6 +2599,7 @@ const APP_PLANS = {
     priceLabel: '$39.99 / month',
     priceShort: '$39.99/mo',
     monthlyAllowance: 200,
+    aiScanAllowance: 30,
     maxBalance: 400,
     trialDays: SUBSCRIPTION_TRIAL_DAYS,
     badge: 'Most Popular',
@@ -2445,6 +2612,7 @@ const APP_PLANS = {
     priceLabel: '$79.99 / month',
     priceShort: '$79.99/mo',
     monthlyAllowance: 500,
+    aiScanAllowance: 100,
     maxBalance: 1000,
     trialDays: SUBSCRIPTION_TRIAL_DAYS,
     description: 'Built for agencies generating higher report volume.',
@@ -2456,6 +2624,7 @@ const APP_PLANS = {
     priceLabel: 'Contact Sales',
     priceShort: 'Contact Sales',
     monthlyAllowance: null,
+    aiScanAllowance: null,
     maxBalance: null,
     unlimited: true,
     description: 'For custom pricing, onboarding, and priority support.',
@@ -2656,6 +2825,8 @@ const ROUTE_TITLES = {
   '/app': 'Dashboard',
   '/app/onboarding': 'Onboarding',
   '/app/scan': 'New Audit',
+  '/app/scan/website': 'Website Scan',
+  '/app/ai-visibility/new': 'AI Visibility Scan',
   '/app/reports': 'Reports',
   '/app/support': 'Support',
   '/app/coming-soon': 'Coming Soon',
@@ -2698,17 +2869,17 @@ const PUBLIC_PAGE_META = {
   'pricing-starter': {
     path: '/pricing/starter',
     title: 'Starter Plan | PitchProof',
-    description: 'Start the Starter plan with 7 days free, then get 50 scans per month, opportunity reports, PDFs, dashboard access, saved reports, and share links.',
+    description: 'Start the Starter plan with 7 days free, then get 50 website scans, 10 AI Visibility scans, opportunity reports, PDFs, dashboard access, saved reports, and share links.',
   },
   'pricing-professional': {
     path: '/pricing/professional',
     title: 'Professional Plan | PitchProof',
-    description: 'Start the Professional plan with 7 days free, then get 150 plan scans, 50 bonus scans for first time users, white-label reports, PDFs, logos, and brand colors.',
+    description: 'Start the Professional plan with 7 days free, then get 150 plan scans, 50 bonus scans for first time users, 30 AI Visibility scans, white-label reports, PDFs, logos, and brand colors.',
   },
   'pricing-growth': {
     path: '/pricing/growth',
     title: 'Growth Plan | PitchProof',
-    description: 'Start the Growth plan with 7 days free, then get 500 scans per month, white-label reports, branded PDFs, priority support, and higher scan capacity.',
+    description: 'Start the Growth plan with 7 days free, then get 500 website scans, 100 AI Visibility scans, white-label reports, branded PDFs, priority support, and higher scan capacity.',
   },
   faq: {
     path: '/faq',
@@ -3199,6 +3370,7 @@ const LEGACY_APP_ROUTE_ALIASES = {
   '/dashboard': '/app',
   '/reports': '/app/reports',
   '/new-audit': '/app/scan',
+  '/ai-visibility/new': '/app/ai-visibility/new',
   '/coming-soon': '/app/coming-soon',
   '/branding': '/app/branding',
   '/billing': '/app/billing',
@@ -3218,6 +3390,15 @@ function savedReportIdFromPath(path = window.location.pathname) {
   return decodeURIComponent(match[1]);
 }
 
+function aiVisibilityReportIdFromPath(path = window.location.pathname) {
+  const match = String(path || '').match(/^\/app\/ai-visibility\/reports\/([^/?#]+)/);
+  return match ? decodeURIComponent(match[1]) : '';
+}
+
+function isWebsiteScanRoute(path = window.location.pathname) {
+  return isFreePreviewRoute(path) || path.startsWith('/app/scan/website');
+}
+
 function setHidden(el, hidden) {
   if (!el) return;
   el.hidden = hidden;
@@ -3235,6 +3416,8 @@ function appRouteKey(path = window.location.pathname) {
   if (path.startsWith('/app/settings')) return 'settings';
   if (path.startsWith('/app/branding')) return 'branding';
   if (path.startsWith('/app/billing')) return 'billing';
+  if (path.startsWith('/app/ai-visibility/new')) return 'ai-visibility-new';
+  if (aiVisibilityReportIdFromPath(path)) return 'ai-visibility-report';
   if (path.startsWith('/app/reports/current')) return 'current-report';
   if (savedReportIdFromPath(path)) return 'saved-report';
   if (path.startsWith('/app/reports')) return 'reports';
@@ -3252,6 +3435,8 @@ function showAppPanel(panel) {
     scan: 'scan-view',
     loading: 'loading',
     report: 'results',
+    'ai-visibility-new': 'ai-visibility-new-view',
+    'ai-visibility-report': 'ai-visibility-report-view',
     settings: 'settings-view',
     branding: 'branding-view',
     billing: 'billing-view',
@@ -4413,6 +4598,13 @@ function renderRecentActivity() {
 }
 
 function updateScanPageMode() {
+  const showWebsiteForm = isWebsiteScanRoute();
+  const scanChoicePanel = document.getElementById('scanChoicePanel');
+  const websiteScanPanel = document.getElementById('websiteScanPanel');
+  if (scanChoicePanel) scanChoicePanel.hidden = showWebsiteForm;
+  if (websiteScanPanel) websiteScanPanel.hidden = !showWebsiteForm;
+  if (!showWebsiteForm) return;
+
   const isPreview = isFreePreviewRoute();
   const values = isPreview
     ? {
@@ -4482,6 +4674,8 @@ function updateReportMetrics() {
   const monthlyReports = document.getElementById('dashboardMonthlyReports');
   const reportsUsed = document.getElementById('dashboardReportsUsed');
   const reportsUsedLabel = document.getElementById('dashboardReportsUsedLabel');
+  const aiReportsUsed = document.getElementById('dashboardAiReportsUsed');
+  const aiReportsUsedLabel = document.getElementById('dashboardAiReportsUsedLabel');
   const averageScore = document.getElementById('dashboardAverageScore');
   const currentPlan = document.getElementById('dashboardCurrentPlan');
   const planStatus = document.getElementById('dashboardPlanStatus');
@@ -4489,6 +4683,8 @@ function updateReportMetrics() {
   const billingPlanStatus = document.getElementById('billingPlanStatus');
   const billingUsageCount = document.getElementById('billingUsageCount');
   const billingUsageRemaining = document.getElementById('billingUsageRemaining');
+  const billingAiUsageCount = document.getElementById('billingAiUsageCount');
+  const billingAiUsageRemaining = document.getElementById('billingAiUsageRemaining');
   const billingPeriodEnd = document.getElementById('billingPeriodEnd');
   const billingRenewalDate = document.getElementById('billingRenewalDate');
   const billingPaymentStatus = document.getElementById('billingPaymentStatus');
@@ -4513,6 +4709,9 @@ function updateReportMetrics() {
   const subscriptionBannerCta = document.getElementById('subscriptionBannerCta');
   const scanBillingNotice = document.getElementById('scanBillingNotice');
   const scanBillingNoticeText = document.getElementById('scanBillingNoticeText');
+  const aiVisibilityBillingNotice = document.getElementById('aiVisibilityBillingNotice');
+  const aiVisibilityBillingNoticeText = document.getElementById('aiVisibilityBillingNoticeText');
+  const aiVisibilityChoiceCta = document.getElementById('aiVisibilityChoiceCta');
   const complimentaryScanNotice = document.getElementById('complimentaryScanNotice');
   const postComplimentaryCta = document.getElementById('postComplimentaryCta');
   const generateAnotherReportBtn = document.getElementById('generateAnotherReportBtn');
@@ -4521,6 +4720,7 @@ function updateReportMetrics() {
   const onboardingPrimaryCta = document.getElementById('onboardingPrimaryCta');
   const onboardingSecondaryCta = document.getElementById('onboardingSecondaryCta');
   const analyzeBtn = document.getElementById('analyzeBtn');
+  const aiVisibilitySubmitBtn = document.getElementById('aiVisibilitySubmitBtn');
   const count = savedReports.length;
   const monthly = savedReports.filter(report => isThisMonth(report.created_at)).length;
   const scores = savedReports.map(savedReportScore).filter(score => Number.isFinite(score));
@@ -4534,9 +4734,13 @@ function updateReportMetrics() {
   const used = Number.isFinite(Number(subscription.used_scans ?? subscription.audits_used)) ? Number(subscription.used_scans ?? subscription.audits_used) : 0;
   const limit = subscription.unlimited ? null : (Number.isFinite(Number(subscription.monthly_allowance ?? subscription.audit_limit)) ? Number(subscription.monthly_allowance ?? subscription.audit_limit) : chosenPlan.monthlyAllowance);
   const remaining = subscription.unlimited ? null : Math.max(0, Number(subscription.remaining_scans ?? subscription.audits_remaining ?? ((limit || 0) - used)) || 0);
+  const aiUsed = Number.isFinite(Number(subscription.ai_scans_used)) ? Number(subscription.ai_scans_used) : 0;
+  const aiLimit = subscription.unlimited ? null : (Number.isFinite(Number(subscription.ai_scan_limit)) ? Number(subscription.ai_scan_limit) : (chosenPlan.aiScanAllowance || 0));
+  const aiRemaining = subscription.unlimited ? null : Math.max(0, Number(subscription.ai_scans_remaining ?? subscription.remaining_ai_scans ?? ((aiLimit || 0) - aiUsed)) || 0);
   const usagePercent = subscription.unlimited || !limit ? 0 : Math.min(100, Math.round((used / limit) * 100));
   const notice = billingNoticeText(subscription);
   const canRunAudit = subscriptionCanRunAudit(subscription);
+  const canRunAiVisibility = aiVisibilityCustomerEnabled && subscription.can_run_ai_visibility === true;
   const hasPaidAuditAccess = subscriptionHasPaidAuditAccess(subscription);
   const canRunComplimentary = subscriptionCanRunComplimentaryScan(subscription);
   const complimentaryUsed = subscriptionComplimentaryUsed(subscription);
@@ -4571,6 +4775,8 @@ function updateReportMetrics() {
   if (reportsUsedLabel) reportsUsedLabel.textContent = canRunComplimentary && !hasPaidAuditAccess
     ? 'Complimentary assessment available.'
     : subscription.unlimited ? 'Enterprise fair-use access.' : (remaining > 0 ? `${remaining} scans remaining.` : 'Scan limit reached.');
+  if (aiReportsUsed) aiReportsUsed.textContent = subscription.unlimited ? `${aiUsed} / Unlimited` : `${aiUsed} / ${aiLimit}`;
+  if (aiReportsUsedLabel) aiReportsUsedLabel.textContent = subscription.unlimited ? 'Enterprise AI fair-use access.' : (aiRemaining > 0 ? `${aiRemaining} AI scans remaining.` : 'AI scan limit reached.');
   if (averageScore) averageScore.textContent = avg == null ? '-' : `${avg}%`;
   if (currentPlan) currentPlan.textContent = plan;
   if (planStatus) planStatus.textContent = canRunComplimentary && !hasPaidAuditAccess
@@ -4582,6 +4788,8 @@ function updateReportMetrics() {
   if (billingPlanStatus) billingPlanStatus.textContent = isTrialing ? 'Free trial workspace.' : `${status} workspace.`;
   if (billingUsageCount) billingUsageCount.textContent = subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
   if (billingUsageRemaining) billingUsageRemaining.textContent = subscription.unlimited ? 'Unlimited fair-use balance.' : `${remaining} remaining balance.`;
+  if (billingAiUsageCount) billingAiUsageCount.textContent = subscription.unlimited ? `${aiUsed} / Unlimited` : `${aiUsed} / ${aiLimit}`;
+  if (billingAiUsageRemaining) billingAiUsageRemaining.textContent = subscription.unlimited ? 'Unlimited AI fair-use balance.' : `${aiRemaining} AI Visibility scans remaining.`;
   if (billingPeriodEnd) billingPeriodEnd.textContent = formatBillingDate(subscription.renewal_date || subscription.current_period_end);
   if (billingRenewalDate) billingRenewalDate.textContent = subscriptionCanRunAudit(subscription)
     ? (isTrialing ? `Trial ends: ${formatBillingDate(subscription.current_period_end || subscription.renewal_date)}` : `Next renewal: ${formatBillingDate(subscription.renewal_date || subscription.current_period_end)}`)
@@ -4675,6 +4883,19 @@ function updateReportMetrics() {
   }
   if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
   if (scanBillingNoticeText) scanBillingNoticeText.textContent = notice;
+  if (aiVisibilityBillingNotice) aiVisibilityBillingNotice.hidden = canRunAiVisibility;
+  if (aiVisibilityBillingNoticeText) aiVisibilityBillingNoticeText.textContent = canRunAiVisibility
+    ? ''
+    : (!aiVisibilityCustomerEnabled
+      ? 'AI Visibility scans are coming soon. Website scans are still available.'
+      : (subscription.status === 'active' || subscription.status === 'trialing'
+      ? 'Your AI Visibility scan balance is empty for this billing period.'
+      : 'Choose an active subscription plan to run AI Visibility scans.'));
+  if (aiVisibilityChoiceCta) {
+    aiVisibilityChoiceCta.textContent = aiVisibilityCustomerEnabled ? 'Run AI Visibility Scan' : 'Coming Soon';
+    aiVisibilityChoiceCta.classList.toggle('disabled-link', !aiVisibilityCustomerEnabled);
+    aiVisibilityChoiceCta.setAttribute('aria-disabled', aiVisibilityCustomerEnabled ? 'false' : 'true');
+  }
   if (complimentaryScanNotice) complimentaryScanNotice.hidden = !(canRunComplimentary && !hasPaidAuditAccess);
   if (postComplimentaryCta) postComplimentaryCta.hidden = lockedPreviewOpen || !(complimentaryUsed && !hasPaidAuditAccess);
   if (generateAnotherReportBtn) generateAnotherReportBtn.hidden = lockedPreviewOpen || (complimentaryUsed && !hasPaidAuditAccess);
@@ -4708,18 +4929,22 @@ function updateReportMetrics() {
     analyzeBtn.disabled = !canSubmitAudit;
     analyzeBtn.dataset.billingBlocked = canSubmitAudit ? 'false' : 'true';
   }
+  if (aiVisibilitySubmitBtn && aiVisibilitySubmitBtn.dataset.scanning !== 'true') {
+    aiVisibilitySubmitBtn.disabled = !canRunAiVisibility;
+    aiVisibilitySubmitBtn.dataset.billingBlocked = canRunAiVisibility ? 'false' : 'true';
+  }
   updateBrandingAccessState(subscription);
   syncRequiredPlanModal();
 }
 
 function selectedPlanModalCopy(plan) {
   if (plan.key === 'starter') {
-    return 'Start with 7 days free, then get PitchProof-branded opportunity reports, business-focused scores, PDF exports, saved reports, share links, and 50 scans per month.';
+    return 'Start with 7 days free, then get PitchProof-branded opportunity reports, business-focused scores, PDF exports, saved reports, share links, 50 website scans, and 10 AI Visibility scans per month.';
   }
   if (plan.key === 'growth') {
-    return 'Start with 7 days free, then get 500 scans per month, full white-label reports, custom branding, PDF exports, higher-volume prospecting, and priority support.';
+    return 'Start with 7 days free, then get 500 website scans, 100 AI Visibility scans, full white-label reports, custom branding, PDF exports, higher-volume prospecting, and priority support.';
   }
-  return 'Start with 7 days free, then get full white-label reports, custom logo, brand colors, PDF exports, client-ready presentation, and 150 plan scans plus 50 bonus scans per month.';
+  return 'Start with 7 days free, then get full white-label reports, custom logo, brand colors, PDF exports, client-ready presentation, 150 plan scans plus 50 bonus scans, and 30 AI Visibility scans per month.';
 }
 
 function updateRequiredPlanModal() {
@@ -4815,6 +5040,66 @@ function reportCardHtml(report, options = {}) {
   `;
 }
 
+function aiVisibilityReportCardHtml(report, options = {}) {
+  const title = asText(report.business_name) || asText(report.domain) || 'AI Visibility Report';
+  const location = [asText(report.city), asText(report.region)].filter(Boolean).join(', ');
+  const date = formatSavedReportDate(report.created_at);
+  const score = Number.isFinite(Number(report.score)) ? `${Math.round(Number(report.score))}%` : 'Unavailable';
+  const compact = !!options.compact;
+
+  return `
+    <article class="saved-report-card ai-visibility-list-card ${compact ? 'compact' : ''}" data-ai-report-id="${escHtml(report.id)}">
+      <button class="saved-report-main" type="button" data-ai-report-action="open" data-ai-report-id="${escHtml(report.id)}">
+        <span>
+          <span class="saved-report-title">${escHtml(title)}</span>
+          <span class="saved-report-meta">${escHtml(date)}${location ? ' - ' + escHtml(location) : ''} - AI Visibility</span>
+        </span>
+        <span class="saved-report-score">${escHtml(score)}</span>
+      </button>
+      <div class="saved-report-actions">
+        <button class="secondary-btn" type="button" data-ai-report-action="open" data-ai-report-id="${escHtml(report.id)}">Open</button>
+      </div>
+    </article>
+  `;
+}
+
+function aiVisibilityReportSkeletonHtml(count = 3) {
+  return reportSkeletonHtml(count);
+}
+
+function renderAiVisibilityReportCollection(containerId, reports, options = {}) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (aiVisibilityReportsLoading) {
+    container.innerHTML = aiVisibilityReportSkeletonHtml(options.compact ? 3 : 5);
+    return;
+  }
+
+  if (!databaseService?.isReady?.()) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <strong>AI reports unavailable</strong>
+        <p>Database access is not connected for this session.</p>
+      </div>
+    `;
+    return;
+  }
+
+  if (!reports.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <strong>${escHtml(options.emptyTitle || 'No AI Visibility reports yet')}</strong>
+        <p>${escHtml(options.emptyText || 'Run an AI Visibility scan and it will appear here automatically.')}</p>
+        <a class="analyze-btn" href="/app/ai-visibility/new" data-route>Run AI Visibility Scan</a>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = reports.map(report => aiVisibilityReportCardHtml(report, options)).join('');
+}
+
 function renderReportCollection(containerId, reports, options = {}) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -4861,6 +5146,30 @@ function renderSavedReports() {
     emptyTitle: 'No recent reports yet',
     emptyText: 'Generate your first website assessment to start building report history.',
   });
+
+  document.querySelectorAll('[data-report-type]').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.reportType === activeReportType);
+  });
+  const reportsSortSelect = document.getElementById('reportsSortSelect');
+  const reportsFilterSelect = document.getElementById('reportsFilterSelect');
+  if (reportsSortSelect?.closest('.lead-field')) reportsSortSelect.closest('.lead-field').hidden = activeReportType === 'ai';
+  if (reportsFilterSelect?.closest('.lead-field')) reportsFilterSelect.closest('.lead-field').hidden = activeReportType === 'ai';
+
+  if (activeReportType === 'ai') {
+    renderAiVisibilityReportCollection('reportsList', aiVisibilityReports.slice(0, reportsVisibleCount), {
+      emptyTitle: reportsSearchTerm ? 'No matching AI Visibility reports' : 'No AI Visibility reports yet',
+      emptyText: reportsSearchTerm ? 'Adjust the search to see more AI Visibility reports.' : 'Run an AI Visibility scan and it will save to this workspace.',
+    });
+    if (countSummary) {
+      countSummary.textContent = aiVisibilityReportsLoading
+        ? 'Loading AI Visibility reports'
+        : `${aiVisibilityReports.length} AI ${aiVisibilityReports.length === 1 ? 'report' : 'reports'} shown`;
+    }
+    if (pagination) pagination.hidden = aiVisibilityReportsLoading || aiVisibilityReports.length <= reportsVisibleCount;
+    if (loadMore) loadMore.textContent = `Show More (${Math.max(0, aiVisibilityReports.length - reportsVisibleCount)} remaining)`;
+    return;
+  }
+
   renderReportCollection('reportsList', visibleReports, {
     emptyTitle: reportsSearchTerm || reportsFilter !== 'all' ? 'No matching reports' : 'No saved reports yet',
     emptyText: reportsSearchTerm || reportsFilter !== 'all' ? 'Adjust the search or filter to see more assessments.' : 'Generate an assessment and it will save to this workspace.',
@@ -4912,6 +5221,353 @@ async function loadSavedReports({ force = false } = {}) {
   }
 }
 
+async function loadAiVisibilityReports({ force = false } = {}) {
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) {
+    aiVisibilityReports = [];
+    aiVisibilityReportsLoaded = false;
+    renderSavedReports();
+    return [];
+  }
+
+  if (aiVisibilityReportsLoaded && !force) {
+    renderSavedReports();
+    return aiVisibilityReports;
+  }
+
+  aiVisibilityReportsLoading = true;
+  renderSavedReports();
+  setReportsMessage('');
+
+  try {
+    aiVisibilityReports = await databaseService.listAiVisibilityReports({
+      search: reportsSearchTerm,
+      limit: 100,
+    });
+    aiVisibilityReportsLoaded = true;
+    return aiVisibilityReports;
+  } catch (error) {
+    console.warn('[PitchProof] AI Visibility reports could not load:', error?.message || error);
+    setReportsMessage(error?.message || 'AI Visibility reports could not load.', 'error');
+    aiVisibilityReports = [];
+    aiVisibilityReportsLoaded = false;
+    return [];
+  } finally {
+    aiVisibilityReportsLoading = false;
+    renderSavedReports();
+  }
+}
+
+function loadActiveReportType({ force = false } = {}) {
+  return activeReportType === 'ai'
+    ? loadAiVisibilityReports({ force })
+    : loadSavedReports({ force });
+}
+
+function setAiVisibilityMessage(message = '', tone = 'default') {
+  const node = document.getElementById('aiVisibilityMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
+function customerAiVisibilityMetricText(value, suffix = '') {
+  if (value === null || value === undefined || value === '') return 'Unavailable';
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return asText(value) || 'Unavailable';
+  return `${Math.round(numeric * 10) / 10}${suffix}`;
+}
+
+function customerAiVisibilityRateText(count, total) {
+  const numerator = Number(count);
+  const denominator = Number(total);
+  if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator <= 0) return '0 / 0';
+  return `${numerator} / ${denominator}`;
+}
+
+function customerAiVisibilityTone(report = {}) {
+  const score = Number(report.score);
+  if (!Number.isFinite(score)) return 'medium';
+  if (score >= 70) return 'low';
+  if (score >= 45) return 'medium';
+  return 'high';
+}
+
+function customerAiVisibilityQueryStatus(query = {}) {
+  if (query.success === false) return { label: 'Unavailable', tone: 'medium' };
+  if (query.recommended) return { label: `Recommended${query.position ? ` #${query.position}` : ''}`, tone: 'low' };
+  if (query.mentioned) return { label: 'Mentioned', tone: 'medium' };
+  return { label: 'Missed', tone: 'high' };
+}
+
+function aiVisibilityQueryHtml(query = {}, index = 0) {
+  const status = customerAiVisibilityQueryStatus(query);
+  return `
+    <article class="ai-query-card">
+      <div>
+        <span class="section-kicker">${escHtml(String(index + 1).padStart(2, '0'))}</span>
+        <h3>${escHtml(query.prompt || 'AI recommendation search')}</h3>
+      </div>
+      <div class="ai-query-status-row">
+        <span class="status-chip ${escHtml(status.tone)}">${escHtml(status.label)}</span>
+        <span class="status-chip ${query.cited ? 'low' : 'partial'}">${query.cited ? 'Website cited' : 'No citation'}</span>
+      </div>
+    </article>
+  `;
+}
+
+function aiVisibilityCompetitorHtml(competitor = {}) {
+  return `
+    <div class="activity-item">
+      <span class="activity-dot"></span>
+      <span>
+        <strong>${escHtml(competitor.businessName || 'Competitor')}</strong>
+        <small>${escHtml(competitor.appearances ? `${competitor.appearances} appearances` : 'Appeared in AI recommendations')}${competitor.averagePosition ? ` - avg. position ${escHtml(competitor.averagePosition)}` : ''}</small>
+      </span>
+    </div>
+  `;
+}
+
+function aiVisibilityMissedHtml(item = {}) {
+  const competitors = asArray(item.competitorsShown).join(', ');
+  return `
+    <article class="ai-missed-card">
+      <strong>${escHtml(item.prompt || 'Missed buyer-intent search')}</strong>
+      <p>${competitors ? `Competitors shown: ${escHtml(competitors)}.` : 'Competitors were shown while this business was not recommended.'}</p>
+    </article>
+  `;
+}
+
+function renderAiVisibilityReport(report = {}) {
+  const container = document.getElementById('aiVisibilityReportContent');
+  if (!container) return;
+  const prompts = Number(report.prompts_tested) || asArray(report.queries).length || 0;
+  const tone = customerAiVisibilityTone(report);
+  const score = Number.isFinite(Number(report.score)) ? Math.round(Number(report.score)) : null;
+  const location = [asText(report.city), asText(report.region), asText(report.country_code)].filter(Boolean).join(', ');
+  const queries = asArray(report.queries);
+  const competitors = asArray(report.competitors);
+  const missed = asArray(report.missed_opportunities);
+
+  container.innerHTML = `
+    <section class="workspace-panel ai-report-hero">
+      <div>
+        <div class="section-kicker">AI Visibility <span class="status-chip partial">Beta</span></div>
+        <h2>${escHtml(report.business_name || 'AI Visibility Report')}</h2>
+        <p>${escHtml(report.domain || '')}${location ? ' - ' + escHtml(location) : ''}</p>
+      </div>
+      <div class="ai-score-block">
+        <strong>${score === null ? 'Unavailable' : `${score} / 100`}</strong>
+        <span class="status-chip ${escHtml(tone)}">${escHtml(report.label || 'Unavailable')}</span>
+      </div>
+    </section>
+
+    <div class="dashboard-grid ai-report-metrics">
+      <article class="metric-card">
+        <span>Recommended In</span>
+        <strong>${escHtml(customerAiVisibilityRateText(report.recommendation_count, prompts))}</strong>
+        <p>Buyer-intent searches where the business was recommended.</p>
+      </article>
+      <article class="metric-card">
+        <span>Mentioned In</span>
+        <strong>${escHtml(customerAiVisibilityRateText(report.mention_count, prompts))}</strong>
+        <p>Searches where the business appeared by name or domain.</p>
+      </article>
+      <article class="metric-card">
+        <span>Website Cited In</span>
+        <strong>${escHtml(customerAiVisibilityRateText(report.citation_count, prompts))}</strong>
+        <p>Searches where the website was used as a citation.</p>
+      </article>
+      <article class="metric-card">
+        <span>Average Recommendation Position</span>
+        <strong>${escHtml(customerAiVisibilityMetricText(report.average_position))}</strong>
+        <p>Average position when the business was recommended.</p>
+      </article>
+    </div>
+
+    <section class="workspace-panel ai-report-section">
+      <div class="panel-heading">
+        <div>
+          <div class="section-kicker">Searches Tested</div>
+          <h2>Five buyer-intent AI searches</h2>
+          <p>Each search is standardized by category, service, and location. Raw AI answers are intentionally hidden from this report.</p>
+        </div>
+      </div>
+      <div class="ai-query-grid">
+        ${queries.map(aiVisibilityQueryHtml).join('') || '<div class="empty-state"><strong>No query data available</strong><p>This report did not return query-level results.</p></div>'}
+      </div>
+    </section>
+
+    <div class="ai-report-two-column">
+      <section class="workspace-panel ai-report-section">
+        <div class="panel-heading">
+          <div>
+            <div class="section-kicker">Competitors</div>
+            <h2>Top AI competitors</h2>
+          </div>
+        </div>
+        <div class="activity-list">
+          ${competitors.map(aiVisibilityCompetitorHtml).join('') || '<div class="empty-state compact-empty"><strong>No competitors detected</strong><p>No clear competitor list appeared in the usable searches.</p></div>'}
+        </div>
+      </section>
+      <section class="workspace-panel ai-report-section">
+        <div class="panel-heading">
+          <div>
+            <div class="section-kicker">Missed Visibility</div>
+            <h2>Missed opportunities</h2>
+          </div>
+        </div>
+        <div class="ai-missed-list">
+          ${missed.map(aiVisibilityMissedHtml).join('') || '<div class="empty-state compact-empty"><strong>No missed opportunities detected</strong><p>The business appeared in the searches where competitors were found.</p></div>'}
+        </div>
+      </section>
+    </div>
+
+    <section class="workspace-panel ai-report-section">
+      <div class="panel-heading">
+        <div>
+          <div class="section-kicker">Summary</div>
+          <h2>AI Visibility overview</h2>
+          <p>${escHtml(report.summary || 'AI Visibility summary unavailable.')}</p>
+        </div>
+      </div>
+      <div class="billing-status-notice" data-tone="default">
+        AI Visibility is in beta. Results are based on representative AI recommendation searches and can vary by prompt, provider, location, and date.
+      </div>
+      <div class="hero-actions">
+        <a class="analyze-btn" href="/app/ai-visibility/new" data-route>Run Another AI Scan</a>
+        <a class="secondary-btn" href="/app/reports?type=ai" data-route>Back to AI Reports</a>
+      </div>
+    </section>
+  `;
+}
+
+async function openAiVisibilityReport(reportId, options = {}) {
+  if (!reportId) return;
+  const updateRoute = options.updateRoute !== false;
+  if (updateRoute) window.history.pushState({}, '', `/app/ai-visibility/reports/${encodeURIComponent(reportId)}`);
+  const appPageTitle = document.getElementById('appPageTitle');
+  if (appPageTitle) appPageTitle.textContent = 'AI Visibility Report';
+  setActiveAppNav('ai-visibility');
+  showAppPanel('loading');
+  loadingAiVisibilityReportId = reportId;
+  document.querySelector('.loading-text').textContent = 'Opening AI Visibility report...';
+
+  try {
+    const report = await databaseService.getAiVisibilityReport(reportId);
+    pendingAiVisibilityReport = report;
+    renderAiVisibilityReport(report);
+    showAppPanel('ai-visibility-report');
+  } catch (error) {
+    console.warn('[PitchProof] AI Visibility report could not open:', error?.message || error);
+    showToast(error?.message || 'AI Visibility report could not open.', 'error');
+    setReportsMessage(error?.message || 'AI Visibility report could not open.', 'error');
+    navigateTo('/app/reports?type=ai');
+  } finally {
+    loadingAiVisibilityReportId = '';
+  }
+}
+
+async function runAiVisibilityScan() {
+  const form = document.getElementById('aiVisibilityForm');
+  const submitBtn = document.getElementById('aiVisibilitySubmitBtn');
+  if (!form || !submitBtn) return;
+  setAiVisibilityMessage('');
+
+  const input = {
+    businessName: document.getElementById('aiBusinessNameInput')?.value.trim() || '',
+    domain: document.getElementById('aiDomainInput')?.value.trim() || '',
+    businessCategory: document.getElementById('aiBusinessCategoryInput')?.value.trim() || '',
+    primaryService: document.getElementById('aiPrimaryServiceInput')?.value.trim() || '',
+    city: document.getElementById('aiCityInput')?.value.trim() || '',
+    region: document.getElementById('aiRegionInput')?.value.trim() || '',
+    country: document.getElementById('aiCountryInput')?.value || 'CA',
+  };
+
+  const missing = Object.entries(input).filter(([, value]) => !asText(value).trim()).map(([key]) => key);
+  if (missing.length) {
+    setAiVisibilityMessage('Complete all required fields before running the AI Visibility scan.', 'error');
+    return;
+  }
+
+  if (!databaseService?.isReady?.()) {
+    setAiVisibilityMessage('Database access is not connected for this session.', 'error');
+    return;
+  }
+
+  if (!aiVisibilityCustomerEnabled) {
+    setAiVisibilityMessage('AI Visibility scans are coming soon. Website scans are still available.', 'warning');
+    return;
+  }
+
+  const subscription = await loadSubscription();
+  if (!(subscription || normalizedSubscription()).can_run_ai_visibility) {
+    const message = 'Choose an active plan with AI Visibility scans to continue.';
+    setAiVisibilityMessage(message, 'warning');
+    showToast(message, 'warning');
+    navigateTo('/app/billing');
+    return;
+  }
+
+  pendingAiVisibilityReport = null;
+  showAppPanel('loading');
+  setActiveScanInProgress(true);
+  submitBtn.dataset.scanning = 'true';
+  submitBtn.disabled = true;
+  stepIdx = 0;
+  document.querySelector('.loading-text').textContent = 'Running AI Visibility assessment...';
+  document.getElementById('loadingStep').textContent = 'Testing standardized AI recommendation searches...';
+  startLoadingProgress();
+  stepTimer = setInterval(cycleStep, 1800);
+  trackProductAnalytics('ai_visibility_scan_started', {
+    business_category: input.businessCategory,
+    city: input.city,
+    region: input.region,
+    country: input.country,
+  });
+
+  try {
+    const payload = await databaseService.runAiVisibilityScan(input);
+    finishLoadingProgress();
+    pendingAiVisibilityReport = payload.report;
+    if (payload.subscription) currentSubscription = payload.subscription;
+    renderAiVisibilityReport(payload.report);
+    window.history.replaceState({}, '', `/app/ai-visibility/reports/${encodeURIComponent(payload.reportId || payload.report.id)}`);
+    const appPageTitle = document.getElementById('appPageTitle');
+    if (appPageTitle) appPageTitle.textContent = 'AI Visibility Report';
+    setActiveAppNav('ai-visibility');
+    showAppPanel('ai-visibility-report');
+    activeReportType = 'ai';
+    aiVisibilityReportsLoaded = false;
+    loadAiVisibilityReports({ force: true });
+    loadSubscription();
+    showToast('AI Visibility report generated.', 'success');
+    trackProductAnalytics('ai_visibility_scan_completed', {
+      report_id: payload.report?.id || payload.reportId || '',
+      score: payload.report?.score,
+    });
+  } catch (error) {
+    console.warn('[PitchProof] AI Visibility scan failed:', error?.message || error);
+    stopLoadingTimers();
+    if (error?.subscription) {
+      currentSubscription = error.subscription;
+      updateReportMetrics();
+    }
+    const message = error?.message || 'AI Visibility scan could not be completed.';
+    setAiVisibilityMessage(message, 'error');
+    showToast(message, 'error');
+    showAppPanel('ai-visibility-new');
+    trackProductAnalytics('ai_visibility_scan_failed', {
+      error: message,
+    });
+  } finally {
+    setActiveScanInProgress(false);
+    submitBtn.dataset.scanning = 'false';
+    submitBtn.disabled = false;
+    updateReportMetrics();
+  }
+}
+
 async function loadSubscription() {
   if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) {
     currentSubscription = null;
@@ -4928,6 +5584,21 @@ async function loadSubscription() {
     currentSubscription = null;
     updateReportMetrics();
     return null;
+  }
+}
+
+async function loadAppConfig() {
+  try {
+    const response = await fetch('/api/billing/config', { headers: { Accept: 'application/json' } });
+    const payload = await response.json().catch(() => ({}));
+    if (response.ok) {
+      aiVisibilityCustomerEnabled = payload.aiVisibilityEnabled !== false;
+      updateReportMetrics();
+    }
+    return payload;
+  } catch (error) {
+    console.warn('[PitchProof] App config could not load:', error?.message || error);
+    return {};
   }
 }
 
@@ -5297,8 +5968,9 @@ function bindReportControls() {
     reportsVisibleCount = 20;
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
-      savedReportsLoaded = false;
-      loadSavedReports({ force: true });
+      if (activeReportType === 'ai') aiVisibilityReportsLoaded = false;
+      else savedReportsLoaded = false;
+      loadActiveReportType({ force: true });
     }, 220);
   });
 
@@ -5306,7 +5978,7 @@ function bindReportControls() {
     reportsSortOrder = event.target.value || 'created_at.desc';
     reportsVisibleCount = 20;
     savedReportsLoaded = false;
-    loadSavedReports({ force: true });
+    if (activeReportType === 'website') loadSavedReports({ force: true });
   });
 
   filterSelect?.addEventListener('change', event => {
@@ -5317,8 +5989,9 @@ function bindReportControls() {
 
   refreshBtn?.addEventListener('click', () => {
     reportsVisibleCount = 20;
-    savedReportsLoaded = false;
-    loadSavedReports({ force: true });
+    if (activeReportType === 'ai') aiVisibilityReportsLoaded = false;
+    else savedReportsLoaded = false;
+    loadActiveReportType({ force: true });
   });
 
   loadMoreBtn?.addEventListener('click', () => {
@@ -5326,18 +5999,38 @@ function bindReportControls() {
     renderSavedReports();
   });
 
+  document.querySelectorAll('[data-report-type]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      activeReportType = tab.dataset.reportType === 'ai' ? 'ai' : 'website';
+      reportsVisibleCount = 20;
+      renderSavedReports();
+      loadActiveReportType();
+    });
+  });
+
   document.addEventListener('click', event => {
     const actionButton = event.target.closest('[data-report-action]');
-    if (!actionButton) return;
-    const action = actionButton.dataset.reportAction;
-    const reportId = actionButton.dataset.reportId;
-    if (!action || !reportId) return;
-    event.preventDefault();
+    const aiActionButton = event.target.closest('[data-ai-report-action]');
+    if (aiActionButton) {
+      const action = aiActionButton.dataset.aiReportAction;
+      const reportId = aiActionButton.dataset.aiReportId;
+      if (!action || !reportId) return;
+      event.preventDefault();
+      if (action === 'open') openAiVisibilityReport(reportId);
+      return;
+    }
 
-    if (action === 'open') openSavedReport(reportId);
-    if (action === 'export') exportReportPdf(reportId, actionButton);
-    if (action === 'duplicate') duplicateSavedReport(reportId);
-    if (action === 'delete') deleteSavedReport(reportId);
+    if (actionButton) {
+      const action = actionButton.dataset.reportAction;
+      const reportId = actionButton.dataset.reportId;
+      if (!action || !reportId) return;
+      event.preventDefault();
+
+      if (action === 'open') openSavedReport(reportId);
+      if (action === 'export') exportReportPdf(reportId, actionButton);
+      if (action === 'duplicate') duplicateSavedReport(reportId);
+      if (action === 'delete') deleteSavedReport(reportId);
+    }
   });
 }
 
@@ -5346,6 +6039,11 @@ function handleAuthStateChange(event) {
     savedReports = [];
     savedReportsLoaded = false;
     savedReportsLoading = false;
+    aiVisibilityReports = [];
+    aiVisibilityReportsLoaded = false;
+    aiVisibilityReportsLoading = false;
+    pendingAiVisibilityReport = null;
+    loadingAiVisibilityReportId = '';
     loadingSavedReportId = '';
     reportsVisibleCount = 20;
     currentSubscription = null;
@@ -5384,6 +6082,12 @@ function renderRoute() {
   }
   if (path === '/billing' || path.startsWith('/billing/')) {
     const nextPath = path.replace(/^\/billing/, '/app/billing');
+    window.history.replaceState({}, '', `${nextPath}${window.location.search}${window.location.hash}`);
+    renderRoute();
+    return;
+  }
+  if (path === '/ai-visibility/new' || path.startsWith('/ai-visibility/reports/')) {
+    const nextPath = path.replace(/^\/ai-visibility/, '/app/ai-visibility');
     window.history.replaceState({}, '', `${nextPath}${window.location.search}${window.location.hash}`);
     renderRoute();
     return;
@@ -5471,9 +6175,9 @@ function renderRoute() {
       clearRequiredPlanSelection();
       trackProductAnalytics('onboarding_choice_viewed', { path });
     }
-    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : key === 'coming-soon' ? 'Coming Soon' : ROUTE_TITLES['/app']);
+    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'ai-visibility-report' ? 'AI Visibility Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : key === 'coming-soon' ? 'Coming Soon' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
-    setActiveAppNav((key === 'current-report' || key === 'saved-report') ? 'reports' : (key === 'dashboard' || key === 'onboarding') ? 'dashboard' : key);
+    setActiveAppNav(key === 'ai-visibility-new' || key === 'ai-visibility-report' ? 'ai-visibility' : (key === 'current-report' || key === 'saved-report') ? 'reports' : (key === 'dashboard' || key === 'onboarding') ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
     else if (key === 'onboarding') showAppPanel('onboarding');
     else if (key === 'branding') showAppPanel('branding');
@@ -5481,7 +6185,25 @@ function renderRoute() {
       showAppPanel('billing');
       handleBillingReturnState();
     }
-    else if (key === 'reports') showAppPanel('reports');
+    else if (key === 'ai-visibility-new') {
+      showAppPanel('ai-visibility-new');
+    }
+    else if (key === 'ai-visibility-report') {
+      const reportId = aiVisibilityReportIdFromPath(path);
+      if (pendingAiVisibilityReport?.id === reportId) {
+        renderAiVisibilityReport(pendingAiVisibilityReport);
+        showAppPanel('ai-visibility-report');
+      } else {
+        showAppPanel('loading');
+        if (loadingAiVisibilityReportId !== reportId) {
+          openAiVisibilityReport(reportId, { updateRoute: false });
+        }
+      }
+    }
+    else if (key === 'reports') {
+      activeReportType = new URLSearchParams(window.location.search).get('type') === 'ai' ? 'ai' : 'website';
+      showAppPanel('reports');
+    }
     else if (key === 'support') {
       showAppPanel('support');
       hydrateSupportDefaults();
@@ -5506,10 +6228,12 @@ function renderRoute() {
     }
     else showAppPanel('dashboard');
 
-    if (['dashboard', 'onboarding', 'scan', 'reports', 'saved-report', 'billing'].includes(key)) {
+    if (key === 'reports') {
+      loadActiveReportType();
+    } else if (['dashboard', 'onboarding', 'scan', 'saved-report', 'billing'].includes(key)) {
       loadSavedReports();
     }
-    if (['dashboard', 'onboarding', 'scan', 'billing'].includes(key)) loadSubscription();
+    if (['dashboard', 'onboarding', 'scan', 'billing', 'ai-visibility-new', 'ai-visibility-report'].includes(key)) loadSubscription();
   }
 
   if (brandingProvider) {
@@ -5718,6 +6442,12 @@ function trackProductAnalytics(eventName, params = {}) {
     'pricing_viewed_from_preview',
     'checkout_started_after_free_scan',
     'subscription_started_from_preview',
+    'ai_visibility_scan_started',
+    'ai_visibility_scan_completed',
+    'ai_visibility_scan_failed',
+    'ai_visibility_report_viewed',
+    'ai_visibility_limit_reached',
+    'ai_visibility_cache_hit',
   ]);
   if (!allowed.has(eventName)) return;
   fetch('/api/analytics/event', {
@@ -8584,6 +9314,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindBillingControls();
   bindBrandingForm();
   bindOnboardingTracking();
+  loadAppConfig();
   renderRoute();
   await authProvider.init();
   if (authProvider.client) {

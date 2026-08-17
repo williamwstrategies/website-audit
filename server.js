@@ -105,6 +105,12 @@ const ALLOWED_CLIENT_ANALYTICS_EVENTS = new Set([
   'pricing_viewed_from_preview',
   'checkout_started_after_free_scan',
   'subscription_started_from_preview',
+  'ai_visibility_scan_started',
+  'ai_visibility_scan_completed',
+  'ai_visibility_scan_failed',
+  'ai_visibility_report_viewed',
+  'ai_visibility_limit_reached',
+  'ai_visibility_cache_hit',
 ]);
 
 const SUPPORT_CATEGORIES = new Set([
@@ -988,6 +994,234 @@ function auditBlockStatus(reason) {
   if (reason === 'audit_limit_reached') return 429;
   return 402;
 }
+
+const AI_VISIBILITY_COUNTRY_CODES = new Map([
+  ['ca', 'CA'],
+  ['canada', 'CA'],
+  ['us', 'US'],
+  ['usa', 'US'],
+  ['united states', 'US'],
+  ['united states of america', 'US'],
+  ['gb', 'GB'],
+  ['uk', 'GB'],
+  ['united kingdom', 'GB'],
+  ['great britain', 'GB'],
+]);
+
+function aiVisibilityCustomerFeatureEnabled() {
+  return /^(1|true|yes|on)$/i.test(cleanSupportText(process.env.AI_VISIBILITY_ENABLED, 20));
+}
+
+function normalizeAiVisibilityCountry(value = '') {
+  return AI_VISIBILITY_COUNTRY_CODES.get(cleanSupportText(value, 80).toLowerCase()) || '';
+}
+
+function normalizeAiVisibilityDomain(rawValue = '') {
+  const raw = cleanSupportText(rawValue, 500);
+  if (!raw) return '';
+  const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  try {
+    return new URL(withProtocol).hostname.replace(/^www\./i, '').replace(/\.$/, '').toLowerCase();
+  } catch {
+    return raw
+      .replace(/^https?:\/\//i, '')
+      .replace(/^www\./i, '')
+      .split('/')[0]
+      .split('?')[0]
+      .replace(/\.$/, '')
+      .toLowerCase();
+  }
+}
+
+function customerAiVisibilityInput(body = {}) {
+  const countryCode = normalizeAiVisibilityCountry(body.country || body.countryCode || body.country_code);
+  const input = {
+    businessName: cleanSupportText(body.businessName || body.business_name, 160),
+    domain: normalizeAiVisibilityDomain(body.domain || body.website || body.websiteUrl || body.website_url),
+    businessCategory: cleanSupportText(body.businessCategory || body.business_category, 120),
+    primaryService: cleanSupportText(body.primaryService || body.primary_service, 120),
+    city: cleanSupportText(body.city, 80),
+    region: cleanSupportText(body.region, 80),
+    countryCode,
+  };
+  const missing = [];
+  if (!input.businessName) missing.push('Business Name');
+  if (!input.domain) missing.push('Website URL / Domain');
+  if (!input.businessCategory) missing.push('Business Category');
+  if (!input.primaryService) missing.push('Primary Service');
+  if (!input.city) missing.push('City');
+  if (!input.region) missing.push('Region');
+  if (!input.countryCode) missing.push('Country');
+  if (missing.length) {
+    throw billing.httpError(400, `Missing required fields: ${missing.join(', ')}.`, 'ai_visibility_invalid_input', { missing });
+  }
+  return input;
+}
+
+function aiVisibilityBlockStatus(reason) {
+  return reason === 'ai_visibility_limit_reached' ? 429 : 402;
+}
+
+function aiVisibilityBlockMessage(reason) {
+  if (reason === 'ai_visibility_limit_reached') {
+    return 'You have used all of your AI Visibility scans for this billing period. Upgrade your plan or wait until the next renewal date to continue.';
+  }
+  if (reason === 'subscription_inactive') {
+    return 'Choose an active subscription plan to run AI Visibility scans.';
+  }
+  return 'Choose a subscription plan to run AI Visibility scans.';
+}
+
+app.get('/api/ai-visibility/reports', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const reports = await billing.listAiVisibilityReportsForUser(user.id, {
+      search: req.query.search,
+      limit: req.query.limit,
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json({ reports });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.get('/api/ai-visibility/reports/:reportId', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const report = await billing.getAiVisibilityReportForUserForClient(user.id, req.params.reportId);
+    posthog.capture({
+      distinctId: user.id,
+      event: 'ai_visibility_report_viewed',
+      properties: {
+        report_id: report.id,
+        score: report.score,
+        status: report.status,
+      },
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json({ report });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/ai-visibility/scans', async (req, res) => {
+  let authContext = null;
+  let input = null;
+  let savedReport = null;
+  try {
+    authContext = await billing.requireAuthenticatedUser(req);
+
+    if (!aiVisibilityCustomerFeatureEnabled()) {
+      throw billing.httpError(503, 'AI Visibility scans are not available yet.', 'ai_visibility_disabled');
+    }
+
+    input = customerAiVisibilityInput(req.body || {});
+
+    const access = await billing.checkAiVisibilityAccessForUser(authContext.user.id);
+    if (!access.allowed) {
+      const subscription = billing.normalizeSubscriptionForClient(access.subscription);
+      posthog.capture({
+        distinctId: authContext.user.id,
+        event: 'ai_visibility_limit_reached',
+        properties: {
+          reason: access.reason,
+          plan: subscription.plan,
+          ai_scan_limit: subscription.ai_scan_limit,
+          ai_scans_used: subscription.ai_scans_used,
+          ai_scans_remaining: subscription.ai_scans_remaining,
+        },
+      });
+      return res.status(aiVisibilityBlockStatus(access.reason)).json({
+        error: aiVisibilityBlockMessage(access.reason),
+        code: access.reason,
+        subscription,
+      });
+    }
+
+    posthog.capture({
+      distinctId: authContext.user.id,
+      event: 'ai_visibility_scan_started',
+      properties: {
+        business_category: input.businessCategory,
+        city: input.city,
+        region: input.region,
+        country_code: input.countryCode,
+        plan: billing.normalizeSubscriptionForClient(access.subscription).plan,
+      },
+    });
+
+    const assessment = await runAiVisibilityAssessment(input);
+    if (assessment.status !== 'complete' || Number(assessment.successfulRequests) < 3) {
+      throw billing.httpError(
+        422,
+        'AI Visibility could not be completed because fewer than three searches returned usable results. No AI scan was used.',
+        'ai_visibility_insufficient_data',
+        {
+          status: assessment.status,
+          successfulRequests: assessment.successfulRequests || 0,
+          failedRequests: assessment.failedRequests || 0,
+        }
+      );
+    }
+
+    savedReport = await billing.createAiVisibilityReportForUser(authContext.user.id, input, assessment);
+    const usage = await billing.recordAiVisibilityUsage(authContext.user.id, savedReport.id);
+    if (!usage?.allowed) {
+      await billing.deleteAiVisibilityReportForUser(authContext.user.id, savedReport.id).catch(error => {
+        console.warn('[PitchProof] AI Visibility report cleanup failed:', error?.message || error);
+      });
+      const subscription = billing.normalizeSubscriptionForClient(usage?.subscription || access.subscription);
+      return res.status(aiVisibilityBlockStatus(usage?.reason)).json({
+        error: aiVisibilityBlockMessage(usage?.reason),
+        code: usage?.reason || 'ai_visibility_limit_reached',
+        subscription,
+      });
+    }
+
+    const report = await billing.getAiVisibilityReportForUserForClient(authContext.user.id, savedReport.id);
+    const subscription = billing.normalizeSubscriptionForClient(usage.subscription);
+    posthog.capture({
+      distinctId: authContext.user.id,
+      event: 'ai_visibility_scan_completed',
+      properties: {
+        report_id: report.id,
+        score: report.score,
+        label: report.label,
+        prompts_tested: report.prompts_tested,
+        successful_requests: report.successful_requests,
+        failed_requests: report.failed_requests,
+        plan: subscription.plan,
+      },
+    });
+
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      reportId: report.id,
+      report,
+      subscription,
+    });
+  } catch (error) {
+    if (authContext?.user?.id) {
+      posthog.capture({
+        distinctId: authContext.user.id,
+        event: 'ai_visibility_scan_failed',
+        properties: {
+          reason: error?.code || 'request_failed',
+          status_code: error?.statusCode || 500,
+          business_category: input?.businessCategory || '',
+          city: input?.city || '',
+          country_code: input?.countryCode || '',
+        },
+      });
+    }
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
 
 function normalizeLeadUrl(rawUrl) {
   const value = String(rawUrl || '').trim();

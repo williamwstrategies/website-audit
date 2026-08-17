@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-13-ai-visibility-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-17-ai-visibility-customer-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
@@ -68,7 +68,7 @@ self.addEventListener('fetch', event => {
     '/blog-support-posts.js',
   ]);
 
-  if (networkOnlyPaths.has(url.pathname) || url.pathname.startsWith('/api/reports/')) {
+  if (networkOnlyPaths.has(url.pathname) || url.pathname.startsWith('/api/reports/') || url.pathname.startsWith('/api/ai-visibility/')) {
     event.respondWith(fetch(event.request));
     return;
   }
