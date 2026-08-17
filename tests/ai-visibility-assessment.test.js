@@ -16,6 +16,10 @@ const {
   runAiVisibilityAssessment,
   scoreLabel,
 } = require('../lib/ai-visibility-assessment');
+const {
+  visibilityClassification,
+  visibilityLevelFromRecommendations,
+} = require('../lib/ai-visibility-classification');
 
 const roofingInput = {
   businessName: 'Intricate Roofing & Contracting',
@@ -134,6 +138,37 @@ test('requires at least three successful prompts to score', () => {
   ]);
   assert.equal(score.status, 'insufficient_data');
   assert.equal(score.score, null);
+});
+
+test('derives customer-facing visibility levels from recommendation count', () => {
+  assert.equal(visibilityLevelFromRecommendations({ status: 'complete', recommendationCount: 0, promptsTested: 5, successfulRequests: 5 }), 'Not Mentioned');
+  assert.equal(visibilityLevelFromRecommendations({ status: 'complete', recommendationCount: 1, promptsTested: 5, successfulRequests: 5 }), 'Low Visibility');
+  assert.equal(visibilityLevelFromRecommendations({ status: 'complete', recommendationCount: 2, promptsTested: 5, successfulRequests: 5 }), 'Some Visibility');
+  assert.equal(visibilityLevelFromRecommendations({ status: 'complete', recommendationCount: 3, promptsTested: 5, successfulRequests: 5 }), 'Some Visibility');
+  assert.equal(visibilityLevelFromRecommendations({ status: 'complete', recommendationCount: 4, promptsTested: 5, successfulRequests: 5 }), 'Strong Visibility');
+  assert.equal(visibilityLevelFromRecommendations({ status: 'complete', recommendationCount: 5, promptsTested: 5, successfulRequests: 5 }), 'Very Strong Visibility');
+});
+
+test('customer-facing visibility preserves internal score and handles insufficient data separately', () => {
+  const score = calculateScore([
+    { success: true, recommended: true, cited: true, position: 1, intent: 'a' },
+    { success: true, recommended: true, cited: false, position: 3, intent: 'b' },
+    { success: true, recommended: true, cited: true, position: 5, intent: 'c' },
+    { success: true, recommended: false, cited: false, position: null, intent: 'd' },
+    { success: true, recommended: false, cited: false, position: null, intent: 'e' },
+  ]);
+  const visibility = visibilityClassification({
+    status: score.status,
+    recommendationCount: 3,
+    promptsTested: 5,
+    successfulRequests: 5,
+  });
+
+  assert.equal(score.score, 54);
+  assert.equal(score.label, 'Moderate');
+  assert.equal(visibility.level, 'Some Visibility');
+  assert.match(visibility.summary, /3 of 5/);
+  assert.equal(visibilityClassification({ status: 'insufficient_data', recommendationCount: 0, successfulRequests: 2 }).level, 'Insufficient Data');
 });
 
 test('successful provider responses without usable text do not produce completed zero reports', () => {

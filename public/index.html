@@ -45,7 +45,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png?v=2026-08-12-pitchproof-favicon">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=2026-08-12-pitchproof-favicon">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2026-08-12-pitchproof-favicon">
-<link rel="stylesheet" href="/styles.css?v=2026-08-17-ai-visibility-selector-v2">
+<link rel="stylesheet" href="/styles.css?v=2026-08-17-ai-visibility-levels-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -5044,7 +5044,9 @@ function aiVisibilityReportCardHtml(report, options = {}) {
   const title = asText(report.business_name) || asText(report.domain) || 'AI Visibility Report';
   const location = [asText(report.city), asText(report.region)].filter(Boolean).join(', ');
   const date = formatSavedReportDate(report.created_at);
-  const score = Number.isFinite(Number(report.score)) ? `${Math.round(Number(report.score))}%` : 'Unavailable';
+  const prompts = Number(report.prompts_tested) || Number(report.promptsTested) || 5;
+  const recommended = Math.max(0, Number(report.recommendation_count ?? report.recommendations) || 0);
+  const visibilityLevel = customerAiVisibilityLevelForReport(report);
   const compact = !!options.compact;
 
   return `
@@ -5052,9 +5054,9 @@ function aiVisibilityReportCardHtml(report, options = {}) {
       <button class="saved-report-main" type="button" data-ai-report-action="open" data-ai-report-id="${escHtml(report.id)}">
         <span>
           <span class="saved-report-title">${escHtml(title)}</span>
-          <span class="saved-report-meta">${escHtml(date)}${location ? ' - ' + escHtml(location) : ''} - AI Visibility</span>
+          <span class="saved-report-meta">${escHtml(date)}${location ? ' - ' + escHtml(location) : ''} - ${escHtml(recommended)} / ${escHtml(prompts)} recommendations</span>
         </span>
-        <span class="saved-report-score">${escHtml(score)}</span>
+        <span class="saved-report-score">${escHtml(visibilityLevel)}</span>
       </button>
       <div class="saved-report-actions">
         <button class="secondary-btn" type="button" data-ai-report-action="open" data-ai-report-id="${escHtml(report.id)}">Open</button>
@@ -5281,23 +5283,61 @@ function customerAiVisibilityMetricText(value, suffix = '') {
 function customerAiVisibilityRateText(count, total) {
   const numerator = Number(count);
   const denominator = Number(total);
-  if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator <= 0) return '0 / 0';
-  return `${numerator} / ${denominator}`;
+  if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator <= 0) return '0 of 0 Searches';
+  return `${numerator} of ${denominator} Searches`;
+}
+
+function customerAiVisibilityPositionText(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return 'Not Ranked';
+  return `#${Math.round(numeric * 10) / 10}`;
+}
+
+function customerAiVisibilityLevelForReport(report = {}) {
+  const apiLevel = asText(report.visibility_level || report.visibilityLevel);
+  if (apiLevel) return apiLevel;
+  const status = asText(report.status).toLowerCase();
+  const successful = Number(report.successful_requests);
+  if (['insufficient_data', 'disabled', 'invalid_input'].includes(status) || (Number.isFinite(successful) && successful < 3)) return 'Insufficient Data';
+  const recommended = Number(report.recommendation_count);
+  if (!Number.isFinite(recommended) || recommended <= 0) return 'Not Mentioned';
+  if (recommended === 1) return 'Low Visibility';
+  if (recommended <= 3) return 'Some Visibility';
+  if (recommended === 4) return 'Strong Visibility';
+  return 'Very Strong Visibility';
 }
 
 function customerAiVisibilityTone(report = {}) {
-  const score = Number(report.score);
-  if (!Number.isFinite(score)) return 'medium';
-  if (score >= 70) return 'low';
-  if (score >= 45) return 'medium';
+  const level = customerAiVisibilityLevelForReport(report);
+  if (level === 'Strong Visibility' || level === 'Very Strong Visibility') return 'low';
+  if (level === 'Some Visibility') return 'medium';
+  if (level === 'Insufficient Data') return 'partial';
   return 'high';
+}
+
+function customerAiVisibilitySummary(report = {}, prompts = 5, competitors = []) {
+  const apiSummary = asText(report.visibility_summary || report.visibilitySummary);
+  if (apiSummary) return apiSummary;
+  const level = customerAiVisibilityLevelForReport(report);
+  const recommended = Math.max(0, Number(report.recommendation_count) || 0);
+  const total = Math.max(1, Number(prompts) || 5);
+  if (level === 'Insufficient Data') return 'Not enough AI recommendation searches completed successfully to produce a reliable visibility assessment.';
+  if (level === 'Not Mentioned') {
+    return competitors.length
+      ? `Your business was not surfaced in any of the ${total} representative AI recommendation searches tested. Competing businesses were recommended instead across these high-intent local searches.`
+      : `Your business was not surfaced in any of the ${total} representative AI recommendation searches tested.`;
+  }
+  if (level === 'Low Visibility') return `Your business appeared in only 1 of ${total} representative AI recommendation searches. AI visibility is currently limited, with competitors appearing more consistently across relevant buyer searches.`;
+  if (level === 'Some Visibility') return `Your business appeared in ${recommended} of ${total} representative AI recommendation searches, but visibility is inconsistent depending on what potential customers ask.`;
+  if (level === 'Strong Visibility') return `Your business appeared in 4 of ${total} representative AI recommendation searches and is being surfaced consistently for high-intent local queries.`;
+  if (level === 'Very Strong Visibility') return `Your business appeared across all ${total} representative AI recommendation searches, indicating very strong visibility across the buyer-intent queries tested.`;
+  return report.summary || 'AI Visibility summary unavailable.';
 }
 
 function customerAiVisibilityQueryStatus(query = {}) {
   if (query.success === false) return { label: 'Unavailable', tone: 'medium' };
   if (query.recommended) return { label: `Recommended${query.position ? ` #${query.position}` : ''}`, tone: 'low' };
-  if (query.mentioned) return { label: 'Mentioned', tone: 'medium' };
-  return { label: 'Missed', tone: 'high' };
+  return { label: 'Not Recommended', tone: 'high' };
 }
 
 function aiVisibilityQueryHtml(query = {}, index = 0) {
@@ -5311,29 +5351,36 @@ function aiVisibilityQueryHtml(query = {}, index = 0) {
       <div class="ai-query-status-row">
         <span class="status-chip ${escHtml(status.tone)}">${escHtml(status.label)}</span>
         <span class="status-chip ${query.cited ? 'low' : 'partial'}">${query.cited ? 'Website cited' : 'No citation'}</span>
+        ${query.mentioned && !query.recommended ? '<span class="status-chip medium">Mentioned only</span>' : ''}
       </div>
     </article>
   `;
 }
 
 function aiVisibilityCompetitorHtml(competitor = {}) {
+  const details = [
+    competitor.appearances ? `${competitor.appearances} appearances` : 'Appeared in AI recommendations',
+    competitor.averagePosition ? `avg. position #${competitor.averagePosition}` : '',
+    competitor.domain ? competitor.domain : '',
+  ].filter(Boolean).join(' - ');
   return `
     <div class="activity-item">
       <span class="activity-dot"></span>
       <span>
         <strong>${escHtml(competitor.businessName || 'Competitor')}</strong>
-        <small>${escHtml(competitor.appearances ? `${competitor.appearances} appearances` : 'Appeared in AI recommendations')}${competitor.averagePosition ? ` - avg. position ${escHtml(competitor.averagePosition)}` : ''}</small>
+        <small>${escHtml(details)}</small>
       </span>
     </div>
   `;
 }
 
 function aiVisibilityMissedHtml(item = {}) {
-  const competitors = asArray(item.competitorsShown).join(', ');
+  const competitors = asArray(item.competitorsShown);
   return `
     <article class="ai-missed-card">
       <strong>${escHtml(item.prompt || 'Missed buyer-intent search')}</strong>
-      <p>${competitors ? `Competitors shown: ${escHtml(competitors)}.` : 'Competitors were shown while this business was not recommended.'}</p>
+      <p>Your business was not recommended for this search.</p>
+      ${competitors.length ? `<ul>${competitors.slice(0, 3).map(name => `<li>${escHtml(name)}</li>`).join('')}</ul>` : '<p>No clear competitor list was extracted from this search.</p>'}
     </article>
   `;
 }
@@ -5342,12 +5389,14 @@ function renderAiVisibilityReport(report = {}) {
   const container = document.getElementById('aiVisibilityReportContent');
   if (!container) return;
   const prompts = Number(report.prompts_tested) || asArray(report.queries).length || 0;
+  const visibilityLevel = customerAiVisibilityLevelForReport(report);
   const tone = customerAiVisibilityTone(report);
-  const score = Number.isFinite(Number(report.score)) ? Math.round(Number(report.score)) : null;
   const location = [asText(report.city), asText(report.region), asText(report.country_code)].filter(Boolean).join(', ');
   const queries = asArray(report.queries);
   const competitors = asArray(report.competitors);
   const missed = asArray(report.missed_opportunities);
+  const recommended = Math.max(0, Number(report.recommendation_count) || 0);
+  const summary = customerAiVisibilitySummary(report, prompts, competitors);
 
   container.innerHTML = `
     <section class="workspace-panel ai-report-hero">
@@ -5356,9 +5405,10 @@ function renderAiVisibilityReport(report = {}) {
         <h2>${escHtml(report.business_name || 'AI Visibility Report')}</h2>
         <p>${escHtml(report.domain || '')}${location ? ' - ' + escHtml(location) : ''}</p>
       </div>
-      <div class="ai-score-block">
-        <strong>${score === null ? 'Unavailable' : `${score} / 100`}</strong>
-        <span class="status-chip ${escHtml(tone)}">${escHtml(report.label || 'Unavailable')}</span>
+      <div class="ai-score-block ai-visibility-level-block">
+        <strong>${escHtml(visibilityLevel)}</strong>
+        <span>${escHtml(recommended)} of ${escHtml(prompts || 5)} AI recommendation searches</span>
+        <span class="status-chip ${escHtml(tone)}">Recommendation visibility</span>
       </div>
     </section>
 
@@ -5369,9 +5419,9 @@ function renderAiVisibilityReport(report = {}) {
         <p>Buyer-intent searches where the business was recommended.</p>
       </article>
       <article class="metric-card">
-        <span>Mentioned In</span>
-        <strong>${escHtml(customerAiVisibilityRateText(report.mention_count, prompts))}</strong>
-        <p>Searches where the business appeared by name or domain.</p>
+        <span>Average Recommendation Position</span>
+        <strong>${escHtml(customerAiVisibilityPositionText(report.average_position))}</strong>
+        <p>Average position when the business was recommended.</p>
       </article>
       <article class="metric-card">
         <span>Website Cited In</span>
@@ -5379,9 +5429,9 @@ function renderAiVisibilityReport(report = {}) {
         <p>Searches where the website was used as a citation.</p>
       </article>
       <article class="metric-card">
-        <span>Average Recommendation Position</span>
-        <strong>${escHtml(customerAiVisibilityMetricText(report.average_position))}</strong>
-        <p>Average position when the business was recommended.</p>
+        <span>AI Competitors Found</span>
+        <strong>${escHtml(competitors.length)}</strong>
+        <p>Competitors surfaced across the usable AI recommendation searches.</p>
       </article>
     </div>
 
@@ -5413,8 +5463,8 @@ function renderAiVisibilityReport(report = {}) {
       <section class="workspace-panel ai-report-section">
         <div class="panel-heading">
           <div>
-            <div class="section-kicker">Missed Visibility</div>
-            <h2>Missed opportunities</h2>
+          <div class="section-kicker">Missed Visibility</div>
+            <h2>Where you're missing visibility</h2>
           </div>
         </div>
         <div class="ai-missed-list">
@@ -5428,11 +5478,15 @@ function renderAiVisibilityReport(report = {}) {
         <div>
           <div class="section-kicker">Summary</div>
           <h2>AI Visibility overview</h2>
-          <p>${escHtml(report.summary || 'AI Visibility summary unavailable.')}</p>
+          <p>${escHtml(summary)}</p>
         </div>
       </div>
+      <div class="ai-supporting-note">
+        <strong>Mentioned in ${escHtml(customerAiVisibilityRateText(report.mention_count, prompts).toLowerCase())}</strong>
+        <span>Mentions are tracked separately from recommendations. A business can be mentioned without being recommended.</span>
+      </div>
       <div class="billing-status-notice" data-tone="default">
-        AI Visibility is in beta. Results are based on representative AI recommendation searches and can vary by prompt, provider, location, and date.
+        AI Visibility is in beta. Results are based on five representative AI recommendation searches and may vary by platform, prompt, location, and time.
       </div>
       <div class="hero-actions">
         <a class="analyze-btn" href="/app/ai-visibility/new" data-route>Run Another AI Scan</a>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-17-ai-visibility-customer-v1';
+const CACHE_NAME = 'leadcheck-app-shell-v2026-08-17-ai-visibility-levels-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
