@@ -344,19 +344,103 @@ async function sendSupportWebhook(payload) {
   return { configured: true, sent: true, error: '' };
 }
 
+function supportSmsMessage(payload = {}) {
+  const subject = cleanSupportText(payload.subject, 140);
+  const urgency = cleanSupportText(payload.urgency, 40).toUpperCase() || 'NORMAL';
+  const customer = cleanSupportText(payload.reply_email || payload.user?.email || payload.reply_phone || 'Unknown customer', 180);
+  const page = cleanSupportText(payload.affected_url || payload.page_url, 220);
+  return [
+    `New PitchProof support request (${urgency})`,
+    subject ? `Subject: ${subject}` : '',
+    `From: ${customer}`,
+    page ? `Page: ${page}` : '',
+    `Ticket: ${payload.ticket_id || ''}`,
+  ].filter(Boolean).join('\n');
+}
+
+function supportGhlPayload(payload = {}) {
+  const supportSmsTo = cleanSupportText(process.env.SUPPORT_SMS_TO, 80);
+  return {
+    source: 'pitchproof_support',
+    event: 'support_request_submitted',
+    ticket_id: payload.ticket_id,
+    ticketId: payload.ticket_id,
+    category: payload.category,
+    urgency: payload.urgency,
+    subject: payload.subject,
+    message: payload.message,
+    affected_url: payload.affected_url,
+    affectedUrl: payload.affected_url,
+    preferred_reply_method: payload.preferred_reply_method,
+    preferredReplyMethod: payload.preferred_reply_method,
+    customer_email: payload.reply_email || payload.user?.email || '',
+    customerEmail: payload.reply_email || payload.user?.email || '',
+    customer_phone: payload.reply_phone || '',
+    customerPhone: payload.reply_phone || '',
+    customer_name: payload.user?.name || '',
+    customerName: payload.user?.name || '',
+    user_id: payload.user?.id || '',
+    agency_name: payload.agency?.name || '',
+    agencyName: payload.agency?.name || '',
+    page_url: payload.page_url,
+    pageUrl: payload.page_url,
+    app_url: payload.app_url,
+    appUrl: payload.app_url,
+    support_sms_to: supportSmsTo,
+    supportSmsTo,
+    sms_to: supportSmsTo,
+    smsTo: supportSmsTo,
+    sms_message: supportSmsMessage(payload),
+    smsMessage: supportSmsMessage(payload),
+    created_at: payload.created_at,
+    createdAt: payload.created_at,
+  };
+}
+
+async function sendSupportGhlWebhook(payload) {
+  const webhookUrl = cleanSupportText(process.env.SUPPORT_GHL_WEBHOOK_URL, 1000);
+  if (!webhookUrl) {
+    return { configured: false, sent: false, error: '' };
+  }
+
+  let response;
+  try {
+    response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(supportGhlPayload(payload)),
+    });
+  } catch (error) {
+    return { configured: true, sent: false, error: error?.message || 'GoHighLevel support webhook request failed.' };
+  }
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    return {
+      configured: true,
+      sent: false,
+      error: `GoHighLevel support webhook failed with HTTP ${response.status}${body ? `: ${body.slice(0, 200)}` : ''}`,
+    };
+  }
+
+  return { configured: true, sent: true, error: '' };
+}
+
 async function sendSupportNotification(payload) {
-  const [email, webhook] = await Promise.all([
+  const [email, webhook, ghlWebhook] = await Promise.all([
     sendSupportEmail(payload),
     sendSupportWebhook(payload),
+    sendSupportGhlWebhook(payload),
   ]);
-  const errors = [email.error, webhook.error].filter(Boolean);
+  const errors = [email.error, webhook.error, ghlWebhook.error].filter(Boolean);
   return {
-    configured: email.configured || webhook.configured,
-    sent: email.sent || webhook.sent,
+    configured: email.configured || webhook.configured || ghlWebhook.configured,
+    sent: email.sent || webhook.sent || ghlWebhook.sent,
     paused: email.paused === true,
     error: errors.join(' | '),
     email,
     webhook,
+    ghlWebhook,
   };
 }
 
@@ -797,6 +881,8 @@ app.post('/api/support/request', async (req, res) => {
         email_paused: notification.email.paused === true,
         webhook_configured: notification.webhook.configured,
         webhook_sent: notification.webhook.sent,
+        ghl_webhook_configured: notification.ghlWebhook.configured,
+        ghl_webhook_sent: notification.ghlWebhook.sent,
       },
     });
 
@@ -1073,7 +1159,7 @@ const AI_VISIBILITY_COUNTRY_CODES = new Map([
 ]);
 
 function aiVisibilityCustomerFeatureEnabled() {
-  return /^(1|true|yes|on)$/i.test(cleanSupportText(process.env.AI_VISIBILITY_ENABLED, 20));
+  return /^(1|true|yes|on)$/i.test(cleanSupportText(process.env.AI_VISIBILITY_CUSTOMER_ENABLED, 20));
 }
 
 function normalizeAiVisibilityCountry(value = '') {
@@ -1128,12 +1214,12 @@ function aiVisibilityBlockStatus(reason) {
 
 function aiVisibilityBlockMessage(reason) {
   if (reason === 'ai_visibility_limit_reached') {
-    return 'You have used all of your AI Visibility scans for this billing period. Upgrade your plan or wait until the next renewal date to continue.';
+    return 'You have used all of your AI Visibility reports for this billing period. Upgrade your plan or wait until the next renewal date to continue.';
   }
   if (reason === 'subscription_inactive') {
-    return 'Choose an active subscription plan to run AI Visibility scans.';
+    return 'Choose an active subscription plan to run AI Visibility reports.';
   }
-  return 'Choose a subscription plan to run AI Visibility scans.';
+  return 'Choose a subscription plan to run AI Visibility reports.';
 }
 
 app.get('/api/ai-visibility/reports', async (req, res) => {
@@ -1180,7 +1266,7 @@ app.post('/api/ai-visibility/scans', async (req, res) => {
     authContext = await billing.requireAuthenticatedUser(req);
 
     if (!aiVisibilityCustomerFeatureEnabled()) {
-      throw billing.httpError(503, 'AI Visibility scans are not available yet.', 'ai_visibility_disabled');
+      throw billing.httpError(503, 'AI Visibility reports are coming soon and are not available yet.', 'ai_visibility_disabled');
     }
 
     input = customerAiVisibilityInput(req.body || {});

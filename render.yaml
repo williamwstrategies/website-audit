@@ -15,6 +15,10 @@ services:
         sync: false
       - key: SUPPORT_WEBHOOK_URL
         sync: false
+      - key: SUPPORT_GHL_WEBHOOK_URL
+        sync: false
+      - key: SUPPORT_SMS_TO
+        sync: false
       - key: RESEND_API_KEY
         sync: false
       - key: RESEND_DOMAIN_ID
@@ -70,4 +74,6 @@ services:
       - key: STRIPE_SUBSCRIPTION_TRIAL_DAYS
         value: "7"
       - key: APP_URL
+        sync: false
+      - key: AI_VISIBILITY_CUSTOMER_ENABLED
         sync: false
