@@ -904,7 +904,13 @@ app.get('/api/branding', async (req, res) => {
 app.put('/api/branding', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
-    const subscription = await billing.getSubscriptionStatus(user.id);
+    let subscription = await billing.getSubscriptionStatus(user.id);
+    if (!subscription.can_white_label && subscription.stripe_subscription_id) {
+      subscription = await billing.refreshSubscriptionFromStripeForUser(user.id).catch(error => {
+        console.warn('[LeadCheck] Branding subscription refresh failed:', error?.message || error);
+        return subscription;
+      });
+    }
     if (!subscription.can_white_label) {
       return res.status(403).json({
         error: 'Upgrade to Professional to remove PitchProof branding and present reports under your own agency.',
