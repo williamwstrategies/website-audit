@@ -7062,11 +7062,17 @@ function bindBrandingForm() {
       const faviconFile = faviconFileInput?.files?.[0] || null;
 
       if (logoFile) {
-        const uploaded = await databaseService.uploadBrandingAsset('logo', logoFile);
+        const uploaded = await databaseService.uploadBrandingAsset('logo', logoFile).catch(error => {
+          const message = error?.message || 'Supabase Storage rejected the logo upload.';
+          throw new Error(`Logo upload failed. Check the agency-branding storage bucket and policies in Supabase. Details: ${message}`);
+        });
         branding = { ...branding, logoUrl: uploaded.path, logoStoragePath: uploaded.path };
       }
       if (faviconFile) {
-        const uploaded = await databaseService.uploadBrandingAsset('favicon', faviconFile);
+        const uploaded = await databaseService.uploadBrandingAsset('favicon', faviconFile).catch(error => {
+          const message = error?.message || 'Supabase Storage rejected the favicon upload.';
+          throw new Error(`Favicon upload failed. Check the agency-branding storage bucket and policies in Supabase. Details: ${message}`);
+        });
         branding = { ...branding, faviconUrl: uploaded.path, faviconStoragePath: uploaded.path };
       }
 
@@ -7084,8 +7090,9 @@ function bindBrandingForm() {
         currentSubscription = error.subscription;
         updateReportMetrics();
       }
-      setBrandingMessage(error?.message || 'Branding could not be saved. Check storage setup and try again.', 'error');
-      showToast('Branding could not be saved.', 'error');
+      const message = error?.message || 'Branding could not be saved. Check storage setup and try again.';
+      setBrandingMessage(message, 'error');
+      showToast(message, 'error');
     } finally {
       setBrandingFormLoading(false);
     }

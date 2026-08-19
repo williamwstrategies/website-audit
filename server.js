@@ -912,8 +912,10 @@ app.put('/api/branding', async (req, res) => {
       });
     }
     if (!subscription.can_white_label) {
+      const planName = subscription.plan_name || subscription.plan || 'unknown plan';
+      const status = subscription.status || 'unknown status';
       return res.status(403).json({
-        error: 'Upgrade to Professional to remove PitchProof branding and present reports under your own agency.',
+        error: `Branding is available on an active or trialing Professional, Growth, or Enterprise plan. Current workspace: ${planName}, ${status}.`,
         code: 'white_label_upgrade_required',
         subscription,
       });
