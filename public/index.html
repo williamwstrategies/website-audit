@@ -1752,12 +1752,16 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               <div>
                 <div class="section-kicker">New Request</div>
                 <h2>What needs attention?</h2>
-                <p>Add a short subject and a clear message. The request will be sent by text.</p>
+                <p>Add a phone number, short subject, and clear message. The request will be sent by text.</p>
               </div>
             </div>
 
             <form class="support-form" id="supportRequestForm" novalidate>
               <div class="settings-grid">
+                <label class="lead-field lead-field-full">
+                  <span class="lead-label">Phone Number</span>
+                  <input class="url-input" type="tel" id="supportPhoneInput" name="replyPhone" placeholder="+1 555 123 4567" autocomplete="tel" required>
+                </label>
                 <label class="lead-field lead-field-full">
                   <span class="lead-label">Subject</span>
                   <input class="url-input" type="text" id="supportSubjectInput" name="subject" placeholder="Short summary of the issue" maxlength="160" required>
@@ -1779,9 +1783,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <section class="workspace-panel support-guidance-card">
               <div class="section-kicker">Notifications</div>
               <h2>Text Alerts</h2>
-              <p>Requests are sent to a GoHighLevel workflow that texts your phone with the ticket details.</p>
+              <p>Requests are sent to GoHighLevel with the customer's phone number, subject, and message so the workflow can send the right text.</p>
               <div class="support-status-list">
                 <span>Authenticated submissions</span>
+                <span>Customer phone number included</span>
                 <span>GoHighLevel SMS webhook payload</span>
                 <span>Ticket reference included</span>
               </div>
@@ -1789,7 +1794,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <section class="workspace-panel support-guidance-card">
               <div class="section-kicker">Recommended Setup</div>
               <h2>Render Environment Variables</h2>
-              <p>Add <strong>SUPPORT_GHL_WEBHOOK_URL</strong> and <strong>SUPPORT_SMS_TO</strong> in Render for text alerts.</p>
+              <p>Add <strong>SUPPORT_GHL_WEBHOOK_URL</strong> in Render. Use <strong>customer_phone</strong> in GoHighLevel to text the customer, or <strong>support_sms_to</strong> for owner alerts.</p>
             </section>
           </aside>
         </div>
@@ -6740,6 +6745,7 @@ function bindSupportForm() {
     }
 
     const payload = {
+      replyPhone: document.getElementById('supportPhoneInput')?.value || '',
       subject: document.getElementById('supportSubjectInput')?.value || '',
       message: document.getElementById('supportDetailsInput')?.value || '',
       agencyName: brandingProvider?.getEffectiveBranding?.()?.agencyName || '',

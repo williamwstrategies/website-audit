@@ -347,8 +347,10 @@ async function sendSupportWebhook(payload) {
 function supportSmsMessage(payload = {}) {
   const subject = cleanSupportText(payload.subject, 140);
   const message = cleanSupportText(payload.message, 1200);
+  const phone = cleanSupportText(payload.reply_phone, 80);
   return [
     'New PitchProof support request',
+    phone ? `Phone: ${phone}` : '',
     subject ? `Subject: ${subject}` : '',
     message ? `Message: ${message}` : '',
   ].filter(Boolean).join('\n');
@@ -819,9 +821,13 @@ app.post('/api/support/request', async (req, res) => {
   try {
     const { user } = await billing.requireAuthenticatedUser(req);
     const body = req.body || {};
+    const replyPhone = cleanSupportText(body.replyPhone || body.reply_phone || body.phone, 80);
     const subject = cleanSupportText(body.subject, 160);
     const message = cleanSupportText(body.message, 4000);
 
+    if (!replyPhone || replyPhone.replace(/\D/g, '').length < 7) {
+      return res.status(400).json({ error: 'Please add a valid phone number for text support.', code: 'support_phone_required' });
+    }
     if (!subject) {
       return res.status(400).json({ error: 'Please add a short subject.', code: 'support_subject_required' });
     }
@@ -840,7 +846,7 @@ app.post('/api/support/request', async (req, res) => {
       affected_url: cleanSupportText(body.pageUrl || body.page_url, 1000),
       preferred_reply_method: 'text',
       reply_email: cleanSupportText(user.email, 320),
-      reply_phone: '',
+      reply_phone: replyPhone,
       page_url: cleanSupportText(body.pageUrl || body.page_url, 1000),
       user_agent: cleanSupportText(body.userAgent || body.user_agent || req.get('user-agent'), 500),
       app_url: requestOrigin(req),
