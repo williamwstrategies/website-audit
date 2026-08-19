@@ -48,6 +48,13 @@
     return String(value || '').trim();
   }
 
+  function normalizeAgencyName(value) {
+    const text = cleanText(value);
+    return /^(w strategies|wstrategies|leadcheck|website strategy scan)$/i.test(text)
+      ? DEFAULT_BRANDING.agencyName
+      : text;
+  }
+
   function isHex(value) {
     return /^#[0-9a-fA-F]{6}$/.test(cleanText(value));
   }
@@ -96,7 +103,7 @@
       .slice(0, 2)
       .map(part => part[0])
       .join('')
-      .toUpperCase() || 'WA';
+      .toUpperCase() || 'PP';
   }
 
   function setText(selector, value) {
@@ -157,7 +164,7 @@
   function normalizeBranding(update = {}) {
     return {
       whiteLabelEnabled: update.whiteLabelEnabled !== false,
-      agencyName: cleanText(update.agencyName || update.agency_name) || DEFAULT_BRANDING.agencyName,
+      agencyName: normalizeAgencyName(update.agencyName || update.agency_name) || DEFAULT_BRANDING.agencyName,
       platformLabel: cleanText(update.platformLabel || update.platform_label) || DEFAULT_BRANDING.platformLabel,
       logoUrl: cleanText(update.logoUrl || update.logo_url || update.logoResolvedUrl || update.logo_resolved_url),
       logoStoragePath: cleanText(update.logoStoragePath || update.logo_storage_path),
