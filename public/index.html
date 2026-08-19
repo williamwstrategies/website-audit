@@ -226,7 +226,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="report-preview-layout">
         <article class="pdf-report-mockup sample-report-shell" aria-label="PDF report mockup">
           <div class="sample-report-top">
-            <div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div>
+            <div><span class="mock-agency-mark">PP</span><strong>PitchProof</strong></div>
             <span>PDF Report</span>
           </div>
           <div class="sample-score-row">
@@ -270,7 +270,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="white-label-mockup product-showcase">
         <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Agency Workspace</strong></div>
-        <div class="mock-report-header"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>Website Assessment Platform</span></div>
+        <div class="mock-report-header"><div><span class="mock-agency-mark">PP</span><strong>PitchProof</strong></div><span>Website Assessment Platform</span></div>
         <div class="color-swatch-row"><i></i><i></i><i></i><span>Brand system applied</span></div>
         <div class="mock-category"><span>Dashboard header</span><strong>Branded</strong></div>
         <div class="mock-category"><span>Report PDF</span><strong>Branded</strong></div>
@@ -454,7 +454,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="product-preview-row" data-reveal>
         <div class="pdf-report-mockup sample-report-shell">
-          <div class="sample-report-top"><div><span class="mock-agency-mark">WS</span><strong>W Strategies</strong></div><span>PDF Export</span></div>
+          <div class="sample-report-top"><div><span class="mock-agency-mark">PP</span><strong>PitchProof</strong></div><span>PDF Export</span></div>
           <div class="sample-score-row"><strong>38</strong><div><span>Website Report</span><p>Priorities, explanations, evidence, and recommendations.</p></div></div>
           <div class="sample-priorities"><strong>Top priorities</strong><ol><li>Clarify the primary call to action.</li><li>Add review proof near quote requests.</li><li>Repair broken service links.</li></ol></div>
         </div>
@@ -1149,10 +1149,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   <aside class="app-sidebar" aria-label="Application navigation">
     <div class="app-sidebar-top">
       <a class="brand-lockup app-brand-lockup" href="/app" data-route>
-        <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
+        <span class="brand-mark brand-logo-fallback" data-brand-logo-text>PP</span>
         <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
         <span>
-          <span class="brand-name" data-brand-name>W Strategies</span>
+          <span class="brand-name" data-brand-name>PitchProof</span>
           <span class="brand-subtitle" data-brand-platform>Website Assessment Platform</span>
         </span>
       </a>
@@ -1202,7 +1202,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         </div>
         <div class="dashboard-hero app-page-hero">
           <div>
-            <div class="section-kicker" data-brand-name>W Strategies</div>
+            <div class="section-kicker" data-brand-name>PitchProof</div>
             <h2 id="dashboardGreeting">Good day.</h2>
             <p>Review recent reports, track website scan usage, and choose the right next step for the next prospect.</p>
             <div class="dashboard-hero-actions">
@@ -1212,9 +1212,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             </div>
           </div>
           <div class="dashboard-brand-card">
-            <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
+            <span class="brand-mark brand-logo-fallback" data-brand-logo-text>PP</span>
             <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
-            <strong data-brand-name>W Strategies</strong>
+            <strong data-brand-name>PitchProof</strong>
             <span data-brand-tagline>Website Assessment Platform</span>
           </div>
         </div>
@@ -2025,10 +2025,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <section class="report-hero score-hero">
             <div class="report-brand-header">
               <div class="brand-lockup report-brand-lockup">
-                <span class="brand-mark brand-logo-fallback" data-brand-logo-text>WS</span>
+                <span class="brand-mark brand-logo-fallback" data-brand-logo-text>PP</span>
                 <img class="brand-logo-image" data-brand-logo-img alt="" hidden>
                 <span>
-                  <span class="brand-name" data-brand-name>W Strategies</span>
+                  <span class="brand-name" data-brand-name>PitchProof</span>
                   <span class="brand-subtitle" data-brand-platform>Website Assessment Platform</span>
                 </span>
               </div>
@@ -2053,7 +2053,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
               </div>
               <div>
                 <span class="report-meta-label">Prepared By</span>
-                <strong data-brand-name>W Strategies</strong>
+                <strong data-brand-name>PitchProof</strong>
               </div>
             </div>
             <div class="report-hero-grid">
@@ -3985,7 +3985,7 @@ async function syncBrandingFromDatabase() {
     setBrandingDirty(false);
     updateAuthUserUI();
   } catch (error) {
-    console.warn('[LeadCheck] Branding could not load from Supabase:', error?.message || error);
+    console.warn('[PitchProof] Branding could not load from Supabase:', error?.message || error);
   }
 }
 
@@ -5179,7 +5179,7 @@ async function loadSavedReports({ force = false } = {}) {
     savedReportsLoaded = true;
     return savedReports;
   } catch (error) {
-    console.warn('[LeadCheck] Saved reports could not load:', error?.message || error);
+    console.warn('[PitchProof] Saved reports could not load:', error?.message || error);
     setReportsMessage(error?.message || 'Saved reports could not load.', 'error');
     savedReports = [];
     savedReportsLoaded = false;
@@ -5611,7 +5611,7 @@ async function loadSubscription() {
     updateReportMetrics();
     return currentSubscription;
   } catch (error) {
-    console.warn('[LeadCheck] Subscription could not load:', error?.message || error);
+    console.warn('[PitchProof] Subscription could not load:', error?.message || error);
     currentSubscription = null;
     updateReportMetrics();
     return null;
@@ -5928,7 +5928,7 @@ async function openSavedReport(reportId, options = {}) {
       setTimeout(downloadReportPdf, 250);
     }
   } catch (error) {
-    console.error('[LeadCheck] Saved report could not open:', error?.message || error);
+    console.error('[PitchProof] Saved report could not open:', error?.message || error);
     showAppPanel('reports');
     if (window.location.pathname !== '/app/reports') {
       window.history.replaceState({}, '', '/app/reports');
@@ -5960,7 +5960,7 @@ async function duplicateSavedReport(reportId) {
     setReportsMessage('Report duplicated.', 'success');
     showToast('Report duplicated.', 'success');
   } catch (error) {
-    console.error('[LeadCheck] Report duplicate failed:', error?.message || error);
+    console.error('[PitchProof] Report duplicate failed:', error?.message || error);
     setReportsMessage(error?.message || 'Report could not be duplicated.', 'error');
     showToast(error?.message || 'Report could not be duplicated.', 'error');
   }
@@ -5980,7 +5980,7 @@ async function deleteSavedReport(reportId) {
     setReportsMessage('Report deleted.', 'success');
     showToast('Report deleted.', 'success');
   } catch (error) {
-    console.error('[LeadCheck] Report delete failed:', error?.message || error);
+    console.error('[PitchProof] Report delete failed:', error?.message || error);
     setReportsMessage(error?.message || 'Report could not be deleted.', 'error');
     showToast(error?.message || 'Report could not be deleted.', 'error');
   }
@@ -6087,7 +6087,7 @@ function handleAuthStateChange(event) {
     savedReportsLoaded = false;
     provisionWorkspace()
       .then(() => updateAuthUserUI())
-      .catch(error => console.warn('[LeadCheck] Workspace provisioning failed:', error))
+      .catch(error => console.warn('[PitchProof] Workspace provisioning failed:', error))
       .finally(() => {
         syncBrandingFromDatabase();
         loadSubscription();
@@ -6995,7 +6995,7 @@ function bindAuthForms() {
     withButtonLoading(logoutBtn, 'Logging out...', async () => {
       const { error } = await authProvider.signOut();
       if (error) {
-        console.error('[LeadCheck] Logout failed:', error.message);
+        console.error('[PitchProof] Logout failed:', error.message);
       }
       pendingProtectedPath = '/app';
       navigateTo('/login');
@@ -7062,7 +7062,7 @@ function bindBrandingForm() {
       updateAuthUserUI();
       showToast('Branding saved.', 'success');
     } catch (error) {
-      console.warn('[LeadCheck] Branding could not save to Supabase:', error?.message || error);
+      console.warn('[PitchProof] Branding could not save to Supabase:', error?.message || error);
       if (error?.subscription) {
         currentSubscription = error.subscription;
         updateReportMetrics();
@@ -7115,7 +7115,7 @@ function bindBrandingForm() {
         updateAuthUserUI();
         showToast('Branding reset.', 'success');
       } catch (error) {
-        console.warn('[LeadCheck] Branding reset could not sync to Supabase:', error?.message || error);
+        console.warn('[PitchProof] Branding reset could not sync to Supabase:', error?.message || error);
         if (error?.subscription) {
           currentSubscription = error.subscription;
           updateReportMetrics();
@@ -7616,7 +7616,7 @@ function verifyPublicDemoReportRender(website, { scrollToReport = false, retry =
     }
 
     if (!retry) {
-      console.warn('[LeadCheck] Demo report mount was empty; retrying render.');
+      console.warn('[PitchProof] Demo report mount was empty; retrying render.');
       setTimeout(() => renderStaticDemoReport(website, { scrollToReport, retry: true }), 120);
       return;
     }
@@ -7639,7 +7639,7 @@ function schedulePublicDemoFallback(website) {
       return;
     }
     if (!publicDemoReportIsMounted()) {
-      console.warn('[LeadCheck] Demo report did not mount after route render; forcing static demo.');
+      console.warn('[PitchProof] Demo report did not mount after route render; forcing static demo.');
       renderStaticDemoReport(website || requestedDemoWebsite(), { scrollToReport: false, retry: true });
     }
   }, 1400);
@@ -7679,7 +7679,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
     scheduleDemoOfferModal();
     return true;
   } catch (error) {
-    console.warn('[LeadCheck] Demo report render failed; retrying static demo report.', error);
+    console.warn('[PitchProof] Demo report render failed; retrying static demo report.', error);
     requestAnimationFrame(() => {
       try {
         mountReportForPublicDemo();
@@ -7694,7 +7694,7 @@ function renderStaticDemoReport(website, { scrollToReport = false, retry = false
       } catch (retryError) {
         demoLoadingActive = false;
         if (notice) notice.hidden = false;
-        console.error('[LeadCheck] Static demo report fallback failed:', retryError);
+        console.error('[PitchProof] Static demo report fallback failed:', retryError);
       }
     });
     return false;
@@ -8017,7 +8017,7 @@ async function persistGeneratedReport(result) {
       window.history.replaceState({}, '', `/app/reports/${encodeURIComponent(pendingSavedReportId)}`);
       renderRoute();
     }
-    console.log('[LeadCheck] Report saved:', pendingSavedReportId);
+    console.log('[PitchProof] Report saved:', pendingSavedReportId);
     setReportSaveMessage('Report saved to your workspace.', 'success');
     setCurrentReportPdfButton(false);
     showToast('Report saved to your workspace.', 'success');
@@ -8025,7 +8025,7 @@ async function persistGeneratedReport(result) {
     loadSavedReports({ force: true });
     return savedReport;
   } catch (error) {
-    console.warn('[LeadCheck] Report save skipped:', error?.message || error);
+    console.warn('[PitchProof] Report save skipped:', error?.message || error);
     if (result?.billing?.complimentary_scan) {
       loadSubscription();
     }
@@ -9383,7 +9383,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (refreshing) return;
       if (shouldDelayRefresh()) {
-        console.info('[LeadCheck] Service worker update ready; reload delayed while form input is active.');
+        console.info('[PitchProof] Service worker update ready; reload delayed while form input is active.');
         return;
       }
       refreshing = true;
@@ -9392,7 +9392,7 @@ if ('serviceWorker' in navigator) {
 
     navigator.serviceWorker.register('/service-worker.js', { updateViaCache: 'none' })
       .then(registration => {
-        console.log('[LeadCheck] Service worker registered:', registration.scope);
+        console.log('[PitchProof] Service worker registered:', registration.scope);
         registration.update();
 
         if (registration.waiting) {
@@ -9411,7 +9411,7 @@ if ('serviceWorker' in navigator) {
         });
       })
       .catch(err => {
-        console.error('[LeadCheck] Service worker registration failed:', err);
+        console.error('[PitchProof] Service worker registration failed:', err);
       });
   });
 }

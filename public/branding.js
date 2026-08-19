@@ -4,7 +4,7 @@
   const SYSTEM_FAVICON = PLATFORM_LOGO;
   const DEFAULT_BRANDING = {
     whiteLabelEnabled: true,
-    agencyName: 'W Strategies',
+    agencyName: 'PitchProof',
     platformLabel: 'Website Assessment',
     logoUrl: '',
     logoStoragePath: '',

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leadcheck-app-shell-v2026-08-17-ai-visibility-levels-v1';
+const CACHE_NAME = 'pitchproof-app-shell-v2026-08-19-mobile-pricing-brand-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
@@ -22,7 +22,7 @@ self.addEventListener('install', event => {
       .then(cache => cache.addAll(APP_SHELL))
       .then(() => self.skipWaiting())
       .catch(err => {
-        console.error('[LeadCheck SW] Install cache failed:', err);
+        console.error('[PitchProof SW] Install cache failed:', err);
       })
   );
 });
@@ -37,7 +37,7 @@ self.addEventListener('activate', event => {
       ))
       .then(() => self.clients.claim())
       .catch(err => {
-        console.error('[LeadCheck SW] Activate cleanup failed:', err);
+        console.error('[PitchProof SW] Activate cleanup failed:', err);
       })
   );
 });

@@ -6882,6 +6882,78 @@ body.required-plan-open {
   line-height: 1.45;
 }
 
+@media (max-width: 700px) {
+  .marketing-view .pricing-section .compact-pricing-grid {
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 14px;
+  }
+
+  .marketing-view .pricing-section .pricing-card,
+  .marketing-view .pricing-section .pricing-main {
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+    gap: 12px;
+    transform: none;
+  }
+
+  .marketing-view .pricing-section .pricing-card > strong,
+  .marketing-view .pricing-section .pricing-main strong {
+    margin: 4px 0 8px;
+    font-size: clamp(2.05rem, 10.5vw, 2.65rem);
+    line-height: 1.03;
+    overflow-wrap: anywhere;
+  }
+
+  .marketing-view .pricing-section .pricing-card strong small,
+  .marketing-view .pricing-section .pricing-main strong small {
+    display: inline;
+    font-size: 0.42em;
+  }
+
+  .marketing-view .pricing-section .pricing-tier-grid .pricing-card > p {
+    min-height: 0;
+    font-size: 0.94rem;
+  }
+
+  .marketing-view .pricing-section .pricing-tier-grid .check-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 2px;
+    font-size: 0.92rem;
+  }
+
+  .marketing-view .pricing-section .pricing-tier-grid .check-list li {
+    margin: 0;
+    padding-left: 18px;
+    line-height: 1.35;
+  }
+
+  .marketing-view .pricing-section .pricing-tier-grid .check-list li::before {
+    top: 0.58em;
+    width: 6px;
+    height: 6px;
+  }
+
+  .marketing-view .pricing-section .plan-detail-link,
+  .marketing-view .pricing-section .pricing-card .analyze-btn,
+  .marketing-view .pricing-section .pricing-card .secondary-btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 430px) {
+  .marketing-view .pricing-section .pricing-card,
+  .marketing-view .pricing-section .pricing-main {
+    padding: 18px;
+    border-radius: 22px;
+  }
+}
+
 .marketing-view .feature-comparison-panel {
   width: min(var(--container), calc(100% - 32px));
   margin: 28px auto 0;

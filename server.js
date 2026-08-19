@@ -863,7 +863,7 @@ app.post('/api/support/request', async (req, res) => {
 
     const notification = await sendSupportNotification(payload);
     if (notification.error) {
-      console.warn('[LeadCheck] Support notification failed:', notification.error);
+      console.warn('[PitchProof] Support notification failed:', notification.error);
     }
 
     posthog.capture({
@@ -993,7 +993,7 @@ app.put('/api/branding', async (req, res) => {
     let subscription = await billing.getSubscriptionStatus(user.id);
     if (!subscription.can_white_label && subscription.stripe_subscription_id) {
       subscription = await billing.refreshSubscriptionFromStripeForUser(user.id).catch(error => {
-        console.warn('[LeadCheck] Branding subscription refresh failed:', error?.message || error);
+        console.warn('[PitchProof] Branding subscription refresh failed:', error?.message || error);
         return subscription;
       });
     }
@@ -1485,7 +1485,7 @@ async function optionalAiVisibility(result = {}, context = {}) {
 async function sendLeadToGHL(lead, score = null, extra = {}) {
   const webhookUrl = process.env.GHL_WEBHOOK_URL;
   if (!webhookUrl) {
-    console.warn('[LeadCheck] GHL_WEBHOOK_URL is not configured; lead webhook skipped.');
+    console.warn('[PitchProof] GHL_WEBHOOK_URL is not configured; lead webhook skipped.');
     return { skipped: true };
   }
 
@@ -1503,9 +1503,9 @@ async function sendLeadToGHL(lead, score = null, extra = {}) {
     ...extra,
   };
 
-  console.log('[LeadCheck][GHL] Sending lead to GoHighLevel');
-  console.log('[LeadCheck][GHL] Website score:', normalizedScore);
-  console.log('[LeadCheck][GHL] Payload:', JSON.stringify(payload, null, 2));
+  console.log('[PitchProof][GHL] Sending lead to GoHighLevel');
+  console.log('[PitchProof][GHL] Website score:', normalizedScore);
+  console.log('[PitchProof][GHL] Payload:', JSON.stringify(payload, null, 2));
 
   let response;
   try {
@@ -1515,16 +1515,16 @@ async function sendLeadToGHL(lead, score = null, extra = {}) {
       body: JSON.stringify(payload),
     });
   } catch (error) {
-    console.error('[LeadCheck][GHL] Webhook failed:', error.message);
+    console.error('[PitchProof][GHL] Webhook failed:', error.message);
     throw error;
   }
 
-  console.log('[LeadCheck][GHL] Webhook status:', response.status);
+  console.log('[PitchProof][GHL] Webhook status:', response.status);
 
   if (!response.ok) {
     const body = await response.text().catch(() => '');
     const error = new Error(`GHL webhook failed with HTTP ${response.status}${body ? `: ${body.slice(0, 200)}` : ''}`);
-    console.error('[LeadCheck][GHL] Webhook failed:', error.message);
+    console.error('[PitchProof][GHL] Webhook failed:', error.message);
     throw error;
   }
 
@@ -1598,7 +1598,7 @@ app.post('/api/analyze', async (req, res) => {
         websiteUrl: url,
         websiteScore: score,
       }).catch(error => {
-        console.warn('[LeadCheck] Audit usage completion failed:', error?.message || error);
+        console.warn('[PitchProof] Audit usage completion failed:', error?.message || error);
       });
     }
     if (auditReservation?.complimentary) {
@@ -1663,7 +1663,7 @@ app.post('/api/analyze', async (req, res) => {
   } catch (err) {
     if (authContext?.user?.id && auditIdempotencyKey) {
       await billing.refundAuditUsage(authContext.user.id, auditIdempotencyKey).catch(error => {
-        console.warn('[LeadCheck] Audit usage refund failed:', error?.message || error);
+        console.warn('[PitchProof] Audit usage refund failed:', error?.message || error);
       });
     }
     posthog.captureException(err, authContext?.user?.id || distinctId, { url });
@@ -1876,7 +1876,7 @@ app.post('/api/lead-capture', async (req, res) => {
         ...(reportData && { reportData }),
       });
     } catch (err) {
-      console.error('[LeadCheck] GHL webhook error:', err.message);
+      console.error('[PitchProof] GHL webhook error:', err.message);
       posthog.captureException(err, distinctId, { website: lead.website, score });
       posthog.capture({
         distinctId,
@@ -1927,7 +1927,7 @@ app.post('/api/lead-capture', async (req, res) => {
   try {
     await sendLeadToGHL(lead, null);
   } catch (err) {
-    console.error('[LeadCheck] GHL webhook error:', err.message);
+    console.error('[PitchProof] GHL webhook error:', err.message);
   }
 
   try {
@@ -1941,7 +1941,7 @@ app.post('/api/lead-capture', async (req, res) => {
     try {
       await sendLeadToGHL(lead, score);
     } catch (err) {
-      console.error('[LeadCheck] GHL webhook score update error:', err.message);
+      console.error('[PitchProof] GHL webhook score update error:', err.message);
     }
     posthog.capture({
       distinctId,
@@ -2072,7 +2072,7 @@ const SITEMAP_PATHS = [
 ];
 
 function publicSiteOrigin(req) {
-  return cleanSupportText(process.env.PUBLIC_SITE_URL, 2000).replace(/\/+$/, '') || requestOrigin(req) || 'https://scanner.wstrategiescanada.ca';
+  return cleanSupportText(process.env.PUBLIC_SITE_URL, 2000).replace(/\/+$/, '') || requestOrigin(req) || 'https://pitchproof.ca';
 }
 
 function escapeXml(value = '') {
@@ -2128,7 +2128,7 @@ async function runScheduledLifecycleEmails() {
     const signupResult = await lifecycleEmails.runAbandonedSignupCampaign({ dryRun: false });
     const cartResult = await lifecycleEmails.runAbandonedCartCampaign({ dryRun: false });
     const incompleteAccountResult = await lifecycleEmails.runIncompleteAccountOfferCampaign({ dryRun: false });
-    console.log('[LeadCheck] Lifecycle email run complete:', {
+    console.log('[PitchProof] Lifecycle email run complete:', {
       abandoned_signup: {
         eligible: signupResult.eligible,
         sent: signupResult.sent,
@@ -2146,7 +2146,7 @@ async function runScheduledLifecycleEmails() {
       },
     });
   } catch (error) {
-    console.warn('[LeadCheck] Lifecycle email run failed:', error?.message || error);
+    console.warn('[PitchProof] Lifecycle email run failed:', error?.message || error);
   } finally {
     lifecycleEmailRunInProgress = false;
   }
@@ -2157,12 +2157,12 @@ function startLifecycleEmailScheduler() {
   const firstRunDelayMs = Number(process.env.NODE_ENV === 'production' ? 120000 : 15000);
   setTimeout(runScheduledLifecycleEmails, firstRunDelayMs);
   setInterval(runScheduledLifecycleEmails, lifecycleEmailIntervalMs());
-  console.log('[LeadCheck] Lifecycle email scheduler enabled.');
+  console.log('[PitchProof] Lifecycle email scheduler enabled.');
 }
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`LeadCheck running on http://localhost:${PORT}`);
+  console.log(`PitchProof running on http://localhost:${PORT}`);
   startLifecycleEmailScheduler();
 });
 
