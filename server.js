@@ -346,15 +346,11 @@ async function sendSupportWebhook(payload) {
 
 function supportSmsMessage(payload = {}) {
   const subject = cleanSupportText(payload.subject, 140);
-  const urgency = cleanSupportText(payload.urgency, 40).toUpperCase() || 'NORMAL';
-  const customer = cleanSupportText(payload.reply_email || payload.user?.email || payload.reply_phone || 'Unknown customer', 180);
-  const page = cleanSupportText(payload.affected_url || payload.page_url, 220);
+  const message = cleanSupportText(payload.message, 1200);
   return [
-    `New PitchProof support request (${urgency})`,
+    'New PitchProof support request',
     subject ? `Subject: ${subject}` : '',
-    `From: ${customer}`,
-    page ? `Page: ${page}` : '',
-    `Ticket: ${payload.ticket_id || ''}`,
+    message ? `Message: ${message}` : '',
   ].filter(Boolean).join('\n');
 }
 
@@ -427,16 +423,14 @@ async function sendSupportGhlWebhook(payload) {
 }
 
 async function sendSupportNotification(payload) {
-  const [email, webhook, ghlWebhook] = await Promise.all([
-    sendSupportEmail(payload),
-    sendSupportWebhook(payload),
-    sendSupportGhlWebhook(payload),
-  ]);
-  const errors = [email.error, webhook.error, ghlWebhook.error].filter(Boolean);
+  const ghlWebhook = await sendSupportGhlWebhook(payload);
+  const email = { configured: false, sent: false, paused: false, error: '', id: '' };
+  const webhook = { configured: false, sent: false, error: '' };
+  const errors = [ghlWebhook.error].filter(Boolean);
   return {
-    configured: email.configured || webhook.configured || ghlWebhook.configured,
-    sent: email.sent || webhook.sent || ghlWebhook.sent,
-    paused: email.paused === true,
+    configured: ghlWebhook.configured,
+    sent: ghlWebhook.sent,
+    paused: false,
     error: errors.join(' | '),
     email,
     webhook,
@@ -839,14 +833,14 @@ app.post('/api/support/request', async (req, res) => {
     const payload = {
       ticket_id: ticketId,
       source: 'customer_service_portal',
-      category: normalizedSupportValue(body.category, SUPPORT_CATEGORIES, 'other'),
-      urgency: normalizedSupportValue(body.urgency, SUPPORT_URGENCIES, 'normal'),
+      category: 'support',
+      urgency: 'normal',
       subject,
       message,
-      affected_url: cleanSupportText(body.affectedUrl || body.affected_url, 1000),
-      preferred_reply_method: normalizedSupportValue(body.preferredReply || body.preferred_reply_method, SUPPORT_REPLY_METHODS, 'email'),
-      reply_email: cleanSupportText(body.replyEmail || body.reply_email || user.email, 320),
-      reply_phone: cleanSupportText(body.replyPhone || body.reply_phone, 80),
+      affected_url: cleanSupportText(body.pageUrl || body.page_url, 1000),
+      preferred_reply_method: 'text',
+      reply_email: cleanSupportText(user.email, 320),
+      reply_phone: '',
       page_url: cleanSupportText(body.pageUrl || body.page_url, 1000),
       user_agent: cleanSupportText(body.userAgent || body.user_agent || req.get('user-agent'), 500),
       app_url: requestOrigin(req),
@@ -896,9 +890,9 @@ app.post('/api/support/request', async (req, res) => {
       warning: notification.paused
         ? ''
         : notification.configured && !notification.sent
-        ? 'Support request received, but the configured notification did not send.'
+        ? 'Support request received, but the text message notification did not send.'
         : !notification.configured
-          ? 'Support request received, but support email is not configured yet.'
+          ? 'Support request received, but text message alerts are not configured yet.'
           : '',
     });
   } catch (error) {
