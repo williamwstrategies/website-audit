@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pitchproof-app-shell-v2026-08-19-mobile-pricing-brand-v1';
+const CACHE_NAME = 'pitchproof-app-shell-v2026-08-19-keyword-ranking-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',

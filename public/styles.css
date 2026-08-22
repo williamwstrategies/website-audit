@@ -2330,6 +2330,199 @@ button:disabled {
   font-size: 0.78rem;
 }
 
+.keyword-ranking-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.keyword-ranking-card,
+.keyword-ranking-metric,
+.keyword-ranking-list,
+.keyword-ranking-highlight {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.026));
+  box-shadow: var(--shadow-soft);
+}
+
+.keyword-ranking-card {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+}
+
+.keyword-ranking-card-header,
+.keyword-ranking-list-heading,
+.keyword-ranking-row,
+.keyword-ranking-opportunity {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.keyword-ranking-card-header h3,
+.keyword-ranking-list-heading h3 {
+  margin: 0 0 7px;
+  color: var(--report-text);
+  font-size: 1rem;
+}
+
+.keyword-ranking-card-header p,
+.keyword-ranking-note,
+.keyword-ranking-opportunity p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.keyword-ranking-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: max-content;
+}
+
+.keyword-ranking-chips span,
+.keyword-ranking-list-heading span,
+.keyword-ranking-opportunity-meta span {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid rgba(87, 190, 255, 0.24);
+  border-radius: var(--radius-pill);
+  background: rgba(87, 190, 255, 0.1);
+  color: var(--blue);
+  font-size: 0.72rem;
+  font-weight: 780;
+  line-height: 1;
+}
+
+.keyword-ranking-chips span,
+.keyword-ranking-list-heading span {
+  padding: 7px 10px;
+}
+
+.keyword-ranking-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.keyword-ranking-metric {
+  padding: 13px;
+}
+
+.keyword-ranking-metric span,
+.keyword-ranking-highlight span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--report-muted);
+  font-size: 0.72rem;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.keyword-ranking-metric strong {
+  display: block;
+  color: var(--report-text);
+  font-size: 1.28rem;
+  line-height: 1.2;
+}
+
+.keyword-ranking-metric small,
+.keyword-ranking-highlight small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.keyword-ranking-highlight {
+  padding: 14px;
+}
+
+.keyword-ranking-highlight strong {
+  display: block;
+  color: var(--report-text);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.keyword-ranking-content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.keyword-ranking-list {
+  padding: 18px;
+}
+
+.keyword-ranking-row,
+.keyword-ranking-opportunity {
+  padding: 14px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.keyword-ranking-row:first-of-type,
+.keyword-ranking-opportunity:first-of-type {
+  border-top: 0;
+}
+
+.keyword-ranking-row strong,
+.keyword-ranking-opportunity strong {
+  display: block;
+  color: var(--report-text);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.keyword-ranking-row span,
+.keyword-ranking-row-meta span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.keyword-ranking-row-meta,
+.keyword-ranking-opportunity-meta {
+  min-width: 128px;
+  text-align: right;
+}
+
+.keyword-ranking-row-meta b,
+.keyword-ranking-opportunity-meta b {
+  display: block;
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.keyword-ranking-opportunity-meta span {
+  justify-content: center;
+  margin-bottom: 8px;
+  padding: 6px 9px;
+  color: var(--accent);
+  border-color: rgba(245, 200, 66, 0.24);
+  background: rgba(245, 200, 66, 0.1);
+}
+
+.keyword-ranking-empty {
+  grid-template-columns: 1fr;
+}
+
+.keyword-ranking-empty h3 {
+  margin: 0 0 8px;
+  color: var(--report-text);
+  font-size: 1rem;
+}
+
 .positive-item,
 .issue-item,
 .rec-card {
@@ -10125,8 +10318,28 @@ body.is-onboarding-route .app-content {
   .locked-content-grid,
   .ai-visibility-card,
   .ai-visibility-context-grid,
-  .ai-visibility-metrics-grid {
+  .ai-visibility-metrics-grid,
+  .keyword-ranking-summary,
+  .keyword-ranking-content-grid {
     grid-template-columns: 1fr;
+  }
+
+  .keyword-ranking-card-header,
+  .keyword-ranking-row,
+  .keyword-ranking-opportunity {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .keyword-ranking-chips {
+    justify-content: flex-start;
+    min-width: 0;
+  }
+
+  .keyword-ranking-row-meta,
+  .keyword-ranking-opportunity-meta {
+    min-width: 0;
+    text-align: left;
   }
 
   .locked-preview-actions {

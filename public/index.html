@@ -45,7 +45,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png?v=2026-08-12-pitchproof-favicon">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png?v=2026-08-12-pitchproof-favicon">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=2026-08-12-pitchproof-favicon">
-<link rel="stylesheet" href="/styles.css?v=2026-08-17-ai-visibility-levels-v1">
+<link rel="stylesheet" href="/styles.css?v=2026-08-19-keyword-ranking-v1">
 </head>
 <body class="is-public-route">
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=4279452245649919&ev=PageView&noscript=1"></noscript>
@@ -933,7 +933,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <a class="secondary-btn" href="/sample-report" data-route id="seoPageSecondaryCta">View Example Report</a>
         </div>
       </div>
-      <div class="product-showcase seo-hero-card" aria-label="PitchProof scan preview">
+      <div class="product-showcase seo-hero-card" id="seoHeroCard" aria-label="PitchProof scan preview">
         <div class="mock-browser-bar"><span></span><span></span><span></span><strong id="seoCardTitle">PitchProof</strong></div>
         <div class="mock-score-card glow-card">
           <span id="seoCardKicker">Website assessment</span>
@@ -943,6 +943,47 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="mock-category"><span>Trust</span><strong>34/100</strong></div>
         <div class="mock-category"><span>Conversion</span><strong>32/100</strong></div>
         <div class="mock-category"><span>Search visibility</span><strong>47/100</strong></div>
+      </div>
+      <div class="product-showcase hero-report-preview resource-hero-report-preview" id="seoHeroReportPreview" aria-label="Website assessment report preview" hidden>
+        <div class="mock-browser-bar hero-report-window-bar"><span></span><span></span><span></span><strong>Website Assessment</strong><em>Complete</em></div>
+        <div class="hero-report-topline">
+          <div class="hero-report-brand"><span><img src="/assets/pitchproof-mark-cropped.png" alt=""></span><strong>PitchProof</strong></div>
+          <small>Prepared for North Star Roofing</small>
+        </div>
+        <div class="hero-report-grid">
+          <section class="hero-report-score-card" aria-label="Overall website health score">
+            <span>Overall Website Health</span>
+            <div><strong>58</strong><small>/100</small></div>
+            <i aria-hidden="true"><b style="width:58%"></b></i>
+            <p>Needs improvement in areas that may be costing calls and enquiries.</p>
+          </section>
+          <section class="hero-report-summary-card">
+            <span>Executive Summary</span>
+            <h2>Clear opportunities to improve trust and conversion.</h2>
+            <p>The website has a usable foundation, but several sales-critical signals are either weak, unclear, or missing.</p>
+          </section>
+        </div>
+        <div class="hero-report-section-heading">
+          <span>02</span>
+          <div>
+            <strong>Category Breakdown</strong>
+            <small>Each category is scored out of 100.</small>
+          </div>
+        </div>
+        <div class="hero-report-categories">
+          <div class="hero-report-category risk"><span>Performance</span><strong>42<small>/100</small></strong><i><b style="width:42%"></b></i></div>
+          <div class="hero-report-category risk"><span>SEO</span><strong>56<small>/100</small></strong><i><b style="width:56%"></b></i></div>
+          <div class="hero-report-category warn"><span>Trust &amp; Credibility</span><strong>64<small>/100</small></strong><i><b style="width:64%"></b></i></div>
+          <div class="hero-report-category risk"><span>Conversion</span><strong>39<small>/100</small></strong><i><b style="width:39%"></b></i></div>
+        </div>
+        <div class="hero-report-priority">
+          <span>03</span>
+          <div>
+            <strong>Calls-to-action are unclear across key service pages.</strong>
+            <small>Visitors may not know the best next step after reading.</small>
+          </div>
+          <em>High</em>
+        </div>
       </div>
     </div>
 
@@ -2139,6 +2180,17 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 </div>
               </section>
 
+              <section class="report-section keyword-ranking-section" id="keywordRankingSection" hidden>
+                <div class="report-section-heading">
+                  <span>SEO</span>
+                  <div>
+                    <h2>Organic Keyword Visibility</h2>
+                    <p>See which searches this website is already appearing for and where stronger SEO opportunities may exist.</p>
+                  </div>
+                </div>
+                <div class="keyword-ranking-panel" id="keywordRankingPanel"></div>
+              </section>
+
               <section class="report-section ai-visibility-section" id="aiVisibilitySection" hidden>
                 <div class="report-section-heading">
                   <span>AI</span>
@@ -2652,6 +2704,69 @@ const DEMO_REPORT_DATA = {
       'Earn reputable third-party mentions that reinforce local authority.',
     ],
   },
+  keywordRanking: {
+    status: 'complete',
+    domain: 'northstarroofing.example',
+    countryCode: 'CA',
+    languageCode: 'en',
+    locationName: 'Canada',
+    message: 'Organic keyword visibility data was found for this website.',
+    totalRankingKeywords: 42,
+    top3Keywords: 0,
+    top10Keywords: 3,
+    top20Keywords: 11,
+    top100Keywords: 42,
+    estimatedOrganicTraffic: 110,
+    averagePosition: 28.4,
+    highestVolumeRankingKeyword: {
+      keyword: 'roof repair ottawa',
+      position: 13,
+      searchVolume: 390,
+      estimatedTraffic: 7,
+      rankingUrl: 'https://northstarroofing.example/roof-repair',
+    },
+    bestRankingMeaningfulKeyword: {
+      keyword: 'roofing company ottawa',
+      position: 8,
+      searchVolume: 590,
+      estimatedTraffic: 18,
+      rankingUrl: 'https://northstarroofing.example/',
+    },
+    topKeywords: [
+      { keyword: 'roofing company ottawa', position: 8, searchVolume: 590, estimatedTraffic: 18, rankingUrl: 'https://northstarroofing.example/' },
+      { keyword: 'roof replacement ottawa', position: 10, searchVolume: 480, estimatedTraffic: 12, rankingUrl: 'https://northstarroofing.example/roof-replacement' },
+      { keyword: 'roof repair ottawa', position: 13, searchVolume: 390, estimatedTraffic: 7, rankingUrl: 'https://northstarroofing.example/roof-repair' },
+      { keyword: 'emergency roofer ottawa', position: 18, searchVolume: 260, estimatedTraffic: 3, rankingUrl: 'https://northstarroofing.example/emergency-roofing' },
+    ],
+    opportunities: [
+      {
+        keyword: 'roof repair ottawa',
+        position: 13,
+        searchVolume: 390,
+        estimatedTraffic: 7,
+        rankingUrl: 'https://northstarroofing.example/roof-repair',
+        opportunityType: 'near_page_one',
+        message: "This keyword is close to Google's first page and may represent a strong opportunity for improved visibility.",
+      },
+      {
+        keyword: 'emergency roofer ottawa',
+        position: 18,
+        searchVolume: 260,
+        estimatedTraffic: 3,
+        rankingUrl: 'https://northstarroofing.example/emergency-roofing',
+        opportunityType: 'near_page_one',
+        message: "This keyword is close to Google's first page and may represent a strong opportunity for improved visibility.",
+      },
+    ],
+    provider: 'static-demo',
+    providerCost: 0,
+    requestDurationMs: 0,
+    endpoint: 'static-demo',
+    resultCount: 4,
+    cacheHit: false,
+    sampleData: true,
+    testedAt: '2026-08-19T00:00:00.000Z',
+  },
   visualTrust: {
     result: true,
     status: 'Strong',
@@ -2965,7 +3080,7 @@ function seoRelatedLinks(currentPath, limit = 6) {
     .map(page => ({ title: page.navTitle || page.h1, path: page.path, description: page.shortDescription || page.description }));
 }
 
-function seoPageBase({ path, title, h1, kicker, description, painTitle, painCopy, solutionTitle, solutionCopy, highlights, faq, related, cardKicker = 'Website assessment', cardScore = '39', includeInRelated = true }) {
+function seoPageBase({ path, title, h1, kicker, description, painTitle, painCopy, solutionTitle, solutionCopy, highlights, faq, related, cardKicker = 'Website assessment', cardScore = '39', showHeroReportPreview = false, includeInRelated = true }) {
   return {
     path,
     title,
@@ -2982,6 +3097,7 @@ function seoPageBase({ path, title, h1, kicker, description, painTitle, painCopy
     related,
     cardKicker,
     cardScore,
+    showHeroReportPreview,
     includeInRelated,
     meta: makeSeoMeta(path, title, description),
   };
@@ -3042,6 +3158,7 @@ const SEO_PAGES = [
       ['Why build resource pages instead of only a blog?', 'Focused pages target high-intent searches that agency owners already make, while still supporting future educational content.'],
       ['Do these pages replace the product pages?', 'No. They expand the public site so each search intent has a clear, relevant entry point into the product.'],
     ],
+    showHeroReportPreview: true,
     includeInRelated: false,
   }),
   seoPageBase({
@@ -3494,6 +3611,10 @@ function renderPublicSeoPage(page = seoPageForPath()) {
   setTextContent('seoCardTitle', 'PitchProof');
   setTextContent('seoCardKicker', page.cardKicker || 'Website assessment');
   setTextContent('seoCardScore', page.cardScore || '39');
+  const seoHeroCard = document.getElementById('seoHeroCard');
+  const seoHeroReportPreview = document.getElementById('seoHeroReportPreview');
+  if (seoHeroCard) seoHeroCard.hidden = page.showHeroReportPreview === true;
+  if (seoHeroReportPreview) seoHeroReportPreview.hidden = page.showHeroReportPreview !== true;
   setTextContent('seoPainKicker', page.kicker === 'Comparison' ? 'Positioning' : 'The Problem');
   setTextContent('seoPainTitle', page.painTitle);
   setTextContent('seoPainCopy', page.painCopy);
@@ -7943,6 +8064,7 @@ function compactReportForPersistence(result) {
     maxScore: Number(root.maxScore) || 100,
     categories: compactPersistedValue(root.categories),
     aiVisibility: compactPersistedValue(root.aiVisibility || root.ai_visibility),
+    keywordRanking: compactPersistedValue(root.keywordRanking || root.keyword_ranking),
     visualTrust: compactPersistedValue(root.visualTrust),
     brokenLinks: compactBrokenLinks(firstDefinedValue(root.brokenLinks, evidence.brokenLinks)),
     issues: asArray(root.issues).slice(0, 30).map(item => compactPersistedValue(item)),
@@ -8398,6 +8520,243 @@ function renderAiVisibilitySection(result = {}) {
   return ai;
 }
 
+function numberOrNull(value) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function formatKeywordNumber(value, fallback = 'Unavailable') {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.round(parsed).toLocaleString();
+}
+
+function normalizeKeywordRankingItem(value = {}) {
+  const item = asRecord(value);
+  const keyword = asText(item.keyword);
+  if (!keyword) return null;
+  return {
+    keyword,
+    position: numberOrNull(firstDefinedValue(item.position, item.rank, item.rank_group)),
+    searchVolume: numberOrNull(firstDefinedValue(item.searchVolume, item.search_volume, item.volume)),
+    estimatedTraffic: numberOrNull(firstDefinedValue(item.estimatedTraffic, item.estimated_traffic, item.traffic)),
+    rankingUrl: asText(firstDefinedValue(item.rankingUrl, item.ranking_url, item.url)),
+    opportunityType: asText(firstDefinedValue(item.opportunityType, item.opportunity_type)),
+    message: asText(item.message),
+  };
+}
+
+function normalizeKeywordRanking(rawValue) {
+  const raw = asRecord(rawValue);
+  if (!objectEntries(raw).length) return null;
+  const status = asText(raw.status).toLowerCase() || 'unavailable';
+  const topKeywords = asArray(firstDefinedValue(raw.topKeywords, raw.top_keywords))
+    .map(normalizeKeywordRankingItem)
+    .filter(Boolean)
+    .slice(0, 10);
+  const opportunities = asArray(raw.opportunities)
+    .map(normalizeKeywordRankingItem)
+    .filter(Boolean)
+    .slice(0, 8);
+
+  return {
+    status,
+    domain: asText(raw.domain),
+    countryCode: asText(firstDefinedValue(raw.countryCode, raw.country_code)).toUpperCase(),
+    languageCode: asText(firstDefinedValue(raw.languageCode, raw.language_code)),
+    locationName: asText(firstDefinedValue(raw.locationName, raw.location_name)),
+    message: asText(raw.message),
+    totalRankingKeywords: numberOrNull(firstDefinedValue(raw.totalRankingKeywords, raw.total_ranking_keywords)),
+    top3Keywords: numberOrNull(firstDefinedValue(raw.top3Keywords, raw.top_3_keywords)),
+    top10Keywords: numberOrNull(firstDefinedValue(raw.top10Keywords, raw.top_10_keywords)),
+    top20Keywords: numberOrNull(firstDefinedValue(raw.top20Keywords, raw.top_20_keywords)),
+    top100Keywords: numberOrNull(firstDefinedValue(raw.top100Keywords, raw.top_100_keywords)),
+    estimatedOrganicTraffic: numberOrNull(firstDefinedValue(raw.estimatedOrganicTraffic, raw.estimated_organic_traffic)),
+    averagePosition: numberOrNull(firstDefinedValue(raw.averagePosition, raw.average_position)),
+    highestVolumeRankingKeyword: normalizeKeywordRankingItem(firstDefinedValue(raw.highestVolumeRankingKeyword, raw.highest_volume_ranking_keyword)),
+    bestRankingMeaningfulKeyword: normalizeKeywordRankingItem(firstDefinedValue(raw.bestRankingMeaningfulKeyword, raw.best_ranking_meaningful_keyword)),
+    topKeywords,
+    opportunities,
+    sampleData: raw.sampleData === true || raw.sample_data === true || asText(raw.provider).includes('static'),
+  };
+}
+
+function keywordRankingForResult(result = {}) {
+  const root = asRecord(result);
+  return normalizeKeywordRanking(firstDefinedValue(root.keywordRanking, root.keyword_ranking));
+}
+
+function keywordPositionLabel(position) {
+  const parsed = Number(position);
+  return Number.isFinite(parsed) ? `#${Math.round(parsed)}` : 'Unavailable';
+}
+
+function keywordMarketLabel(data) {
+  const parts = [data.locationName || data.countryCode, data.languageCode ? data.languageCode.toUpperCase() : ''];
+  return parts.filter(Boolean).join(' · ');
+}
+
+function keywordRankingUrlLabel(value = '') {
+  const raw = asText(value);
+  if (!raw) return '';
+  try {
+    const url = new URL(raw);
+    return `${url.hostname.replace(/^www\./i, '')}${url.pathname === '/' ? '' : url.pathname}`;
+  } catch {
+    return raw.replace(/^https?:\/\//i, '').replace(/^www\./i, '').slice(0, 120);
+  }
+}
+
+function renderKeywordRankingMetric(label, value, detail) {
+  return `
+    <div class="keyword-ranking-metric">
+      <span>${escHtml(label)}</span>
+      <strong>${escHtml(formatKeywordNumber(value, '0'))}</strong>
+      <small>${escHtml(detail)}</small>
+    </div>
+  `;
+}
+
+function renderKeywordRankingItem(item = {}) {
+  const url = item.rankingUrl ? keywordRankingUrlLabel(item.rankingUrl) : '';
+  return `
+    <div class="keyword-ranking-row">
+      <div>
+        <strong>${escHtml(item.keyword)}</strong>
+        ${url ? `<span>${escHtml(url)}</span>` : ''}
+      </div>
+      <div class="keyword-ranking-row-meta">
+        <b>${escHtml(keywordPositionLabel(item.position))}</b>
+        <span>${escHtml(formatKeywordNumber(item.searchVolume, 'No volume'))} searches/mo</span>
+      </div>
+    </div>
+  `;
+}
+
+function keywordOpportunityLabel(type = '') {
+  if (type === 'top_3_opportunity') return 'Top 3 opportunity';
+  if (type === 'high_volume_weak_ranking') return 'High-volume gap';
+  return 'Near page one';
+}
+
+function renderKeywordOpportunity(item = {}) {
+  return `
+    <div class="keyword-ranking-opportunity">
+      <div>
+        <strong>${escHtml(item.keyword)}</strong>
+        <p>${escHtml(item.message || 'This keyword may represent an opportunity for stronger organic visibility.')}</p>
+      </div>
+      <div class="keyword-ranking-opportunity-meta">
+        <span>${escHtml(keywordOpportunityLabel(item.opportunityType))}</span>
+        <b>${escHtml(keywordPositionLabel(item.position))}</b>
+      </div>
+    </div>
+  `;
+}
+
+function renderKeywordRankingUnavailable(panel, data) {
+  panel.innerHTML = `
+    <div class="keyword-ranking-card keyword-ranking-empty">
+      <div>
+        <h3>Keyword ranking data unavailable</h3>
+        <p>${escHtml(data?.message || 'Keyword ranking data unavailable for this scan.')}</p>
+      </div>
+    </div>
+  `;
+}
+
+function renderKeywordRankingNoKeywords(panel) {
+  panel.innerHTML = `
+    <div class="keyword-ranking-card keyword-ranking-empty">
+      <div>
+        <h3>Limited Organic Search Visibility</h3>
+        <p>This website currently has little or no measurable organic keyword visibility in the selected market.</p>
+      </div>
+      <div class="keyword-ranking-summary">
+        ${renderKeywordRankingMetric('Ranking Keywords', 0, 'Measured organic keywords in the selected market.')}
+        ${renderKeywordRankingMetric('Top 10 Keywords', 0, 'Keywords currently appearing on page one.')}
+        ${renderKeywordRankingMetric('Estimated Traffic', 0, 'Estimated monthly organic visits.')}
+      </div>
+    </div>
+  `;
+}
+
+function renderKeywordRankingSection(result = {}) {
+  const section = document.getElementById('keywordRankingSection');
+  const panel = document.getElementById('keywordRankingPanel');
+  const data = keywordRankingForResult(result);
+  if (!section || !panel) return data;
+  if (!data) {
+    section.hidden = true;
+    panel.innerHTML = '';
+    return null;
+  }
+
+  section.hidden = false;
+  if (data.status === 'unavailable') {
+    renderKeywordRankingUnavailable(panel, data);
+    return data;
+  }
+  if (data.status === 'no_keywords') {
+    renderKeywordRankingNoKeywords(panel);
+    return data;
+  }
+  if (data.status !== 'complete') {
+    section.hidden = true;
+    panel.innerHTML = '';
+    return data;
+  }
+
+  const bestKeyword = data.bestRankingMeaningfulKeyword || data.highestVolumeRankingKeyword;
+  const topKeywords = data.topKeywords.length ? data.topKeywords : [];
+  const opportunities = data.opportunities.length ? data.opportunities : [];
+
+  panel.innerHTML = `
+    <div class="keyword-ranking-card">
+      <div class="keyword-ranking-card-header">
+        <div>
+          <h3>Organic search footprint</h3>
+          <p>${escHtml(data.message || 'Organic keyword visibility data was found for this website.')}</p>
+        </div>
+        <div class="keyword-ranking-chips">
+          ${data.sampleData ? '<span>Demo sample</span>' : ''}
+          ${keywordMarketLabel(data) ? `<span>${escHtml(keywordMarketLabel(data))}</span>` : ''}
+        </div>
+      </div>
+      <div class="keyword-ranking-summary">
+        ${renderKeywordRankingMetric('Ranking Keywords', data.totalRankingKeywords, 'Measured organic keywords in the selected market.')}
+        ${renderKeywordRankingMetric('Top 10 Keywords', data.top10Keywords, 'Keywords currently appearing on page one.')}
+        ${renderKeywordRankingMetric('Top 20 Keywords', data.top20Keywords, 'Keywords close to meaningful visibility.')}
+        ${renderKeywordRankingMetric('Estimated Traffic', data.estimatedOrganicTraffic, 'Estimated monthly organic visits.')}
+      </div>
+      ${bestKeyword ? `
+        <div class="keyword-ranking-highlight">
+          <span>Best meaningful ranking</span>
+          <strong>${escHtml(bestKeyword.keyword)}</strong>
+          <small>${escHtml(keywordPositionLabel(bestKeyword.position))} · ${escHtml(formatKeywordNumber(bestKeyword.searchVolume, 'No volume'))} searches/mo</small>
+        </div>
+      ` : ''}
+    </div>
+    <div class="keyword-ranking-content-grid">
+      <div class="keyword-ranking-list">
+        <div class="keyword-ranking-list-heading">
+          <h3>Top ranking keywords</h3>
+          <span>${escHtml(formatKeywordNumber(topKeywords.length, '0'))}</span>
+        </div>
+        ${topKeywords.length ? topKeywords.map(renderKeywordRankingItem).join('') : '<p class="keyword-ranking-note">No organic keywords were available to display.</p>'}
+      </div>
+      <div class="keyword-ranking-list">
+        <div class="keyword-ranking-list-heading">
+          <h3>SEO opportunities</h3>
+          <span>${escHtml(formatKeywordNumber(opportunities.length, '0'))}</span>
+        </div>
+        ${opportunities.length ? opportunities.map(renderKeywordOpportunity).join('') : '<p class="keyword-ranking-note">No clear keyword opportunities were detected in the returned data.</p>'}
+      </div>
+    </div>
+  `;
+  return data;
+}
+
 function issuePriority(rawIssue, index = 0) {
   const issue = asRecord(rawIssue);
   const explicitPriority = asText(issue.priority).toLowerCase();
@@ -8786,6 +9145,7 @@ function buildReportRequestData(result) {
     maxScore: Number(root.maxScore) || 100,
     categories: categorySummary,
     aiVisibility: compactPersistedValue(root.aiVisibility || root.ai_visibility),
+    keywordRanking: compactPersistedValue(root.keywordRanking || root.keyword_ranking),
     issues: asArray(root.issues).slice(0, 10),
     recommendations: asArray(root.recommendations).slice(0, 10),
     criticalFlags: asArray(root.criticalFlags).slice(0, 10),
@@ -8874,6 +9234,7 @@ function renderResults(data, options = {}) {
   const catsGrid = document.getElementById('catsGrid');
   catsGrid.innerHTML = '';
   const categories = normalizedReportCategories(result);
+  renderKeywordRankingSection(result);
   const aiVisibility = renderAiVisibilitySection(result);
   categories.forEach(cat => {
     const catScore = cat.score;

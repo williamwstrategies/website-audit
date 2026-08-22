@@ -10,6 +10,7 @@ const { generateReportPdf } = require('./lib/pdf');
 const { enrichReportWithAiVisibility } = require('./lib/ai-visibility');
 const { runAiVisibilityPrompt } = require('./lib/dataforseo-ai-visibility');
 const { runAiVisibilityAssessment } = require('./lib/ai-visibility-assessment');
+const { runKeywordRankingAnalysis, keywordRankingFeatureEnabled } = require('./lib/keyword-ranking');
 const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
 const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-controls');
 
@@ -569,6 +570,17 @@ function requireAiVisibilityTestSecret(req) {
   }
 }
 
+function requireKeywordRankingTestSecret(req) {
+  const configured = cleanSupportText(process.env.KEYWORD_RANKING_TEST_SECRET, 2000);
+  const provided = cleanSupportText(req.get('x-keyword-ranking-secret'), 2000);
+  if (!configured) {
+    throw billing.httpError(503, 'KEYWORD_RANKING_TEST_SECRET is not configured.', 'keyword_ranking_test_secret_missing');
+  }
+  if (!safeCompare(provided, configured)) {
+    throw billing.httpError(401, 'Keyword ranking test access is not authorized.', 'keyword_ranking_test_unauthorized');
+  }
+}
+
 function lifecycleDryRun(req) {
   return /^(1|true|yes)$/i.test(cleanSupportText(req.query.dryRun || req.query.dry_run || req.body?.dryRun || req.body?.dry_run, 20));
 }
@@ -952,6 +964,18 @@ app.post('/api/internal/ai-visibility/assessment-test', async (req, res) => {
   try {
     requireAiVisibilityTestSecret(req);
     const result = await runAiVisibilityAssessment(req.body || {});
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/internal/keyword-ranking/test', async (req, res) => {
+  try {
+    requireKeywordRankingTestSecret(req);
+    const result = await runKeywordRankingAnalysis(req.body || {});
     res.set('Cache-Control', 'no-store');
     res.json(result);
   } catch (error) {
@@ -1482,6 +1506,25 @@ async function optionalAiVisibility(result = {}, context = {}) {
   }
 }
 
+async function optionalKeywordRanking(result = {}, context = {}) {
+  if (!keywordRankingFeatureEnabled()) return result;
+  try {
+    const keywordRanking = await runKeywordRankingAnalysis({
+      domain: context.requestedWebsite || result.url,
+      countryCode: context.countryCode || context.country || result.countryCode || result.country_code,
+      languageCode: context.languageCode || context.language_code || result.languageCode || result.language_code || 'en',
+    });
+    if (!keywordRanking || keywordRanking.status === 'disabled') return result;
+    return {
+      ...result,
+      keywordRanking,
+    };
+  } catch (error) {
+    console.warn('[Keyword Ranking] enrichment skipped:', error?.message || error);
+    return result;
+  }
+}
+
 async function sendLeadToGHL(lead, score = null, extra = {}) {
   const webhookUrl = process.env.GHL_WEBHOOK_URL;
   if (!webhookUrl) {
@@ -1585,13 +1628,17 @@ app.post('/api/analyze', async (req, res) => {
   }
 
   try {
-    let result = await analyzeWebsite(url, { debug: debugMode });
-    result = await optionalAiVisibility(result, {
+    const reportContext = {
       prospectName: req.body.prospectName,
       companyName: req.body.companyName,
       notes: req.body.notes,
       requestedWebsite: url,
-    });
+      countryCode: req.body.countryCode || req.body.country_code || req.body.country,
+      languageCode: req.body.languageCode || req.body.language_code,
+    };
+    let result = await analyzeWebsite(url, { debug: debugMode });
+    result = await optionalAiVisibility(result, reportContext);
+    result = await optionalKeywordRanking(result, reportContext);
     const score = extractWebsiteScore(result);
     if (!auditReservation?.complimentary) {
       await billing.completeAuditUsage(authContext.user.id, auditIdempotencyKey, {
