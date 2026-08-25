@@ -15,6 +15,7 @@ const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
 const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-controls');
 const businessSearchProvider = require('./lib/business-search-provider');
 const leads = require('./lib/leads');
+const emailFinder = require('./lib/email-finder');
 
 const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
   host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
@@ -1957,6 +1958,58 @@ app.patch('/api/leads/:leadId', async (req, res) => {
     const lead = await leads.updateLeadForUser(user.id, String(req.params.leadId || '').trim(), req.body || {});
     res.set('Cache-Control', 'no-store');
     res.json({ lead });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/leads/:leadId/find-email', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const leadId = String(req.params.leadId || '').trim();
+    const lead = await leads.getLeadForUser(user.id, leadId);
+    if (!lead.website_url && !lead.website_domain) {
+      throw billing.httpError(
+        400,
+        'Add or find a website for this lead before searching for an email.',
+        'lead_email_website_required'
+      );
+    }
+
+    const result = await emailFinder.findPublicEmailForLead(lead);
+    if (!result.email) {
+      posthog.capture({
+        distinctId: user.id,
+        event: 'lead_email_not_found',
+        properties: {
+          lead_id: lead.id,
+          website_domain: lead.website_domain || '',
+          pages_checked: result.pagesChecked || 0,
+        },
+      });
+      res.set('Cache-Control', 'no-store');
+      return res.json({ lead, email_result: result });
+    }
+
+    const updatedLead = await leads.updateLeadForUser(user.id, lead.id, {
+      email: result.email,
+      emailSourceUrl: result.sourceUrl,
+      emailConfidence: result.confidence,
+      emailFoundAt: new Date().toISOString(),
+    });
+    posthog.capture({
+      distinctId: user.id,
+      event: 'lead_email_found',
+      properties: {
+        lead_id: lead.id,
+        website_domain: lead.website_domain || '',
+        confidence: result.confidence || '',
+        pages_checked: result.pagesChecked || 0,
+      },
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json({ lead: updatedLead, email_result: result });
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
     res.status(statusCode).json(body);

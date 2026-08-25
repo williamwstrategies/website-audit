@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "node server.js",
     "test:opportunity-score": "node --test tests/opportunity-score.test.js",
-    "test:ai-visibility": "node --test tests/ai-visibility-assessment.test.js"
+    "test:ai-visibility": "node --test tests/ai-visibility-assessment.test.js",
+    "test:email-finder": "node --test tests/email-finder.test.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

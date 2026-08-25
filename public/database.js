@@ -551,6 +551,13 @@
       return payload.lead || null;
     }
 
+    async findLeadEmail(leadId) {
+      return this.serverJson(`/api/leads/${encodeURIComponent(leadId)}/find-email`, {
+        method: 'POST',
+        body: {},
+      });
+    }
+
     async deleteLead(leadId) {
       await this.serverJson(`/api/leads/${encodeURIComponent(leadId)}`, {
         method: 'DELETE',

@@ -22,6 +22,10 @@ create table if not exists public.leads (
   website_url text,
   website_domain text,
   phone text,
+  email text,
+  email_source_url text,
+  email_confidence text,
+  email_found_at timestamptz,
   address text,
   city text,
   region text,
@@ -47,6 +51,10 @@ alter table public.leads add column if not exists category text;
 alter table public.leads add column if not exists website_url text;
 alter table public.leads add column if not exists website_domain text;
 alter table public.leads add column if not exists phone text;
+alter table public.leads add column if not exists email text;
+alter table public.leads add column if not exists email_source_url text;
+alter table public.leads add column if not exists email_confidence text;
+alter table public.leads add column if not exists email_found_at timestamptz;
 alter table public.leads add column if not exists address text;
 alter table public.leads add column if not exists city text;
 alter table public.leads add column if not exists region text;
@@ -95,6 +103,10 @@ on public.leads (user_id, opportunity_score desc nulls last);
 
 create index if not exists leads_user_scan_status_idx
 on public.leads (user_id, scan_status);
+
+create index if not exists leads_user_email_idx
+on public.leads (user_id, email)
+where email is not null and email <> '';
 
 create unique index if not exists leads_user_source_external_idx
 on public.leads (user_id, source, external_source_id)

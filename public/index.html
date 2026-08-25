@@ -1593,6 +1593,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <div class="lead-finder-form-actions">
               <button class="analyze-btn" type="submit" id="leadSearchBtn">Search Leads</button>
               <button class="secondary-btn" type="button" id="leadBatchScanBtn" disabled>Scan Selected</button>
+              <button class="secondary-btn" type="button" id="leadBatchEmailBtn" disabled>Find Emails</button>
             </div>
           </form>
           <div class="auth-message" id="leadFinderMessage" role="status" hidden></div>
@@ -2762,6 +2763,7 @@ let leadsLoaded = false;
 let leadsLoading = false;
 let leadSearchLoading = false;
 let leadBatchScanning = false;
+let leadEmailFinding = false;
 let selectedLeadKeys = new Set();
 let currentSubscription = null;
 let currentAccount = null;
@@ -5630,6 +5632,17 @@ function formatLeadWebsiteScore(value) {
   return `${Math.round(Math.max(0, Math.min(100, score)))}/100`;
 }
 
+function leadEmail(lead = {}) {
+  return asText((lead || {}).email).toLowerCase();
+}
+
+function leadEmailSummary(lead = {}) {
+  const email = leadEmail(lead);
+  if (!email) return 'No email found yet';
+  const confidence = asText(lead.email_confidence);
+  return confidence ? `${email} (${confidence})` : email;
+}
+
 function leadOpportunityText(lead = {}) {
   const score = Number(lead.opportunity_score);
   if (!Number.isFinite(score)) return 'Not scored';
@@ -5644,7 +5657,7 @@ function leadPrimaryActionText(lead = {}) {
 }
 
 function leadSavePayload(lead = {}) {
-  return {
+  const payload = {
     businessName: asText(lead.business_name || lead.businessName),
     category: asText(lead.category),
     websiteUrl: leadWebsite(lead),
@@ -5659,6 +5672,14 @@ function leadSavePayload(lead = {}) {
     source: asText(lead.source) || 'manual',
     externalSourceId: asText(lead.external_source_id),
   };
+  const email = leadEmail(lead);
+  if (email) {
+    payload.email = email;
+    payload.emailSourceUrl = asText(lead.email_source_url);
+    payload.emailConfidence = asText(lead.email_confidence);
+    payload.emailFoundAt = asText(lead.email_found_at);
+  }
+  return payload;
 }
 
 function mergeLeadIntoState(lead = {}) {
@@ -5728,13 +5749,14 @@ function leadCardHtml(lead = {}, index = 0, source = 'search') {
   const website = leadWebsite(lead);
   const score = Number(lead.website_score);
   const opportunity = Number(lead.opportunity_score);
+  const email = leadEmail(lead);
   const status = asText(lead.scan_status || 'not_scanned');
   const selected = selectedLeadKeys.has(key);
 
   return `
     <article class="lead-card" data-lead-key="${escHtml(key)}" data-lead-source="${escHtml(source)}">
       <div class="lead-card-select">
-        <input type="checkbox" aria-label="Select ${escHtml(asText(lead.business_name) || 'lead')}" data-lead-select data-lead-key="${escHtml(key)}" ${selected ? 'checked' : ''} ${leadBatchScanning ? 'disabled' : ''}>
+        <input type="checkbox" aria-label="Select ${escHtml(asText(lead.business_name) || 'lead')}" data-lead-select data-lead-key="${escHtml(key)}" ${selected ? 'checked' : ''} ${(leadBatchScanning || leadEmailFinding) ? 'disabled' : ''}>
       </div>
       <div class="lead-card-main">
         <div class="lead-card-title-row">
@@ -5745,6 +5767,7 @@ function leadCardHtml(lead = {}, index = 0, source = 'search') {
         <div class="lead-card-meta">
           <span>${escHtml(leadRatingText(lead))}</span>
           <span>${website ? escHtml(asText(lead.website_domain) || website) : 'No website found'}</span>
+          <span>${escHtml(email || 'Email not found yet')}</span>
         </div>
       </div>
       <div class="lead-score-stack">
@@ -5758,6 +5781,9 @@ function leadCardHtml(lead = {}, index = 0, source = 'search') {
       <div class="lead-card-actions">
         ${saved ? '' : `<button class="secondary-btn" type="button" data-lead-action="save" data-lead-key="${escHtml(key)}">Save</button>`}
         <button class="analyze-btn" type="button" data-lead-action="${lead.scan_id ? 'audit' : 'scan'}" data-lead-key="${escHtml(key)}" ${status === 'scanning' ? 'disabled' : ''}>${escHtml(leadPrimaryActionText(lead))}</button>
+        ${email
+          ? `<button class="secondary-btn" type="button" data-lead-action="copy-email" data-lead-key="${escHtml(key)}">Copy Email</button>`
+          : `<button class="secondary-btn" type="button" data-lead-action="find-email" data-lead-key="${escHtml(key)}" ${website ? '' : 'disabled'}>Find Email</button>`}
         <button class="secondary-btn" type="button" data-lead-action="details" data-lead-key="${escHtml(key)}">Details</button>
       </div>
     </article>
@@ -5788,10 +5814,15 @@ function renderLeadFinder() {
   const saved = document.getElementById('savedLeadsList');
   const summary = document.getElementById('leadResultsSummary');
   const batchBtn = document.getElementById('leadBatchScanBtn');
+  const emailBtn = document.getElementById('leadBatchEmailBtn');
 
   if (batchBtn) {
-    batchBtn.disabled = !selectedLeadKeys.size || leadBatchScanning;
+    batchBtn.disabled = !selectedLeadKeys.size || leadBatchScanning || leadEmailFinding;
     batchBtn.textContent = leadBatchScanning ? 'Scanning...' : `Scan Selected${selectedLeadKeys.size ? ` (${selectedLeadKeys.size})` : ''}`;
+  }
+  if (emailBtn) {
+    emailBtn.disabled = !selectedLeadKeys.size || leadBatchScanning || leadEmailFinding;
+    emailBtn.textContent = leadEmailFinding ? 'Finding emails...' : `Find Emails${selectedLeadKeys.size ? ` (${selectedLeadKeys.size})` : ''}`;
   }
 
   renderRecentLeadSearches();
@@ -6058,6 +6089,56 @@ async function scanSelectedLeads() {
   showToast('Batch scan complete.', 'success');
 }
 
+async function findEmailForLead(key, options = {}) {
+  if (leadEmailFinding && !options.batch) return null;
+  const savedLead = await ensureLeadSaved(key);
+  const website = leadWebsite(savedLead);
+  if (!website) {
+    setLeadFinderMessage('This lead needs a website before Email Finder can check public contact pages.', 'warning');
+    return null;
+  }
+
+  setLeadFinderMessage(`Checking public contact pages for ${asText(savedLead.business_name)}...`, 'default');
+  try {
+    const payload = await databaseService.findLeadEmail(savedLead.id);
+    const updated = payload.lead || savedLead;
+    mergeLeadIntoState(updated);
+    const email = leadEmail(updated);
+    if (email) {
+      setLeadFinderMessage(`${asText(updated.business_name)} email found: ${email}`, 'success');
+      if (!options.batch) showToast('Email found.', 'success');
+    } else {
+      setLeadFinderMessage(`No public email found for ${asText(updated.business_name)} after checking contact pages.`, 'warning');
+      if (!options.batch) showToast('No public email found.', 'warning');
+    }
+    renderLeadFinder();
+    return updated;
+  } catch (error) {
+    setLeadFinderMessage(error?.message || 'Email Finder failed.', 'error');
+    if (!options.batch) showToast(error?.message || 'Email Finder failed.', 'error');
+    renderLeadFinder();
+    return null;
+  }
+}
+
+async function findEmailsForSelectedLeads() {
+  const keys = Array.from(selectedLeadKeys);
+  if (!keys.length || leadEmailFinding) return;
+  leadEmailFinding = true;
+  renderLeadFinder();
+  let found = 0;
+  for (let index = 0; index < keys.length; index += 1) {
+    setLeadFinderMessage(`Finding emails ${index + 1} of ${keys.length}. Checking public website pages only.`, 'default');
+    const updated = await findEmailForLead(keys[index], { batch: true });
+    if (leadEmail(updated)) found += 1;
+  }
+  leadEmailFinding = false;
+  selectedLeadKeys.clear();
+  await loadLeadFinderData({ force: true });
+  setLeadFinderMessage(`Email Finder complete. ${found} ${found === 1 ? 'email' : 'emails'} found.`, found ? 'success' : 'warning');
+  showToast('Email Finder complete.', found ? 'success' : 'warning');
+}
+
 async function openLeadAudit(key) {
   const lead = findLeadByKey(key);
   const reportId = asText(lead?.scan_id);
@@ -6099,6 +6180,7 @@ function openLeadDetail(key) {
       <div><span>Website</span><strong>${website ? escHtml(website) : 'No website found'}</strong></div>
       <div><span>Address</span><strong>${escHtml(asText(lead.address) || leadLocationText(lead))}</strong></div>
       <div><span>Phone</span><strong>${escHtml(asText(lead.phone) || 'No phone listed')}</strong></div>
+      <div><span>Email</span><strong>${escHtml(leadEmailSummary(lead))}</strong></div>
     </div>
     <div class="lead-detail-reasons">
       <strong>Opportunity Summary</strong>
@@ -6109,6 +6191,9 @@ function openLeadDetail(key) {
     <div class="lead-detail-actions">
       <button class="analyze-btn" type="button" data-lead-action="${lead.scan_id ? 'audit' : 'scan'}" data-lead-key="${escHtml(key)}">${escHtml(leadPrimaryActionText(lead))}</button>
       <button class="secondary-btn" type="button" data-lead-action="prompt" data-lead-key="${escHtml(key)}" ${lead.scan_id ? '' : 'disabled'}>Generate Website Prompt</button>
+      ${leadEmail(lead)
+        ? `<button class="secondary-btn" type="button" data-lead-action="copy-email" data-lead-key="${escHtml(key)}">Copy Email</button>`
+        : `<button class="secondary-btn" type="button" data-lead-action="find-email" data-lead-key="${escHtml(key)}" ${website ? '' : 'disabled'}>Find Email</button>`}
       ${website ? `<a class="secondary-btn" href="${escHtml(website)}" target="_blank" rel="noopener">Visit Website</a>` : ''}
       ${lead.phone ? `<button class="secondary-btn" type="button" data-lead-action="copy-phone" data-lead-key="${escHtml(key)}">Copy Phone</button>` : ''}
     </div>
@@ -6144,6 +6229,18 @@ async function handleLeadAction(action, key) {
     openLeadDetail(key);
     return;
   }
+  if (action === 'find-email') {
+    await findEmailForLead(key);
+    return;
+  }
+  if (action === 'copy-email') {
+    const lead = findLeadByKey(key);
+    const email = leadEmail(lead);
+    if (!email) return;
+    await navigator.clipboard?.writeText(email);
+    showToast('Email copied.', 'success');
+    return;
+  }
   if (action === 'copy-phone') {
     const lead = findLeadByKey(key);
     const phone = asText(lead?.phone);
@@ -6159,6 +6256,7 @@ function bindLeadFinderControls() {
     runLeadSearch();
   });
   document.getElementById('leadBatchScanBtn')?.addEventListener('click', scanSelectedLeads);
+  document.getElementById('leadBatchEmailBtn')?.addEventListener('click', findEmailsForSelectedLeads);
   document.getElementById('refreshLeadsBtn')?.addEventListener('click', () => loadLeadFinderData({ force: true }));
   document.getElementById('leadSortSelect')?.addEventListener('change', renderLeadFinder);
   document.getElementById('savedLeadSearchInput')?.addEventListener('input', renderLeadFinder);
