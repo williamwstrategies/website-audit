@@ -141,6 +141,7 @@ const SUPPORT_REPLY_METHODS = new Set([
 ]);
 
 const RESEND_EMAIL_API_URL = 'https://api.resend.com/emails';
+const STARTER_LEAD_DISCOVERY_LIMIT = 3000;
 
 function checkLeadSearchRateLimit(userId) {
   const limit = Math.max(1, Math.min(Number(process.env.LEAD_FINDER_SEARCHES_PER_MINUTE) || 6, 60));
@@ -158,6 +159,54 @@ function checkLeadSearchRateLimit(userId) {
   }
   recent.push(now);
   leadSearchRateWindow.set(key, recent);
+}
+
+function validIsoDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function leadDiscoveryPeriodStart(subscription = {}) {
+  const periodStart = validIsoDate(subscription.current_period_start);
+  if (periodStart) return periodStart.toISOString();
+
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();
+}
+
+function leadDiscoveryAllowanceForSubscription(subscription = {}) {
+  const plan = String(subscription.plan || '').toLowerCase();
+  const active = ['active', 'trialing'].includes(String(subscription.status || '').toLowerCase());
+  const activeHigherPlan = ['professional', 'growth', 'enterprise'].includes(plan) && active;
+  if (activeHigherPlan || (subscription.unlimited === true && active)) return null;
+  return STARTER_LEAD_DISCOVERY_LIMIT;
+}
+
+async function leadDiscoveryUsageForSearch(userId, subscription = {}) {
+  const limit = leadDiscoveryAllowanceForSubscription(subscription);
+  if (limit == null) {
+    return {
+      unlimited: true,
+      limit: null,
+      used: 0,
+      remaining: null,
+      period_start: leadDiscoveryPeriodStart(subscription),
+    };
+  }
+
+  const periodStart = leadDiscoveryPeriodStart(subscription);
+  const used = await leads.getLeadDiscoveryUsageForUser(userId, { since: periodStart });
+  return {
+    unlimited: false,
+    limit,
+    used,
+    remaining: Math.max(0, limit - used),
+    period_start: periodStart,
+  };
+}
+
+function requestedLeadLimit(input = {}) {
+  return Math.max(1, Math.min(Number(input.limit) || 25, 50));
 }
 
 function cleanSupportText(value = '', maxLength = 1000) {
@@ -1808,9 +1857,32 @@ app.post('/api/leads/search', async (req, res) => {
     // Preflight the user-owned lead table before making a paid provider request.
     await leads.listLeadsForUser(user.id, { limit: 1 });
 
-    const providerResult = await businessSearchProvider.searchBusinessListings(req.body || {});
+    const subscription = await billing.getSubscriptionStatus(user.id);
+    const leadUsageBeforeSearch = await leadDiscoveryUsageForSearch(user.id, subscription);
+    if (!leadUsageBeforeSearch.unlimited && leadUsageBeforeSearch.remaining <= 0) {
+      throw billing.httpError(
+        402,
+        'Starter includes 3,000 Lead Finder results per month. Upgrade to Professional for unlimited lead discovery.',
+        'lead_discovery_limit_reached',
+        leadUsageBeforeSearch
+      );
+    }
+
+    const providerInput = { ...(req.body || {}) };
+    if (!leadUsageBeforeSearch.unlimited) {
+      providerInput.limit = Math.min(requestedLeadLimit(providerInput), leadUsageBeforeSearch.remaining);
+    }
+
+    const providerResult = await businessSearchProvider.searchBusinessListings(providerInput);
     const decoratedResults = await leads.decorateBusinessResultsForUser(user.id, providerResult.results || []);
-    await leads.recordLeadSearchForUser(user.id, req.body || {}, {
+    const leadDiscoveryUsage = leadUsageBeforeSearch.unlimited
+      ? leadUsageBeforeSearch
+      : {
+        ...leadUsageBeforeSearch,
+        used: leadUsageBeforeSearch.used + decoratedResults.length,
+        remaining: Math.max(0, leadUsageBeforeSearch.remaining - decoratedResults.length),
+      };
+    await leads.recordLeadSearchForUser(user.id, providerInput, {
       ...providerResult,
       result_count: decoratedResults.length,
     }).catch(error => {
@@ -1832,6 +1904,7 @@ app.post('/api/leads/search', async (req, res) => {
     res.set('Cache-Control', 'no-store');
     res.json({
       ...providerResult,
+      lead_discovery_usage: leadDiscoveryUsage,
       result_count: decoratedResults.length,
       results: decoratedResults,
     });
