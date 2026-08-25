@@ -944,7 +944,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div class="mock-browser-bar"><span></span><span></span><span></span><strong id="seoCardTitle">PitchProof</strong></div>
         <div class="mock-score-card glow-card">
           <span id="seoCardKicker">Website assessment</span>
-          <strong id="seoCardScore">39</strong>
+          <strong id="seoCardScore">3.9/10</strong>
           <small>Opportunity score</small>
         </div>
         <div class="mock-category"><span>Trust</span><strong>34/100</strong></div>
@@ -3278,7 +3278,7 @@ function seoRelatedLinks(currentPath, limit = 6) {
     .map(page => ({ title: page.navTitle || page.h1, path: page.path, description: page.shortDescription || page.description }));
 }
 
-function seoPageBase({ path, title, h1, kicker, description, painTitle, painCopy, solutionTitle, solutionCopy, highlights, faq, related, cardKicker = 'Website assessment', cardScore = '39', showHeroReportPreview = false, includeInRelated = true }) {
+function seoPageBase({ path, title, h1, kicker, description, painTitle, painCopy, solutionTitle, solutionCopy, highlights, faq, related, cardKicker = 'Website assessment', cardScore = '3.9/10', showHeroReportPreview = false, includeInRelated = true }) {
   return {
     path,
     title,
@@ -3810,7 +3810,7 @@ function renderPublicSeoPage(page = seoPageForPath()) {
   setTextContent('seoPageIntro', page.description);
   setTextContent('seoCardTitle', 'PitchProof');
   setTextContent('seoCardKicker', page.cardKicker || 'Website assessment');
-  setTextContent('seoCardScore', page.cardScore || '39');
+  setTextContent('seoCardScore', page.cardScore || '3.9/10');
   const seoHeroCard = document.getElementById('seoHeroCard');
   const seoHeroReportPreview = document.getElementById('seoHeroReportPreview');
   if (seoHeroCard) seoHeroCard.hidden = page.showHeroReportPreview === true;
@@ -5617,10 +5617,23 @@ function leadStatusLabel(lead = {}) {
   return labels[status] || status;
 }
 
+function formatLeadOpportunityScore(value) {
+  const score = Number(value);
+  if (!Number.isFinite(score)) return '-';
+  const outOfTen = Math.max(0, Math.min(10, score / 10));
+  return `${outOfTen.toFixed(1)}/10`;
+}
+
+function formatLeadWebsiteScore(value) {
+  const score = Number(value);
+  if (!Number.isFinite(score)) return '-';
+  return `${Math.round(Math.max(0, Math.min(100, score)))}/100`;
+}
+
 function leadOpportunityText(lead = {}) {
   const score = Number(lead.opportunity_score);
   if (!Number.isFinite(score)) return 'Not scored';
-  return `${Math.round(score)} / 100`;
+  return formatLeadOpportunityScore(score);
 }
 
 function leadPrimaryActionText(lead = {}) {
@@ -5736,11 +5749,11 @@ function leadCardHtml(lead = {}, index = 0, source = 'search') {
       </div>
       <div class="lead-score-stack">
         <span>Website</span>
-        <strong>${Number.isFinite(score) ? Math.round(score) : '-'}</strong>
+        <strong>${escHtml(formatLeadWebsiteScore(score))}</strong>
       </div>
       <div class="lead-score-stack opportunity">
         <span>Opportunity</span>
-        <strong>${Number.isFinite(opportunity) ? Math.round(opportunity) : '-'}</strong>
+        <strong>${escHtml(formatLeadOpportunityScore(opportunity))}</strong>
       </div>
       <div class="lead-card-actions">
         ${saved ? '' : `<button class="secondary-btn" type="button" data-lead-action="save" data-lead-key="${escHtml(key)}">Save</button>`}
@@ -6079,7 +6092,7 @@ function openLeadDetail(key) {
     <p>${escHtml(asText(lead.category) || 'Category unavailable')} - ${escHtml(leadLocationText(lead))}</p>
     <div class="lead-detail-metrics">
       <div><span>Opportunity</span><strong>${escHtml(leadOpportunityText(lead))}</strong><small>${escHtml(asText(lead.opportunity_label) || 'Not scored')}</small></div>
-      <div><span>Website Score</span><strong>${Number.isFinite(Number(lead.website_score)) ? Math.round(Number(lead.website_score)) : '-'}</strong><small>${escHtml(leadStatusLabel(lead))}</small></div>
+      <div><span>Website Score</span><strong>${escHtml(formatLeadWebsiteScore(lead.website_score))}</strong><small>${escHtml(leadStatusLabel(lead))}</small></div>
       <div><span>Google Proof</span><strong>${escHtml(leadRatingText(lead))}</strong><small>${escHtml(asText(lead.phone) || 'No phone listed')}</small></div>
     </div>
     <div class="lead-detail-info">
