@@ -1,9 +1,10 @@
-const CACHE_NAME = 'pitchproof-app-shell-v2026-08-19-keyword-ranking-v1';
+const CACHE_NAME = 'pitchproof-app-shell-v2026-08-25-website-build-prompt-v1';
 const APP_SHELL = [
   '/styles.css',
   '/branding.js',
   '/auth.js',
   '/database.js',
+  '/website-build-prompt.js',
   '/blog-posts.js',
   '/blog-support-posts.js',
   '/manifest.json',
@@ -64,6 +65,7 @@ self.addEventListener('fetch', event => {
     '/branding.js',
     '/auth.js',
     '/database.js',
+    '/website-build-prompt.js',
     '/blog-posts.js',
     '/blog-support-posts.js',
   ]);

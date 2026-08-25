@@ -2335,9 +2335,41 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <div id="recsList"></div>
               </section>
 
-              <section class="report-section positives-section" id="positivesSection">
+              <section class="report-section website-prompt-section" id="websitePromptSection">
                 <div class="report-section-heading">
                   <span>05</span>
+                  <div>
+                    <h2>Build Their Better Website</h2>
+                    <p>Turn this audit into a ready-to-use website build brief based on the exact problems PitchProof found.</p>
+                  </div>
+                </div>
+                <div class="website-prompt-panel">
+                  <div class="website-prompt-intro">
+                    <div>
+                      <div class="section-kicker">AI Website Builder Brief</div>
+                      <h3>PitchProof found the problems. Now turn those findings into the brief for the rebuild.</h3>
+                      <p>The generated prompt uses this specific website scan, including scores, findings, evidence, strengths, weaknesses, and recommendations. It is designed to copy into Lovable, Codex, Replit, Bolt, Claude, ChatGPT, or another AI website builder.</p>
+                    </div>
+                    <div class="website-prompt-actions">
+                      <button class="analyze-btn" type="button" id="generateWebsitePromptBtn">Generate Website Prompt</button>
+                      <button class="secondary-btn" type="button" id="regenerateWebsitePromptBtn" hidden>Regenerate Prompt</button>
+                      <button class="secondary-btn" type="button" id="copyWebsitePromptBtn" disabled>Copy Prompt</button>
+                    </div>
+                  </div>
+                  <div class="website-prompt-meta" id="websitePromptMeta">Prompt not generated yet.</div>
+                  <div class="website-prompt-output" id="websitePromptOutputWrap" hidden>
+                    <div class="website-prompt-toolbar">
+                      <span>Based on this website scan</span>
+                      <strong id="websitePromptStats">Ready to copy</strong>
+                    </div>
+                    <textarea id="websitePromptOutput" readonly spellcheck="false" aria-label="Generated website build prompt"></textarea>
+                  </div>
+                </div>
+              </section>
+
+              <section class="report-section positives-section" id="positivesSection">
+                <div class="report-section-heading">
+                  <span>06</span>
                   <div>
                     <h2>Strengths Already Working</h2>
                     <p>Positive signals found during the assessment.</p>
@@ -2349,7 +2381,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
               <section class="report-section evidence-section" id="evidenceSection">
                 <div class="report-section-heading">
-                  <span>06</span>
+                  <span>07</span>
                   <div>
                     <h2>Assessment Evidence</h2>
                     <p>The pages and visible signals used to support the assessment.</p>
@@ -2361,7 +2393,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 
               <section class="report-section final-assessment-section" id="finalAssessmentSection">
                 <div class="report-section-heading">
-                  <span>07</span>
+                  <span>08</span>
                   <div>
                     <h2>Final Assessment</h2>
                     <p>A concise professional summary of what the report means.</p>
@@ -2484,6 +2516,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
 <script src="/branding.js?v=2026-08-06-plan-pages-v1"></script>
 <script src="/auth.js?v=2026-08-06-plan-pages-v1"></script>
 <script src="/database.js?v=2026-08-17-ai-visibility-customer-v1"></script>
+<script src="/website-build-prompt.js?v=2026-08-25-build-prompt-v1"></script>
 <script src="/blog-posts.js?v=2026-08-12-seo-bundle-v1"></script>
 <script src="/blog-support-posts.js?v=2026-08-12-support-guides-v1"></script>
 
@@ -2551,6 +2584,8 @@ let pendingProspectName = '';
 let pendingCompanyName = '';
 let pendingAuditNotes = '';
 let pendingAuditIdempotencyKey = '';
+let currentWebsiteBuildPrompt = '';
+let currentWebsiteBuildPromptKey = '';
 let fullResultsUnlocked = false;
 let brandingProvider = null;
 let authProvider = null;
@@ -6151,6 +6186,16 @@ function bindReportControls() {
     renderSavedReports();
   });
 
+  document.getElementById('generateWebsitePromptBtn')?.addEventListener('click', () => {
+    generateWebsiteBuildPromptFromCurrent({ regenerate: false });
+  });
+
+  document.getElementById('regenerateWebsitePromptBtn')?.addEventListener('click', () => {
+    generateWebsiteBuildPromptFromCurrent({ regenerate: true });
+  });
+
+  document.getElementById('copyWebsitePromptBtn')?.addEventListener('click', copyWebsiteBuildPrompt);
+
   document.querySelectorAll('[data-report-type]').forEach(tab => {
     tab.addEventListener('click', () => {
       activeReportType = tab.dataset.reportType === 'ai' ? 'ai' : 'website';
@@ -8062,9 +8107,14 @@ function compactReportForPersistence(result) {
     score: firstDefinedValue(root.score, root.total, root.websiteScore, root.rating),
     websiteScore: firstDefinedValue(root.websiteScore, root.total, root.score, root.rating),
     maxScore: Number(root.maxScore) || 100,
+    industry: asText(root.industry),
+    scanMethod: asText(root.scanMethod),
+    pagesAnalyzed: firstDefinedValue(root.pagesAnalyzed, root.pages_analyzed),
     categories: compactPersistedValue(root.categories),
     aiVisibility: compactPersistedValue(root.aiVisibility || root.ai_visibility),
     keywordRanking: compactPersistedValue(root.keywordRanking || root.keyword_ranking),
+    pageSpeed: compactPersistedValue(root.pageSpeed),
+    pageSpeedScore: firstDefinedValue(root.pageSpeedScore, root.page_speed_score),
     visualTrust: compactPersistedValue(root.visualTrust),
     brokenLinks: compactBrokenLinks(firstDefinedValue(root.brokenLinks, evidence.brokenLinks)),
     issues: asArray(root.issues).slice(0, 30).map(item => compactPersistedValue(item)),
@@ -8074,6 +8124,8 @@ function compactReportForPersistence(result) {
     checks: compactPersistedValue(root.checks),
     evidenceFound: compactEvidence(evidence, root),
     evidence: compactEvidence(evidence, root),
+    reviewEvidence: compactPersistedValue(root.reviewEvidence),
+    reviewFound: root.reviewFound === true,
     detectionSummary: compactPersistedValue(root.detectionSummary),
     pagesScanned: firstArray(evidence.pagesList, evidence.pagesScanned, root.pagesScanned, root.pagesCrawled).slice(0, 60).map(item => compactPersistedValue(item)),
     pagesCrawled: firstArray(root.pagesCrawled, root.pagesScanned, evidence.pagesList, evidence.pagesScanned).slice(0, 60).map(item => compactPersistedValue(item)),
@@ -8879,6 +8931,7 @@ function setPreviewLockState(locked) {
   const detailedSections = [
     'issuesSection',
     'recsSection',
+    'websitePromptSection',
     'positivesSection',
     'evidenceSection',
     'finalAssessmentSection',
@@ -8926,10 +8979,13 @@ function clearLockedReportDetails() {
     'evidenceSignals',
     'finalAssessment',
     'visualTrustBreakdown',
+    'websitePromptOutput',
   ].forEach(id => {
     const node = document.getElementById(id);
-    if (node) node.innerHTML = '';
+    if (node?.tagName === 'TEXTAREA') node.value = '';
+    else if (node) node.innerHTML = '';
   });
+  setWebsitePromptOutput('');
   const visualTrustSection = document.getElementById('visualTrustSection');
   if (visualTrustSection) visualTrustSection.style.display = 'none';
 }
@@ -9154,6 +9210,156 @@ function buildReportRequestData(result) {
   };
 }
 
+function websiteBuildPromptContext() {
+  return {
+    prospectName: pendingProspectName || '',
+    companyName: pendingCompanyName || '',
+    notes: pendingAuditNotes || '',
+    requestedWebsite: pendingWebsiteUrl || '',
+  };
+}
+
+function websiteBuildPromptKey(result = pendingScanResult) {
+  const root = asRecord(result);
+  const savedId = asText(pendingSavedReportId || root.saved_report_id);
+  if (savedId) return `report:${savedId}`;
+  const website = asText(root.url) || pendingWebsiteUrl || 'current';
+  const score = reportScoreFromResult(root);
+  return `current:${website}:${score}`;
+}
+
+function websiteBuildPromptStorageKey(result = pendingScanResult) {
+  return `pitchproof.websiteBuildPrompt.${websiteBuildPromptKey(result)}`;
+}
+
+function setWebsitePromptMeta(message = '', tone = 'default') {
+  const meta = document.getElementById('websitePromptMeta');
+  if (!meta) return;
+  meta.textContent = message || 'Prompt not generated yet.';
+  meta.dataset.tone = tone;
+}
+
+function setWebsitePromptOutput(prompt = '', meta = {}) {
+  const textarea = document.getElementById('websitePromptOutput');
+  const wrap = document.getElementById('websitePromptOutputWrap');
+  const copyBtn = document.getElementById('copyWebsitePromptBtn');
+  const generateBtn = document.getElementById('generateWebsitePromptBtn');
+  const regenerateBtn = document.getElementById('regenerateWebsitePromptBtn');
+  const stats = document.getElementById('websitePromptStats');
+  currentWebsiteBuildPrompt = asText(prompt);
+
+  if (textarea) textarea.value = currentWebsiteBuildPrompt;
+  if (wrap) wrap.hidden = !currentWebsiteBuildPrompt;
+  if (copyBtn) copyBtn.disabled = !currentWebsiteBuildPrompt;
+  if (generateBtn) generateBtn.hidden = !!currentWebsiteBuildPrompt;
+  if (regenerateBtn) regenerateBtn.hidden = !currentWebsiteBuildPrompt;
+  if (stats) {
+    const characterCount = Number(meta.characterCount || currentWebsiteBuildPrompt.length) || 0;
+    const findingCount = Number(meta.findingCount) || 0;
+    stats.textContent = characterCount
+      ? `${characterCount.toLocaleString()} characters${findingCount ? ` - ${findingCount} audit inputs` : ''}`
+      : 'Ready to copy';
+  }
+}
+
+function resetWebsiteBuildPromptSection(result = pendingScanResult, options = {}) {
+  const section = document.getElementById('websitePromptSection');
+  if (!section) return;
+  const locked = options.previewLocked === true || result?.previewLocked === true || result?.preview_locked === true || result?.full_report_locked === true;
+  section.hidden = !!locked;
+  currentWebsiteBuildPromptKey = websiteBuildPromptKey(result);
+  currentWebsiteBuildPrompt = '';
+  setWebsitePromptOutput('');
+  if (locked) {
+    setWebsitePromptMeta('Unlock the complete report to generate a website rebuild prompt from every finding.', 'default');
+    return;
+  }
+
+  const storageKey = websiteBuildPromptStorageKey(result);
+  let stored = '';
+  try {
+    stored = localStorage.getItem(storageKey) || '';
+  } catch {
+    stored = '';
+  }
+
+  if (stored) {
+    setWebsitePromptOutput(stored, { characterCount: stored.length });
+    setWebsitePromptMeta('Saved prompt restored for this report. Regenerate it any time from the latest report data.', 'success');
+  } else {
+    setWebsitePromptMeta('Prompt not generated yet. It will use this specific report data and will not call another AI service.', 'default');
+  }
+}
+
+function generateWebsiteBuildPromptFromCurrent({ regenerate = false } = {}) {
+  const generator = window.PitchProofWebsitePrompt;
+  const result = asRecord(pendingScanResult);
+  if (!generator?.generate || !objectEntries(result).length) {
+    setWebsitePromptMeta('Prompt generator is not available for this report.', 'error');
+    showToast('Prompt generator is not available for this report.', 'error');
+    return;
+  }
+  if (result.previewLocked === true || result.preview_locked === true || result.full_report_locked === true) {
+    setWebsitePromptMeta('Unlock the complete report to generate the rebuild prompt.', 'default');
+    showToast('Unlock the complete report to generate the rebuild prompt.', 'warning');
+    return;
+  }
+
+  const output = generator.generate({
+    report: result,
+    context: websiteBuildPromptContext(),
+  });
+  currentWebsiteBuildPromptKey = websiteBuildPromptKey(result);
+  setWebsitePromptOutput(output.prompt, output.meta);
+  setWebsitePromptMeta('Generated from this report. Copy it into Lovable, Codex, Replit, Bolt, Claude, ChatGPT, or another AI website builder.', 'success');
+
+  try {
+    localStorage.setItem(websiteBuildPromptStorageKey(result), output.prompt);
+  } catch {
+    // Storage limits should not block prompt generation.
+  }
+
+  trackProductAnalytics(regenerate ? 'website_build_prompt_regenerated' : 'website_build_prompt_generated', {
+    report_id: pendingSavedReportId || '',
+    prompt_key: currentWebsiteBuildPromptKey,
+    character_count: output.meta?.characterCount || output.prompt.length,
+    finding_count: output.meta?.findingCount || 0,
+  });
+  showToast(regenerate ? 'Website prompt regenerated.' : 'Website prompt generated.', 'success');
+}
+
+async function copyWebsiteBuildPrompt() {
+  const prompt = currentWebsiteBuildPrompt || document.getElementById('websitePromptOutput')?.value || '';
+  if (!prompt.trim()) {
+    showToast('Generate the website prompt first.', 'warning');
+    return;
+  }
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(prompt);
+    } else {
+      const textarea = document.getElementById('websitePromptOutput');
+      textarea?.focus();
+      textarea?.select();
+      document.execCommand('copy');
+      window.getSelection?.().removeAllRanges?.();
+    }
+    setWebsitePromptMeta('Copied. Paste it into your AI website builder to start the rebuild brief.', 'success');
+    showToast('Prompt copied.', 'success');
+    trackProductAnalytics('website_build_prompt_copied', {
+      report_id: pendingSavedReportId || '',
+      prompt_key: currentWebsiteBuildPromptKey,
+    });
+  } catch (error) {
+    const textarea = document.getElementById('websitePromptOutput');
+    textarea?.focus();
+    textarea?.select();
+    setWebsitePromptMeta('Copy failed. Select the prompt text and copy it manually.', 'error');
+    showToast('Copy failed. Select the prompt text manually.', 'error');
+  }
+}
+
 function renderResults(data, options = {}) {
   stopLoadingTimers();
   const publicDemo = options.publicDemo === true;
@@ -9201,6 +9407,7 @@ function renderResults(data, options = {}) {
   fullResultsUnlocked = !previewLocked;
   document.getElementById('fullResults').style.display = 'block';
   setPreviewLockState(previewLocked);
+  resetWebsiteBuildPromptSection(result, { previewLocked, publicDemo });
   const actions = document.querySelector('.report-actions');
   if (actions) actions.style.display = publicDemo || previewLocked ? 'none' : 'flex';
   if (publicDemo) {
