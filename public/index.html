@@ -2139,6 +2139,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             </div>
             <div class="report-actions">
               <button class="download-pdf-btn" onclick="downloadReportPdf()">Download PDF</button>
+              <button class="secondary-btn website-prompt-top-btn" type="button" id="generateWebsitePromptTopBtn">Generate Website Prompt</button>
             </div>
             <div class="auth-message report-save-message" id="reportSaveMessage" role="status" hidden></div>
           </section>
@@ -6190,6 +6191,14 @@ function bindReportControls() {
     generateWebsiteBuildPromptFromCurrent({ regenerate: false });
   });
 
+  document.getElementById('generateWebsitePromptTopBtn')?.addEventListener('click', () => {
+    if (currentWebsiteBuildPrompt) {
+      scrollToWebsitePromptSection();
+      return;
+    }
+    generateWebsiteBuildPromptFromCurrent({ regenerate: false, scrollToPrompt: true });
+  });
+
   document.getElementById('regenerateWebsitePromptBtn')?.addEventListener('click', () => {
     generateWebsiteBuildPromptFromCurrent({ regenerate: true });
   });
@@ -9244,6 +9253,7 @@ function setWebsitePromptOutput(prompt = '', meta = {}) {
   const wrap = document.getElementById('websitePromptOutputWrap');
   const copyBtn = document.getElementById('copyWebsitePromptBtn');
   const generateBtn = document.getElementById('generateWebsitePromptBtn');
+  const topGenerateBtn = document.getElementById('generateWebsitePromptTopBtn');
   const regenerateBtn = document.getElementById('regenerateWebsitePromptBtn');
   const stats = document.getElementById('websitePromptStats');
   currentWebsiteBuildPrompt = asText(prompt);
@@ -9252,6 +9262,7 @@ function setWebsitePromptOutput(prompt = '', meta = {}) {
   if (wrap) wrap.hidden = !currentWebsiteBuildPrompt;
   if (copyBtn) copyBtn.disabled = !currentWebsiteBuildPrompt;
   if (generateBtn) generateBtn.hidden = !!currentWebsiteBuildPrompt;
+  if (topGenerateBtn) topGenerateBtn.textContent = currentWebsiteBuildPrompt ? 'View Website Prompt' : 'Generate Website Prompt';
   if (regenerateBtn) regenerateBtn.hidden = !currentWebsiteBuildPrompt;
   if (stats) {
     const characterCount = Number(meta.characterCount || currentWebsiteBuildPrompt.length) || 0;
@@ -9260,6 +9271,15 @@ function setWebsitePromptOutput(prompt = '', meta = {}) {
       ? `${characterCount.toLocaleString()} characters${findingCount ? ` - ${findingCount} audit inputs` : ''}`
       : 'Ready to copy';
   }
+}
+
+function scrollToWebsitePromptSection() {
+  const section = document.getElementById('websitePromptSection');
+  if (!section || section.hidden) return;
+  setTimeout(() => {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('websitePromptOutput')?.focus?.({ preventScroll: true });
+  }, 40);
 }
 
 function resetWebsiteBuildPromptSection(result = pendingScanResult, options = {}) {
@@ -9291,7 +9311,7 @@ function resetWebsiteBuildPromptSection(result = pendingScanResult, options = {}
   }
 }
 
-function generateWebsiteBuildPromptFromCurrent({ regenerate = false } = {}) {
+function generateWebsiteBuildPromptFromCurrent({ regenerate = false, scrollToPrompt = false } = {}) {
   const generator = window.PitchProofWebsitePrompt;
   const result = asRecord(pendingScanResult);
   if (!generator?.generate || !objectEntries(result).length) {
@@ -9326,6 +9346,7 @@ function generateWebsiteBuildPromptFromCurrent({ regenerate = false } = {}) {
     finding_count: output.meta?.findingCount || 0,
   });
   showToast(regenerate ? 'Website prompt regenerated.' : 'Website prompt generated.', 'success');
+  if (scrollToPrompt) scrollToWebsitePromptSection();
 }
 
 async function copyWebsiteBuildPrompt() {

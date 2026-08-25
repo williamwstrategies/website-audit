@@ -1904,6 +1904,11 @@ button:disabled {
   margin-top: 24px;
 }
 
+.report-actions .website-prompt-top-btn {
+  min-height: 48px;
+  padding-inline: 18px;
+}
+
 #resultsInner {
   max-width: none;
   margin: 0;
