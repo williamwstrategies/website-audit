@@ -509,6 +509,57 @@
       });
     }
 
+    async searchBusinesses(input = {}) {
+      return this.serverJson('/api/leads/search', {
+        method: 'POST',
+        body: input,
+      });
+    }
+
+    async listLeads({ search = '', status = 'all', sort = 'updated_at.desc', limit = 250 } = {}) {
+      const params = new URLSearchParams({
+        search: cleanText(search),
+        status: cleanText(status) || 'all',
+        sort: cleanText(sort) || 'updated_at.desc',
+        limit: String(Math.max(1, Math.min(Number(limit) || 250, 500))),
+      });
+      const payload = await this.serverJson(`/api/leads?${params.toString()}`);
+      return payload.leads || [];
+    }
+
+    async listRecentLeadSearches({ limit = 8 } = {}) {
+      const params = new URLSearchParams({
+        limit: String(Math.max(1, Math.min(Number(limit) || 8, 25))),
+      });
+      const payload = await this.serverJson(`/api/leads/recent-searches?${params.toString()}`);
+      return payload.searches || [];
+    }
+
+    async saveLead(lead = {}) {
+      const payload = await this.serverJson('/api/leads', {
+        method: 'POST',
+        body: lead,
+      });
+      return payload.lead || null;
+    }
+
+    async updateLead(leadId, update = {}) {
+      const payload = await this.serverJson(`/api/leads/${encodeURIComponent(leadId)}`, {
+        method: 'PATCH',
+        body: update,
+      });
+      return payload.lead || null;
+    }
+
+    async deleteLead(leadId) {
+      await this.serverJson(`/api/leads/${encodeURIComponent(leadId)}`, {
+        method: 'DELETE',
+      }).catch(error => {
+        if (error?.status !== 204) throw error;
+      });
+      return true;
+    }
+
     async runAudit({ url, idempotencyKey, debug = false, prospectName = '', companyName = '', notes = '' } = {}) {
       return this.serverJson('/api/analyze', {
         method: 'POST',

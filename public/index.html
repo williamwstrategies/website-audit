@@ -1205,6 +1205,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <nav class="app-menu" id="appMenu">
       <a href="/app" data-route data-app-nav="dashboard">Dashboard</a>
       <a href="/app/scan" data-route data-app-nav="scan">New Audit</a>
+      <a href="/app/leads" data-route data-app-nav="leads">Lead Finder</a>
       <a href="/app/ai-visibility/new" data-route data-app-nav="ai-visibility">AI Visibility (Soon)</a>
       <a href="/app/reports" data-route data-app-nav="reports">Reports</a>
       <a href="/app/support" data-route data-app-nav="support">Support</a>
@@ -1327,6 +1328,10 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
                 <a href="/app/scan/website" data-route>
                   <strong>Website Scan</strong>
                   <span>Audit website health, conversion, trust, and technical issues.</span>
+                </a>
+                <a href="/app/leads" data-route>
+                  <strong>Lead Finder</strong>
+                  <span>Find local businesses, save prospects, and rank website opportunities.</span>
                 </a>
                 <a href="/app/ai-visibility/new" data-route>
                   <strong>AI Visibility Coming Soon</strong>
@@ -1506,6 +1511,139 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <div id="error-box" role="alert" aria-live="polite"></div>
         </section>
         </div>
+      </section>
+
+      <section id="lead-finder-view" class="app-panel lead-finder-view" hidden>
+        <div class="app-page-hero lead-finder-hero">
+          <div>
+            <div class="section-kicker">Lead Finder</div>
+            <h2>Find website opportunities in a local market.</h2>
+            <p>Search real businesses, save qualified prospects, run the existing website scan, and prioritize leads by commercial opportunity.</p>
+            <div class="dashboard-hero-actions">
+              <a class="analyze-btn" href="#leadFinderSearchForm" data-lead-scroll-search>Search Market</a>
+              <button class="secondary-btn" type="button" id="refreshLeadsBtn">Refresh Leads</button>
+            </div>
+          </div>
+          <div class="scan-context-panel">
+            <span>Scoring Model</span>
+            <strong>Opportunity Score</strong>
+            <p>Combines website need, conversion gaps, SEO gaps, trust gaps, and business quality after a lead is scanned.</p>
+          </div>
+        </div>
+
+        <section class="workspace-panel lead-finder-search-panel" aria-label="Lead Finder search">
+          <div class="panel-heading">
+            <div>
+              <div class="section-kicker">Search</div>
+              <h2>Local Business Search</h2>
+              <p>Use a business type and location. Results come from a server-side business data provider, then saved leads belong only to your account.</p>
+            </div>
+          </div>
+          <form class="lead-finder-form" id="leadFinderSearchForm">
+            <label class="lead-field">
+              <span class="lead-label">Business Type</span>
+              <input class="url-input" type="text" id="leadBusinessTypeInput" placeholder="Roofing contractor" autocomplete="off" required>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Location</span>
+              <input class="url-input" type="text" id="leadLocationInput" placeholder="Ottawa, Ontario" autocomplete="address-level2" required>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Country</span>
+              <select class="url-input" id="leadCountrySelect">
+                <option value="CA">Canada</option>
+                <option value="US">United States</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="NZ">New Zealand</option>
+                <option value="IE">Ireland</option>
+              </select>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Results</span>
+              <select class="url-input" id="leadLimitSelect">
+                <option value="10">10</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+              </select>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Website Status</span>
+              <select class="url-input" id="leadWebsiteStatusSelect">
+                <option value="all">Any website status</option>
+                <option value="has_website">Has website</option>
+                <option value="no_website">No website found</option>
+              </select>
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Minimum Rating</span>
+              <input class="url-input" type="number" id="leadMinRatingInput" min="0" max="5" step="0.1" placeholder="4.0">
+            </label>
+            <label class="lead-field">
+              <span class="lead-label">Minimum Reviews</span>
+              <input class="url-input" type="number" id="leadMinReviewsInput" min="0" step="1" placeholder="25">
+            </label>
+            <div class="lead-finder-form-actions">
+              <button class="analyze-btn" type="submit" id="leadSearchBtn">Search Leads</button>
+              <button class="secondary-btn" type="button" id="leadBatchScanBtn" disabled>Scan Selected</button>
+            </div>
+          </form>
+          <div class="auth-message" id="leadFinderMessage" role="status" hidden></div>
+          <div class="recent-lead-searches" id="recentLeadSearches"></div>
+        </section>
+
+        <section class="workspace-panel lead-results-panel" aria-label="Lead search results">
+          <div class="panel-heading reports-panel-header">
+            <div>
+              <div class="section-kicker">Results</div>
+              <h2>Search Results</h2>
+              <p id="leadResultsSummary">Search a local market to find prospects.</p>
+            </div>
+            <div class="lead-results-controls">
+              <select class="url-input" id="leadSortSelect" aria-label="Sort leads">
+                <option value="opportunity">Opportunity score</option>
+                <option value="rating">Google rating</option>
+                <option value="reviews">Review count</option>
+                <option value="name">Business name</option>
+              </select>
+            </div>
+          </div>
+          <div id="leadSearchResults" class="lead-results-list"></div>
+        </section>
+
+        <section class="workspace-panel saved-leads-panel" aria-label="Saved leads">
+          <div class="panel-heading reports-panel-header">
+            <div>
+              <div class="section-kicker">Saved</div>
+              <h2>Saved Leads</h2>
+              <p>Saved prospects, scan status, and opportunity scoring.</p>
+            </div>
+            <div class="reports-toolbar saved-leads-toolbar">
+              <label class="lead-field">
+                <span class="lead-label">Search Saved</span>
+                <input class="url-input" type="search" id="savedLeadSearchInput" placeholder="Search saved leads">
+              </label>
+              <label class="lead-field">
+                <span class="lead-label">Status</span>
+                <select class="url-input" id="savedLeadStatusFilter">
+                  <option value="all">All</option>
+                  <option value="not_scanned">Not scanned</option>
+                  <option value="scanned">Scanned</option>
+                  <option value="no_website">No website</option>
+                  <option value="failed">Failed</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <div id="savedLeadsList" class="lead-results-list saved-leads-list"></div>
+        </section>
+
+        <aside class="lead-detail-panel" id="leadDetailPanel" hidden aria-label="Lead details">
+          <div class="lead-detail-card">
+            <button class="lead-detail-close" type="button" id="leadDetailCloseBtn" aria-label="Close lead details">&times;</button>
+            <div id="leadDetailContent"></div>
+          </div>
+        </aside>
       </section>
 
       <section id="ai-visibility-new-view" class="app-panel scan-panel" hidden>
@@ -2606,6 +2744,14 @@ let reportsSearchTerm = '';
 let reportsSortOrder = 'created_at.desc';
 let reportsFilter = 'all';
 let reportsVisibleCount = 20;
+let leadSearchResults = [];
+let savedLeads = [];
+let recentLeadSearches = [];
+let leadsLoaded = false;
+let leadsLoading = false;
+let leadSearchLoading = false;
+let leadBatchScanning = false;
+let selectedLeadKeys = new Set();
 let currentSubscription = null;
 let currentAccount = null;
 const AI_VISIBILITY_CUSTOMER_LAUNCHED = false;
@@ -2942,6 +3088,7 @@ const ROUTE_TITLES = {
   '/app/onboarding': 'Onboarding',
   '/app/scan': 'New Audit',
   '/app/scan/website': 'Website Scan',
+  '/app/leads': 'Lead Finder',
   '/app/ai-visibility/new': 'AI Visibility Coming Soon',
   '/app/reports': 'Reports',
   '/app/support': 'Support',
@@ -3540,6 +3687,7 @@ function appRouteKey(path = window.location.pathname) {
   if (savedReportIdFromPath(path)) return 'saved-report';
   if (path.startsWith('/app/reports')) return 'reports';
   if (path.startsWith('/app/history')) return 'reports';
+  if (path.startsWith('/app/leads')) return 'leads';
   if (path.startsWith('/app/support')) return 'support';
   if (path.startsWith('/app/coming-soon')) return 'coming-soon';
   if (path.startsWith('/app/scan')) return 'scan';
@@ -3555,6 +3703,7 @@ function showAppPanel(panel) {
     report: 'results',
     'ai-visibility-new': 'ai-visibility-new-view',
     'ai-visibility-report': 'ai-visibility-report-view',
+    leads: 'lead-finder-view',
     settings: 'settings-view',
     branding: 'branding-view',
     billing: 'billing-view',
@@ -5392,6 +5541,622 @@ function loadActiveReportType({ force = false } = {}) {
     : loadSavedReports({ force });
 }
 
+function setLeadFinderMessage(message = '', tone = 'default') {
+  const node = document.getElementById('leadFinderMessage');
+  if (!node) return;
+  node.hidden = !message;
+  node.textContent = message;
+  node.dataset.tone = tone;
+}
+
+function leadRecordId(lead = {}) {
+  return asText(lead.id || lead.lead_id);
+}
+
+function leadUiKey(lead = {}, index = 0, source = 'lead') {
+  return asText(lead._ui_key) ||
+    leadRecordId(lead) ||
+    asText(lead.external_source_id) ||
+    asText(lead.website_domain) ||
+    `${source}-${index}-${asText(lead.business_name).toLowerCase().replace(/\s+/g, '-')}`;
+}
+
+function assignLeadUiKeys(leads = [], source = 'lead') {
+  return asArray(leads).map((lead, index) => ({
+    ...lead,
+    _ui_key: asText(lead._ui_key) || leadUiKey(lead, index, source),
+  }));
+}
+
+function leadWebsite(lead = {}) {
+  return asText(lead.website_url || lead.website || (lead.website_domain ? `https://${lead.website_domain}` : ''));
+}
+
+function leadRatingText(lead = {}) {
+  const rating = Number(lead.rating);
+  const reviews = Number(lead.review_count);
+  const ratingText = Number.isFinite(rating) && rating > 0 ? rating.toFixed(1).replace(/\.0$/, '') : 'No rating';
+  const reviewText = Number.isFinite(reviews) && reviews > 0 ? `${reviews.toLocaleString()} reviews` : 'No reviews';
+  return `${ratingText} - ${reviewText}`;
+}
+
+function leadLocationText(lead = {}) {
+  return [asText(lead.city), asText(lead.region), asText(lead.country_code)].filter(Boolean).join(', ') || asText(lead.address) || 'Location unavailable';
+}
+
+function leadStatusLabel(lead = {}) {
+  const status = asText(lead.scan_status || 'not_scanned');
+  const labels = {
+    not_scanned: 'Not scanned',
+    queued: 'Queued',
+    scanning: 'Scanning',
+    scanned: 'Scanned',
+    failed: 'Failed',
+    no_website: 'No website',
+  };
+  return labels[status] || status;
+}
+
+function leadOpportunityText(lead = {}) {
+  const score = Number(lead.opportunity_score);
+  if (!Number.isFinite(score)) return 'Not scored';
+  return `${Math.round(score)} / 100`;
+}
+
+function leadPrimaryActionText(lead = {}) {
+  if (lead.scan_id) return 'View Audit';
+  if (asText(lead.scan_status) === 'scanning') return 'Scanning...';
+  if (leadWebsite(lead)) return Number.isFinite(Number(lead.website_score)) ? 'Rescan' : 'Scan Website';
+  return 'Score No Website';
+}
+
+function leadSavePayload(lead = {}) {
+  return {
+    businessName: asText(lead.business_name || lead.businessName),
+    category: asText(lead.category),
+    websiteUrl: leadWebsite(lead),
+    websiteDomain: asText(lead.website_domain),
+    phone: asText(lead.phone),
+    address: asText(lead.address),
+    city: asText(lead.city),
+    region: asText(lead.region),
+    countryCode: asText(lead.country_code),
+    rating: Number.isFinite(Number(lead.rating)) ? Number(lead.rating) : null,
+    reviewCount: Number.isFinite(Number(lead.review_count)) ? Number(lead.review_count) : null,
+    source: asText(lead.source) || 'manual',
+    externalSourceId: asText(lead.external_source_id),
+  };
+}
+
+function mergeLeadIntoState(lead = {}) {
+  if (!lead?.id) return;
+  const normalizedLead = {
+    ...lead,
+    _ui_key: asText(lead._ui_key) || lead.id,
+  };
+  const updateOne = item => {
+    const sameId = leadRecordId(item) && leadRecordId(item) === normalizedLead.id;
+    const sameExternal = asText(item.external_source_id) && asText(item.external_source_id) === asText(normalizedLead.external_source_id);
+    const sameDomain = asText(item.website_domain) && asText(item.website_domain) === asText(normalizedLead.website_domain);
+    if (!sameId && !sameExternal && !sameDomain) return item;
+    return {
+      ...item,
+      ...normalizedLead,
+      saved: true,
+      lead_id: normalizedLead.id,
+    };
+  };
+  leadSearchResults = leadSearchResults.map(updateOne);
+  const existingIndex = savedLeads.findIndex(item => item.id === normalizedLead.id);
+  if (existingIndex >= 0) savedLeads[existingIndex] = { ...savedLeads[existingIndex], ...normalizedLead };
+  else savedLeads.unshift(normalizedLead);
+}
+
+function findLeadByKey(key = '') {
+  const candidates = [...leadSearchResults, ...savedLeads];
+  return candidates.find((lead, index) => leadUiKey(lead, index, 'lead') === key || leadRecordId(lead) === key) || null;
+}
+
+function sortedLeadSearchResults() {
+  const sort = document.getElementById('leadSortSelect')?.value || 'opportunity';
+  return [...leadSearchResults].sort((a, b) => {
+    if (sort === 'name') return asText(a.business_name).localeCompare(asText(b.business_name));
+    if (sort === 'rating') return (Number(b.rating) || 0) - (Number(a.rating) || 0);
+    if (sort === 'reviews') return (Number(b.review_count) || 0) - (Number(a.review_count) || 0);
+    return (Number(b.opportunity_score) || -1) - (Number(a.opportunity_score) || -1);
+  });
+}
+
+function filteredSavedLeads() {
+  const term = asText(document.getElementById('savedLeadSearchInput')?.value).toLowerCase();
+  const status = document.getElementById('savedLeadStatusFilter')?.value || 'all';
+  return savedLeads.filter(lead => {
+    const haystack = [lead.business_name, lead.website_domain, lead.category, lead.city, lead.region].map(asText).join(' ').toLowerCase();
+    const matchesSearch = !term || haystack.includes(term);
+    const matchesStatus = status === 'all' || asText(lead.scan_status) === status;
+    return matchesSearch && matchesStatus;
+  });
+}
+
+function leadSkeletonHtml(count = 4) {
+  return Array.from({ length: count }).map(() => `
+    <article class="lead-card skeleton-card">
+      <div></div>
+      <div></div>
+      <div></div>
+    </article>
+  `).join('');
+}
+
+function leadCardHtml(lead = {}, index = 0, source = 'search') {
+  const key = leadUiKey(lead, index, source);
+  const recordId = leadRecordId(lead);
+  const saved = Boolean(recordId || lead.saved || lead.lead_id);
+  const website = leadWebsite(lead);
+  const score = Number(lead.website_score);
+  const opportunity = Number(lead.opportunity_score);
+  const status = asText(lead.scan_status || 'not_scanned');
+  const selected = selectedLeadKeys.has(key);
+
+  return `
+    <article class="lead-card" data-lead-key="${escHtml(key)}" data-lead-source="${escHtml(source)}">
+      <div class="lead-card-select">
+        <input type="checkbox" aria-label="Select ${escHtml(asText(lead.business_name) || 'lead')}" data-lead-select data-lead-key="${escHtml(key)}" ${selected ? 'checked' : ''} ${leadBatchScanning ? 'disabled' : ''}>
+      </div>
+      <div class="lead-card-main">
+        <div class="lead-card-title-row">
+          <button class="lead-card-title" type="button" data-lead-action="details" data-lead-key="${escHtml(key)}">${escHtml(asText(lead.business_name) || 'Unnamed business')}</button>
+          <span class="lead-status-chip" data-status="${escHtml(status)}">${escHtml(leadStatusLabel(lead))}</span>
+        </div>
+        <div class="saved-report-meta">${escHtml(asText(lead.category) || 'Category unavailable')} - ${escHtml(leadLocationText(lead))}</div>
+        <div class="lead-card-meta">
+          <span>${escHtml(leadRatingText(lead))}</span>
+          <span>${website ? escHtml(asText(lead.website_domain) || website) : 'No website found'}</span>
+        </div>
+      </div>
+      <div class="lead-score-stack">
+        <span>Website</span>
+        <strong>${Number.isFinite(score) ? Math.round(score) : '-'}</strong>
+      </div>
+      <div class="lead-score-stack opportunity">
+        <span>Opportunity</span>
+        <strong>${Number.isFinite(opportunity) ? Math.round(opportunity) : '-'}</strong>
+      </div>
+      <div class="lead-card-actions">
+        ${saved ? '' : `<button class="secondary-btn" type="button" data-lead-action="save" data-lead-key="${escHtml(key)}">Save</button>`}
+        <button class="analyze-btn" type="button" data-lead-action="${lead.scan_id ? 'audit' : 'scan'}" data-lead-key="${escHtml(key)}" ${status === 'scanning' ? 'disabled' : ''}>${escHtml(leadPrimaryActionText(lead))}</button>
+        <button class="secondary-btn" type="button" data-lead-action="details" data-lead-key="${escHtml(key)}">Details</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderRecentLeadSearches() {
+  const container = document.getElementById('recentLeadSearches');
+  if (!container) return;
+  if (!recentLeadSearches.length) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = `
+    <span>Recent searches</span>
+    <div>
+      ${recentLeadSearches.slice(0, 5).map((search, index) => `
+        <button type="button" data-lead-recent-index="${index}">
+          ${escHtml(asText(search.query) || 'Business search')} in ${escHtml(asText(search.location) || 'location')}
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderLeadFinder() {
+  const results = document.getElementById('leadSearchResults');
+  const saved = document.getElementById('savedLeadsList');
+  const summary = document.getElementById('leadResultsSummary');
+  const batchBtn = document.getElementById('leadBatchScanBtn');
+
+  if (batchBtn) {
+    batchBtn.disabled = !selectedLeadKeys.size || leadBatchScanning;
+    batchBtn.textContent = leadBatchScanning ? 'Scanning...' : `Scan Selected${selectedLeadKeys.size ? ` (${selectedLeadKeys.size})` : ''}`;
+  }
+
+  renderRecentLeadSearches();
+
+  if (summary) {
+    summary.textContent = leadSearchLoading
+      ? 'Searching local businesses...'
+      : leadSearchResults.length
+        ? `${leadSearchResults.length} ${leadSearchResults.length === 1 ? 'lead' : 'leads'} found. Save or scan the best prospects.`
+        : 'Search a local market to find prospects.';
+  }
+
+  if (results) {
+    if (leadSearchLoading) {
+      results.innerHTML = leadSkeletonHtml(4);
+    } else if (!leadSearchResults.length) {
+      results.innerHTML = `
+        <div class="empty-state">
+          <strong>No search results yet</strong>
+          <p>Enter a business type and location to find local website opportunities.</p>
+        </div>
+      `;
+    } else {
+      results.innerHTML = sortedLeadSearchResults().map((lead, index) => leadCardHtml(lead, index, 'search')).join('');
+    }
+  }
+
+  if (saved) {
+    const rows = filteredSavedLeads();
+    if (leadsLoading) {
+      saved.innerHTML = leadSkeletonHtml(3);
+    } else if (!databaseService?.isReady?.()) {
+      saved.innerHTML = `
+        <div class="empty-state">
+          <strong>Saved leads unavailable</strong>
+          <p>Database access is not connected for this session.</p>
+        </div>
+      `;
+    } else if (!rows.length) {
+      saved.innerHTML = `
+        <div class="empty-state">
+          <strong>No saved leads yet</strong>
+          <p>Save a business from search results or scan it to add it here.</p>
+        </div>
+      `;
+    } else {
+      saved.innerHTML = rows.map((lead, index) => leadCardHtml(lead, index, 'saved')).join('');
+    }
+  }
+}
+
+async function loadLeadFinderData({ force = false } = {}) {
+  if (!databaseService?.isReady?.() || !authProvider?.isAuthenticated?.()) {
+    savedLeads = [];
+    recentLeadSearches = [];
+    leadsLoaded = false;
+    renderLeadFinder();
+    return;
+  }
+  if (leadsLoaded && !force) {
+    renderLeadFinder();
+    return;
+  }
+  leadsLoading = true;
+  setLeadFinderMessage('');
+  renderLeadFinder();
+  try {
+    const [leads, searches] = await Promise.all([
+      databaseService.listLeads({ limit: 500 }),
+      databaseService.listRecentLeadSearches({ limit: 8 }).catch(() => []),
+    ]);
+    savedLeads = assignLeadUiKeys(leads || [], 'saved');
+    recentLeadSearches = searches || [];
+    leadsLoaded = true;
+  } catch (error) {
+    savedLeads = [];
+    recentLeadSearches = [];
+    leadsLoaded = false;
+    setLeadFinderMessage(error?.message || 'Lead Finder could not load.', 'error');
+  } finally {
+    leadsLoading = false;
+    renderLeadFinder();
+  }
+}
+
+function leadSearchPayloadFromForm() {
+  return {
+    businessType: asText(document.getElementById('leadBusinessTypeInput')?.value),
+    location: asText(document.getElementById('leadLocationInput')?.value),
+    countryCode: asText(document.getElementById('leadCountrySelect')?.value) || 'CA',
+    limit: Number(document.getElementById('leadLimitSelect')?.value) || 25,
+    websiteStatus: asText(document.getElementById('leadWebsiteStatusSelect')?.value) || 'all',
+    minRating: document.getElementById('leadMinRatingInput')?.value || '',
+    minReviews: document.getElementById('leadMinReviewsInput')?.value || '',
+  };
+}
+
+async function runLeadSearch() {
+  if (!databaseService?.isReady?.()) {
+    setLeadFinderMessage('Database access is not connected for this session.', 'error');
+    return;
+  }
+  const payload = leadSearchPayloadFromForm();
+  if (!payload.businessType || !payload.location) {
+    setLeadFinderMessage('Enter a business type and location to search.', 'warning');
+    return;
+  }
+
+  leadSearchLoading = true;
+  selectedLeadKeys.clear();
+  setLeadFinderMessage('Searching local businesses...', 'default');
+  renderLeadFinder();
+
+  try {
+    const response = await databaseService.searchBusinesses(payload);
+    leadSearchResults = assignLeadUiKeys(response.results || [], 'search');
+    recentLeadSearches = await databaseService.listRecentLeadSearches({ limit: 8 }).catch(() => recentLeadSearches);
+    setLeadFinderMessage(
+      leadSearchResults.length
+        ? `${leadSearchResults.length} leads found${response.cached ? ' from cache' : ''}. Save or scan the best prospects.`
+        : 'No leads matched those filters. Try a broader business type or location.',
+      leadSearchResults.length ? 'success' : 'warning'
+    );
+  } catch (error) {
+    leadSearchResults = [];
+    setLeadFinderMessage(error?.message || 'Lead search failed.', 'error');
+    showToast(error?.message || 'Lead search failed.', 'error');
+  } finally {
+    leadSearchLoading = false;
+    renderLeadFinder();
+  }
+}
+
+async function ensureLeadSaved(key) {
+  const lead = findLeadByKey(key);
+  if (!lead) throw new Error('Lead could not be found.');
+  const existingId = leadRecordId(lead);
+  if (existingId) return savedLeads.find(item => item.id === existingId) || { ...lead, id: existingId };
+  const savedLead = await databaseService.saveLead(leadSavePayload(lead));
+  mergeLeadIntoState(savedLead);
+  leadsLoaded = true;
+  renderLeadFinder();
+  return savedLead;
+}
+
+function withTemporaryLeadReportContext(lead, idempotencyKey, action) {
+  const previous = {
+    pendingProspectName,
+    pendingCompanyName,
+    pendingAuditNotes,
+    pendingWebsiteUrl,
+    pendingAuditIdempotencyKey,
+  };
+  pendingProspectName = asText(lead.business_name);
+  pendingCompanyName = asText(lead.business_name);
+  pendingAuditNotes = 'Lead Finder scan';
+  pendingWebsiteUrl = leadWebsite(lead);
+  pendingAuditIdempotencyKey = idempotencyKey;
+  try {
+    return action();
+  } finally {
+    pendingProspectName = previous.pendingProspectName;
+    pendingCompanyName = previous.pendingCompanyName;
+    pendingAuditNotes = previous.pendingAuditNotes;
+    pendingWebsiteUrl = previous.pendingWebsiteUrl;
+    pendingAuditIdempotencyKey = previous.pendingAuditIdempotencyKey;
+  }
+}
+
+async function scanLeadByKey(key, options = {}) {
+  if (leadBatchScanning && !options.batch) return;
+  const savedLead = await ensureLeadSaved(key);
+  const website = leadWebsite(savedLead);
+  if (!website) {
+    const updated = await databaseService.updateLead(savedLead.id, {
+      hasWebsite: false,
+      scanStatus: 'no_website',
+    });
+    mergeLeadIntoState(updated);
+    setLeadFinderMessage(`${asText(updated.business_name)} scored as a no-website opportunity.`, 'success');
+    renderLeadFinder();
+    return updated;
+  }
+
+  const subscription = await loadSubscription();
+  if (!subscriptionCanRunAudit(subscription || normalizedSubscription())) {
+    const message = billingNoticeText(subscription || normalizedSubscription());
+    setLeadFinderMessage(message, 'warning');
+    showToast(message, 'warning');
+    navigateTo('/app/billing');
+    return null;
+  }
+
+  const scanningLead = await databaseService.updateLead(savedLead.id, { scanStatus: 'scanning' }).catch(() => savedLead);
+  mergeLeadIntoState(scanningLead);
+  renderLeadFinder();
+
+  const idempotencyKey = newAuditIdempotencyKey();
+  setLeadFinderMessage(`Scanning ${asText(savedLead.business_name)}. Keep this tab open.`, 'default');
+
+  try {
+    const data = await databaseService.runAudit({
+      url: website,
+      idempotencyKey,
+      prospectName: asText(savedLead.business_name),
+      companyName: asText(savedLead.business_name),
+      notes: 'Lead Finder scan',
+    });
+    const websiteScore = reportScoreFromResult(data);
+    const reportData = withTemporaryLeadReportContext(savedLead, idempotencyKey, () => buildPersistedReportData(data));
+    const report = await databaseService.createReport({
+      websiteUrl: website,
+      websiteScore,
+      reportData,
+      scanStatus: 'completed',
+      auditIdempotencyKey: idempotencyKey,
+    });
+    const updated = await databaseService.updateLead(savedLead.id, {
+      scanId: report?.id || '',
+      websiteScore,
+      reportData,
+      scanStatus: 'scanned',
+    });
+    mergeLeadIntoState(updated);
+    savedReportsLoaded = false;
+    loadSavedReports({ force: true });
+    setLeadFinderMessage(`${asText(updated.business_name)} scanned and scored.`, 'success');
+    if (!options.batch) showToast('Lead scanned and scored.', 'success');
+    renderLeadFinder();
+    return updated;
+  } catch (error) {
+    const failed = await databaseService.updateLead(savedLead.id, { scanStatus: 'failed' }).catch(() => savedLead);
+    mergeLeadIntoState(failed);
+    setLeadFinderMessage(error?.message || 'Lead scan failed.', 'error');
+    if (!options.batch) showToast(error?.message || 'Lead scan failed.', 'error');
+    renderLeadFinder();
+    return null;
+  }
+}
+
+async function scanSelectedLeads() {
+  const keys = Array.from(selectedLeadKeys);
+  if (!keys.length || leadBatchScanning) return;
+  leadBatchScanning = true;
+  renderLeadFinder();
+  let completed = 0;
+  for (const key of keys) {
+    completed += 1;
+    setLeadFinderMessage(`Scanning ${completed} of ${keys.length}. Keep this tab open.`, 'default');
+    await scanLeadByKey(key, { batch: true });
+  }
+  leadBatchScanning = false;
+  selectedLeadKeys.clear();
+  await loadLeadFinderData({ force: true });
+  setLeadFinderMessage('Batch scan complete.', 'success');
+  showToast('Batch scan complete.', 'success');
+}
+
+async function openLeadAudit(key) {
+  const lead = findLeadByKey(key);
+  const reportId = asText(lead?.scan_id);
+  if (!reportId) {
+    setLeadFinderMessage('Scan this lead before opening an audit.', 'warning');
+    return;
+  }
+  await openSavedReport(reportId);
+}
+
+async function generatePromptForLead(key) {
+  const lead = findLeadByKey(key);
+  const reportId = asText(lead?.scan_id);
+  if (!reportId) {
+    setLeadFinderMessage('Scan this lead before generating a website prompt.', 'warning');
+    return;
+  }
+  await openSavedReport(reportId);
+  setTimeout(() => generateWebsiteBuildPromptFromCurrent({ scrollToPrompt: true }), 350);
+}
+
+function openLeadDetail(key) {
+  const lead = findLeadByKey(key);
+  const panel = document.getElementById('leadDetailPanel');
+  const content = document.getElementById('leadDetailContent');
+  if (!lead || !panel || !content) return;
+  const reasons = asArray(lead.opportunity_reasons);
+  const website = leadWebsite(lead);
+  content.innerHTML = `
+    <div class="section-kicker">Lead Details</div>
+    <h2>${escHtml(asText(lead.business_name) || 'Unnamed business')}</h2>
+    <p>${escHtml(asText(lead.category) || 'Category unavailable')} - ${escHtml(leadLocationText(lead))}</p>
+    <div class="lead-detail-metrics">
+      <div><span>Opportunity</span><strong>${escHtml(leadOpportunityText(lead))}</strong><small>${escHtml(asText(lead.opportunity_label) || 'Not scored')}</small></div>
+      <div><span>Website Score</span><strong>${Number.isFinite(Number(lead.website_score)) ? Math.round(Number(lead.website_score)) : '-'}</strong><small>${escHtml(leadStatusLabel(lead))}</small></div>
+      <div><span>Google Proof</span><strong>${escHtml(leadRatingText(lead))}</strong><small>${escHtml(asText(lead.phone) || 'No phone listed')}</small></div>
+    </div>
+    <div class="lead-detail-info">
+      <div><span>Website</span><strong>${website ? escHtml(website) : 'No website found'}</strong></div>
+      <div><span>Address</span><strong>${escHtml(asText(lead.address) || leadLocationText(lead))}</strong></div>
+      <div><span>Phone</span><strong>${escHtml(asText(lead.phone) || 'No phone listed')}</strong></div>
+    </div>
+    <div class="lead-detail-reasons">
+      <strong>Opportunity Summary</strong>
+      ${reasons.length
+        ? `<ul>${reasons.map(reason => `<li>${escHtml(reason)}</li>`).join('')}</ul>`
+        : '<p>This lead has not been scanned yet. Run the website scan to calculate the opportunity score.</p>'}
+    </div>
+    <div class="lead-detail-actions">
+      <button class="analyze-btn" type="button" data-lead-action="${lead.scan_id ? 'audit' : 'scan'}" data-lead-key="${escHtml(key)}">${escHtml(leadPrimaryActionText(lead))}</button>
+      <button class="secondary-btn" type="button" data-lead-action="prompt" data-lead-key="${escHtml(key)}" ${lead.scan_id ? '' : 'disabled'}>Generate Website Prompt</button>
+      ${website ? `<a class="secondary-btn" href="${escHtml(website)}" target="_blank" rel="noopener">Visit Website</a>` : ''}
+      ${lead.phone ? `<button class="secondary-btn" type="button" data-lead-action="copy-phone" data-lead-key="${escHtml(key)}">Copy Phone</button>` : ''}
+    </div>
+  `;
+  panel.hidden = false;
+}
+
+function closeLeadDetail() {
+  const panel = document.getElementById('leadDetailPanel');
+  if (panel) panel.hidden = true;
+}
+
+async function handleLeadAction(action, key) {
+  if (action === 'save') {
+    const saved = await ensureLeadSaved(key);
+    setLeadFinderMessage(`${asText(saved.business_name)} saved.`, 'success');
+    showToast('Lead saved.', 'success');
+    return;
+  }
+  if (action === 'scan') {
+    await scanLeadByKey(key);
+    return;
+  }
+  if (action === 'audit') {
+    await openLeadAudit(key);
+    return;
+  }
+  if (action === 'prompt') {
+    await generatePromptForLead(key);
+    return;
+  }
+  if (action === 'details') {
+    openLeadDetail(key);
+    return;
+  }
+  if (action === 'copy-phone') {
+    const lead = findLeadByKey(key);
+    const phone = asText(lead?.phone);
+    if (!phone) return;
+    await navigator.clipboard?.writeText(phone);
+    showToast('Phone copied.', 'success');
+  }
+}
+
+function bindLeadFinderControls() {
+  document.getElementById('leadFinderSearchForm')?.addEventListener('submit', event => {
+    event.preventDefault();
+    runLeadSearch();
+  });
+  document.getElementById('leadBatchScanBtn')?.addEventListener('click', scanSelectedLeads);
+  document.getElementById('refreshLeadsBtn')?.addEventListener('click', () => loadLeadFinderData({ force: true }));
+  document.getElementById('leadSortSelect')?.addEventListener('change', renderLeadFinder);
+  document.getElementById('savedLeadSearchInput')?.addEventListener('input', renderLeadFinder);
+  document.getElementById('savedLeadStatusFilter')?.addEventListener('change', renderLeadFinder);
+  document.getElementById('leadDetailCloseBtn')?.addEventListener('click', closeLeadDetail);
+  document.querySelector('[data-lead-scroll-search]')?.addEventListener('click', event => {
+    event.preventDefault();
+    document.getElementById('leadFinderSearchForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  document.getElementById('recentLeadSearches')?.addEventListener('click', event => {
+    const button = event.target.closest('[data-lead-recent-index]');
+    if (!button) return;
+    const search = recentLeadSearches[Number(button.dataset.leadRecentIndex)];
+    if (!search) return;
+    document.getElementById('leadBusinessTypeInput').value = asText(search.query);
+    document.getElementById('leadLocationInput').value = asText(search.location);
+    if (search.country_code) document.getElementById('leadCountrySelect').value = asText(search.country_code);
+    runLeadSearch();
+  });
+
+  document.getElementById('lead-finder-view')?.addEventListener('change', event => {
+    const checkbox = event.target.closest('[data-lead-select]');
+    if (!checkbox) return;
+    const key = checkbox.dataset.leadKey;
+    if (!key) return;
+    if (checkbox.checked) selectedLeadKeys.add(key);
+    else selectedLeadKeys.delete(key);
+    renderLeadFinder();
+  });
+
+  document.getElementById('lead-finder-view')?.addEventListener('click', event => {
+    const button = event.target.closest('[data-lead-action]');
+    if (!button) return;
+    event.preventDefault();
+    if (button.disabled) return;
+    withButtonLoading(button, 'Working...', () => handleLeadAction(button.dataset.leadAction, button.dataset.leadKey));
+  });
+}
+
 function setAiVisibilityMessage(message = '', tone = 'default') {
   const node = document.getElementById('aiVisibilityMessage');
   if (!node) return;
@@ -6250,6 +7015,14 @@ function handleAuthStateChange(event) {
     aiVisibilityReportsLoading = false;
     pendingAiVisibilityReport = null;
     loadingAiVisibilityReportId = '';
+    leadSearchResults = [];
+    savedLeads = [];
+    recentLeadSearches = [];
+    selectedLeadKeys.clear();
+    leadsLoaded = false;
+    leadsLoading = false;
+    leadSearchLoading = false;
+    leadBatchScanning = false;
     loadingSavedReportId = '';
     reportsVisibleCount = 20;
     currentSubscription = null;
@@ -6260,6 +7033,7 @@ function handleAuthStateChange(event) {
 
   if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
     savedReportsLoaded = false;
+    leadsLoaded = false;
     provisionWorkspace()
       .then(() => updateAuthUserUI())
       .catch(error => console.warn('[PitchProof] Workspace provisioning failed:', error))
@@ -6381,7 +7155,7 @@ function renderRoute() {
       clearRequiredPlanSelection();
       trackProductAnalytics('onboarding_choice_viewed', { path });
     }
-    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'ai-visibility-report' ? 'AI Visibility Report' : key === 'reports' ? 'Reports' : key === 'support' ? 'Support' : key === 'coming-soon' ? 'Coming Soon' : ROUTE_TITLES['/app']);
+    const title = ROUTE_TITLES[path] || (key === 'current-report' || key === 'saved-report' ? 'Saved Report' : key === 'ai-visibility-report' ? 'AI Visibility Report' : key === 'reports' ? 'Reports' : key === 'leads' ? 'Lead Finder' : key === 'support' ? 'Support' : key === 'coming-soon' ? 'Coming Soon' : ROUTE_TITLES['/app']);
     if (appPageTitle) appPageTitle.textContent = title;
     setActiveAppNav(key === 'ai-visibility-new' || key === 'ai-visibility-report' ? 'ai-visibility' : (key === 'current-report' || key === 'saved-report') ? 'reports' : (key === 'dashboard' || key === 'onboarding') ? 'dashboard' : key);
     if (key === 'settings') showAppPanel('settings');
@@ -6415,6 +7189,10 @@ function renderRoute() {
       activeReportType = AI_VISIBILITY_CUSTOMER_LAUNCHED && new URLSearchParams(window.location.search).get('type') === 'ai' ? 'ai' : 'website';
       showAppPanel('reports');
     }
+    else if (key === 'leads') {
+      showAppPanel('leads');
+      loadLeadFinderData();
+    }
     else if (key === 'support') {
       showAppPanel('support');
       hydrateSupportDefaults();
@@ -6441,10 +7219,10 @@ function renderRoute() {
 
     if (key === 'reports') {
       loadActiveReportType();
-    } else if (['dashboard', 'onboarding', 'scan', 'saved-report', 'billing'].includes(key)) {
+    } else if (['dashboard', 'onboarding', 'scan', 'saved-report', 'billing', 'leads'].includes(key)) {
       loadSavedReports();
     }
-    if (['dashboard', 'onboarding', 'scan', 'billing', 'ai-visibility-new', 'ai-visibility-report'].includes(key)) loadSubscription();
+    if (['dashboard', 'onboarding', 'scan', 'billing', 'leads', 'ai-visibility-new', 'ai-visibility-report'].includes(key)) loadSubscription();
   }
 
   if (brandingProvider) {
@@ -9939,6 +10717,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   bindAuthForms();
   bindReportControls();
   bindBillingControls();
+  bindLeadFinderControls();
   bindBrandingForm();
   bindOnboardingTracking();
   loadAppConfig();

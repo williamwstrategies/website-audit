@@ -13,6 +13,8 @@ const { runAiVisibilityAssessment } = require('./lib/ai-visibility-assessment');
 const { runKeywordRankingAnalysis, keywordRankingFeatureEnabled } = require('./lib/keyword-ranking');
 const { ensureResendTrackingEnabled } = require('./lib/resend-tracking');
 const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-controls');
+const businessSearchProvider = require('./lib/business-search-provider');
+const leads = require('./lib/leads');
 
 const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
   host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
@@ -21,6 +23,8 @@ const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
 
 const app = express();
 app.use(cors());
+
+const leadSearchRateWindow = new Map();
 
 const LEGACY_PRODUCTION_HOST = 'scanner.wstrategiescanada.ca';
 const PRIMARY_PRODUCTION_ORIGIN = 'https://pitchproof.ca';
@@ -137,6 +141,24 @@ const SUPPORT_REPLY_METHODS = new Set([
 ]);
 
 const RESEND_EMAIL_API_URL = 'https://api.resend.com/emails';
+
+function checkLeadSearchRateLimit(userId) {
+  const limit = Math.max(1, Math.min(Number(process.env.LEAD_FINDER_SEARCHES_PER_MINUTE) || 6, 60));
+  const now = Date.now();
+  const windowMs = 60 * 1000;
+  const key = String(userId || 'anonymous');
+  const current = leadSearchRateWindow.get(key) || [];
+  const recent = current.filter(timestamp => now - timestamp < windowMs);
+  if (recent.length >= limit) {
+    throw billing.httpError(
+      429,
+      'Lead Finder search limit reached. Wait a minute, then search again.',
+      'lead_search_rate_limited'
+    );
+  }
+  recent.push(now);
+  leadSearchRateWindow.set(key, recent);
+}
 
 function cleanSupportText(value = '', maxLength = 1000) {
   return String(value || '').trim().slice(0, maxLength);
@@ -1752,6 +1774,130 @@ app.post('/api/analyze', async (req, res) => {
       properties: { url, error: err.message },
     });
     res.status(500).json({ error: err.message || 'Analysis failed' });
+  }
+});
+
+app.get('/api/leads/config', async (req, res) => {
+  try {
+    await billing.requireAuthenticatedUser(req);
+    res.set('Cache-Control', 'no-store');
+    res.json({ leadFinder: businessSearchProvider.leadFinderConfigStatus() });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.get('/api/leads/recent-searches', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const searches = await leads.listRecentLeadSearchesForUser(user.id, { limit: req.query.limit });
+    res.set('Cache-Control', 'no-store');
+    res.json({ searches });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/leads/search', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    checkLeadSearchRateLimit(user.id);
+
+    // Preflight the user-owned lead table before making a paid provider request.
+    await leads.listLeadsForUser(user.id, { limit: 1 });
+
+    const providerResult = await businessSearchProvider.searchBusinessListings(req.body || {});
+    const decoratedResults = await leads.decorateBusinessResultsForUser(user.id, providerResult.results || []);
+    await leads.recordLeadSearchForUser(user.id, req.body || {}, {
+      ...providerResult,
+      result_count: decoratedResults.length,
+    }).catch(error => {
+      console.warn('[PitchProof] Lead search history could not be recorded:', error?.message || error);
+    });
+
+    posthog.capture({
+      distinctId: user.id,
+      event: 'lead_finder_search_completed',
+      properties: {
+        provider: providerResult.provider,
+        cached: Boolean(providerResult.cached),
+        result_count: decoratedResults.length,
+        query: req.body?.businessType || req.body?.query || '',
+        location: req.body?.location || '',
+      },
+    });
+
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      ...providerResult,
+      result_count: decoratedResults.length,
+      results: decoratedResults,
+    });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.get('/api/leads', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const savedLeads = await leads.listLeadsForUser(user.id, {
+      search: req.query.search,
+      status: req.query.status,
+      sort: req.query.sort,
+      limit: req.query.limit,
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json({ leads: savedLeads });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.post('/api/leads', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const lead = await leads.saveLeadForUser(user.id, req.body?.lead || req.body || {});
+    posthog.capture({
+      distinctId: user.id,
+      event: 'lead_saved',
+      properties: {
+        lead_id: lead?.id || '',
+        duplicate: Boolean(lead?.duplicate),
+        source: lead?.source || '',
+      },
+    });
+    res.status(lead?.duplicate ? 200 : 201).json({ lead });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.patch('/api/leads/:leadId', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    const lead = await leads.updateLeadForUser(user.id, String(req.params.leadId || '').trim(), req.body || {});
+    res.set('Cache-Control', 'no-store');
+    res.json({ lead });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.delete('/api/leads/:leadId', async (req, res) => {
+  try {
+    const { user } = await billing.requireAuthenticatedUser(req);
+    await leads.deleteLeadForUser(user.id, String(req.params.leadId || '').trim());
+    res.status(204).send('');
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
   }
 });
 

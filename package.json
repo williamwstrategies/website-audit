@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "test:opportunity-score": "node --test tests/opportunity-score.test.js",
     "test:ai-visibility": "node --test tests/ai-visibility-assessment.test.js"
   },
   "dependencies": {
