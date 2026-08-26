@@ -7257,6 +7257,7 @@ function renderRoute() {
   }
 
   if (authProvider?.ready && isApp && !authProvider.isAuthenticated()) {
+    if (path.startsWith('/app/billing')) pendingCheckoutOffer();
     pendingProtectedPath = isFreePreviewRoute(path) ? freePreviewPathWithPendingWebsite() : `${path}${window.location.search}`;
     window.history.replaceState({}, '', isFreePreviewRoute(path) ? freePreviewLoginPath() : '/login');
     renderRoute();
