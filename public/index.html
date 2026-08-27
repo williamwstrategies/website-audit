@@ -2787,7 +2787,6 @@ const DEMO_OFFER_CONTEXT_FREE_PREVIEW = 'free_preview';
 let activeDemoOfferContext = DEMO_OFFER_CONTEXT_DEMO;
 const demoOfferShownContexts = new Set();
 const demoOfferDismissedContexts = new Set();
-const ABANDONED_CART_OFFER_KEY = 'abandoned_cart_50_first_month';
 let reportOriginalParent = null;
 let reportOriginalNextSibling = null;
 const viewedPublicPages = new Set();
@@ -5044,8 +5043,6 @@ function updateReportMetrics() {
   const isStripeAccess = (subscription.status === 'active' || isTrialing) && (hasCustomer || hasStripeSubscription);
   const isDifferentPlan = chosenPlan.key !== subscription.plan;
   const canSwitchPlan = isStripeAccess && isDifferentPlan && chosenPlan.key !== 'enterprise';
-  const checkoutOffer = pendingCheckoutOffer();
-  const abandonedCartOfferActive = checkoutOffer === ABANDONED_CART_OFFER_KEY && !isStripeAccess;
   if (hasPaidAuditAccess) {
     clearRequiredPlanSelection();
     clearOnboardingIntent();
@@ -5111,8 +5108,6 @@ function updateReportMetrics() {
     : `${chosenPlan.priceShort.replace('/mo', '')}<span>/mo</span>`;
   if (billingPriceLabel) billingPriceLabel.textContent = chosenPlan.key === 'enterprise'
     ? 'Enterprise includes custom scan limits, priority onboarding, and dedicated support.'
-    : abandonedCartOfferActive
-      ? `Abandoned-cart offer active: 50% off your first paid month on ${chosenPlan.name}.`
     : canSwitchPlan
       ? (isTrialing
         ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} and ${leadDiscoveryAllowanceLabel(chosenPlan)}. Confirm the plan change in Stripe.`
@@ -5125,15 +5120,13 @@ function updateReportMetrics() {
   if (billingHeaderKicker) billingHeaderKicker.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (billingHeaderTitle) billingHeaderTitle.textContent = needsUpgrade ? 'Choose a Plan' : 'Plan and Usage';
   if (billingHeaderCopy) billingHeaderCopy.textContent = needsUpgrade
-    ? (abandonedCartOfferActive
-      ? 'Your 50% off first-month offer is active. Choose a plan and finish checkout in Stripe.'
-      : 'Choose the plan that fits your agency. Stripe charges when you subscribe and your plan renews monthly.')
+    ? 'Choose the plan that fits your agency. Stripe charges when you subscribe and your plan renews monthly.'
     : isTrialing
       ? 'Your subscription access is active. Manage billing details, invoices, and monthly assessment usage from here.'
       : 'Manage your subscription, billing details, invoices, and monthly assessment usage.';
   if (billingSubscribeBtn) {
     billingSubscribeBtn.hidden = chosenPlan.key === 'enterprise' || isStripeAccess;
-    billingSubscribeBtn.textContent = abandonedCartOfferActive ? 'Claim 50% Off' : 'Get Started';
+    billingSubscribeBtn.textContent = 'Get Started';
   }
   if (billingSwitchPlanBtn) {
     billingSwitchPlanBtn.hidden = !canSwitchPlan;
@@ -6778,10 +6771,7 @@ async function startCheckout(source = 'billing_checkout') {
   const checkoutSource = typeof source === 'string' && source !== 'billing_checkout'
     ? source
     : storedCheckoutSource || 'billing_checkout';
-  const checkoutOffer = pendingCheckoutOffer();
-  const effectiveCheckoutSource = checkoutOffer === ABANDONED_CART_OFFER_KEY && checkoutSource === 'billing_checkout'
-    ? 'abandoned_cart_email'
-    : checkoutSource;
+  const effectiveCheckoutSource = checkoutSource;
   const plan = selectedPlan();
   if (plan.key === 'enterprise') {
     navigateTo('/contact');
@@ -6800,13 +6790,13 @@ async function startCheckout(source = 'billing_checkout') {
     button.textContent = 'Opening Checkout...';
   }
   try {
-    setBillingMessage(checkoutOffer === ABANDONED_CART_OFFER_KEY ? 'Opening secure checkout with 50% off your first month...' : 'Opening secure checkout...', 'default');
+    setBillingMessage('Opening secure checkout...', 'default');
     setRequiredPlanMessage('Opening secure checkout...', 'default');
-    trackPublicEvent('plan_selected', { plan: plan.key, source: effectiveCheckoutSource, offer: checkoutOffer || undefined });
+    trackPublicEvent('plan_selected', { plan: plan.key, source: effectiveCheckoutSource });
     if (subscriptionComplimentaryUsed(subscription)) {
       trackProductAnalytics('checkout_started_after_free_scan', { plan: plan.key, source: effectiveCheckoutSource });
     }
-    const session = await createCheckoutSessionWithAccountRetry({ plan: plan.key, ...(checkoutOffer && { offer: checkoutOffer }) });
+    const session = await createCheckoutSessionWithAccountRetry({ plan: plan.key });
     if (!session?.url) throw new Error('Checkout could not be started.');
     rememberPendingCheckoutMeta(session, plan.key, effectiveCheckoutSource);
     try {
@@ -8307,10 +8297,7 @@ function rememberPendingCheckoutMeta(session = {}, planKey = selectedBillingPlan
 }
 
 function normalizeCheckoutOffer(value = '') {
-  const clean = String(value || '').trim().toLowerCase().replace(/-/g, '_');
-  return clean === ABANDONED_CART_OFFER_KEY || clean === 'abandoned_cart_50' || clean === 'first_month_50'
-    ? ABANDONED_CART_OFFER_KEY
-    : '';
+  return '';
 }
 
 function readCheckoutOfferFromUrl() {
