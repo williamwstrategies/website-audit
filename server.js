@@ -2507,6 +2507,10 @@ async function runScheduledLifecycleEmails() {
     const signupResult = await lifecycleEmails.runAbandonedSignupCampaign({ dryRun: false });
     const cartResult = await lifecycleEmails.runAbandonedCartCampaign({ dryRun: false });
     const incompleteAccountResult = await lifecycleEmails.runIncompleteAccountOfferCampaign({ dryRun: false });
+    const discountSequenceResult = await lifecycleEmails.runFirstMonthDiscountSequenceBroadcast({
+      dryRun: false,
+      confirm: 'send-first-month-discount-sequence',
+    });
     console.log('[PitchProof] Lifecycle email run complete:', {
       abandoned_signup: {
         eligible: signupResult.eligible,
@@ -2522,6 +2526,13 @@ async function runScheduledLifecycleEmails() {
         eligible: incompleteAccountResult.eligible,
         sent: incompleteAccountResult.sent,
         failed: incompleteAccountResult.failed,
+      },
+      first_month_discount_sequence: {
+        step: discountSequenceResult.step,
+        eligible: discountSequenceResult.eligible,
+        sent: discountSequenceResult.sent,
+        failed: discountSequenceResult.failed,
+        expired: discountSequenceResult.campaign_expired,
       },
     });
   } catch (error) {
