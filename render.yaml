@@ -28,7 +28,7 @@ services:
       - key: RESEND_TRACKING_AUTO_CONFIGURE
         sync: false
       - key: OUTBOUND_EMAILS_PAUSED
-        value: "true"
+        sync: false
       - key: EMAIL_TEST_SECRET
         sync: false
       - key: BROADCAST_EMAIL_MAX_PER_RUN
@@ -54,9 +54,9 @@ services:
       - key: LIFECYCLE_EMAIL_TEST_DELAYS_MINUTES
         sync: false
       - key: REACTIVATION_AB_TEST_ENABLED
-        value: "false"
+        sync: false
       - key: REACTIVATION_AB_TEST_DRY_RUN
-        value: "true"
+        sync: false
       - key: REACTIVATION_AB_TEST_EXCLUDED_EMAILS
         sync: false
       - key: REACTIVATION_AB_TEST_INCOMPATIBLE_CAMPAIGNS
