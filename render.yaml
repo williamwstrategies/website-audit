@@ -53,6 +53,14 @@ services:
         sync: false
       - key: LIFECYCLE_EMAIL_TEST_DELAYS_MINUTES
         sync: false
+      - key: REACTIVATION_AB_TEST_ENABLED
+        value: "false"
+      - key: REACTIVATION_AB_TEST_DRY_RUN
+        value: "true"
+      - key: REACTIVATION_AB_TEST_EXCLUDED_EMAILS
+        sync: false
+      - key: REACTIVATION_AB_TEST_INCOMPATIBLE_CAMPAIGNS
+        sync: false
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_ANON_KEY
@@ -70,6 +78,12 @@ services:
       - key: STRIPE_GROWTH_PRICE_ID
         sync: false
       - key: STRIPE_PRICE_ID
+        sync: false
+      - key: STRIPE_REACTIVATION_10_PROMOTION_CODE_ID
+        sync: false
+      - key: STRIPE_REACTIVATION_10_COUPON_ID
+        sync: false
+      - key: STRIPE_REACTIVATION_10_PROMOTION_CODE
         sync: false
       - key: STRIPE_SUBSCRIPTION_TRIAL_DAYS
         value: "0"

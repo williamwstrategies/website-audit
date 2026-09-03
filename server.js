@@ -16,6 +16,7 @@ const { outboundEmailsPaused, pausedEmailResult } = require('./lib/email-control
 const businessSearchProvider = require('./lib/business-search-provider');
 const leads = require('./lib/leads');
 const emailFinder = require('./lib/email-finder');
+const reactivationExperiment = require('./lib/reactivation-experiment');
 
 const posthog = new PostHog(process.env.POSTHOG_API_KEY, {
   host: process.env.POSTHOG_HOST || 'https://us.i.posthog.com',
@@ -63,6 +64,19 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
         event: 'subscription_started',
         properties: { stripe_event_id: result.id, plan: result.subscription?.plan || '' },
       });
+      if (result.reactivationConversion) {
+        posthog.capture({
+          distinctId: result.id,
+          event: 'reactivation_subscription_started',
+          properties: {
+            stripe_event_id: result.id,
+            plan: result.subscription?.plan || '',
+            experiment_key: result.reactivationConversion.experiment_key,
+            variant: result.reactivationConversion.variant,
+            enrollment_id: result.reactivationConversion.enrollment_id,
+          },
+        });
+      }
     }
     if (result.planChange === 'upgraded' || result.planChange === 'downgraded') {
       posthog.capture({
@@ -111,6 +125,7 @@ const ALLOWED_CLIENT_ANALYTICS_EVENTS = new Set([
   'pricing_viewed_from_preview',
   'checkout_started_after_free_scan',
   'subscription_started_from_preview',
+  'reactivation_cancelled',
   'ai_visibility_scan_started',
   'ai_visibility_scan_completed',
   'ai_visibility_scan_failed',
@@ -911,6 +926,150 @@ app.all('/api/email/broadcast/first-month-discount-sequence/run', async (req, re
   }
 });
 
+app.get('/api/reactivation/click', async (req, res) => {
+  try {
+    const result = await reactivationExperiment.recordEmailClick({
+      email: req.query.email,
+      token: req.query.token,
+      step: req.query.step,
+    });
+    posthog.capture({
+      distinctId: result.enrollment?.user_id || result.enrollment?.email || 'reactivation-email-click',
+      event: 'reactivation_email_clicked',
+      properties: {
+        experiment_key: reactivationExperiment.EXPERIMENT_KEY,
+        variant: result.enrollment?.variant || '',
+        step: cleanSupportText(req.query.step, 100),
+      },
+    });
+    posthog.capture({
+      distinctId: result.enrollment?.user_id || result.enrollment?.email || 'reactivation-offer-view',
+      event: 'reactivation_offer_viewed',
+      properties: {
+        experiment_key: reactivationExperiment.EXPERIMENT_KEY,
+        variant: result.enrollment?.variant || '',
+        step: cleanSupportText(req.query.step, 100),
+      },
+    });
+    res.redirect(302, result.redirectUrl);
+  } catch (error) {
+    const fallbackUrl = new URL('/login', requestOrigin(req));
+    fallbackUrl.searchParams.set('reactivation', 'link_error');
+    res.redirect(302, fallbackUrl.toString());
+  }
+});
+
+app.all('/api/internal/reactivation/enroll', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const dryRun = broadcastDryRun(req);
+    const forceTarget = Boolean((req.body?.email || req.body?.userId || req.body?.user_id || req.query.email || req.query.userId || req.query.user_id) && (req.body?.forceVariant || req.body?.force_variant || req.query.forceVariant || req.query.force_variant));
+    const confirm = cleanSupportText(req.body?.confirm || req.query.confirm, 120);
+    if (!dryRun && !forceTarget && confirm !== 'enroll-reactivation-users') {
+      throw billing.httpError(400, 'Enrollment requires confirm="enroll-reactivation-users".', 'reactivation_enrollment_confirmation_required');
+    }
+    const result = await reactivationExperiment.enrollUsers({
+      dryRun,
+      limit: req.body?.limit || req.query.limit,
+      phase: req.body?.phase || req.query.phase,
+      targetPerVariant: req.body?.targetPerVariant || req.body?.target_per_variant || req.query.targetPerVariant || req.query.target_per_variant,
+      userId: req.body?.userId || req.body?.user_id || req.query.userId || req.query.user_id,
+      email: req.body?.email || req.query.email,
+      forceVariant: req.body?.forceVariant || req.body?.force_variant || req.query.forceVariant || req.query.force_variant,
+      allowInternal: req.body?.allowInternal === true || /^(1|true|yes)$/i.test(cleanSupportText(req.query.allowInternal, 20)),
+    });
+    posthog.capture({
+      distinctId: 'reactivation-ab-test-runner',
+      event: 'reactivation_enrollment_run',
+      properties: {
+        experiment_key: result.experiment_key,
+        dry_run: result.dryRun,
+        eligible: result.eligible,
+        selected: result.selected,
+        enrolled: result.enrolled,
+      },
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.all('/api/internal/reactivation/emails/run', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const dryRun = broadcastDryRun(req);
+    const confirm = cleanSupportText(req.body?.confirm || req.query.confirm, 120);
+    if (!dryRun && confirm !== 'send-reactivation-email-sequence') {
+      throw billing.httpError(400, 'Email sending requires confirm="send-reactivation-email-sequence".', 'reactivation_email_confirmation_required');
+    }
+    const result = await reactivationExperiment.runEmailSequence({
+      dryRun,
+      limit: req.body?.limit || req.query.limit,
+    });
+    posthog.capture({
+      distinctId: 'reactivation-ab-test-runner',
+      event: 'reactivation_email_sequence_run',
+      properties: {
+        experiment_key: result.campaign,
+        dry_run: result.dryRun,
+        eligible: result.eligible,
+        selected: result.selected,
+        sent: result.sent,
+        failed: result.failed,
+      },
+    });
+    if (!result.dryRun && Array.isArray(result.deliveries)) {
+      result.deliveries.forEach(delivery => {
+        posthog.capture({
+          distinctId: delivery.user_id || delivery.email,
+          event: 'reactivation_email_sent',
+          properties: {
+            experiment_key: reactivationExperiment.EXPERIMENT_KEY,
+            variant: delivery.variant || '',
+            step: delivery.step || '',
+            subject: delivery.subject || '',
+          },
+        });
+      });
+    }
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.all('/api/internal/reactivation/state', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const result = await reactivationExperiment.experimentState({
+      userId: req.body?.userId || req.body?.user_id || req.query.userId || req.query.user_id,
+      email: req.body?.email || req.query.email,
+    });
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
+app.all('/api/internal/reactivation/summary', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const result = await reactivationExperiment.experimentSummary();
+    res.set('Cache-Control', 'no-store');
+    res.json(result);
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.get('/api/email/unsubscribe', async (req, res) => {
   const email = cleanSupportText(req.query.email, 320);
   const campaign = cleanSupportText(req.query.campaign || lifecycleEmails.CAMPAIGN_KEY, 80);
@@ -1218,6 +1377,18 @@ app.post('/api/billing/checkout', async (req, res) => {
         checkout_offer_label: session.checkout_offer_label || '',
       },
     });
+    if (session.checkout_offer === reactivationExperiment.VARIANT_DISCOUNT_MONTH) {
+      posthog.capture({
+        distinctId: user.id,
+        event: 'reactivation_checkout_started',
+        properties: {
+          experiment_key: reactivationExperiment.EXPERIMENT_KEY,
+          variant: reactivationExperiment.VARIANT_DISCOUNT_MONTH,
+          plan: session.plan?.key || billing.PROFESSIONAL_PLAN.key,
+          checkout_offer_label: session.checkout_offer_label || '',
+        },
+      });
+    }
     res.json(session);
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
@@ -1287,6 +1458,9 @@ function auditBlockMessage(reason, subscription = {}) {
   if (reason === 'audit_limit_reached') {
     return 'You have used all of your available scans for this billing period. Upgrade your plan or wait until your next renewal date to continue generating reports.';
   }
+  if (reason === 'promotional_scans_exhausted') {
+    return 'You have used all 10 promotional prospect scans. Choose a plan to keep generating reports.';
+  }
   if (reason === 'subscription_expired') {
     return 'Your subscription period has ended. Manage billing to continue running audits.';
   }
@@ -1297,7 +1471,7 @@ function auditBlockMessage(reason, subscription = {}) {
 }
 
 function auditBlockStatus(reason) {
-  if (reason === 'audit_limit_reached') return 429;
+  if (reason === 'audit_limit_reached' || reason === 'promotional_scans_exhausted') return 429;
   return 402;
 }
 
@@ -1754,6 +1928,18 @@ app.post('/api/analyze', async (req, res) => {
         },
       });
     }
+    if (reservation?.promotional) {
+      posthog.capture({
+        distinctId: authContext.user.id,
+        event: 'reactivation_scan_started',
+        properties: {
+          experiment_key: reservation.experiment_key || reactivationExperiment.EXPERIMENT_KEY,
+          variant: reservation.variant || reactivationExperiment.VARIANT_FREE_SCANS,
+          credits_remaining: reservation.credits_remaining,
+          ...(sessionId && { $session_id: sessionId }),
+        },
+      });
+    }
   } catch (error) {
     const { statusCode, body } = billing.publicError(error);
     return res.status(statusCode).json(body);
@@ -1773,12 +1959,27 @@ app.post('/api/analyze', async (req, res) => {
     result = await optionalKeywordRanking(result, reportContext);
     const score = extractWebsiteScore(result);
     if (!auditReservation?.complimentary) {
-      await billing.completeAuditUsage(authContext.user.id, auditIdempotencyKey, {
+      const usageCompletion = await billing.completeAuditUsage(authContext.user.id, auditIdempotencyKey, {
         websiteUrl: url,
         websiteScore: score,
       }).catch(error => {
         console.warn('[PitchProof] Audit usage completion failed:', error?.message || error);
+        return null;
       });
+      if (usageCompletion?.promotional) {
+        posthog.capture({
+          distinctId: authContext.user.id,
+          event: 'reactivation_scan_completed',
+          properties: {
+            experiment_key: usageCompletion.experiment_key || reactivationExperiment.EXPERIMENT_KEY,
+            variant: usageCompletion.variant || reactivationExperiment.VARIANT_FREE_SCANS,
+            website_url: url,
+            score,
+            credits_remaining: usageCompletion.credits_remaining,
+            ...(sessionId && { $session_id: sessionId }),
+          },
+        });
+      }
     }
     if (auditReservation?.complimentary) {
       const report = await billing.createReportForUser(authContext.user.id, {

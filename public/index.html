@@ -4647,6 +4647,9 @@ function defaultSubscriptionState() {
     can_white_label: false,
     platform_branding_required: true,
     platform_branding_name: 'PitchProof',
+    reactivation_experiment: null,
+    reactivation_promotional_scan_access: false,
+    promotional_scans_remaining: 0,
   };
 }
 
@@ -4662,7 +4665,7 @@ function subscriptionCanRunAudit(subscription = normalizedSubscription()) {
 }
 
 function subscriptionHasPaidAuditAccess(subscription = normalizedSubscription()) {
-  return subscription.can_run_audit === true;
+  return subscription.can_run_audit === true && subscription.reactivation_promotional_scan_access !== true;
 }
 
 function subscriptionCanRunComplimentaryScan(subscription = normalizedSubscription()) {
@@ -4715,6 +4718,9 @@ function billingNoticeText(subscription = normalizedSubscription()) {
   const planName = subscription.plan_name || plan.name;
   if (!subscription.billing_configured) {
     return 'Billing is not fully configured yet. Add Stripe and Supabase server environment variables in Render.';
+  }
+  if (subscription.reactivation_promotional_scan_access && (subscription.promotional_scans_remaining || 0) > 0) {
+    return `Your account includes ${subscription.promotional_scans_remaining} one-time promotional prospect scans. No card is required.`;
   }
   if (subscription.status === 'trialing') {
     const accessEnd = subscription.current_period_end || subscription.renewal_date;
@@ -5028,6 +5034,7 @@ function updateReportMetrics() {
   const canRunAudit = subscriptionCanRunAudit(subscription);
   const canRunAiVisibility = AI_VISIBILITY_CUSTOMER_LAUNCHED && aiVisibilityCustomerEnabled && subscription.can_run_ai_visibility === true;
   const hasPaidAuditAccess = subscriptionHasPaidAuditAccess(subscription);
+  const hasReactivationPromoAccess = subscription.reactivation_promotional_scan_access === true && (subscription.promotional_scans_remaining || 0) > 0;
   const canRunComplimentary = subscriptionCanRunComplimentaryScan(subscription);
   const complimentaryUsed = subscriptionComplimentaryUsed(subscription);
   const complimentaryReserved = subscription.complimentary_scan_reserved === true;
@@ -5037,7 +5044,7 @@ function updateReportMetrics() {
   const canSubmitAudit = canRunAudit || canAttemptFreePreview;
   const hasCustomer = !!subscription.stripe_customer_id;
   const hasStripeSubscription = !!subscription.stripe_subscription_id;
-  const needsUpgrade = !hasPaidAuditAccess && !canRunComplimentary;
+  const needsUpgrade = !hasPaidAuditAccess && !canRunComplimentary && !hasReactivationPromoAccess;
   const isTrialing = subscription.status === 'trialing';
   const isActivePaid = subscription.status === 'active' && (hasCustomer || hasStripeSubscription);
   const isStripeAccess = (subscription.status === 'active' || isTrialing) && (hasCustomer || hasStripeSubscription);
@@ -5055,8 +5062,10 @@ function updateReportMetrics() {
   if (reportCount) reportCount.textContent = String(count);
   if (reportCountLabel) reportCountLabel.textContent = count === 1 ? 'Saved assessment.' : 'Saved assessments.';
   if (monthlyReports) monthlyReports.textContent = String(monthly);
-  if (reportsUsed) reportsUsed.textContent = canRunComplimentary && !hasPaidAuditAccess ? '1 included' : subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
-  if (reportsUsedLabel) reportsUsedLabel.textContent = canRunComplimentary && !hasPaidAuditAccess
+  if (reportsUsed) reportsUsed.textContent = hasReactivationPromoAccess ? `${subscription.promotional_scans_remaining} free` : canRunComplimentary && !hasPaidAuditAccess ? '1 included' : subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
+  if (reportsUsedLabel) reportsUsedLabel.textContent = hasReactivationPromoAccess
+    ? 'One-time reactivation scans available.'
+    : canRunComplimentary && !hasPaidAuditAccess
     ? 'Complimentary assessment available.'
     : subscription.unlimited ? 'Enterprise fair-use access.' : (remaining > 0 ? `${remaining} scans remaining.` : 'Scan limit reached.');
   if (aiReportsUsed) aiReportsUsed.textContent = AI_VISIBILITY_CUSTOMER_LAUNCHED ? (subscription.unlimited ? `${aiUsed} / Unlimited` : `${aiUsed} / ${aiLimit}`) : 'Coming soon';
@@ -5065,24 +5074,30 @@ function updateReportMetrics() {
     : 'Not available yet.';
   if (averageScore) averageScore.textContent = avg == null ? '-' : `${avg}%`;
   if (currentPlan) currentPlan.textContent = plan;
-  if (planStatus) planStatus.textContent = canRunComplimentary && !hasPaidAuditAccess
+  if (planStatus) planStatus.textContent = hasReactivationPromoAccess
+    ? 'Promotional scans available.'
+    : canRunComplimentary && !hasPaidAuditAccess
     ? 'Complimentary assessment available.'
     : complimentaryUsed && !hasPaidAuditAccess
       ? 'Plan required for more reports.'
       : `${status} workspace.`;
   if (billingPlanName) billingPlanName.textContent = plan;
-  if (billingPlanStatus) billingPlanStatus.textContent = isTrialing ? 'Subscription workspace.' : `${status} workspace.`;
-  if (billingUsageCount) billingUsageCount.textContent = subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
-  if (billingUsageRemaining) billingUsageRemaining.textContent = subscription.unlimited ? 'Unlimited fair-use balance.' : `${remaining} remaining balance.`;
+  if (billingPlanStatus) billingPlanStatus.textContent = hasReactivationPromoAccess ? 'Promotional access.' : isTrialing ? 'Subscription workspace.' : `${status} workspace.`;
+  if (billingUsageCount) billingUsageCount.textContent = hasReactivationPromoAccess ? `${subscription.promotional_scans_remaining} / 10` : subscription.unlimited ? `${used} / Unlimited` : `${used} / ${limit}`;
+  if (billingUsageRemaining) billingUsageRemaining.textContent = hasReactivationPromoAccess ? 'Promotional scans remaining.' : subscription.unlimited ? 'Unlimited fair-use balance.' : `${remaining} remaining balance.`;
   if (billingAiUsageCount) billingAiUsageCount.textContent = AI_VISIBILITY_CUSTOMER_LAUNCHED ? (subscription.unlimited ? `${aiUsed} / Unlimited` : `${aiUsed} / ${aiLimit}`) : 'Coming soon';
   if (billingAiUsageRemaining) billingAiUsageRemaining.textContent = AI_VISIBILITY_CUSTOMER_LAUNCHED
     ? (subscription.unlimited ? 'Unlimited AI fair-use balance.' : `${aiRemaining} AI Visibility reports remaining.`)
     : 'AI Visibility reports are not available yet.';
   if (billingPeriodEnd) billingPeriodEnd.textContent = formatBillingDate(subscription.renewal_date || subscription.current_period_end);
-  if (billingRenewalDate) billingRenewalDate.textContent = subscriptionCanRunAudit(subscription)
+  if (billingRenewalDate) billingRenewalDate.textContent = hasReactivationPromoAccess
+    ? 'No card required for promotional scans.'
+    : subscriptionCanRunAudit(subscription)
     ? (isTrialing ? `Access through: ${formatBillingDate(subscription.current_period_end || subscription.renewal_date)}` : `Next renewal: ${formatBillingDate(subscription.renewal_date || subscription.current_period_end)}`)
     : 'Renewal date unavailable.';
-  if (billingPaymentStatus) billingPaymentStatus.textContent = isTrialing
+  if (billingPaymentStatus) billingPaymentStatus.textContent = hasReactivationPromoAccess
+    ? 'One-time reactivation access.'
+    : isTrialing
     ? 'Stripe charges when you subscribe.'
     : subscription.payment_status
       ? `Payment status: ${titleCase(subscription.payment_status)}`
@@ -5135,10 +5150,12 @@ function updateReportMetrics() {
   if (billingManageBtn) billingManageBtn.hidden = !hasCustomer;
   if (subscriptionBanner) {
     subscriptionBanner.hidden = hasPaidAuditAccess;
-    subscriptionBanner.dataset.tone = canRunComplimentary ? 'success' : 'upgrade';
+    subscriptionBanner.dataset.tone = canRunComplimentary || hasReactivationPromoAccess ? 'success' : 'upgrade';
   }
   if (subscriptionBannerTitle) {
-    subscriptionBannerTitle.textContent = canRunComplimentary
+    subscriptionBannerTitle.textContent = hasReactivationPromoAccess
+      ? '10 Free Prospect Scans Added'
+      : canRunComplimentary
       ? 'One Free Report Preview Available'
       : complimentaryReserved
         ? 'Your preview is being prepared'
@@ -5151,7 +5168,9 @@ function updateReportMetrics() {
               : 'Subscription active';
   }
   if (subscriptionBannerText) {
-    subscriptionBannerText.textContent = canRunComplimentary
+    subscriptionBannerText.textContent = hasReactivationPromoAccess
+      ? `${subscription.promotional_scans_remaining} promotional scans remain. Use them on real prospects without adding a card.`
+      : canRunComplimentary
       ? 'Scan one real website and preview the most important findings before choosing a plan.'
       : complimentaryReserved
         ? 'Your free preview is in progress. Return to the report when it is ready.'
@@ -5162,8 +5181,8 @@ function updateReportMetrics() {
             : `${scanBalanceText(remaining)} scans remaining.`;
   }
   if (subscriptionBannerCta) {
-    subscriptionBannerCta.textContent = canRunComplimentary ? 'Generate Preview' : complimentaryUsed ? 'Unlock Full Report' : needsUpgrade ? 'Choose Plan' : 'Billing';
-    subscriptionBannerCta.setAttribute('href', canRunComplimentary ? '/onboarding/free-preview' : complimentaryUsed || needsUpgrade ? '/app/billing' : '/app/billing');
+    subscriptionBannerCta.textContent = hasReactivationPromoAccess ? 'Run Free Scan' : canRunComplimentary ? 'Generate Preview' : complimentaryUsed ? 'Unlock Full Report' : needsUpgrade ? 'Choose Plan' : 'Billing';
+    subscriptionBannerCta.setAttribute('href', hasReactivationPromoAccess ? '/app/scan' : canRunComplimentary ? '/onboarding/free-preview' : complimentaryUsed || needsUpgrade ? '/app/billing' : '/app/billing');
   }
   if (scanBillingNotice) scanBillingNotice.hidden = canRunAudit;
   if (scanBillingNoticeText) scanBillingNoticeText.textContent = notice;
@@ -6727,6 +6746,15 @@ function handleBillingReturnState() {
     setTimeout(trackStripeSuccessReturnConversion, 1500);
     pollSubscriptionActivation();
   } else if (path.startsWith('/app/billing/cancelled')) {
+    const pending = readPendingCheckoutMeta();
+    if (pending.offer === 'reactivation_discount_month') {
+      trackProductAnalytics('reactivation_cancelled', {
+        experiment_key: 'pitchproof_reactivation_2026_09',
+        variant: 'reactivation_discount_month',
+        plan: pending.plan || 'professional',
+        source: pending.source || 'stripe_cancel_return',
+      });
+    }
     markRequiredPlanSelection();
     syncRequiredPlanModal();
     setBillingMessage('Checkout was cancelled. No subscription changes were made.', 'warning');
@@ -6772,7 +6800,8 @@ async function startCheckout(source = 'billing_checkout') {
     ? source
     : storedCheckoutSource || 'billing_checkout';
   const effectiveCheckoutSource = checkoutSource;
-  const plan = selectedPlan();
+  const checkoutOffer = pendingCheckoutOffer();
+  const plan = checkoutOffer === 'reactivation_discount_month' ? appPlanForKey('professional') : selectedPlan();
   if (plan.key === 'enterprise') {
     navigateTo('/contact');
     return;
@@ -6796,7 +6825,10 @@ async function startCheckout(source = 'billing_checkout') {
     if (subscriptionComplimentaryUsed(subscription)) {
       trackProductAnalytics('checkout_started_after_free_scan', { plan: plan.key, source: effectiveCheckoutSource });
     }
-    const session = await createCheckoutSessionWithAccountRetry({ plan: plan.key });
+    const session = await createCheckoutSessionWithAccountRetry({
+      plan: plan.key,
+      ...(checkoutOffer && { offer: checkoutOffer }),
+    });
     if (!session?.url) throw new Error('Checkout could not be started.');
     rememberPendingCheckoutMeta(session, plan.key, effectiveCheckoutSource);
     try {
@@ -8297,6 +8329,10 @@ function rememberPendingCheckoutMeta(session = {}, planKey = selectedBillingPlan
 }
 
 function normalizeCheckoutOffer(value = '') {
+  const clean = String(value || '').trim().toLowerCase();
+  if (clean === 'reactivation_discount_month' || clean === 'reactivation' || clean === 'reactivation_10') {
+    return 'reactivation_discount_month';
+  }
   return '';
 }
 
@@ -9976,7 +10012,7 @@ async function runAnalysis() {
 
   resetMetaScan(url);
   fireMetaOnce('auditStarted', 'AuditStarted');
-  const scanSource = isFreePreviewRoute() ? 'free_preview' : 'new_audit';
+  const scanSource = activeSubscription.reactivation_promotional_scan_access ? 'reactivation_free_scans' : isFreePreviewRoute() ? 'free_preview' : 'new_audit';
   trackProductAnalytics('scan_started', {
     source: scanSource,
     has_prospect_name: Boolean(pendingProspectName),
