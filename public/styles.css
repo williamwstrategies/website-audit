@@ -6904,6 +6904,354 @@ body.required-plan-open {
   box-shadow: 0 16px 42px rgba(35, 168, 255, 0.26);
 }
 
+.marketing-view .problem-section {
+  grid-template-columns: minmax(280px, 0.55fr) minmax(640px, 1.45fr);
+}
+
+.marketing-view .before-after-report-frame {
+  --before-after-card: rgba(9, 25, 46, 0.9);
+  --before-after-card-soft: rgba(255, 255, 255, 0.065);
+  --before-after-border: rgba(255, 255, 255, 0.12);
+  --before-after-muted: #9fb1c7;
+  --before-after-muted-strong: #d7e6f7;
+  --before-after-risk: #d46959;
+  --before-after-warn: #d09a28;
+  --before-after-good: #39d98e;
+  display: grid;
+  gap: 16px;
+  padding: 22px;
+  overflow: hidden;
+  border-radius: 30px;
+  color: var(--public-text);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.032) 1px, transparent 1px),
+    radial-gradient(circle at 12% 0%, rgba(35, 168, 255, 0.18), transparent 28rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.035)),
+    rgba(9, 25, 46, 0.92);
+  background-size: 54px 54px, 54px 54px, auto, auto, auto;
+}
+
+.marketing-view .before-after-window-bar {
+  margin: 0;
+}
+
+.marketing-view .before-after-window-bar strong {
+  margin-right: auto;
+  color: var(--public-text);
+  font-size: 0.95rem;
+}
+
+.marketing-view .before-after-window-bar em {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border: 1px solid rgba(121, 214, 255, 0.2);
+  border-radius: var(--radius-pill);
+  background: rgba(35, 168, 255, 0.1);
+  color: var(--public-cyan);
+  font-size: 0.76rem;
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.marketing-view .before-after-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.marketing-view .mini-assessment-report {
+  --mini-tone: var(--before-after-risk);
+  --mini-tone-soft: rgba(212, 105, 89, 0.13);
+  --mini-tone-border: rgba(212, 105, 89, 0.26);
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--mini-tone-border);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032)),
+    var(--before-after-card);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.2);
+}
+
+.marketing-view .mini-assessment-report.after {
+  --mini-tone: var(--before-after-good);
+  --mini-tone-soft: rgba(57, 217, 142, 0.13);
+  --mini-tone-border: rgba(57, 217, 142, 0.26);
+}
+
+.marketing-view .mini-report-header,
+.marketing-view .mini-report-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.marketing-view .mini-report-header {
+  justify-content: space-between;
+}
+
+.marketing-view .comparison-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 6px 10px;
+  border: 1px solid var(--mini-tone-border);
+  border-radius: var(--radius-pill);
+  background: var(--mini-tone-soft);
+  color: var(--mini-tone);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.marketing-view .mini-report-header small,
+.marketing-view .mini-report-brand-row small,
+.marketing-view .mini-score-card > span,
+.marketing-view .mini-summary-card > span {
+  color: var(--before-after-muted);
+  font-size: 0.74rem;
+  font-weight: 760;
+}
+
+.marketing-view .mini-report-brand-row {
+  flex-wrap: wrap;
+  padding: 10px;
+  border: 1px solid var(--before-after-border);
+  border-radius: 16px;
+  background: var(--before-after-card-soft);
+}
+
+.marketing-view .mini-report-brand-row > span {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  background: #ffffff;
+}
+
+.marketing-view .mini-report-brand-row img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.marketing-view .mini-report-brand-row strong {
+  color: var(--before-after-muted-strong);
+  font-size: 0.86rem;
+}
+
+.marketing-view .mini-report-brand-row small {
+  margin-left: auto;
+  text-align: right;
+}
+
+.marketing-view .mini-score-card,
+.marketing-view .mini-summary-card {
+  padding: 14px;
+  border: 1px solid var(--before-after-border);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    rgba(9, 25, 46, 0.82);
+}
+
+.marketing-view .mini-score-card > span,
+.marketing-view .mini-summary-card > span {
+  display: block;
+  margin-bottom: 9px;
+  text-transform: uppercase;
+}
+
+.marketing-view .mini-score-value {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.marketing-view .mini-score-value strong {
+  color: var(--mini-tone);
+  font-size: 3.35rem;
+  font-weight: 800;
+  line-height: 0.9;
+}
+
+.marketing-view .mini-score-value small {
+  color: var(--before-after-muted);
+  font-size: 1.28rem;
+  font-weight: 760;
+}
+
+.marketing-view .mini-score-card i,
+.marketing-view .mini-category i {
+  display: block;
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.marketing-view .mini-score-card i {
+  margin: 12px 0 10px;
+}
+
+.marketing-view .mini-score-card b,
+.marketing-view .mini-category b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mini-tone);
+}
+
+.marketing-view .mini-score-card p,
+.marketing-view .mini-summary-card p {
+  margin: 0;
+  color: var(--before-after-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.marketing-view .mini-score-card p {
+  color: #e08b7f;
+}
+
+.marketing-view .mini-assessment-report.after .mini-score-card p {
+  color: #91e7bd;
+}
+
+.marketing-view .mini-summary-card h3 {
+  margin: 0 0 8px;
+  color: var(--public-text);
+  font-size: 1.18rem;
+  line-height: 1.1;
+}
+
+.marketing-view .mini-category-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  color: var(--public-text);
+  font-weight: 820;
+}
+
+.marketing-view .mini-category-heading span {
+  color: #f5c842;
+  font-size: 0.8rem;
+}
+
+.marketing-view .mini-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.marketing-view .mini-category {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 10px;
+  align-items: baseline;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--before-after-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.052);
+}
+
+.marketing-view .mini-category.risk {
+  --mini-tone: var(--before-after-risk);
+}
+
+.marketing-view .mini-category.warn {
+  --mini-tone: var(--before-after-warn);
+}
+
+.marketing-view .mini-category.good {
+  --mini-tone: var(--before-after-good);
+}
+
+.marketing-view .mini-category > span {
+  color: var(--public-text);
+  font-size: 0.78rem;
+  font-weight: 780;
+}
+
+.marketing-view .mini-category > strong {
+  color: var(--mini-tone);
+  font-size: 1.18rem;
+  font-weight: 800;
+}
+
+.marketing-view .mini-category > strong small {
+  color: var(--before-after-muted);
+  font-size: 0.68rem;
+  font-weight: 760;
+}
+
+.marketing-view .mini-category i {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1040px) {
+  .marketing-view .problem-section {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-view .before-after-report-frame {
+    max-width: 860px;
+  }
+}
+
+@media (max-width: 700px) {
+  .marketing-view .before-after-report-frame {
+    gap: 14px;
+    padding: 14px;
+    border-radius: 24px;
+  }
+
+  .marketing-view .before-after-window-bar {
+    flex-wrap: wrap;
+  }
+
+  .marketing-view .before-after-report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-view .mini-assessment-report {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .marketing-view .mini-score-value strong {
+    font-size: 3rem;
+  }
+
+  .marketing-view .mini-summary-card h3 {
+    font-size: 1.08rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .marketing-view .mini-category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-view .mini-report-brand-row small {
+    width: 100%;
+    margin-left: 38px;
+    text-align: left;
+  }
+}
+
 .marketing-view .four-step-grid,
 .marketing-view .score-card-grid {
   display: grid;
