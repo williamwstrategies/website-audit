@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const crypto = require('crypto');
 const { analyzeWebsite } = require('./api/analyze');
 const { PostHog } = require('posthog-node');
@@ -97,6 +98,227 @@ app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async
 });
 
 app.use(express.json({ limit: '8mb' }));
+
+const PUBLIC_INDEX_PATH = path.join(__dirname, 'public', 'index.html');
+const PUBLIC_ROUTE_META = {
+  '/': {
+    title: 'PitchProof | White-Label Website Audit Reports for Agencies',
+    description: 'Scan one prospect free. Turn prospect websites into client-ready website audit reports for discovery calls, outreach, and proposals.',
+  },
+  '/product': {
+    title: 'White-Label Website Audit Software for Agencies | PitchProof',
+    description: 'See how agencies scan prospect websites, generate opportunity reports, save assessments, export PDFs, and explain 38+ website factors under their own brand.',
+  },
+  '/features': {
+    title: 'Website Audit Software Features for Agencies | PitchProof',
+    description: 'Explore PitchProof features for white-label reports, PDF exports, conversion analysis, trust analysis, technical health, and client-ready website assessments.',
+  },
+  '/how-it-works': {
+    title: 'How PitchProof Works | Website Audit Reports for Sales Calls',
+    description: 'Learn how agencies move from a prospect website scan to a clear opportunity report for outreach, discovery calls, follow-up, and proposals.',
+  },
+  '/sample-report': {
+    title: 'Demo Website Opportunity Report | PitchProof',
+    description: 'Explore a fictional demo opportunity report showing scores, category breakdowns, priorities, and client-ready recommendations.',
+  },
+  '/free-assessment': {
+    title: 'Free Prospect Website Scan | PitchProof',
+    description: 'Scan one prospect free, create an account while the report prepares, and preview the assessment before choosing a plan.',
+  },
+  '/pricing': {
+    title: 'Website Audit Report Software Pricing | PitchProof',
+    description: 'Compare Starter, Professional, Growth, and Enterprise plans for agency website audit reports, PDFs, saved reports, Lead Finder, and white-label branding.',
+  },
+  '/pricing/starter': {
+    title: 'Starter Plan | PitchProof Website Audit Reports',
+    description: 'Start the Starter plan with 50 website scans, 3,000 Lead Finder results, PDF exports, saved reports, share links, and PitchProof-branded reports.',
+  },
+  '/pricing/professional': {
+    title: 'Professional Plan | White-Label Website Audit Reports | PitchProof',
+    description: 'Start the Professional plan with 150 plan scans, 50 bonus scans, unlimited Lead Finder results, white-label reports, custom logo, and brand colors.',
+  },
+  '/pricing/growth': {
+    title: 'Growth Plan | Higher Volume Website Audit Reports | PitchProof',
+    description: 'Start the Growth plan with 500 website scans, unlimited Lead Finder results, white-label reports, branded PDFs, and priority support.',
+  },
+  '/blog': {
+    title: 'PitchProof Blog | Website Sales Guides for Agencies',
+    description: 'Read practical guides about getting more web design clients, prospecting, outreach, discovery calls, website audits, proposals, and sales tools.',
+  },
+  '/resources': {
+    title: 'Website Audit Resources for Agencies | PitchProof',
+    description: 'Explore resources for agency sales, website audits, proposal support, templates, comparisons, and client-ready website assessments.',
+  },
+  '/industries': {
+    title: 'Website Audit Software by Agency Type | PitchProof',
+    description: 'Find focused PitchProof pages for web design agencies, marketing agencies, SEO agencies, freelancers, consultants, WordPress teams, Webflow teams, and Shopify agencies.',
+  },
+  '/comparisons': {
+    title: 'Website Audit Software Comparisons | PitchProof',
+    description: 'Compare PitchProof with traditional SEO, crawling, analytics, and audit tools for agencies focused on website sales conversations.',
+  },
+  '/templates': {
+    title: 'Website Audit Templates for Agencies | PitchProof',
+    description: 'Explore website audit templates, proposal templates, discovery questionnaires, redesign proposal templates, consultation checklists, and sales presentation templates.',
+  },
+  '/tools': {
+    title: 'Free Website Tools for Agencies | PitchProof',
+    description: 'Explore upcoming tools for website ROI, redesign timing, lead loss, pricing, and homepage checklist generation.',
+  },
+  '/faq': {
+    title: 'PitchProof FAQ | Website Audit Reports, Scoring, and Branding',
+    description: 'Find answers about website health scoring, opportunity reports, white-label branding, PDF reports, saved reports, billing, and agency use cases.',
+  },
+  '/contact': {
+    title: 'Contact PitchProof | Website Audit Software for Agencies',
+    description: 'Find presale and account access information for PitchProof.',
+  },
+  '/about': {
+    title: 'About PitchProof | Built for Agency Website Sales Conversations',
+    description: 'Learn why William Hall built PitchProof for agencies that need clearer website sales conversations and prospect-ready audit reports.',
+  },
+  '/privacy': {
+    title: 'Privacy Policy | PitchProof',
+    description: 'Privacy overview for PitchProof website audit software.',
+  },
+  '/terms': {
+    title: 'Terms of Service | PitchProof',
+    description: 'Terms overview for PitchProof website audit software.',
+  },
+  '/website-audit-software': {
+    title: 'Website Audit Software for Agencies | PitchProof',
+    description: 'PitchProof helps agencies scan prospect websites, create professional opportunity reports, save assessments, export PDFs, and present findings with sales-ready clarity.',
+  },
+};
+
+function publicRouteLabel(segment = '') {
+  return String(segment || '')
+    .split('-')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function dynamicPublicRouteMeta(pathName) {
+  const normalized = String(pathName || '').replace(/\/+$/, '') || '/';
+  const parts = normalized.split('/').filter(Boolean);
+  if (parts.length !== 2) return null;
+
+  const [section, slug] = parts;
+  const label = publicRouteLabel(slug);
+  if (!label) return null;
+
+  if (section === 'industries') {
+    return {
+      title: `Website Audit Software for ${label} | PitchProof`,
+      description: `See how ${label.toLowerCase()} can use PitchProof to scan prospect websites, create client-ready reports, and support website sales conversations.`,
+    };
+  }
+  if (section === 'features') {
+    return {
+      title: `${label} | PitchProof Website Audit Software`,
+      description: `Learn how PitchProof helps agencies use ${label.toLowerCase()} inside client-ready website audit reports and sales workflows.`,
+    };
+  }
+  if (section === 'use-cases') {
+    return {
+      title: `${label} | PitchProof Use Case`,
+      description: `Use PitchProof website audit reports for ${label.toLowerCase()} with clearer scores, priorities, and recommendations for agency sales conversations.`,
+    };
+  }
+  if (section === 'comparisons') {
+    return {
+      title: `${label} | PitchProof Comparison`,
+      description: `Compare PitchProof with ${label.replace(/^Pitchproof Vs /i, '')} for agencies that need prospect-ready website audit reports instead of generic technical exports.`,
+    };
+  }
+  if (section === 'templates') {
+    return {
+      title: `${label} | PitchProof Template`,
+      description: `Use this ${label.toLowerCase()} with PitchProof website assessments to turn prospect research into clearer proposals, follow-up, and sales conversations.`,
+    };
+  }
+  if (section === 'tools') {
+    return {
+      title: `${label} | PitchProof Tool`,
+      description: `Explore the ${label.toLowerCase()} and start with a PitchProof website assessment preview for agency sales conversations.`,
+    };
+  }
+  if (section === 'blog') {
+    return {
+      title: `${label} | PitchProof Blog`,
+      description: `Read this PitchProof guide for agencies using website audits, prospect research, outreach, discovery calls, and proposals to sell more website work.`,
+    };
+  }
+  return null;
+}
+
+function publicMetaForRequestPath(pathName) {
+  const normalized = String(pathName || '').replace(/\/+$/, '') || '/';
+  return PUBLIC_ROUTE_META[normalized] || dynamicPublicRouteMeta(normalized);
+}
+
+function escapeHtmlAttribute(value = '') {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function injectPublicRouteMeta(html, req, meta) {
+  const canonical = `${PRIMARY_PRODUCTION_ORIGIN}${String(req.path || '/').replace(/\/+$/, '') || '/'}`;
+  const title = escapeHtmlAttribute(meta.title);
+  const description = escapeHtmlAttribute(meta.description);
+  const canonicalHref = escapeHtmlAttribute(canonical);
+
+  return String(html || '')
+    .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
+    .replace(/<meta id="metaDescription" name="description" content="[^"]*">/, `<meta id="metaDescription" name="description" content="${description}">`)
+    .replace(/<link id="canonicalUrl" rel="canonical" href="[^"]*">/, `<link id="canonicalUrl" rel="canonical" href="${canonicalHref}">`)
+    .replace(/<meta id="ogTitle" property="og:title" content="[^"]*">/, `<meta id="ogTitle" property="og:title" content="${title}">`)
+    .replace(/<meta id="ogDescription" property="og:description" content="[^"]*">/, `<meta id="ogDescription" property="og:description" content="${description}">`)
+    .replace(/<meta id="ogUrl" property="og:url" content="[^"]*">/, `<meta id="ogUrl" property="og:url" content="${canonicalHref}">`)
+    .replace(/<meta id="twitterTitle" name="twitter:title" content="[^"]*">/, `<meta id="twitterTitle" name="twitter:title" content="${title}">`)
+    .replace(/<meta id="twitterDescription" name="twitter:description" content="[^"]*">/, `<meta id="twitterDescription" name="twitter:description" content="${description}">`);
+}
+
+function servePublicIndexWithSeo(req, res, next) {
+  const meta = publicMetaForRequestPath(req.path);
+  if (!meta) return next();
+
+  fs.readFile(PUBLIC_INDEX_PATH, 'utf8', (error, html) => {
+    if (error) return next(error);
+    res.type('html').send(injectPublicRouteMeta(html, req, meta));
+  });
+}
+
+app.get([
+  '/',
+  '/product',
+  '/features',
+  '/how-it-works',
+  '/sample-report',
+  '/free-assessment',
+  '/pricing',
+  '/pricing/starter',
+  '/pricing/professional',
+  '/pricing/growth',
+  '/blog',
+  '/resources',
+  '/industries',
+  '/comparisons',
+  '/templates',
+  '/tools',
+  '/faq',
+  '/contact',
+  '/about',
+  '/privacy',
+  '/terms',
+  '/website-audit-software',
+], servePublicIndexWithSeo);
+app.get(/^\/(?:industries|features|use-cases|comparisons|templates|tools|blog)\/[^/]+$/, servePublicIndexWithSeo);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const ALLOWED_CLIENT_ANALYTICS_EVENTS = new Set([

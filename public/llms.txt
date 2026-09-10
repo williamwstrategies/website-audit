@@ -1,0 +1,43 @@
+PitchProof
+
+PitchProof is website audit report software for agencies, freelancers, SEO teams, and web design teams.
+
+The product helps agencies scan prospect websites and turn the findings into client-ready website assessment reports for outreach, discovery calls, proposals, and follow-up.
+
+Primary audience:
+- Web design agencies
+- Marketing agencies
+- SEO agencies
+- Freelance web designers
+- Digital consultants
+
+Core pages:
+- Homepage: https://pitchproof.ca/
+- Product: https://pitchproof.ca/product
+- Pricing: https://pitchproof.ca/pricing
+- Free prospect scan: https://pitchproof.ca/free-assessment
+- Demo report: https://pitchproof.ca/sample-report
+- Website audit software: https://pitchproof.ca/website-audit-software
+- Resources: https://pitchproof.ca/resources
+- Blog: https://pitchproof.ca/blog
+- FAQ: https://pitchproof.ca/faq
+
+Main product capabilities:
+- Prospect website scanning
+- Website health score out of 100
+- Category score breakdowns
+- Client-ready website opportunity reports
+- PDF exports
+- Saved and shared reports
+- Lead Finder
+- White-label reports on eligible plans
+- Custom agency logo and brand colors on eligible plans
+
+Pricing summary:
+- Starter: $19.99 per month, 50 website scans, 3,000 Lead Finder results, PitchProof branding on reports
+- Professional: $39.99 per month, 150 plan scans plus 50 bonus scans, unlimited Lead Finder results, white-label reports
+- Growth: $79.99 per month, 500 website scans, unlimited Lead Finder results, white-label reports
+- Enterprise: custom pricing
+
+Important positioning:
+PitchProof does not build websites automatically and does not guarantee sales, search rankings, or revenue. It helps agencies present clearer evidence and recommendations when selling website projects.
