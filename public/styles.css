@@ -7439,6 +7439,565 @@ body.required-plan-open {
   background: rgba(22, 121, 188, 0.15);
 }
 
+.marketing-view .report-story-card {
+  --story-card: rgba(9, 25, 46, 0.9);
+  --story-card-soft: rgba(255, 255, 255, 0.065);
+  --story-border: rgba(255, 255, 255, 0.12);
+  --story-muted: #9fb1c7;
+  --story-muted-strong: #d7e6f7;
+  --story-risk: #d46959;
+  --story-warn: #d09a28;
+  --story-good: #39d98e;
+  --story-gold: #f5c842;
+  position: relative;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(18px, 2.2vw, 26px);
+  overflow: hidden;
+  border-radius: 30px;
+  color: var(--public-text);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    radial-gradient(circle at 14% 0%, rgba(35, 168, 255, 0.16), transparent 28rem),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.088), rgba(255, 255, 255, 0.032)),
+    rgba(9, 25, 46, 0.9);
+  background-size: 48px 48px, 48px 48px, auto, auto, auto;
+}
+
+.marketing-view .report-story-card,
+.marketing-view .report-story-card * {
+  min-width: 0;
+}
+
+.marketing-view .story-report-window-bar,
+.marketing-view .story-report-topline,
+.marketing-view .story-brand,
+.marketing-view .story-step-flow,
+.marketing-view .story-brand-system,
+.marketing-view .story-status-list div {
+  display: flex;
+  align-items: center;
+}
+
+.marketing-view .story-report-window-bar {
+  gap: 8px;
+  color: var(--story-muted);
+  font-weight: 780;
+}
+
+.marketing-view .story-report-window-bar > span {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: rgba(121, 214, 255, 0.58);
+}
+
+.marketing-view .story-report-window-bar strong {
+  margin-left: 10px;
+  margin-right: auto;
+  color: var(--public-text);
+  font-size: 0.92rem;
+}
+
+.marketing-view .story-report-window-bar em {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 1px solid rgba(95, 143, 109, 0.24);
+  border-radius: var(--radius-pill);
+  background: rgba(95, 143, 109, 0.12);
+  color: #a8d5b3;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.marketing-view .story-report-window-bar em::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--story-good);
+}
+
+.marketing-view .story-report-topline {
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 12px;
+  border: 1px solid var(--story-border);
+  border-radius: 16px;
+  background: var(--story-card-soft);
+}
+
+.marketing-view .story-brand {
+  gap: 9px;
+}
+
+.marketing-view .story-brand span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(245, 200, 66, 0.18);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #071426;
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.marketing-view .story-brand.agency span {
+  background: linear-gradient(180deg, #47bcff, #1296ee);
+}
+
+.marketing-view .story-brand strong,
+.marketing-view .story-report-topline small {
+  color: var(--story-muted-strong);
+  font-size: 0.82rem;
+  font-weight: 780;
+}
+
+.marketing-view .story-report-topline small {
+  color: var(--story-muted);
+  text-align: right;
+}
+
+.marketing-view .story-report-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 14px;
+}
+
+.marketing-view .story-score-panel,
+.marketing-view .story-summary-panel,
+.marketing-view .story-priority-list,
+.marketing-view .story-category-card,
+.marketing-view .story-sales-callout,
+.marketing-view .story-export-summary {
+  border: 1px solid var(--story-border);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.032)),
+    var(--story-card);
+  color: var(--public-text);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.18);
+}
+
+.marketing-view .story-score-panel,
+.marketing-view .story-summary-panel,
+.marketing-view .story-priority-list,
+.marketing-view .story-sales-callout,
+.marketing-view .story-export-summary {
+  padding: 16px;
+}
+
+.marketing-view .story-score-panel > span,
+.marketing-view .story-summary-panel > span,
+.marketing-view .story-priority-list > span,
+.marketing-view .story-sales-callout > span,
+.marketing-view .story-export-summary > span,
+.marketing-view .story-category-card > span {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--story-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.marketing-view .story-score-panel div {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.marketing-view .story-score-panel strong {
+  color: var(--story-risk);
+  font-size: clamp(3.2rem, 7vw, 4.9rem);
+  font-weight: 790;
+  line-height: 0.9;
+}
+
+.marketing-view .story-score-panel small {
+  color: var(--story-muted);
+  font-size: clamp(1.25rem, 2.4vw, 1.72rem);
+  font-weight: 760;
+}
+
+.marketing-view .story-score-panel.compact strong {
+  font-size: 3.15rem;
+}
+
+.marketing-view .story-score-panel i,
+.marketing-view .story-category-card i {
+  display: block;
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.marketing-view .story-score-panel i {
+  margin: 14px 0 11px;
+}
+
+.marketing-view .story-score-panel b,
+.marketing-view .story-category-card b {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--story-risk);
+}
+
+.marketing-view .story-category-card.warn b {
+  background: var(--story-warn);
+}
+
+.marketing-view .story-category-card.good b {
+  background: var(--story-good);
+}
+
+.marketing-view .story-score-panel p,
+.marketing-view .story-summary-panel p,
+.marketing-view .story-priority-list p,
+.marketing-view .story-sales-callout p,
+.marketing-view .story-export-summary p,
+.marketing-view .story-category-card p {
+  margin: 0;
+  color: var(--story-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.marketing-view .story-score-panel p {
+  color: #e08b7f;
+}
+
+.marketing-view .story-summary-panel h3,
+.marketing-view .story-sales-callout strong,
+.marketing-view .story-export-summary h3 {
+  margin: 0 0 8px;
+  color: var(--public-text);
+  font-size: clamp(1.12rem, 2vw, 1.5rem);
+  line-height: 1.12;
+}
+
+.marketing-view .story-step-flow {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.marketing-view .story-step-flow span {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+  min-height: 82px;
+  padding: 12px;
+  border: 1px solid var(--story-border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.marketing-view .story-step-flow b {
+  color: var(--public-text);
+  font-size: 0.9rem;
+}
+
+.marketing-view .story-step-flow small {
+  color: var(--story-muted);
+  font-size: 0.76rem;
+  line-height: 1.35;
+}
+
+.marketing-view .story-step-flow > i {
+  width: 22px;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, rgba(121, 214, 255, 0.2), rgba(121, 214, 255, 0.85));
+}
+
+.marketing-view .story-priority-list ol,
+.marketing-view .story-pdf-sheet ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--story-muted);
+  line-height: 1.45;
+}
+
+.marketing-view .story-priority-list strong {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--public-text);
+  font-size: 1.02rem;
+  line-height: 1.25;
+}
+
+.marketing-view .story-mobile-shell {
+  position: relative;
+  width: min(300px, 100%);
+  min-height: 440px;
+  margin: 0 auto;
+  display: grid;
+  align-content: start;
+  gap: 13px;
+  padding: 52px 18px 22px;
+  border: 10px solid #061120;
+  border-radius: 36px;
+  background:
+    linear-gradient(rgba(7, 20, 38, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7, 20, 38, 0.04) 1px, transparent 1px),
+    #f8fbff;
+  color: #071426;
+  box-shadow: 0 24px 68px rgba(0, 0, 0, 0.36);
+}
+
+.marketing-view .story-phone-notch {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  width: 78px;
+  height: 18px;
+  border-radius: var(--radius-pill);
+  background: #061120;
+  transform: translateX(-50%);
+}
+
+.marketing-view .story-mobile-report-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #071426;
+  font-weight: 850;
+}
+
+.marketing-view .story-mobile-report-header small {
+  color: #1f9c61;
+  font-weight: 850;
+}
+
+.marketing-view .story-mobile-shell .story-score-panel,
+.marketing-view .story-mobile-shell .story-priority-list {
+  border-color: rgba(7, 20, 38, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: none;
+}
+
+.marketing-view .story-mobile-shell .story-score-panel > span,
+.marketing-view .story-mobile-shell .story-priority-list > span,
+.marketing-view .story-mobile-shell .story-score-panel small,
+.marketing-view .story-mobile-shell .story-priority-list p {
+  color: #68768a;
+}
+
+.marketing-view .story-mobile-shell .story-priority-list strong {
+  color: #071426;
+}
+
+.marketing-view .story-export-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.marketing-view .story-pdf-sheet {
+  display: grid;
+  gap: 12px;
+  min-height: 260px;
+  padding: 22px;
+  border: 1px solid rgba(7, 20, 38, 0.1);
+  border-radius: 18px;
+  background: #f8fbff;
+  color: #071426;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+}
+
+.marketing-view .story-pdf-sheet small,
+.marketing-view .story-pdf-sheet span {
+  color: #1679bc;
+  font-weight: 820;
+}
+
+.marketing-view .story-pdf-sheet strong {
+  color: #071426;
+  font-size: 3.4rem;
+  line-height: 0.9;
+}
+
+.marketing-view .story-pdf-sheet strong em {
+  color: #7a8798;
+  font-size: 1.2rem;
+  font-style: normal;
+}
+
+.marketing-view .story-pdf-sheet ol {
+  color: #5b6879;
+  font-size: 0.9rem;
+}
+
+.marketing-view .story-export-summary {
+  align-content: center;
+  display: grid;
+}
+
+.marketing-view .story-brand-system {
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.marketing-view .story-brand-system i {
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+}
+
+.marketing-view .story-brand-system i:nth-child(1) {
+  background: #23a8ff;
+}
+
+.marketing-view .story-brand-system i:nth-child(2) {
+  background: #ffffff;
+}
+
+.marketing-view .story-brand-system i:nth-child(3) {
+  background: #c9a06a;
+}
+
+.marketing-view .story-brand-system span {
+  color: var(--story-muted);
+}
+
+.marketing-view .story-status-list {
+  display: grid;
+}
+
+.marketing-view .story-status-list div {
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 48px;
+  border-top: 1px solid var(--story-border);
+  color: var(--public-text);
+}
+
+.marketing-view .story-status-list div:last-child {
+  border-bottom: 1px solid var(--story-border);
+}
+
+.marketing-view .story-status-list span {
+  color: var(--story-muted);
+}
+
+.marketing-view .story-status-list strong {
+  color: var(--public-text);
+}
+
+.marketing-view .story-category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.marketing-view .story-category-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+}
+
+.marketing-view .story-category-card strong {
+  color: var(--story-risk);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 0.95;
+}
+
+.marketing-view .story-category-card.warn strong {
+  color: var(--story-warn);
+}
+
+.marketing-view .story-category-card.good strong {
+  color: var(--story-good);
+}
+
+.marketing-view .story-category-card small {
+  color: var(--story-muted);
+  font-size: 0.48em;
+}
+
+.marketing-view .story-sales-callout {
+  min-height: 160px;
+  align-content: center;
+  display: grid;
+}
+
+.marketing-view .story-sales-callout strong {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+}
+
+@media (max-width: 900px) {
+  .marketing-view .story-report-grid,
+  .marketing-view .story-export-layout,
+  .marketing-view .story-category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .marketing-view .story-step-flow {
+    display: grid;
+  }
+
+  .marketing-view .story-step-flow > i {
+    width: 2px;
+    height: 18px;
+    justify-self: center;
+    background: linear-gradient(180deg, rgba(121, 214, 255, 0.2), rgba(121, 214, 255, 0.85));
+  }
+}
+
+@media (max-width: 520px) {
+  .marketing-view .report-story-card {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .marketing-view .story-report-window-bar {
+    flex-wrap: wrap;
+  }
+
+  .marketing-view .story-report-window-bar em {
+    margin-left: 27px;
+  }
+
+  .marketing-view .story-report-topline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .marketing-view .story-report-topline small {
+    text-align: left;
+  }
+
+  .marketing-view .story-score-panel strong {
+    font-size: 3.2rem;
+  }
+
+  .marketing-view .story-mobile-shell {
+    min-height: 405px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
 .marketing-view .pricing-main {
   max-width: 780px;
   margin: 0 auto;

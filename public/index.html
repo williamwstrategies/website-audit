@@ -336,32 +336,78 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <div class="section-kicker">Product Preview</div>
       <h2 id="previewTitle">The software sells itself through the workflow.</h2>
       <div class="product-preview-row">
-        <div class="product-showcase mini-dashboard-mockup">
-          <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Dashboard</strong></div>
-          <div class="metric-strip"><span>Reports saved <b>28</b></span><span>Audits used <b>41/100</b></span><span>Demo score <b>38</b></span></div>
-          <div class="mock-category"><span>northstarroofing.example</span><strong>38</strong></div>
-          <div class="mock-category"><span>High priorities</span><strong>6</strong></div>
-          <div class="mock-category"><span>Broken links</span><strong>14</strong></div>
-        </div>
+        <article class="product-showcase report-story-card workflow-report-card" aria-label="PitchProof workflow report preview">
+          <div class="story-report-window-bar"><span></span><span></span><span></span><strong>Report Workflow</strong><em>Saved</em></div>
+          <div class="story-report-topline">
+            <div class="story-brand"><span>PP</span><strong>PitchProof</strong></div>
+            <small>Prepared for North Star Roofing</small>
+          </div>
+          <div class="story-step-flow" aria-hidden="true">
+            <span><b>URL added</b><small>northstarroofing.example</small></span>
+            <i></i>
+            <span><b>Scan complete</b><small>38+ factors reviewed</small></span>
+            <i></i>
+            <span><b>Report ready</b><small>6 top priorities</small></span>
+          </div>
+          <div class="story-report-grid">
+            <div class="story-score-panel">
+              <span>Overall Website Health</span>
+              <div><strong>38</strong><small>/100</small></div>
+              <i><b style="width:38%"></b></i>
+              <p>Weak foundation with several high-impact improvements to prioritize.</p>
+            </div>
+            <div class="story-summary-panel">
+              <span>Next Best Use</span>
+              <h3>Open the report before the sales call.</h3>
+              <p>See the score, the top issues, and the exact conversation points in one saved assessment.</p>
+            </div>
+          </div>
+        </article>
         <div><h3>Desktop Dashboard</h3><p>Manage audits, reopen reports, track usage, and move quickly from prospect research to professional presentation.</p></div>
       </div>
       <div class="product-preview-row reverse">
-        <div class="mobile-report-mockup">
-          <div class="phone-shell">
-            <div class="phone-notch"></div>
-            <strong>38</strong>
-            <span>Website Score</span>
-            <p>Top priority: make the quote request impossible to miss.</p>
-            <i></i><i></i><i></i>
+        <article class="product-showcase report-story-card mobile-report-preview-card" aria-label="Mobile report preview">
+          <div class="story-mobile-shell">
+            <div class="story-phone-notch"></div>
+            <div class="story-mobile-report-header">
+              <span>PitchProof</span>
+              <small>Complete</small>
+            </div>
+            <div class="story-score-panel compact">
+              <span>Website Score</span>
+              <div><strong>38</strong><small>/100</small></div>
+              <i><b style="width:38%"></b></i>
+            </div>
+            <div class="story-priority-list">
+              <span>Top priorities</span>
+              <strong>Make the quote request impossible to miss.</strong>
+              <p>Move trust signals closer to the main conversion path.</p>
+            </div>
           </div>
-        </div>
+        </article>
         <div><h3>Mobile Report</h3><p>Reports stay readable on smaller screens, so a prospect can review findings after a call without pinching through a tiny document.</p></div>
       </div>
       <div class="product-preview-row">
-        <div class="device-pair-mockup">
-          <div class="laptop-shell"><div class="mock-category"><span>SEO</span><strong>24%</strong></div><div class="mock-category"><span>Trust</span><strong>31%</strong></div><div class="mock-category"><span>Conversion</span><strong>18%</strong></div></div>
-          <div class="phone-shell small"><strong>PDF</strong><span>Ready</span><p>Agency branded</p></div>
-        </div>
+        <article class="product-showcase report-story-card pdf-workflow-report-card" aria-label="Laptop and PDF report preview">
+          <div class="story-report-window-bar"><span></span><span></span><span></span><strong>Client Presentation</strong><em>PDF ready</em></div>
+          <div class="story-export-layout">
+            <div class="story-pdf-sheet">
+              <small>Website Assessment</small>
+              <strong>38<em>/100</em></strong>
+              <span>Recommended improvements</span>
+              <ol>
+                <li>Clarify primary call to action.</li>
+                <li>Add proof near quote requests.</li>
+                <li>Repair broken service links.</li>
+              </ol>
+            </div>
+            <div class="story-export-summary">
+              <span>After the call</span>
+              <h3>Send one branded report your prospect can review.</h3>
+              <p>The same assessment works on desktop, mobile, and PDF follow-up.</p>
+            </div>
+          </div>
+        </article>
         <div><h3>Laptop and Mobile Workflow</h3><p>Present live on a sales call, save the report, and export a branded PDF when the prospect needs something to review.</p></div>
       </div>
     </section>
@@ -371,17 +417,27 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <h2 id="reportPreviewTitle">Professional Reports Your Clients Actually Understand.</h2>
       <p class="section-lede">The report uses business language, not dense technical jargon. Each section explains what is wrong, why it matters, and what should be improved.</p>
       <div class="report-preview-layout">
-        <article class="pdf-report-mockup sample-report-shell" aria-label="PDF report mockup">
-          <div class="sample-report-top">
-            <div><span class="mock-agency-mark">PP</span><strong>PitchProof</strong></div>
-            <span>PDF Report</span>
+        <article class="product-showcase report-story-card client-report-preview-card" aria-label="Client-ready report preview">
+          <div class="story-report-window-bar"><span></span><span></span><span></span><strong>Website Assessment</strong><em>Complete</em></div>
+          <div class="story-report-topline">
+            <div class="story-brand"><span>PP</span><strong>PitchProof</strong></div>
+            <small>Prepared for Prospect</small>
           </div>
-          <div class="sample-score-row">
-            <strong>38</strong>
-            <div><span>Overall Assessment</span><p>Weak foundation with several high-impact improvements to prioritize.</p></div>
+          <div class="story-report-grid">
+            <div class="story-score-panel">
+              <span>Overall Assessment</span>
+              <div><strong>38</strong><small>/100</small></div>
+              <i><b style="width:38%"></b></i>
+              <p>Weak foundation with several high-impact improvements to prioritize.</p>
+            </div>
+            <div class="story-summary-panel">
+              <span>Executive Summary</span>
+              <h3>Clear issues your client can understand.</h3>
+              <p>The report explains what is hurting trust, why it matters, and what to improve first.</p>
+            </div>
           </div>
-          <div class="sample-priorities">
-            <strong>Recommended Improvements</strong>
+          <div class="story-priority-list">
+            <span>Recommended Improvements</span>
             <ol>
               <li>Add unique titles and metadata to core pages.</li>
               <li>Move reviews and proof closer to quote requests.</li>
@@ -415,34 +471,69 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
           <li>Client-facing report presentation</li>
         </ul>
       </div>
-      <div class="white-label-mockup product-showcase">
-        <div class="mock-browser-bar"><span></span><span></span><span></span><strong>Agency Workspace</strong></div>
-        <div class="mock-report-header"><div><span class="mock-agency-mark">PP</span><strong>PitchProof</strong></div><span>White-Label Report</span></div>
-        <div class="color-swatch-row"><i></i><i></i><i></i><span>Brand system applied</span></div>
-        <div class="mock-category"><span>Dashboard header</span><strong>Branded</strong></div>
-        <div class="mock-category"><span>Report PDF</span><strong>Branded</strong></div>
-        <div class="mock-category"><span>Booking link</span><strong>Connected</strong></div>
-      </div>
+      <article class="product-showcase report-story-card branded-report-card" aria-label="White-label report preview">
+        <div class="story-report-window-bar"><span></span><span></span><span></span><strong>Agency Workspace</strong><em>Branded</em></div>
+        <div class="story-report-topline">
+          <div class="story-brand agency"><span>NS</span><strong>North Star Digital</strong></div>
+          <small>White-label Report</small>
+        </div>
+        <div class="story-brand-system">
+          <i></i><i></i><i></i>
+          <span>Agency colors applied</span>
+        </div>
+        <div class="story-status-list">
+          <div><span>Dashboard header</span><strong>Branded</strong></div>
+          <div><span>Report PDF</span><strong>Branded</strong></div>
+          <div><span>Booking link</span><strong>Connected</strong></div>
+        </div>
+        <div class="story-summary-panel">
+          <span>Client View</span>
+          <h3>The report feels like it came from your agency.</h3>
+          <p>Logo, colors, contact details, and PDF presentation carry your brand through the sales conversation.</p>
+        </div>
+      </article>
     </section>
 
     <section class="marketing-section" aria-labelledby="featuresTitle" data-reveal>
       <div class="section-kicker">Score Breakdown</div>
       <h2 id="featuresTitle">Every category becomes a clearer conversation.</h2>
-      <div class="score-card-grid">
-        <article><span>SEO</span><strong>24/100</strong><p>Visibility signals, page structure, and search basics.</p></article>
-        <article><span>Trust</span><strong>31/100</strong><p>Reviews, proof, credibility, and risk-reduction signals.</p></article>
-        <article><span>Conversion</span><strong>18/100</strong><p>Calls to action, forms, booking paths, and lead friction.</p></article>
-        <article><span>Technical</span><strong>57/100</strong><p>Mobile, speed, structure, and crawl health.</p></article>
-        <article><span>Performance</span><strong>42/100</strong><p>Load quality and visitor experience basics.</p></article>
-        <article><span>Design</span><strong>78/100</strong><p>Visual trust, hierarchy, clarity, and professional feel.</p></article>
-      </div>
+      <article class="product-showcase report-story-card category-report-preview" aria-label="Score breakdown report preview">
+        <div class="story-report-window-bar"><span></span><span></span><span></span><strong>Category Breakdown</strong><em>Prioritized</em></div>
+        <div class="story-report-topline">
+          <div class="story-brand"><span>PP</span><strong>PitchProof</strong></div>
+          <small>Each category is scored out of 100</small>
+        </div>
+        <div class="story-category-grid">
+          <div class="story-category-card risk"><span>SEO</span><strong>24<small>/100</small></strong><p>Visibility signals and page structure.</p><i><b style="width:24%"></b></i></div>
+          <div class="story-category-card risk"><span>Trust</span><strong>31<small>/100</small></strong><p>Reviews, proof, and credibility.</p><i><b style="width:31%"></b></i></div>
+          <div class="story-category-card risk"><span>Conversion</span><strong>18<small>/100</small></strong><p>Calls to action and lead friction.</p><i><b style="width:18%"></b></i></div>
+          <div class="story-category-card warn"><span>Technical</span><strong>57<small>/100</small></strong><p>Mobile, structure, and crawl health.</p><i><b style="width:57%"></b></i></div>
+          <div class="story-category-card warn"><span>Performance</span><strong>42<small>/100</small></strong><p>Load quality and visitor experience.</p><i><b style="width:42%"></b></i></div>
+          <div class="story-category-card good"><span>Design</span><strong>78<small>/100</small></strong><p>Visual trust, hierarchy, and clarity.</p><i><b style="width:78%"></b></i></div>
+        </div>
+      </article>
     </section>
 
     <section class="marketing-section sales-section visual-section" aria-labelledby="salesTitle" data-reveal>
-      <div class="sales-meeting-mockup product-showcase">
-        <div class="meeting-screen"><span>Sales Meeting</span><strong>Reviewing Website Assessment</strong><p>"Here are the three issues hurting trust and quote requests."</p></div>
-        <div class="meeting-notes"><i></i><i></i><i></i></div>
-      </div>
+      <article class="product-showcase report-story-card sales-report-card" aria-label="Sales meeting report preview">
+        <div class="story-report-window-bar"><span></span><span></span><span></span><strong>Sales Meeting</strong><em>Live review</em></div>
+        <div class="story-report-topline">
+          <div class="story-brand"><span>PP</span><strong>PitchProof</strong></div>
+          <small>North Star Roofing assessment</small>
+        </div>
+        <div class="story-sales-callout">
+          <span>Talking Point</span>
+          <strong>"Here are the three issues hurting trust and quote requests."</strong>
+        </div>
+        <div class="story-priority-list">
+          <span>Walkthrough Order</span>
+          <ol>
+            <li>Show the 38/100 website health score.</li>
+            <li>Explain the missing proof near quote requests.</li>
+            <li>Use the PDF as follow-up after the call.</li>
+          </ol>
+        </div>
+      </article>
       <div class="split-copy">
         <div class="section-kicker">Sales Use Case</div>
         <h2 id="salesTitle">Use the report where website projects are actually sold.</h2>
@@ -458,38 +549,38 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
     <section class="marketing-section pricing-section" id="pricing" aria-labelledby="pricingTitle">
       <div class="section-kicker">Pricing</div>
       <h2 id="pricingTitle">Choose the plan that fits your agency.</h2>
-      <p class="section-lede">Start with a 7-day free trial. Stripe collects your payment method now and billing starts after the trial.</p>
+      <p class="section-lede">Start with a 7-day trial and a $1 activation charge today. Your monthly plan starts after the trial.</p>
       <div class="pricing-tier-grid compact-pricing-grid">
         <article class="pricing-card">
-          <span class="plan-trial-badge">7-day free trial</span>
+          <span class="plan-trial-badge">7-day trial + $1 today</span>
           <span class="plan-name">Starter</span>
           <strong>$19.99 <small>/ month</small></strong>
-          <p>Perfect for freelancers and agencies getting started. $19.99/month after your 7-day free trial.</p>
+          <p>Perfect for freelancers and agencies getting started. $19.99/month after your 7-day trial.</p>
           <p class="plan-value-anchor">Less than a single manual audit, with 50 scans to start prospecting.</p>
           <ul class="check-list"><li>50 scans per month</li><li>3,000 Lead Finder results per month</li><li>AI Visibility reports coming soon</li><li>Website Opportunity Reports</li><li>Top priorities and scores</li><li>PDF exports</li><li>Saved and shared reports</li><li>PitchProof branding</li></ul>
           <a class="plan-detail-link" href="/pricing/starter" data-route>View Starter details</a>
-          <a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start Free Trial</a>
+          <a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
         </article>
         <article class="pricing-card featured pricing-main">
           <span class="plan-badge">Most Popular</span>
-          <span class="plan-trial-badge">7-day free trial</span>
+          <span class="plan-trial-badge">7-day trial + $1 today</span>
           <span class="plan-name">Professional</span>
           <strong>$39.99 <small>/ month</small></strong>
-          <p>Perfect for agencies presenting opportunity reports directly to prospects. $39.99/month after your 7-day free trial.</p>
+          <p>Perfect for agencies presenting opportunity reports directly to prospects. $39.99/month after your 7-day trial.</p>
           <p class="plan-value-anchor">Less than the cost of one freelance audit - and you can run 200 scans a month.</p>
           <ul class="check-list"><li>150 plan scans per month</li><li>50 bonus scans per month</li><li>200 total scans per month</li><li>Unlimited Lead Finder results</li><li>AI Visibility reports coming soon</li><li>Everything in Starter</li><li>White-label reports and PDFs</li><li>Client-ready sales presentation</li><li>Custom agency branding</li></ul>
           <a class="plan-detail-link" href="/pricing/professional" data-route>View Professional details</a>
-          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start Free Trial</a>
+          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
         </article>
         <article class="pricing-card">
-          <span class="plan-trial-badge">7-day free trial</span>
+          <span class="plan-trial-badge">7-day trial + $1 today</span>
           <span class="plan-name">Growth</span>
           <strong>$79.99 <small>/ month</small></strong>
-          <p>Built for agencies generating higher report volume. $79.99/month after your 7-day free trial.</p>
+          <p>Built for agencies generating higher report volume. $79.99/month after your 7-day trial.</p>
           <p class="plan-value-anchor">For less than one small website tweak, your team gets 500 scans a month.</p>
           <ul class="check-list"><li>500 scans per month</li><li>Unlimited Lead Finder results</li><li>AI Visibility reports coming soon</li><li>Everything in Professional</li><li>Higher-volume prospecting</li><li>Saved report history</li><li>Priority support</li><li>Early access to report features</li></ul>
           <a class="plan-detail-link" href="/pricing/growth" data-route>View Growth details</a>
-          <a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start Free Trial</a>
+          <a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
         </article>
       </div>
       <div class="pricing-reassurance-row" aria-label="Billing reassurance">
@@ -568,7 +659,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details><summary>Can I use my own branding?</summary><p>Yes on Professional, Growth, and Enterprise. Starter reports include PitchProof branding while keeping the full reporting workflow usable.</p></details>
       <details><summary>Can I download PDFs?</summary><p>Yes. Saved reports can be exported as branded PDFs from the authenticated application.</p></details>
       <details><summary>How many assessments are included?</summary><p>Starter includes 50 website scans and 3,000 Lead Finder results monthly. Professional includes 150 plan scans plus 50 bonus website scans and unlimited Lead Finder results. Growth includes 500 website scans and unlimited Lead Finder results. AI Visibility reports are coming soon and are not available yet.</p></details>
-      <details><summary>Will I be charged today?</summary><p>No. Stripe collects your payment method at checkout, but your first charge starts after the 7-day free trial unless you cancel.</p></details>
+      <details><summary>Will I be charged today?</summary><p>Yes. Stripe charges a $1 activation fee today, then your monthly plan starts after the 7-day trial unless you cancel.</p></details>
       <details><summary>Will prospects see platform branding?</summary><p>Starter reports include a small PitchProof branding footer. Professional, Growth, and Enterprise reports can be fully white-labeled.</p></details>
       <details><summary>What happens to my data?</summary><p>Scans stay in your workspace. PitchProof does not sell customer scan data, and saved reports belong to the authenticated account that created them.</p></details>
     </section>
@@ -786,11 +877,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
   </article>
 
   <article class="public-page supporting-page pricing-page" data-public-page="pricing" hidden>
-    <div class="supporting-hero" data-reveal><div class="section-kicker">Pricing</div><h1>Choose a plan and start using PitchProof.</h1><p>Pick the monthly plan that fits your agency. Stripe collects your payment method now and billing starts after your 7-day free trial.</p></div>
+    <div class="supporting-hero" data-reveal><div class="section-kicker">Pricing</div><h1>Choose a plan and start using PitchProof.</h1><p>Pick the monthly plan that fits your agency. Stripe charges $1 today to activate the trial, then monthly billing starts after seven days.</p></div>
     <div class="pricing-tier-grid full-pricing-grid" data-reveal>
-      <article class="pricing-card featured pricing-main"><span class="plan-badge">Most Popular</span><span class="plan-trial-badge">7-day free trial</span><span class="plan-special-badge">50 extra scans/month for first time users!</span><span class="plan-name">Professional</span><strong>$39.99 <small>/ month</small></strong><p>Perfect for agencies presenting opportunity reports directly to prospects. $39.99/month after your 7-day free trial.</p><p class="plan-value-anchor">Less than the cost of one freelance audit - and you can run 200 scans a month.</p><ul class="check-list"><li>150 plan scans per month</li><li>50 bonus scans per month</li><li>200 total scans per month</li><li>Unlimited Lead Finder results</li><li>AI Visibility reports coming soon</li><li>Everything in Starter</li><li>Remove PitchProof branding</li><li>White-label online reports</li><li>White-label PDF exports</li><li>Custom agency logo and colors</li><li>Agency contact details and booking link</li><li>Client-ready sales presentation</li><li>Saved report history</li><li>Priority email support</li></ul><a class="plan-detail-link" href="/pricing/professional" data-route>View Professional details</a><a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start Free Trial</a></article>
-      <article class="pricing-card"><span class="plan-trial-badge">7-day free trial</span><span class="plan-name">Starter</span><strong>$19.99 <small>/ month</small></strong><p>Perfect for freelancers and agencies getting started. $19.99/month after your 7-day free trial.</p><p class="plan-value-anchor">Less than a single manual audit, with 50 scans to start prospecting.</p><ul class="check-list"><li>50 scans per month</li><li>3,000 Lead Finder results per month</li><li>AI Visibility reports coming soon</li><li>Website Opportunity Reports</li><li>Overall and category scores</li><li>Executive summary and top priorities</li><li>Business-focused recommendations</li><li>PDF exports</li><li>Dashboard access</li><li>Saved and shareable reports</li><li>Email support</li><li>Includes PitchProof branding</li></ul><a class="plan-detail-link" href="/pricing/starter" data-route>View Starter details</a><a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start Free Trial</a></article>
-      <article class="pricing-card"><span class="plan-trial-badge">7-day free trial</span><span class="plan-name">Growth</span><strong>$79.99 <small>/ month</small></strong><p>Built for agencies generating higher report volume. $79.99/month after your 7-day free trial.</p><p class="plan-value-anchor">For less than one small website tweak, your team gets 500 scans a month.</p><ul class="check-list"><li>500 scans per month</li><li>Unlimited Lead Finder results</li><li>AI Visibility reports coming soon</li><li>Everything in Professional</li><li>Higher-volume prospecting workflow</li><li>White-label reports and PDFs</li><li>Custom agency branding</li><li>Saved report history</li><li>Priority support</li><li>Early access to report features</li><li>Higher scan capacity</li></ul><a class="plan-detail-link" href="/pricing/growth" data-route>View Growth details</a><a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start Free Trial</a></article>
+      <article class="pricing-card featured pricing-main"><span class="plan-badge">Most Popular</span><span class="plan-trial-badge">7-day trial + $1 today</span><span class="plan-special-badge">50 extra scans/month for first time users!</span><span class="plan-name">Professional</span><strong>$39.99 <small>/ month</small></strong><p>Perfect for agencies presenting opportunity reports directly to prospects. $39.99/month after your 7-day trial.</p><p class="plan-value-anchor">Less than the cost of one freelance audit - and you can run 200 scans a month.</p><ul class="check-list"><li>150 plan scans per month</li><li>50 bonus scans per month</li><li>200 total scans per month</li><li>Unlimited Lead Finder results</li><li>AI Visibility reports coming soon</li><li>Everything in Starter</li><li>Remove PitchProof branding</li><li>White-label online reports</li><li>White-label PDF exports</li><li>Custom agency logo and colors</li><li>Agency contact details and booking link</li><li>Client-ready sales presentation</li><li>Saved report history</li><li>Priority email support</li></ul><a class="plan-detail-link" href="/pricing/professional" data-route>View Professional details</a><a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
+      <article class="pricing-card"><span class="plan-trial-badge">7-day trial + $1 today</span><span class="plan-name">Starter</span><strong>$19.99 <small>/ month</small></strong><p>Perfect for freelancers and agencies getting started. $19.99/month after your 7-day trial.</p><p class="plan-value-anchor">Less than a single manual audit, with 50 scans to start prospecting.</p><ul class="check-list"><li>50 scans per month</li><li>3,000 Lead Finder results per month</li><li>AI Visibility reports coming soon</li><li>Website Opportunity Reports</li><li>Overall and category scores</li><li>Executive summary and top priorities</li><li>Business-focused recommendations</li><li>PDF exports</li><li>Dashboard access</li><li>Saved and shareable reports</li><li>Email support</li><li>Includes PitchProof branding</li></ul><a class="plan-detail-link" href="/pricing/starter" data-route>View Starter details</a><a class="secondary-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
+      <article class="pricing-card"><span class="plan-trial-badge">7-day trial + $1 today</span><span class="plan-name">Growth</span><strong>$79.99 <small>/ month</small></strong><p>Built for agencies generating higher report volume. $79.99/month after your 7-day trial.</p><p class="plan-value-anchor">For less than one small website tweak, your team gets 500 scans a month.</p><ul class="check-list"><li>500 scans per month</li><li>Unlimited Lead Finder results</li><li>AI Visibility reports coming soon</li><li>Everything in Professional</li><li>Higher-volume prospecting workflow</li><li>White-label reports and PDFs</li><li>Custom agency branding</li><li>Saved report history</li><li>Priority support</li><li>Early access to report features</li><li>Higher scan capacity</li></ul><a class="plan-detail-link" href="/pricing/growth" data-route>View Growth details</a><a class="secondary-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a></article>
       <article class="pricing-card"><span class="plan-name">Enterprise</span><strong>Contact <small>Sales</small></strong><p>For teams that need custom pricing, onboarding, and priority support.</p><p class="plan-value-anchor">Priced around your workflow, volume, and onboarding needs.</p><ul class="check-list"><li>Unlimited scans subject to fair use</li><li>Unlimited Lead Finder results with fair use</li><li>AI Visibility reports coming soon</li><li>Custom pricing</li><li>Dedicated onboarding</li><li>Priority support</li><li>Custom scan capacity</li><li>Workflow guidance for established teams</li></ul><a class="secondary-btn" href="/contact" data-route data-plan-key="enterprise" data-public-event="enterprise_contact_clicked">Contact Sales</a></article>
     </div>
     <div class="pricing-reassurance-row pricing-page-reassurance" aria-label="Billing reassurance">
@@ -825,11 +916,11 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <p class="fair-use-note">Unlimited plans are subject to a reasonable fair use policy. Automated or abusive scanning activity may require a custom Enterprise agreement.</p>
     </section>
     <div class="pricing-detail-grid" data-reveal>
-      <aside class="pricing-support-card"><h2>Billing details</h2><p>Starter, Professional, and Growth begin with a 7-day free trial. Stripe collects payment details at checkout and monthly billing starts after the trial unless canceled.</p><h2>Rollover balance</h2><p>Unused scans roll into the next billing period up to one additional month of allowance.</p><h2>Plan changes</h2><p>Plans can be managed through the secure Stripe billing portal inside the application.</p></aside>
+      <aside class="pricing-support-card"><h2>Billing details</h2><p>Starter, Professional, and Growth begin with a 7-day trial and a $1 activation charge today. Monthly billing starts after the trial unless canceled.</p><h2>Rollover balance</h2><p>Unused scans roll into the next billing period up to one additional month of allowance.</p><h2>Plan changes</h2><p>Plans can be managed through the secure Stripe billing portal inside the application.</p></aside>
     </div>
     <section class="faq-section pricing-faq-list" data-reveal>
       <details><summary>What counts as a completed assessment?</summary><p>A successful scan that returns a report counts toward the monthly allowance. Failed scans and public demo reports do not count.</p></details>
-      <details><summary>Will I be charged today?</summary><p>No. Stripe collects your payment method at checkout, but your first charge starts after the 7-day free trial unless you cancel.</p></details>
+      <details><summary>Will I be charged today?</summary><p>Yes. Stripe charges a $1 activation fee today, then your monthly plan starts after the 7-day trial unless you cancel.</p></details>
       <details><summary>Can I cancel through Stripe?</summary><p>Yes. Subscription management is handled through the Stripe billing portal inside the authenticated app.</p></details>
       <details><summary>Are PDFs included?</summary><p>Yes. Starter PDFs include PitchProof branding. Professional and Growth PDFs can be fully white-labeled with your agency branding.</p></details>
     </section>
@@ -841,14 +932,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <a class="plan-back-link" href="/pricing" data-route>Pricing</a>
         <div class="section-kicker">Starter Plan</div>
         <h1>Start creating prospect-ready opportunity reports.</h1>
-        <p>Starter is built for freelancers, solo designers, and smaller agencies that want a simple way to turn a prospect website into a clear sales conversation. Start with a 7-day free trial, then continue at $19.99/month.</p>
+        <p>Starter is built for freelancers, solo designers, and smaller agencies that want a simple way to turn a prospect website into a clear sales conversation. Start with a 7-day trial and $1 activation today, then continue at $19.99/month.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start Free Trial</a>
+          <a class="analyze-btn" href="/signup?plan=starter" data-route data-public-cta data-plan-key="starter" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
           <a class="secondary-btn" href="/pricing/professional" data-route>Compare Professional</a>
         </div>
       </div>
       <aside class="plan-price-card">
-        <span class="plan-trial-badge">7-day free trial</span>
+        <span class="plan-trial-badge">7-day trial + $1 today</span>
         <span class="plan-name">Starter</span>
         <strong>$19.99 <small>/ month</small></strong>
         <p>Starter includes 50 scans and 3,000 Lead Finder results monthly with PitchProof branding.</p>
@@ -922,15 +1013,15 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <a class="plan-back-link" href="/pricing" data-route>Pricing</a>
         <div class="section-kicker">Professional Plan</div>
         <h1>White-label opportunity reports for client-facing agencies.</h1>
-        <p>Professional is the first true agency plan, built for teams that want to present polished business cases under their own logo, colors, and brand. Start with a 7-day free trial, then continue at $39.99/month.</p>
+        <p>Professional is the first true agency plan, built for teams that want to present polished business cases under their own logo, colors, and brand. Start with a 7-day trial and $1 activation today, then continue at $39.99/month.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start Free Trial</a>
+          <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
           <a class="secondary-btn" href="/sample-report" data-route>View Example Report</a>
         </div>
       </div>
       <aside class="plan-price-card featured">
         <span class="plan-badge">Most Popular</span>
-        <span class="plan-trial-badge">7-day free trial</span>
+        <span class="plan-trial-badge">7-day trial + $1 today</span>
         <span class="plan-special-badge">50 extra scans/month for first time users!</span>
         <span class="plan-name">Professional</span>
         <strong>$39.99 <small>/ month</small></strong>
@@ -1007,14 +1098,14 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <a class="plan-back-link" href="/pricing" data-route>Pricing</a>
         <div class="section-kicker">Growth Plan</div>
         <h1>Higher report capacity for established agencies.</h1>
-        <p>Growth is built for agencies generating a higher volume of reports across prospecting, sales calls, client reviews, and active pipeline opportunities. Start with a 7-day free trial, then continue at $79.99/month.</p>
+        <p>Growth is built for agencies generating a higher volume of reports across prospecting, sales calls, client reviews, and active pipeline opportunities. Start with a 7-day trial and $1 activation today, then continue at $79.99/month.</p>
         <div class="hero-actions">
-          <a class="analyze-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start Free Trial</a>
+          <a class="analyze-btn" href="/signup?plan=growth" data-route data-public-cta data-plan-key="growth" data-public-event="pricing_signup_clicked">Start 7-Day Trial</a>
           <a class="secondary-btn" href="/pricing/professional" data-route>Compare Professional</a>
         </div>
       </div>
       <aside class="plan-price-card">
-        <span class="plan-trial-badge">7-day free trial</span>
+        <span class="plan-trial-badge">7-day trial + $1 today</span>
         <span class="plan-name">Growth</span>
         <strong>$79.99 <small>/ month</small></strong>
         <p>Growth includes 500 website scans monthly, unlimited Lead Finder results, and white-label reports.</p>
@@ -1097,7 +1188,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <details data-faq-item><summary>Can I download reports as PDFs?</summary><p>Yes. Saved reports can be downloaded as branded PDF reports from inside the authenticated app.</p></details>
       <details data-faq-item><summary>Are reports saved?</summary><p>Yes. Reports are saved to the authenticated user's workspace and can be reopened later.</p></details>
       <details data-faq-item><summary>How many assessments are included?</summary><p>Starter includes 50 website scans and 3,000 Lead Finder results monthly. Professional includes 150 plan scans plus 50 bonus website scans and unlimited Lead Finder results. Growth includes 500 website scans and unlimited Lead Finder results. AI Visibility reports are coming soon and are not available yet.</p></details>
-      <details data-faq-item><summary>Will I be charged today?</summary><p>No. Stripe collects your payment method at checkout, but your first charge starts after the 7-day free trial unless you cancel.</p></details>
+      <details data-faq-item><summary>Will I be charged today?</summary><p>Yes. Stripe charges a $1 activation fee today, then your monthly plan starts after the 7-day trial unless you cancel.</p></details>
       <details data-faq-item><summary>Can prospects see platform branding?</summary><p>Starter reports include PitchProof branding. Professional, Growth, and Enterprise can remove it and use agency branding.</p></details>
       <details data-faq-item><summary>What happens to my data?</summary><p>Scans stay in your workspace. PitchProof does not sell customer scan data, and saved reports belong to the authenticated account that created them.</p></details>
       <details data-faq-item><summary>Does the platform build websites?</summary><p>No. It creates professional website assessments that agencies can use in sales conversations and proposals.</p></details>
@@ -1623,8 +1714,8 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
             <div class="section-kicker">Option 1</div>
             <h3>Choose a Plan</h3>
             <p>Best if you are ready to generate complete reports, export PDFs, save assessments, and use your monthly scan allowance.</p>
-            <small>Stripe collects your payment method now, and your monthly plan starts after the 7-day free trial.</small>
-            <a class="analyze-btn" href="/app/billing" data-route data-onboarding-plan>Start Free Trial</a>
+            <small>Stripe charges $1 today to activate the trial, and your monthly plan starts after seven days.</small>
+            <a class="analyze-btn" href="/app/billing" data-route data-onboarding-plan>Start 7-Day Trial</a>
           </article>
           <article class="workspace-panel onboarding-choice-card featured">
             <div class="section-kicker">Option 2</div>
@@ -2843,9 +2934,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
         <div>
           <div class="section-kicker">Final Step</div>
           <h2 id="requiredPlanTitle">Choose a plan.</h2>
-          <p id="requiredPlanCopy">Choose a plan to start your 7-day free trial. Stripe collects your payment method now and billing starts after the trial.</p>
+          <p id="requiredPlanCopy">Choose a plan to start your 7-day trial. Stripe charges $1 today to activate it, then monthly billing starts after the trial.</p>
         </div>
-        <span class="status-chip partial">7-Day Trial</span>
+        <span class="status-chip partial">7-Day Trial + $1</span>
       </div>
       <div class="required-plan-grid" id="requiredPlanGrid" aria-label="Required subscription plans">
         <button class="app-plan-card" type="button" data-required-plan="starter">
@@ -2871,9 +2962,9 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </div>
       <div class="auth-message" id="requiredPlanMessage" hidden></div>
       <div class="required-plan-actions">
-        <button class="analyze-btn" type="button" id="requiredPlanContinueBtn">Start Free Trial</button>
+        <button class="analyze-btn" type="button" id="requiredPlanContinueBtn">Start 7-Day Trial</button>
       </div>
-      <p class="required-plan-note">No charge today. Stripe billing starts after the 7-day trial unless you cancel from billing.</p>
+      <p class="required-plan-note">$1 activation today. Stripe monthly billing starts after the 7-day trial unless you cancel from billing.</p>
     </section>
   </div>
 
@@ -2889,7 +2980,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       <span>Professional</span>
       <strong>$40<span>/month</span></strong>
       <ul>
-        <li>7-day free trial before billing starts</li>
+        <li>7-day trial with $1 activation today</li>
         <li>150 plan scans per month</li>
         <li>50 extra scans free every month</li>
         <li>White-label reports and PDFs</li>
@@ -2897,7 +2988,7 @@ console.log('[Meta Pixel] Event fired:', 'PageView', {});
       </ul>
     </div>
     <div class="demo-offer-actions">
-      <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-demo-offer-cta data-public-event="demo_offer_signup_clicked">Start Free Trial</a>
+      <a class="analyze-btn" href="/signup?plan=professional" data-route data-public-cta data-plan-key="professional" data-demo-offer-cta data-public-event="demo_offer_signup_clicked">Start 7-Day Trial</a>
       <button class="secondary-btn" type="button" data-demo-offer-close>Keep Viewing Demo</button>
     </div>
   </section>
@@ -5340,7 +5431,7 @@ function updateReportMetrics() {
   if (billingPaymentStatus) billingPaymentStatus.textContent = hasReactivationPromoAccess
     ? 'One-time reactivation access.'
     : isTrialing
-    ? 'First charge after trial.'
+    ? 'Monthly plan starts after trial.'
     : subscription.payment_status
       ? `Payment status: ${titleCase(subscription.payment_status)}`
       : (subscription.unlimited ? 'Enterprise fair-use access' : `Progress: ${used} / ${limit || chosenPlan.monthlyAllowance}`);
@@ -5370,20 +5461,20 @@ function updateReportMetrics() {
         ? `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} and ${leadDiscoveryAllowanceLabel(chosenPlan)}. Confirm the plan change in Stripe.`
         : `${chosenPlan.priceLabel}. ${scanAllowanceLabel(chosenPlan)} and ${leadDiscoveryAllowanceLabel(chosenPlan)}. Confirm and pay for plan changes in Stripe immediately.`)
       : chosenPlan.key === 'starter'
-        ? `${chosenPlan.priceLabel} after your 7-day free trial. ${scanAllowanceLabel(chosenPlan)} and ${leadDiscoveryAllowanceLabel(chosenPlan)} with PitchProof-branded opportunity reports and PDFs.`
-        : `${chosenPlan.priceLabel} after your 7-day free trial. ${scanAllowanceLabel(chosenPlan)} and ${leadDiscoveryAllowanceLabel(chosenPlan)} with full white-label reports and PDFs.`;
+        ? `${chosenPlan.priceLabel} after your 7-day trial. $1 activation today. ${scanAllowanceLabel(chosenPlan)} and ${leadDiscoveryAllowanceLabel(chosenPlan)} with PitchProof-branded opportunity reports and PDFs.`
+        : `${chosenPlan.priceLabel} after your 7-day trial. $1 activation today. ${scanAllowanceLabel(chosenPlan)} and ${leadDiscoveryAllowanceLabel(chosenPlan)} with full white-label reports and PDFs.`;
   if (billingNavLink) billingNavLink.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (appPageTitle && window.location.pathname.startsWith('/app/billing')) appPageTitle.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (billingHeaderKicker) billingHeaderKicker.textContent = needsUpgrade ? 'Upgrade' : 'Billing';
   if (billingHeaderTitle) billingHeaderTitle.textContent = needsUpgrade ? 'Choose a Plan' : 'Plan and Usage';
   if (billingHeaderCopy) billingHeaderCopy.textContent = needsUpgrade
-    ? 'Choose the plan that fits your agency. Stripe collects your payment method now and billing starts after your 7-day free trial.'
+    ? 'Choose the plan that fits your agency. Stripe charges $1 today to activate the trial, then monthly billing starts after seven days.'
     : isTrialing
       ? 'Your 7-day trial is active. Manage billing details, invoices, and monthly assessment usage from here.'
       : 'Manage your subscription, billing details, invoices, and monthly assessment usage.';
   if (billingSubscribeBtn) {
     billingSubscribeBtn.hidden = chosenPlan.key === 'enterprise' || isStripeAccess;
-    billingSubscribeBtn.textContent = 'Start Free Trial';
+    billingSubscribeBtn.textContent = 'Start 7-Day Trial';
   }
   if (billingSwitchPlanBtn) {
     billingSwitchPlanBtn.hidden = !canSwitchPlan;
@@ -5484,12 +5575,12 @@ function updateReportMetrics() {
 
 function selectedPlanModalCopy(plan) {
   if (plan.key === 'starter') {
-    return 'Start with 7 days free, then get PitchProof-branded opportunity reports, business-focused scores, PDF exports, saved reports, share links, 50 website scans, 3,000 Lead Finder results monthly, and AI Visibility reports coming soon.';
+    return 'Start with a 7-day trial and $1 activation today, then get PitchProof-branded opportunity reports, business-focused scores, PDF exports, saved reports, share links, 50 website scans, 3,000 Lead Finder results monthly, and AI Visibility reports coming soon.';
   }
   if (plan.key === 'growth') {
-    return 'Start with 7 days free, then get 500 website scans, unlimited Lead Finder results, full white-label reports, custom branding, PDF exports, higher-volume prospecting, priority support, and AI Visibility reports coming soon.';
+    return 'Start with a 7-day trial and $1 activation today, then get 500 website scans, unlimited Lead Finder results, full white-label reports, custom branding, PDF exports, higher-volume prospecting, priority support, and AI Visibility reports coming soon.';
   }
-  return 'Start with 7 days free, then get full white-label reports, custom logo, brand colors, PDF exports, client-ready presentation, 150 plan scans plus 50 bonus scans, unlimited Lead Finder results, and AI Visibility reports coming soon.';
+  return 'Start with a 7-day trial and $1 activation today, then get full white-label reports, custom logo, brand colors, PDF exports, client-ready presentation, 150 plan scans plus 50 bonus scans, unlimited Lead Finder results, and AI Visibility reports coming soon.';
 }
 
 function updateRequiredPlanModal() {
@@ -8817,11 +8908,11 @@ function configureDemoOfferModal(context = DEMO_OFFER_CONTEXT_DEMO) {
   const secondary = document.querySelector('.demo-offer-actions [data-demo-offer-close]');
   if (copy) {
     copy.textContent = normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW
-      ? 'Start Professional to unlock the complete report and generate real website reports with the bonus included.'
-      : 'Start Professional and generate real website reports with the bonus included.';
+      ? 'Start Professional with a 7-day trial and $1 activation today to unlock the complete report and generate real website reports with the bonus included.'
+      : 'Start Professional with a 7-day trial and $1 activation today to generate real website reports with the bonus included.';
   }
   if (cta) {
-    cta.textContent = 'Start Free Trial';
+    cta.textContent = 'Start 7-Day Trial';
     cta.dataset.planKey = 'professional';
     if (normalizedContext === DEMO_OFFER_CONTEXT_FREE_PREVIEW) {
       cta.setAttribute('href', '/app/billing');
