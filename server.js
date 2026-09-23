@@ -1130,6 +1130,48 @@ app.all('/api/email/broadcast/client-list-acquisition/run', async (req, res) => 
   }
 });
 
+app.post('/api/email/broadcast/client-list-acquisition/test', async (req, res) => {
+  try {
+    requireEmailTestSecret(req);
+    const to = singleEmailRecipient(req.body?.to || req.query.to || 'hallpwj@gmail.com');
+    if (!to) {
+      return res.status(400).json({ error: 'A valid test recipient email is required.', code: 'email_test_recipient_required' });
+    }
+
+    const baseStep = lifecycleEmails.clientListAcquisitionBroadcastStep;
+    const step = {
+      ...baseStep,
+      key: `${baseStep.key}_test_${Date.now()}`,
+    };
+    const delivery = await lifecycleEmails.sendLifecycleEmail({
+      user: {
+        id: `email-test-${to}`,
+        email: to,
+        created_at: new Date().toISOString(),
+        user_metadata: { name: 'William', full_name: 'William' },
+      },
+      profile: { first_name: 'William', full_name: 'William' },
+      step,
+      campaign: lifecycleEmails.CLIENT_LIST_ACQUISITION_BROADCAST_CAMPAIGN_KEY,
+      ignorePause: true,
+    });
+
+    res.set('Cache-Control', 'no-store');
+    res.json({
+      ok: true,
+      sent: true,
+      campaign: lifecycleEmails.CLIENT_LIST_ACQUISITION_BROADCAST_CAMPAIGN_KEY,
+      step: baseStep.key,
+      subject: baseStep.subject,
+      to,
+      provider_message_id: delivery.id || '',
+    });
+  } catch (error) {
+    const { statusCode, body } = billing.publicError(error);
+    res.status(statusCode).json(body);
+  }
+});
+
 app.all('/api/email/broadcast/lead-finder-launch/run', async (req, res) => {
   try {
     requireEmailTestSecret(req);
